@@ -1,0 +1,9 @@
+key    ::= '"' (letter) (letter_or_digit)* '"'
+boolean ::= ('true'|'TRUE'|'false'|'FALSE')
+atom  ::= ('null'|'NULL'|boolean)
+digit ::= '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'
+number ::= (('-'|'+')?(digit)(digit)*('.'(digit)*)?)((E|e)(|'-'|'+')(digit)(digit)*)?
+string ::='"' (Char|'\"'|'\\')* '"'
+value ::= (string|number|object|array)
+object ::= '{' (( key ':' value ) ( ',' key ':' value )*)? '}'
+array ::= '[' ((((object|null))(',' (object|null))*)|((value|null)(',' (value|null) )*)) ']'

@@ -1,0 +1,155 @@
+:sectnums!:
+
+=== Exercise First Contact
+[[prepapeformaven]]
+
+++++
+<!-- prepareformaven -->
+<div class='ex'><details open class='ex'><summary class='ex'>Prepare IDE and Maven</summary>
+++++
+
+
+
+*Prepare Your Workbench*
+
+This exercise does not have to be committed. In only helps to prepare and configuring
+your IDE and in particular maven.
+
+
+Create the project in NetBeans as a Maven Java Application.
+Adapt the pom file of the project such that it uses sebipom as parent. You do that by declaring
+the parent directly after the second line that reads `<modelVersion>4.0.0</modelVersion>`. This will have
+the effect that you will have the exact plugins for the style of testing we want to teach.
+
+.Use sebipom as parent
+[source,xml]
+----
+    <repositories>
+      <repository>
+        <id>fontysvenlo.org</id>
+        <url>https://www.fontysvenlo.org/repository</url> <!--1-->
+      </repository>
+    </repositories>
+    <parent>
+        <groupId>nl.fontys.sebivenlo</groupId>
+        <artifactId>sebipom</artifactId>
+        <version>3.0.4</version>
+        <relativePath/>
+    </parent>
+----
+
+<1> Add the repository where sebipom is at home.
+
+//You will notice that the IDE does not like it because it will not be able to find the parent pom.
+
+// [blue]#sebipom# is specific to our course, meaning you have to configure maven to consider the repository that is
+// specific to our courses: https://www.fontysvenlo.org/repository[www.fontysvenlo.org/repository ^], where you can find semipom
+// and other small projects that are used in some of the exercises.
+//
+// .maven settings
+// image::mavensettings.png[role="left thumb"]
+// To do that, click on *'Project Files'* in the NetBeans-IDE project tree, which should have as a minimum
+// a pom.xml file. If it does not have a settings.xml file, you can right-click on *Project Files*, which will then offer
+// to create a settings file. Accept it, then add the `<profile>` with `<id>` _sebivenlo_ to the `<profiles>` section, and activate that profile
+// in the `<activeProfiles>` section. See the examples below. This will give you access to the sebivenlo repository which we use to publish
+// sebipom and other useful maven project artifacts. +
+// Maven settings will affect all maven projects, not just the current.
+// That is shows up in the Project Files folder is just a convenience.footnote:[settings.xml can be found in your home directory under folder `${HOME}/.m2`. It starts with a dot and may appear hidden in some cases. `${HOME}` refers to the home directory of the user.]
+//
+// .Maven settings.xml, Profiles Section
+// [source,xml]
+// ----
+//     <profiles>
+//         <profile>
+//             <id>sebivenlo</id> <--1-->
+//             <repositories>
+//                 <repository>
+//                     <id>fontysvenlo.org</id>
+//                     <url>https://www.fontysvenlo.org/repository</url>
+//                 </repository>
+//             </repositories>
+//         </profile>
+//     </profiles>
+// ----
+//
+// .Maven settings.xml, activeProfiles Section
+// [source,xml]
+// ----
+//     <activeProfiles>
+//         <activeProfile>sebivenlo</activeProfile>
+//     </activeProfiles>
+// ----
+//
+// .complete minimal settings.xml
+// [source,xml]
+// ----
+// <?xml version="1.0" encoding="UTF-8"?>
+// <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+//           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+//           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+//     <pluginGroups>
+//         <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+//     </pluginGroups>
+//     <profiles>
+//         <profile>
+//             <id>sebivenlo</id>
+//             <repositories>
+//                 <repository>
+//                     <id>fontysvenlo.org</id>
+//                     <url>https://www.fontysvenlo.org/repository</url>
+//                 </repository>
+//             </repositories>
+//         </profile>
+//
+//     </profiles>
+//     <activeProfiles>
+//         <activeProfile>sebivenlo</activeProfile>
+//     </activeProfiles>
+//     <offline>false</offline>
+// </settings>
+// ----
+//
+// If all is well, you should be able to create a JUnit test in the project. +
+// To verify that, create a JUnit test in the package 'hi' with the name `GreetingTest`. Turn of all Generated stuff, like code and javadoc hints. +
+// In the test class, create a testMethod called firstContact.
+
+.firstContact
+[source,java]
+----
+  @Test
+  void firstContact(){
+    Greeting g = new Greeting( "Johnny" ); // <1>
+    String greet = g.greet();
+    assertThat(greet)
+        .as("expecting polity greeting")
+        .contains("Hello", "Johnny");
+  }
+----
+
+<1> You will have to type this without _completion_,  because nothing the Greeting class exists at this moment.
+
+You will notice that when you _type_ (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist
+and on top of that has not method called `greet()` that returns a String. Do not worry because the IDE is willing to help. Look for tip image:warning-bulb.png[]
+and click on it. From the suggestions select create class in *Source directory* to create the Greeting class in the package `hi`.
+Then for the greet method, select the create method in the Greeting class.
+Up until now you made the compiler and IDE happy.
+
+Run the test. It [red,bold]*should fail*. [red,bold]*Red* is the color we want here.
+
+Then make the greeting class pass this test. You have to make the greet method pass it's test. Make it [green,bold]*green*.
+
+Bravo: you have just created your first method in [blue,bold]*Test Driven Development* style.
+
+[TIP]
+====
+If the IDE (or the compiler) complains that it can't find things, or something along that line,
+you should do, what is called a priming build: Just build once by pressing the hammer symbol or right-click on the project and select build.
+This will trigger maven to fetch all dependencies, that is the libraries that are used by the project. Sebipom selects test specific libraries to make sure
+that we are all on the same page regarding the test dependencies in the project.
+====
+
+++++
+</details></div><!--end prepareformaven -->
+++++
+
+:sectnums:

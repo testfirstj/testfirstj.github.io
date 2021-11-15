@@ -1,0 +1,221 @@
+:sectnums!:
+
+=== Exercise PhoneBook.
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Walking-through exercise: Phonebook</summary>
+++++
+
+:sectnums:
+
+// Author: Linda
+
+In this exercise, we will write our own phone book. As this is the first exercise,
+we will work through the solution and have some accompanying text for you to read.
+Please read the text and don't just copy+paste the code, especially when you are struggling with something.
+
+//In week 9 of PRC1 you were asked to implement a more advanced version of the phonebook of week 6.
+//https://materiaalit.github.io/2013-oo-programming/part2/week-9/[Let's have a look at the exercise again].
+// The exercise is nice, but we had to make sure that the User Interface is an *exact* copy, so that the tests run properly. For PRC1 this was fine because it was good for teaching you how to program. But when we write our own tests, we want the tests to be less brittle.
+
+Let's write our own tests and work test-driven to implement our phonebook again.
+
+*Turning requirements into testable statements* +
+Let's get started with writing our phonebook, TDD style. How do we proceed? In the beginning
+it's best to write down the *requirements* for the system as a list of requirements that is *testable*.
+Instead of writing "The system should add numbers together", write "2 and 2 should equal 4.".
+The first statement is not testable, the second statement is much easier: `assertThat(2+2).isEqualTo(4)`.
+
+The list of requirements reads:
+
+. adding a phone number to the relative person
+. phone number search by name
+. name search by phone number
+. adding an address to the relative person
+ personal information search (search for a person's address and phone number by name)
+. removing a person's information
+
+Let's turn each requirement into testable statements and how we are going to verify them.
+
+. Lookup a person by name:
+.. Input "Jukka" should yield Null (because we haven't added any entries yet)
+. Add person and phone number:
+.. input "Pekka", "040-123456" should store those values
+.. lookup: "Pekka" should yield "040-123456"
+. Lookup a person by number:
+.. input "02-444123" should yield Null
+.. input "040-123456" should yield "Pekka"
+. Add address:
+.. input "Pekka" and "Hulsterweg 6, Venlo"
+. Lookup personal information by name:
+.. lookup "Pekka" should yield a String containing address "Hulsterweg 6, Venlo" and phone number "040-123456"
+. Deleting personal information by name:
+.. Input "Pekka", should delete "Pekka" and number and address
+
+The requirements leave some room for several designs.
+
+Before beginning with the list, this is what our test class looks like.
+To avoid creating a new phonebook object in every test, we use declare a field in the test class and initialize it with a `new PhoneBook()`.
+[source,java]
+----
+public class PhonebookTest {
+    // create the
+    Phonebook phonebook= new Phonebook();
+    //
+}
+----
+
+Note that JUnit creates a new test class instance before every test method is run. So for each test, everything is *fresh*.
+
+Let's work our way through that list. In the beginning, we want to have a phonebook that actually looks up people.
+Because we haven't added anything to the book yet, we're starting with the test case that the person is not found.
+We could have written the test differently; instead of testing `isNull`, we could have asked for `isEqualTo("person not found")`.
+The reason we are not doing that is that we are making the test brittle (prone to break): by expecting a very specific String output,
+we essentially force our phonebook implementation to output "person not found".
+This is not the point of a test. You want to make sure that you test that functionality "if person is not found, the method should not return a person".
+It's intuitive.footnote:[to a Java programmer anyway] to use the `isNull` comparison here.
+
+[source,java]
+----
+    @Test
+    public void phonebookSearchByNameNotFound() {
+      assertThat( phonebook.searchByName( "Jukka" ) )
+         .as("Person not present should return null")
+         .isNull();
+    }
+----
+Next, we add a person and use the `searchByName` function to see whether the adding was successful.
+To check whether we have successfully added an entry to the phonebook, we make use of the (already tested) search function.
+Because the search function was already successfully tested, we can include it here.
+Can you figure out what weakness our test has? We are using the `contains` comparison to see whether our phonebook contains the data we ask for.
+The phonebook could essentially be a long String containing all the data you add, but it has no phonebook structure that,
+for example, a `Map` or a `Linked List` would provide. At this point we have to decide how strict we make the tests.
+We could add another `assert` statement that checks the length of the String. If it's greater than what is needed two contain name and number,
+ the test fails. This would be a more strict test, but it also enforces a certain type of implementation.
+ Essentially, when writing our tests we constantly make judgment calls of how lax or strict our tests should be. Let's leave our test like this for now.
+[source,java]
+----
+@Test
+public void phonebookAddsEntry() {
+    phonebook.add("Pekka","040-123456");
+    assertThat(phonebook.searchByName("Pekka"))
+       .as("An added person, phone number should be found")
+       .contains("040-123456");
+}
+----
+We have successfully tested the `searchByName` method and the `add` method.
+Moving down our list of requirements, next is the `searchByNumber` functionality.
+Let's write a test that will first add an entry to the phonebook, and then asks to lookup a person by providing their number.
+In addition, we write another test that checks that looking up a number which is not in the phonebook returns a null result.
+[source,java]
+----
+@Test
+public void phonebookSearchByNumber() {
+    phonebook.add("Pekka", "040-123456");
+    assertThat(phonebook.searchByNumber("040-123456"))
+       .as("search by number should return person's name")
+       .contains("Pekka");
+}
+
+@Test
+public void phonebookSearchByNumberNotFound() {
+    assertThat(phonebook.searchByNumber("02-444123"))
+        .as("search for number not present should return null")
+        .isNull();
+}
+----
+Are you getting the hang of it? Remember that our tests don't prescribe one implementation- each
+of you can write a different phonebook implementation that all pass these tests. The more tests we write however,
+the more we have to optimize our implementation. We will see that with our next set of tests, the address entry.
+According to our requirements, the phonebook should also contain the address of the persons added, and naturally,
+it should be possible to look up addresses when specifying a person's name. Again, our test forces us to
+make an implementation decision. In the code below, `addAddress` is a separate
+method and the `searchByName` method is now expected to yield the address as well.
+[source,java]
+----
+@Test
+public void phonebookSearchAddress(){
+    phonebook.addEntry( "Pekka", "040-123456" );
+    phonebook.addAddress( "Pekka", "Hulsterweg 6, Venlo" );
+    assertThat(phonebook.searchByName( "Pekka" ))
+       .as("after add, parts of the address required")
+       .contains( "Hulsterweg 6", "Venlo" );
+}
+----
+
+[NOTE]
+[blue big]*Using an API properly can boost your application's performance.* +
+For instance when you
+first ask a map if a key is contained and then ask it to retrieve it is effectively asking
+the map to do the same information twice, effectively doubling the work.
+In such case, simply ask for the bloody thing. The map will return null if it does not have it,
+and checking for null on your side is just as efficient as checking for the boolean return value of contains.
+If you forgot, revisit the part on how maps are created in PRC1. Or look at the sources of HashMap.
+
+Here is what an alternative test could look like:
+[source,java]
+----
+@Test
+public void phonebookSearchAddress(){
+    phonebook.addEntry( "Pekka", "040-123456", "Hulsterweg 6, Venlo");
+    assertThat( phonebook.searchAddress( "Pekka" ) )
+      .as("addEntry should add phone and address")
+      .contains( "Hulsterweg 6" ,"Venlo", "040-123456" );
+}
+----
+In this version, the `addEntry` method is required to take a third argument, the address;
+and there is a specific search function that looks up addresses only. Which of these two versions
+(or another version entirely) you choose is down to the business logic and best coding practices.
+If the business logic requires a separate address search for example, the second test is the way to go.
+But the way we have phrased our requirement, the first version is correct.
+
+[NOTE]
+[blue]*Another tip on maps:* +
+If you iterate through a map, only to retrieve key and value when the key is found,
+do [red]*not* iterate through the [red]`keySet` to find the key, but instead use the [green]`entrySet`, because that also
+avoids double work on the maps side. The entryset is the set of key-value pairs, so you will have both in one go.
+
+New tests can have an impact on our implementation. Perhaps up until now you have used
+a `HashMap<String, ArrayList<String>>` to store a persons name and their phone numbers.
+Now that people also need addresses, our simple `HashMap` implementation reaches its limits.
+Sure, we could store numbers and addresses in the same `ArrayList`, but that would be messy.
+Instead, we could use Object-oriented principles and create a `Person` class that holds name,
+numbers and addresses and the `HashMap<String,Person>` binds people's name and person Objects.
+
+[NOTE]
+[blue]*Another one on performance*. +
+If you iterate through a collection or BookEntries, do [red]*not* create intermediate objects, like with concatenated Strings,
+only to reject them when they do not suit the search. Instead inspect the list for containment or
+use a smarter data structure such as a https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html[Set ^],
+ which can check for containment very efficiently. If you want to keep the entries in the set in insertion order, so it behaves similar to a list, choose
+the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/LinkedHashSet.html[LinkedHashSet ^] to do your bidding. +
+[green]*If you do not expose your internal data structures you can change them without changing the functional behavior of your class, but at a better performance point.*
+
+How you implement your phonebook is up to you, but we can see here that as testing progresses,
+we are forced to *refactor* our code and to optimize it so that it passes the tests,
+yet its easy to read and implements good design choices. The key point here is that our test
+should not worry about whether you implement a `Person` class, but is concerned
+solely with the outcome. That way, different implementations can achieve the same end result.
+
+Lets return to our list of requirements. We have one requirement left, the deletion of an entry.
+In our requirement we specified that we lookup a person by name before deleting. Let our test reflect that:
+[source,java]
+----
+@Test
+public void phonebookDeletesEntry() {
+    phonebook.addEntry("Pekka", "040-123456");
+    phonebook.deleteEntry("Pekka");
+    assertThat(phonebook.searchByName("Pekka")).isNull();
+}
+----
+Again, we are using the `searchByName` method to verify that deleting the entry actually
+removes the data selected.
+
+[big blue]*And this is it! Our very first test-driven phonebook!*
+
+++++
+</details></div><!--end phonebook-->
+++++
+
+:sectnums:

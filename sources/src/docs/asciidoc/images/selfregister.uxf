@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>30</y>
+      <w>390</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>template=&lt;E&gt;
+{abstract}
+/*Deconstructor*/
+--
+
+_- registry: Map&lt;Class&lt;E&gt;,Deconstructor&lt;E&gt;&gt;_
+
+--
+
+_# register( d : Deconstructor&lt;E&gt;): void_
+_+ forType(t : Class&lt;E&gt; ): Deconstructor&lt;E&gt;_
+
+/+deconstruct(e: E): Object[]/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>300</y>
+      <w>590</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>StudentDeconstructor
+--
+--
+- StudentDeconstructor()
+static {
+*    Deconstructor.register(Student.class, new StudentDeconstructor() );*
+}
+
++ deconstruct( s: Student ): Object[]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>250</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>450</x>
+      <y>100</y>
+      <w>250</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>The constructor is private,
+so no-one can can create new
+instances but the class loader.
+The static block ensures that
+the instance registers itself
+as the deconstructor for a type.
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>220</y>
+      <w>90</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;120.0;70.0;10.0</additional_attributes>
+  </element>
+</diagram>

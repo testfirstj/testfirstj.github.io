@@ -1,0 +1,107 @@
+:doctitle: W1 Test Driven Development
+:docinfo: shared
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,h,d,d,d,d,d,d,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+== Write your own tests!
+
+[big]#Throughout the exercises of PRC1, you have become acquainted with the value of tests: You have a way of checking if your code is any good without having to
+test each and every part manually. You clicked on the nice TMC button in NetBeans and then you could see which parts of your code worked, and which didn't.
+There is a catch though: Out there in the real world, there won't be any NetBeans button doing that magic for you, nor will some teacher or school
+provide the tests for you, so [red]*you will be on your own*.#
+
+But fret not! Writing tests is typically much simpler than writing the actual code. At least, it is when you follow a basic set of steps:
+
+image::boom250.jpeg[role="related thumb right",title='source:dumont.lib.ia.us']
+. [blue]**A**rrange: Prepare or set up the thing you want to test
+. [blue]**A**ct: Interact with the object you are testing
+. [blue]**A**ssert or Ensure that the observable result(s) is/are as expected.
+. If it says [red]*boom*, then at least you learned something ....
+
+// :sectums!:
+// == Reading
+// :sectnums:
+//
+// We assume that PRC1 covers the content of chapters 1 through 6 of Horstmann sufficiently. It does
+// not hurt to skim through those first. We will introduce no new _java_ topics this week, but use
+// in but use whatever was there up until week 11 o
+//
+//
+// * Horstmann Core Java, Ed 11, Vol 1 Fundamentals Chapter 5 sections 5.1-5.5
+// //* Horstmann Core Java, Ed 11, Vol 2 Advanced Feature
+//
+
+*Topics week 1*
+
+* Test Driven Development.
+* Maven configuration as exercise.
+* **A**rrange **A**ct **A**ssert
+* JUnit (5) as test framework.
+* AssertJ as assertion library.
+
+// On the theory of inheritance and interfaces. we will refine later on.
+
+== Testing / Test Driven Development
+
+include::{topics}/tdd.adoc[]
+
+include::{exercises}/prepareformaven.adoc[]
+
+include::{topics}/arrangeactassert.adoc[]
+
+include::{exercises}/phonebook.adoc[]
+
+include::{topics}/assertjexamples.adoc[]
+
+include::{exercises}/minibar.adoc[]
+
+include::{topics}/softassertions.adoc[]
+
+include::{exercises}/simplequeue.adoc[]
+
+include::{topics}/assumptions.adoc[]
+
+:sectnums!:
+
+== Exercises in this part
+
+* <<_exercise_first_contact,First Contact>>
+* <<_exercise_phonebook,Phonebook>>
+* <<_exercise_minibar,Mini Bar>>
+* <<_exercise_simple_queue,Simple Queue>>
+
+== Additional pointers
+
+* https://assertj.github.io/doc/[AssertJ - fluent assertions java library ^]
+* https://junit.org/junit5/docs/current/user-guide/[JUnit 5 User Guide ^]
+
+== Slides and videos
+
+* link:../pdf/010_howtoassert_sheets169_en.pdf[How to assert ^]
+* link:week01video.html[Videos to week 1]
+
+[NOTE]
+====
+Check out https://assertj.github.io/doc/#assertj-core-assertions-guide[this guide on assertions with AssertJ]!
+====
+
+// ++++
+// <div class='ex'><details class='ex'><summary>Exercise 1: In the pub (without exceptions)</summary>
+// ++++
+// include::{exercises}/inthepub.adoc[]
+// ++++
+// </details></div><!--end ex 1-->
+// ++++
+//
+//
+//
+// ++++
+// <div class='ex'><details class='ex'><summary>Exercise 2: Fraction</summary>
+// ++++
+// include::{exercises}/fraction-tdd.adoc[]
+// ++++
+// </details></div><!--end ex 2-->
+// ++++
+
+'''

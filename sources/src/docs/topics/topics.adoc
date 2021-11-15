@@ -1,0 +1,58 @@
+== Topics 2021
+
+// TODO table below needs revision.
+
+////
+Focus points in the weeks ahead:
+. week 1 Testing, JUnit5, assertJ
+.. comparator will be a big part here?
+.. experiment with various comp. impls inside test class.
+.. use sorting as example. assertThat(x).containsExactly(...) and assertThat(x).containsExactlyInAnyOrder()
+.. looking at assertThat().extract...
+.. more exercises needed.
+.. main exercise: fraction (), need more simpler ones.
+. week 2 lambda
+. week 3, need simpler in the pub. Also needs try with resources. (A tap is AutoClosable?).
+////
+
+In the topics table below, *Vol I* is _Core Java Volume I, Fundamentals_ and *Vol II* is _Core Java Volume II, Advanced Features_
+both by Cay S. Horstmann and both in the eleventh edition.
+
+// This run we have ONE topic per week, either test focused, java feature focused or design focused.
+[cols="2,200,100,200",options="header"]
+|=======
+| Week | Topic | Book | Exercises
+|link:week01.html[01, title='Mon 2021-02-08'] | Test Driven, Unit Testing basics |  -                     | FirstContact, Phone book, Mini BAr, Simple List.
+|link:week02.html[02, title='Mon 2021-02-22'] | Parameterized Tests              | Vol I 5.6 enum classes | Fraction, Flawless Password, Enum Calculator
+|link:week03.html[03, title='Mon 2021-03-01'] | Design for testability, Mockito  | -                      | Perishable products, CandyVendingMachine as study object.
+|link:week04.html[04, title='Mon 2021-03-08'] | Generics                         | Vol I Ch 8             | Generic Box, Shape Filter, Ranges in 3 parts
+|link:week05.html[05, title='Mon 2021-03-15'] | Lambda and Streams               | Vol I Ch 6.2, Vol II Ch 1 | Simple Stream, Csv Objects, Lambda Library MinMaxCollector
+|link:week06.html[06, title='Mon 2021-03-12'] | Reflection                       | Vol I Ch 5.7,          | Generater sql table from entity, Mapper using MethodHandles. Generate JSON from entity using mapper.
+|link:week07.html[07, title='Mon 2021-03-22'] | Database access using JDBC       | Vol II Ch 5            | Data base access using generic methods and the mapper from wk 6
+|link:week08.html[08, title='Mon 2021-03-29'] | JavaFX and Java Modules          | Vol I bonus Ch (pdf), Vol II Ch 9 |
+|link:week09.html[09, title='Mon 2021-04-19'] | Statemachine, regex     | Vol I, chp 5.7,Vol II Ch 5 | GumballMachine, GradeCapture (regex), templating engine
+|link:week10.html[10, title='Mon 2021-04-26'] | Date/Time API and Internationalization     | TBD |
+|link:week11.html[11, title='Mon 2021-05-10'] | Exceptions, Assertions and logging, File(I/O)    | TBD |
+|link:week12.html[12, title='Mon 2021-05-17'] | Programmers responsibility: Security   | TBD |
+|link:week13.html[13, title='Mon 2021-06-07'] | Not used, buffer   | - | |
+
+// TODO: choose topic
+// |link:2021/week04.html[04, title='Mon 2021-03-12'] | Generics | Test and Quality and other Qualities | Vol. I - Ch8 | BoxOfThings, Shapes
+// |link:2021/week05.html[05, title='Mon 2021-03-19'] | Collections + Java8 Streams | Break your code | Vol. I - Ch9 + Vol. II - Ch1 | Lambda Library, CSV to Object Stream
+// |link:2021/week06.html[06, title='Mon 2021-03-26'] | Design for testability, Date/Time API | Mocking with Mockito | Vol. II - Ch6 | First Mocks, Perishable products
+// |link:2021/week07.html[07, title='Mon 2021-04-03'] | Logging,  + Internationalization | - | Vol. II - Ch7, Vol. I - Ch7.5 | Spanish Beer
+// |                          | Break | | |
+// |link:2021/week08.html[08, title='Mon 2021-04-23'] | State machines, Regex | Mocking with Mockito II | Vol. II - Ch2.7 | GradeCapture, Olifantys balls
+// |link:2021/week09.html[09, title='Mon 2021-05-07'] | Networking, I/O | Testing networking protocol | Vol. II - Ch2.2, Ch4 | Template Engine
+// |link:2021/week10.html[10, title='Mon 2021-05-14'] | Threads & Concurrency | Testing in case of concurrency | Vol. I - Ch12| Concurrent Restaurant
+// |                          | Ascension Day | | |
+// |link:2021/week12.html[12, title='Mon 2021-05-28'] | Java Reflection | Testing non functional aspects, static tests | Vol. I - Ch5.7 | Table Creator
+// |link:2021/week13.html[13, title='Mon 2021-06-04'] | Java Platform Module System | - | Vol. II - Ch9 | Travel agency
+// |link:2021/week14.html[14, title='Mon 2021-06-11'] | Spare | | |
+|=======
+
+
+// [format="dsv", cols="^1,2*4", options="header", separator=";"]
+// |===
+// include::topics.csv[]
+// |===

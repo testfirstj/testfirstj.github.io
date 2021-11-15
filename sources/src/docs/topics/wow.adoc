@@ -1,0 +1,21 @@
+== Way of Working during practical hours.
+
+
+image:tdd.png[float="right"] The way of working with the practical assignments is as follows:
+
+* Each student has a personal subversion repository
+* The teachers will add the starter project for the assignment in due time +
+ to all student repositories, which are then available for checkout by the students
+* The students will work on the assignment and work TDD style.
+** Write a test for a requirement (typically a method), +
+  see it showing failure ([red,bold]*RED*),
+** then implement the method to turn the test [green,bold]*GREEN*.
+** If [green,bold]*GREEN*, svn-commit both test-class AND implementing class.
+* If the assignment is complete (all requirements covered with tests, all tests green and code coverage at an appropriate level )
+  ask any of the teachers or student assistants to run the teachers test on your code.
+** The teachers will not explicitly test your tests, only your implementation code, but will provide you with the test report.
+** They will run *your* tests, to see if your test report is in agreement with the teachers tests.
+
+This procedure is similar to the one followed during the link:2019/assessmentcorrectionrules.html[performance assessment] at the end of the semester.
+The difference is that we will review not only the implementation, but will start with reviewing the tests.
+If there is no valid test, the implementation of the method will not be considered.

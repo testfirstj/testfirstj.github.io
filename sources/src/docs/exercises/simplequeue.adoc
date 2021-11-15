@@ -1,0 +1,118 @@
+:sectnums!:
+
+=== Exercise Simple Queue
+[[simplequeue]]
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Simple queue</summary>
+++++
+
+[big blue]*You have to write your own simple queue implementation using nodes as in the diagram. Simply
+delegating the work to an already existing queue or (ab)using some kind of list implementation from the JDK is not legal for this exercise.*
+
+image:https://i.gifer.com/qa.gif[title="Simple Queue Experience",role="right thumb", link="https://gifer.com/en/qa"]
+In this exercise you will develop a simple queue class called `queue.SimpleQueue` to get acquainted with the TDD rhythm.
+
+We will describe the requirements of the queue as a short functional requirement, recognizable as *FRx* where x is some number.
+Where needed, we will add non-functional requirements as well (recognizable as *NFx*).
+Each functional requirement leads to a test.
+
+A queue is a **F**irst **I**n **F**irst **O**ut (FIFO) data structure.
+
+We will describe the requirements quite formally here, in the hope to make them very clear.
+Other exercise may require that you do this formalization in your head, because the requirements may be described in a more relaxed style.
+
+The simple queue you are to develop is a so called single linked queue.
+Internally you have Node objects that carry an item and a link to the next node.
+The last node's next is `null`.
+The LinkedList has two fields of type node
+
+* head, which points at the place where you would take or peek elements from the queue. The head looks at the first element that will come off.
+* tail, points at the place where the next new element is to added.
+
+// Using a so called dummy head makes your algorithm a bit simpler. A dummy head is actually a node that does not have a item, but whose `next` points to the first real node (if any).
+// It makes the situation of the empty queue simpler. It can also be made final, so reading from it it can't cause a null pointer exception (NPE).
+
+.making a sketch never hurts.
+image::ll.png[]
+
+* *NF1:* All fields of the queue class are `private`. +
+* *NF2:* The queue shall use a linked node structure. +
+* *NF3:* None of the fields in the SimpleQueue objects shall be of some array type. +
+* *FR1:* The queue shall be declared generic, with type token `<E>` .
++
+*Test:* Create a JUnit test class in the package `queue` and name the test class `SimpleQueueTest`. +
+   Create a test method named `queueIsGeneric()`.
+   Let the test method create two instances of the SimpleQueue, one with items of generic type `<String>`, the other of type `<Integer>`.
+//Inside the test call the test method, create a SimpleQueue Object with
+* *FR2:* queue can be created with a no-args constructor. +
+  This means that there should be a constructor so that you can do `new SimpleQueue()`. +
+  If a class does not yet have any constructors, the compiler will add a default constructor,footnote:[The constructor will not be Invisible in the source code]
+  which is a no-arguments constructor. +
+  An SimpleQueue has a method called `isEmpty()` taking no parameters, that reports that the queue contains no elements.
+ Immediately after instantiating `isEmpty()` reports true.
++
+*Test*  that the queue object is empty after creation.
+* *FR3:* The method `void put(E e)` adds an element to the queue. If the queue was empty before, the object e will appear as the first element in the queue.
+  Immediately after a put, the queue is not empty. +
++
+*Test*: Call it `putMakesNotEmpty`. Create two  SimpleQueue objects, one for String and one for Integer.
+  Use the put method to add one element to each of the queues.
+  Each queue should report not empty, i.e. `isEmpty()` returns false.
+* *FR4:* The queue has an `E peek()` method, that returns the first element of the queue without removing it from the queue. +
+  If there is only one element in the queue, that element should be returned.
++
+*Test:* Create a SimpleQueue for each of the types String and Integer. Put an element of each type in the queue.
+  Create a String named `expectedString` with some content of your liking.
+  Invoke the peek() method on each queue and assert that each returns the correct object, the one that you put in.
+  You should use `assertThat(q.peek()).isSameAs( expectedString )` for the String. for the integer it is similar.
+* *FR5:* The queue has an E take() method that returns and removes the first element of the queue.
+  If there is only one element in the queue, the queue should become empty. +
++
+*Test:* Test that the take method returns the correct element and reduces the size of the queue. A queue should be empty after one put and one take.
+* *FR6:* The queue can contain multiple elements. The values that are returned by take are in the same order as the order in which the elements have been put on the queue.
++
+*Test:* Create a queue for strings. Put multiple elements to the queue, one after the other. Use an an array of Strings as source of data: +
+  `String[] values= { "Hello", "World", "And", "Some", "Bla", "Di", "Bla" };`. +
+  **U**se a for-each loop to put the values in the queue. +
+  **C**reate an `ArrayList<String>` named  `returns` and in a while loop take all elements from the queue and put them in the list. +
+  **U**se `assertThat( returns ).containsExactly( values );` to verify the correct behavior of the queue. Also ensure that the queue reports empty after all takes.
+* *FR7:* The queue should implement the *Iterable* interface.
++
+*Test:* Copy the previous test, but instead of using an intermediate list to collect the returned values,
+  use the fact the an *Iterable* can be tested for it's  content as is. +
+ Inside the Iterator implementation that you return you should use a cursor or current +
+ that maintains where the iterator has been. Initialize it to point to the (dummy) head of
+  the queue. `boolean hasNext()` checks that there is another element to be visited, `T next()` moves the cursor and returns the element it is 'looking' at. +
+  Ensure that the iterator does not destroy the queue. You can test that by using iterating twice, once to print the content (for-each loop),
+   the 2nd time to check that the content is still there in the `assertThat(...).contains(...)` part.
+
+.setup code left as an exercise.
+[source,java]
+----
+    for ( String string : q1) {
+        System.out.println( string );
+    }
+   assertThat( queue ).containsExactly( values );
+----
+
+* *FR8:* The queue should throw an `IllegalStateException` when a peek or take operation is done while the queue is empty.
+  So far we played nicely with the queue. Now we want to make sure that the queue can protect itself from abuse, so that the queue object stays in a correct state.
++
+*Test:*
+  Use `assertThatThrownBy(code)`, to ensure that code that tries to peek or take. +
+  Write 2 tests, one for peek and one for take. [green,bold]*Try to avoid code duplication in the queue class*.
+
+.Declaring exception throwing code as lambda expression.
+[source,java]
+----
+  ThrowingCallable code = () -> { queue.peek(); };
+----
+
+The queue is now feature complete.
+
+++++
+</details></div><!--simplequeue-->
+++++
+
+:sectnums:

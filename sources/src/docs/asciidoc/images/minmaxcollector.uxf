@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>30</x>
+      <y>130</y>
+      <w>350</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>MinMaxCollector&lt;T&gt;
+--
+- comp: Comparator&lt;T&gt; {frozen}
+--
++ supplier(): MinMax&lt;T&gt;
++ characteristics(): Set&lt;...&gt;
++ combiner(): BinaryOperator&lt;A&gt;
++ finisher(): Function&lt;A,R&gt;
++ accumulator(): BiConsumer&lt;A,T&gt;
+--
+
+
+
+{innerclass
+MinMax&lt;E&gt;
+--
+ - min: E
+ - max: E
+ - comp: Comparator&lt;E&gt; {frozen}
+--
+ + accept( e E ): void
+ + getMin(): T
+ + getMax(): T
+
+innerclass}
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>210</y>
+      <w>290</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>/java.util.function.Consumer&lt;E&gt;/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>310</x>
+      <y>230</y>
+      <w>160</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>140.0;10.0;140.0;50.0;10.0;50.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>470</x>
+      <y>150</y>
+      <w>190</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>/java.util.Comparator&lt;E&gt;/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>370</x>
+      <y>150</y>
+      <w>120</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>170</x>
+      <y>30</y>
+      <w>140</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>template=&lt;T,A,R&gt;
+*/Collector/*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>70</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+</diagram>

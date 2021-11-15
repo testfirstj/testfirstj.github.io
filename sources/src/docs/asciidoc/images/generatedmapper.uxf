@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>60</y>
+      <w>430</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>template=&lt;E,K&gt;
+{abstract}
+*Mapper&lt;Y&gt;*
+--
+_- register: Map&lt;Class&lt;?,?&gt;, Mapper&lt;?,?&gt; &gt; _
+- entityType : Class&lt;Y&gt;
+- entityFields: Field[]
+- allFieldsConstructor: Function&lt;Object[],E&gt; 
+--
+# Mapper&lt;E&gt;(entityType: Class&lt;E&gt;) 
+*_+ mapperFor(Class&lt;Y&gt;): Mapper&lt;Y&gt;_*
+- entityFields(entityType: Class&lt;E&gt; ): Field[] {frozen}
+*+ construct( args: Object[] ): E*
++ getEntityType(): Class&lt;E&gt;
++ stream( y: Y) : Stream&lt;FieldPair&gt; {abstract}
++ entityFields(): List&lt;Field&gt;
+/+ deconstruct( entity : E ): Object[] {abstract}/
+/+ keyType(): Class&lt;K&gt; {abstract}/
+ 
+
+bg=green
+transparency=70</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>430</y>
+      <w>310</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>{generated}
+*ExampleMapper*
+--
+--
+*- EntityMapper( ) {*
+*    super( Example.class );*
+*}*
+
+*static {*
+*    Mapper.register(...)*
+*}*
+
++ deconstruct( entity : Y ): Object[]
++ keyType(): Class&lt;K&gt; {abstract}
+bg=white
+transparency=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>340</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>70</y>
+      <w>100</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.&gt;&gt;&gt;&gt;
+registry
+lw=3</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;60.0;80.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>610</x>
+      <y>80</y>
+      <w>470</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*Simple Cache*
+public static &lt;Y,Z&gt; Mapper&lt;Y,Z&gt; mapperFor( Class&lt;Y&gt; aType ) {
+   if (!mapperCache.containsKey(aType)) {
+       loadMapperFor(aType);
+   }
+   return (Mapper&lt;Y,Z&gt;) mapperCache.get( aType);
+}
+
+bg=green
+transparency=70</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>120</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>760</x>
+      <y>400</y>
+      <w>240</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Note..
+
+This class diagram 
+is incomplete.
+
+Methods left out are 
+implementation details.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>650</x>
+      <y>230</y>
+      <w>250</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>FieldPair
+--
+~ key: String {frozen}
+~value: Object {frozen}
+--
++ key(): String
++ value(): Object
+
+bg=green
+transparency=70</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>60</x>
+      <y>390</y>
+      <w>670</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>entities</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>60</x>
+      <y>20</y>
+      <w>1040</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>mapperapi</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>450</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>{entity}
+Example
+bg=white
+transparency=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>450</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>250</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>120.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>200</x>
+      <y>450</y>
+      <w>310</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>{generated}
+*ExampleMapper*
+--
+--
+*- EntityMapper( ) {*
+*    super( Example.class );*
+*}*
+
+*static {*
+*    Mapper.register(...)*
+*}*
+
++ deconstruct( entity : Y ): Object[]
+
+bg=gray
+transparency=70
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>340</x>
+      <y>340</y>
+      <w>30</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+layer=-1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>560</x>
+      <y>530</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>A mapper per 
+entity class.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>530</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>500</x>
+      <y>570</y>
+      <w>80</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;20.0;60.0;10.0</additional_attributes>
+  </element>
+</diagram>
