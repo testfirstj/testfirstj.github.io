@@ -411,7 +411,7 @@ We do this by adding an executable file to the `PATH` so we can start Netbeans f
 ----
 cd /usr/local/bin #<1>
 touch netbeans #<2>
-echo \"/Applications/NetBeans/Apache NetBeans 12.2.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\" --jdkhome \$JAVA_HOME \$\* \& > netbeans #<3>
+echo \"/Applications/NetBeans/Apache NetBeans 12.5.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\" --jdkhome \$JAVA_HOME \$\* \& > netbeans #<3>
 chmod +x netbeans #<4>
 ----
 <1> Change to the right directory
@@ -423,10 +423,10 @@ As you can see, when invoking it this way, you can inform Netbeans about which j
 Furthermore you can pass the project name as a parameter (defined by `$*``) so you don’t need to open the project manually anymore in NetBeans.
 Finally the `&` means that NetBeans runs as a background process without blocking your Terminal session, so your Terminal session is immediately available again.
 
-.icon:apple[fw] Open `myProject` in Netbeans using Java version 15
+.icon:apple[fw] Open `myProject` in Netbeans using Java version 17
 [source,sh]
 ----
-j15
+j17
 netbeans myProject
 ----
 

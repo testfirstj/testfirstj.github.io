@@ -741,7 +741,7 @@ sudo mv netbeans{,-12.5}</code></pre>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">cd /usr/local/bin <i class="conum" data-value="1"></i><b>(1)</b>
 touch netbeans <i class="conum" data-value="2"></i><b>(2)</b>
-echo \&quot;/Applications/NetBeans/Apache NetBeans 12.2.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\&quot; --jdkhome \$JAVA_HOME \$\* \&amp; &gt; netbeans <i class="conum" data-value="3"></i><b>(3)</b>
+echo \&quot;/Applications/NetBeans/Apache NetBeans 12.5.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\&quot; --jdkhome \$JAVA_HOME \$\* \&amp; &gt; netbeans <i class="conum" data-value="3"></i><b>(3)</b>
 chmod +x netbeans <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
@@ -771,9 +771,9 @@ Furthermore you can pass the project name as a parameter (defined by <code>$*`</
 Finally the <code>&amp;</code> means that NetBeans runs as a background process without blocking your Terminal session, so your Terminal session is immediately available again.</p>
 </div>
 <div class="listingblock">
-<div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Open <code>myProject</code> in Netbeans using Java version 15</div>
+<div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Open <code>myProject</code> in Netbeans using Java version 17</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">j15
+<pre class="CodeRay highlight"><code data-lang="sh">j17
 netbeans myProject</code></pre>
 </div>
 </div>
