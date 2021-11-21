@@ -65,7 +65,7 @@ The keywords specific to the module declaration are
 * [blue]#with# Used with provides to indicate which implementation(s) are available for the
   provided interface implementation. See the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html[Service Loader API].
 
-As a rule, the module [blue]#java.base# is 'required' by default, the same a [blue]#java.lang# is available or imported by default, considering packages to import.
+As a rule, the module [blue]#java.base# is 'required' by default, the same as [blue]#java.lang# is available or imported by default, considering packages to import.
 
 A few examples.
 
@@ -166,7 +166,7 @@ Java has always had the visibility modifiers [blue]#public#, [blue]#protected#, 
 This is still effective with the same rules _within_ a module. However the module boundaries add an extra line of visibility defense.
 A public element from module A is only visible to elements in module B if the public elements is part of an exported package.
 As far as reflection goes. An element in module A is accessible via reflection only if the package of the element is open (with the [blue]#opens# keyword)
-either globally or explicitly to module B ( e.g. `module A { exports aPackage to B;}`).
+either globally or explicitly to module B ( e.g. `module A { opens aPackage to B;}`).
 
 
 include::{topics}/java-module-testing.adoc[]
