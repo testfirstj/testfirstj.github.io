@@ -1,0 +1,189 @@
+:doctitle: Assessment Correction Rules.
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,d,d,d,h
+include::../adocresources/topmenu.adoc[]
+
+From February 2019 onwards, PRC2 is about complete realisation using a test driven
+approach.
+
+
+== Introduction
+
+The examiners are under time pressure to deliver the exam results, so that candidates can receive
+their grades  in time to make decisions for the planning of their studies in the days and weeks ahead.
+
+This has some consequences regarding the way we can and will correct the performance assessment (PA)
+solutions.
+
+Basic rules are:
+
+* The correction is fair and equal for all candidates
+* The candidates have been informed or were able to inform themselves in due time
+  to adapt the desired mode of working, both in the assessment and while doing offline
+  tasks like homework or other assignments.
+
+The rules are best observed by having a computer program suite to do the correcting.
+It is unbiased towards any candidate, always applies the same ruling to all tasks and
+these rules are easy to explain and can be implemented in said program suite. Any
+subsequent runs of said program due to correction of rules or program will again apply equally to
+all candidates.
+
+== Rules and Requirements of the exam correction suite
+
+The performance assessment will be corrected using a correction program suite.
+In the following text the term application code refers to the classes that make up the application logic of the class(es)
+that are under test. The test code is the code that tests the application code.
+
+=== Non functional requirements
+
+* The suite will use the same Java and Java  (javac) compiler version as is available during the PA.
+* The add-ons to the JVM in test and runtime context will be the same as those
+  available to the candidate during the assessment, such that the candidate can work
+  with these tools during off line assignments and home work but also during the PA.
+  In particular:
+
+** The compiler and compiler configuration settings
+** The test libraries, such as Mockito, AssertJ, Unit test framework ...
+** Coverage measurement tool such as JaCoCo
+** Code mutation such as the PIT test validation library to test the tests.
+
+The correction suite is further enhanced with scripts or auxiliary programs such that the
+correction can be done by means of a batch processing program. This may or may not involve the IDE
+but will use (a variant) of the build script, like an ant _build.xml_ or a maven  _pom.xml_.
+
+=== Functional requirements
+
+A *function point* is a application feature like a method or some other declaration as part of the assignment, and will be rewarded
+with a weighted grade with values *fail*, *test*, or *pass*. The weights are pre determined and will be available in the documentation to the exam.
+A function point that has candidate tests and is correct by the corrector's and the candidate's tests will be awarded the function point,
+under the condition that the candidate has created or completed the test relevant to the function point.
+
+When a function point is deemed to be reachable without a Unit test, such as it is a task that only involves convincing the compiler, than
+that fact will be indicated by a _provided_ unit test that will indicate this. This is indicated as "make the compiler happy test".
+
+The distribution and number of function points will be according to the Learning Goals or Objectives of this module.
+
+The PA tasks are derived from a working and tested solution with a code coverage near to or at 100% for
+the parts relevant to the tests. Coverage can be part of the grade assessment but only if it is relevant to the application.
+Typically when branches or loops are involved, that all branches have been tested.
+
+The *methods* in PA assignments will have prescribed method definition, including signature, return value and optional throws clause that must be available in both the application part and the test part of the start project.
+
+The candidate PA assignment has to produce both the tests and the application code, preferably in that order, typically
+by filling in the blanks.
+
+The corrector has and uses his own tests, using the same signatures as available in the start project. +
+He will have a correct reference implementation of the application, that is covered at or near 100% for the relevant parts of the test, so that
+it is verifiable that this quality measure can be reached. +
+The corrector will also use one or more broken versions of the application code, which are used to test the candidates test.
+
+In the following the letters A and B and some digits are used to indicate so called test modes.
+The letters and digits appear in pairs, like *AA*, *BA* etc. The first character indicates the location of the test, the second the location of
+the application code. A is always the reference solution of the project, either the test part or the application code part. B is the candidate's solution,
+for both test and application code.
+
+With this *AB* means using the reference tests to test the candidates application code; *BB* is running the candidate's tests on the candidate's application code.
+
+In the True Test process, the following steps will be taken:
+
+* *BA* test, the reference application code should pass all candidate tests (all [green,bold]*green*).
+* *BB* test, the candidate application code should pass all candidate tests (all [green,bold]*green*).
+* *B0* called trivially fail, it is the same as the initial application code
+   before the candidate did any coding in the application side. Should have lots of [red,bold]*red*.
+* *B1* implemented application but intentionally broken after certain well know error patterns, like missing a condition. Quite a bit of [red,bold]*red*.
+* *B2* implemented application but intentionally broken after certain well know error patterns, which are not compatible with error patterns in B0..B1
+  etc. The last bits of [red,bold]*red* not produced by the earlier broken versions.
+
+During the correction process the candidate source code will *NOT* be modified in any way.
+
+=== Correction process
+
+During the correction the following steps are preformed:
+
+. Compile the application code.
+. Compile the test code with the application code (SB) on the class path.
+. Run the *BB* tests and save the results as candidate-test results.
+. Run the *BB* code coverage tool and save as candidate-coverage.
+. Run the *AB* test, save the test results as corrector test results
+. Run the *BA* test, tests the acceptance of the reference application code by the candidate's tests.
+. evaluate the test reports and transform them into grades for grading process phase 1.
+. Evaluate the quality of the candidates test, rule *True Tests*
+.. run test B0 .
+.. run B1.
+.. run B2 etc.
+** the combination of the test results of AB ([green,bold]*green*) and B0 ... Bn should show a failing test for
+  each test signature *at least once* in any of these Bx test runs. +
+  In other words: each test should have shown its true colour, red, at least once in any of the *True Test* verification runs.
+  Of course the same tests must accept the reference application code with [green,bold]*green*.
+
+The results of these tests will be merged with the appropriate operators.
+
+=== Grading from the correction results
+
+. A coding error not accepted by the Java compiler will *take out* the *complete* class or test class.
+  A application class with a compilation error may take out both test and application class.
+  It may even take out the whole project. The exam correction suite will not (be able to) repair that.
+. A method in the application code *B* that has no tests in *B* will *not be graded* and will be rewarded an unconditional *fail*. +
+. A failing test (test is red, *B* application not implemented or broken) can be rewarded with with the mark *test* if the test passes the *True Test* test.
+. A application code that passes the reference tests *A* _and_ passes *True Test* and passes *BB* will be awarded *pass*.
+. candidate coverage on *BB* with a high coverage of B's application code will be rewarded a *bonus*. +
+  Bonuses will be added to the intermediate result, but the final grade will be clipped or topped at the mark required to get final grade 10.
+
+== Bottom line
+
+We expect the candidates to work carefully according to the TDD cycle as has been presented during lectures and
+made possible by the practical exercises and should have been applied in the parallel module project 2.
+
+This and the above text in it's final version will be part of the assessment documentation
+and will be available to the candidate at the time of the assessment, either
+in print or inside the assessment environment.
+
+[CAUTION,role="red"]
+====
+Work carefully. Do not leave any code that the compiler does not accept in your code or test code.
+What cannot be compiled cannot be graded. So at the least comment out anything not acceptable by the compiler so that it
+does not stumble on problems. Or rewrite the code so that the compiler does accept it.
+====
+
+=== Working test driven during PA
+
+
+The exam will have predefined test method signatures, because in the correction process they are needed as a reference.
+The traditional way for creating predefined tests is to have them `fail` with a message that the test method needs implementing or
+review. To avoid the fact that the candidate looses focus when seeing a lot of failing tests, the given tests will be tagged with the
+annotation `@Disabled`. The candidate should comment or remove this annotation from the test method when he or she starts working on that particular test method.
+In this way he or she can incrementally build up tests and application code, as test driven is meant. Below you see an example of a test method
+that has to be coded by the candidate, but awaits enabling by commenting the `@Disabled` annotation.
+
+
+.sample initial test method
+[source,java]
+----
+    // TODO assert that x conforms the specification.
+    @Disabled("Think TDD")
+    @Test
+    public void someTestMethod(){
+
+      // you code here
+
+
+      Assert.fail("method someTestMethod reached end. You know what to do.");
+    }
+
+----
+
+[NOTE]
+====
+Note that _just_ enabling the test and have it unconditionally fail will give the candidate
+[red,bold]*NO* points for that test nor points for the application code,
+because that application code will not pass the candidate's broken test.
+Leaving the `@Disabled` annotation on has the same effect: for the correction suite there is no test, hence no points.
+Both options effectively take out the chance of the application code to be worth any points.
+====
+
+'''
+
+[CAUTION,role="red"]
+====
+The bottom of the bottom line is here: Not testing will make the candidate fail all learning goals defined for the performance assessment.
+====

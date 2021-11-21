@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>TIPS through the weeks</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>TIPS through the weeks</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_java_style">1. Java Style</a>
+<ul class="sectlevel2">
+<li><a href="#_where_have_you_put_your_curly_braces">1.1. Where have you put your Curly Braces.</a></li>
+<li><a href="#_javadoc_style">1.2. Javadoc style</a>
+<ul class="sectlevel3">
+<li><a href="#_class_javadoc">1.2.1. Class javadoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_adding_your_own_code_templates_to_netbeans_ide">2. Adding your own code templates to NetBeans IDE</a></li>
+<li><a href="#_test_easy_pom_3_0_3">3. Test Easy Pom 3.0.3</a>
+<ul class="sectlevel2">
+<li><a href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></li>
+<li><a href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></li>
+<li><a href="#_upgrade_all_projects_with_one_command">3.3. Upgrade all projects with one command</a></li>
+<li><a href="#_maven_on_steroids_or_use_it_properly">3.4. Maven on Steroids or: use it properly</a>
+<ul class="sectlevel3">
+<li><a href="#_maven_the_proper_way_when_still_in_the_tdd_phase">3.4.1. Maven the proper way, when still in the TDD phase</a></li>
+</ul>
+</li>
+<li><a href="#_maven_modules">3.5. Maven Modules</a>
+<ul class="sectlevel3">
+<li><a href="#_module">3.5.1. Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_flex_your_java_muscles">4. Flex Your Java Muscles</a>
+<ul class="sectlevel2">
+<li><a href="#_concepts_used">4.1. Concepts used</a></li>
+<li><a href="#_setting_in_startup_script">4.2. Setting in startup script</a></li>
+<li><a href="#_switching_to_other_java_version">4.3. Switching to other Java version</a></li>
+<li><a href="#_all_made_simple_with_aliases">4.4. All made simple with aliases</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_style"><a class="anchor" href="#_java_style"></a><a class="link" href="#_java_style">1. Java Style</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Java is a language (sort of anyway) and languages come with a culture.
+One such cultural aspect is the way you format your code, like placing your brackets, parenthesis, spaces and curly braces.
+This coding style is intended to help you read the code, recognize the structure at a glance and find the interesting details easily and spot on.</p>
+</div>
+<div class="paragraph">
+<p>The official Java style is derived from the Kernighan and Ritchie (K&amp;R) style for the <strong>C</strong> programming language. Since syntactically Java inherits quite a lot from C, that would be logical choice.</p>
+</div>
+<div class="paragraph">
+<p>The current and preferred way of using this java style is best described in the <a href="https://google.github.io/styleguide/javaguide.html">Google Java Style Guide</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_where_have_you_put_your_curly_braces"><a class="anchor" href="#_where_have_you_put_your_curly_braces"></a><a class="link" href="#_where_have_you_put_your_curly_braces">1.1. Where have you put your Curly Braces.</a></h3>
+<div class="paragraph">
+<p>Most holy wars are fought over the placement of the curlies '{}', and in some cases other brackets <code>[]</code> or parenthesis <code>()</code> and <code>&lt;&gt;</code> too.
+In particular: Put them at the beginning of the line or at the end. The Java Style Guide is quite clear about that: <a href="https://google.github.io/styleguide/javaguide.html#s4.1-braces">Braces</a>.</p>
+</div>
+<div class="paragraph">
+<p>My personal motivation would be: If your understand that C and Java are block oriented languages, then you immediately will understand that placing a brace at the beginning of a line
+can only mean that you start a new block. This allows you to define a local scope. This is what you already know from for loops. Well the loop need not be there to allow yourselves to have some very local variables, like in the example below.</p>
+</div>
+<div class="paragraph">
+<p>If you understand this block aspect of the K&amp;R style, you know that you do not have to search for the name of a method, a class start or anything else. The block is just a block with local scope. It helps readability, because you can define
+your local variables at the place your need them and confine them there, without having the locals interfere with anything else in the method or class.</p>
+</div>
+<div class="listingblock">
+<div class="title">example of block with scoped local variable</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java">        {
+            <span class="type">int</span> i=<span class="integer">0</span>;
+            <span class="comment">// do something with i</span>
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This often overlooked feature can help big time to help improve the readability
+of your code, in particular when the method is getting big. But since having big methods is a bit of a no go area in a modern programming
+style.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>, your rarely see it in practice.</p>
+</div>
+<div class="paragraph">
+<p>In Java there is also another reason. You can have blocks at the class level, which allow you to define some kind of anonymous constructor. Remember Anonymous Inner Classes? Well, sometimes
+you want to have a constructor, just to initialise things. Here is an examples from the Java FX binding chapter.</p>
+</div>
+<div class="listingblock">
+<div class="title">initialize a binding in an 'Anonymous' constructor, lines 10..12, which is a block with no name&#8230;&#8203;</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td>
+  <td class="code"><pre>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+
+        <span class="directive">final</span> DoubleProperty a = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">1</span> );
+        <span class="directive">final</span> DoubleProperty b = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">2</span> );
+        <span class="directive">final</span> DoubleProperty c = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">3</span> );
+        <span class="directive">final</span> DoubleProperty d = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">4</span> );
+
+        DoubleBinding db = <span class="keyword">new</span> DoubleBinding() {
+
+            { <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="local-variable">super</span>.bind( a, b, c, d );
+            } <i class="conum" data-value="2"></i><b>(2)</b>
+
+            <span class="annotation">@Override</span>
+            <span class="directive">protected</span> <span class="type">double</span> computeValue() {
+                <span class="keyword">return</span> ( a.get() * b.get() ) + ( c.get() * d.get() );
+            }
+        };
+
+        <span class="predefined-type">System</span>.out.println( db.get() );
+        b.set( <span class="integer">3</span> );
+        <span class="predefined-type">System</span>.err.println( db.get() );
+    }</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start of anonymous block in line 10.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>End of anonymous block in line 12.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>So whenever you find a closing bracket, you only have to look up in the same column to find what it belongs to. If you find the start of a method, then that&#8217;s what its is, if you find
+an opening bracket, stop looking, you have found its meaning, a block.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javadoc_style"><a class="anchor" href="#_javadoc_style"></a><a class="link" href="#_javadoc_style">1.2. Javadoc style</a></h3>
+<div class="paragraph">
+<p>See <a href="https://google.github.io/styleguide/javaguide.html#s7-javadoc">Javadoc style guide</a> and
+<a href="https://www.oracle.com/technetwork/java/javase/documentation/index-137868.html">How to write doc comments</a>.</p>
+</div>
+<div class="paragraph">
+<p>Not only does Java code have a proper style, the same applies to java-doc.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Public means documented, as in proper javadoc.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Everything that is marked public is part of the public API and must be documented.</p>
+</li>
+<li>
+<p><code>protected</code> and <code>public</code> are alike here. They provide access to members from classes
+outside the package and must be documented.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Because all <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> members
+in an interface default to public you need to document them too.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can skip on documentation if
+* The member is not public or protected
+* For methods: it overwrites a method in a (documented) interface or super class.</p>
+</div>
+<div class="paragraph">
+<p>Javadoc starts with <code>/<strong>*</code> and ends with <code></strong>/</code></p>
+</div>
+<div class="sect3">
+<h4 id="_class_javadoc"><a class="anchor" href="#_class_javadoc"></a><a class="link" href="#_class_javadoc">1.2.1. Class javadoc</a></h4>
+<div class="paragraph">
+<p>A (public|protected) class or interface needs javadoc at its class definition, just before <code>class</code> or <code>interface</code>.
+A required tag is <code>@author</code>, and you are allowed to have that multiple times in a class, in particular if
+multiple authors contributed substantially. See the the jdk libraries for examples.</p>
+</div>
+<div class="listingblock">
+<div class="title">Excerpt from the String javadoc.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">&lt;p&gt;A {<span class="annotation">@code</span> <span class="predefined-type">String</span>} represents a string in the UTF-<span class="integer">16</span> format
+ * in which &lt;em&gt;supplementary characters&lt;/em&gt; are represented by &lt;em&gt;surrogate
+ * pairs&lt;/em&gt; (see the section &lt;a href=<span class="string"><span class="delimiter">&quot;</span><span class="content">Character.html#unicode</span><span class="delimiter">&quot;</span></span>&gt;Unicode
+ * <span class="predefined-type">Character</span> Representations&lt;/a&gt; in the {<span class="annotation">@code</span> <span class="predefined-type">Character</span>} <span class="type">class</span> <span class="class">for</span>
+ * more information).
+ * Index values refer to {<span class="annotation">@code</span> <span class="type">char</span>} code units, so a supplementary
+ * character uses two positions in a {<span class="annotation">@code</span> <span class="predefined-type">String</span>}.
+ * &lt;p&gt;The {<span class="annotation">@code</span> <span class="predefined-type">String</span>} <span class="type">class</span> <span class="class">provides</span> methods <span class="keyword">for</span> dealing with
+ * Unicode code points (i.e., characters), in addition to those <span class="keyword">for</span>
+ * dealing with Unicode code units (i.e., {<span class="annotation">@code</span> <span class="type">char</span>} values).
+ *
+ * <span class="annotation">@author</span>  Lee Boynton
+ * <span class="annotation">@author</span>  Arthur van Hoff
+ * <span class="annotation">@author</span>  Martin Buchholz
+ * <span class="annotation">@author</span>  Ulf Zibis
+ * <span class="annotation">@see</span>     java.lang.Object<span class="error">#</span>toString()
+ * <span class="annotation">@see</span>     java.lang.StringBuffer
+ * <span class="annotation">@see</span>     java.lang.StringBuilder
+ * <span class="annotation">@see</span>     java.nio.charset.Charset
+ * <span class="annotation">@since</span>   JDK1<span class="float">.0</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As a minimum for class javadoc, have one short sentence describing the purpose of the class.
+End that line with a period., followed by the author tag. It is considered bad style to leave
+out author or make substantial changes to a file without adding the author of those changes.</p>
+</div>
+<div class="listingblock">
+<div class="title">Class java doc</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
+ * Friendly and well known program.
+ *
+ * @author John Doe
+ * @author Jane Doe
+ */</span>
+ <span class="directive">public</span> <span class="type">class</span> <span class="class">HelloWorld</span> {
+   <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span>... args){
+     <span class="comment">/// wot goes here should be obvious.</span>
+   }
+
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In particular in a project like PRJ2, you should have multiple authors if that best describes how a program came about.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can configure your IDE to insert the proper author info. In NetBeans IDE go to templates, settings, and
+uncomment the <code>user</code> property and make it have the proper information. This is particularly important if
+your user name on your machine is <code>pattatje</code> or some other obscure name that the teachers might not know.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Do Not skimp on Javadoc style. It is just as wrong as writing  "Alice and Bob <strong class="role="red"">goes</strong> to town".</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_your_own_code_templates_to_netbeans_ide"><a class="anchor" href="#_adding_your_own_code_templates_to_netbeans_ide"></a><a class="link" href="#_adding_your_own_code_templates_to_netbeans_ide">2. Adding your own code templates to NetBeans IDE</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Productivity can be helped big time, if you add code templates
+to NetBeans. Quite a few are predefined but you can add your own too.</p>
+</div>
+<div class="paragraph">
+<p>Go to Tools &gt; Options &gt; Editor &gt; Code Templates.</p>
+</div>
+<div class="paragraph">
+<p>You get this dialog:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/codetemplatedialog.png" alt="codetemplatedialog">
+</div>
+</div>
+<div class="paragraph">
+<p>You can add one with the new button, Duh.</p>
+</div>
+<div class="paragraph">
+<p>I find this one quite convenient:</p>
+</div>
+<div class="listingblock">
+<div class="title">Definition of my codetemplate <strong>jutm</strong></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//@Disabled(&quot;think TDD&quot;)</span>
+<span class="error">@</span><span class="error">$</span>{baseType type=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter.api.Test</span><span class="delimiter">&quot;</span></span> <span class="keyword">default</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Test</span><span class="delimiter">&quot;</span></span> editable=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span>}
+<span class="directive">public</span> <span class="type">void</span> <span class="error">$</span>{method}(){
+    fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">method ${method} reached end. You know what to do.</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>As of January 2020 <code>jutm</code> is junit 5 specific.</p>
+</li>
+<li>
+<p>Note that <code>@Disabled</code> is a tag that is only used when writing all test bodies beforehand.</p>
+</li>
+<li>
+<p>Once you start writing the test, you should remove or comment (best) the <code>@Disabled</code> to make the test effective.</p>
+</li>
+</ul>
+</div>
+<hr>
+<div class="videoblock">
+<div class="title">Adding Code templates</div>
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/1SUHFMvM39Y?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_easy_pom_3_0_3"><a class="anchor" href="#_test_easy_pom_3_0_3"></a><a class="link" href="#_test_easy_pom_3_0_3">3. Test Easy Pom 3.0.3</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spelled all lower  case: <code>testeasypom</code>, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
+dependencies needed. Niceties to do proper Test Driver Development are provided for in the testeasypom definitions, including things as being able to create
+javadoc in a professional looking way, including code highlighted code snippets, checkstyle, reporting, code coverage with maven, pmd, spotbugs  etc.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/sebivenlo/testeasypom">testeasypom is hosted on github</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>testeasypom declares no dependencies other than those for dynamic (e.g. JUnit, AssertJ etc) and static <strong>testing</strong> in the form of plugins and their configuration.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This way of using maven, having a <span class="blue">super</span> or parent pom defined globally (in a repository, not on a local path), is the <span class="big black">modern</span> usage.
+ It can be seen in well known big java projects such as <a href="https://spring.io/projects/spring-boot">Spring Boot</a> and <a href="https://quarkus.io/">quarkus</a>, and many other modern maven projects.</p>
+</div>
+<div class="admonitionblock tip green">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Note that we are using a <em>separately installed</em> maven (3.8.4 at the time of writing) which you can download from <a href="http://maven.apache.org/download.cgi">apache maven</a>,
+  not the one bundled with NetBeans or any other IDE. You can tell NetBeans (via tools&#8594; options &#8594;java&#8594;maven) to use the installed one instead of the bundled one.</p>
+</div>
+<div class="paragraph">
+<p><em class="big">Our tests will <span class="blue">always</span> use maven, not some IDE. There is no gnome inside the build server to move the mouse.</em></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="testeasypom-as-parent" class="listingblock">
+<div class="title">Setting testeasypom as parent.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="tag">&lt;/parent&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The parent pom does not live in a local directory near (relative to) the project, but instead in a repository. This makes a parent pom 'portable'.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>All of the starter projects we provide already use this parent in some version. To get those working, apply the settings show in the paragraph <a href="setup.html.html#_configuring_maven">Configuring Maven</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use testeasypom in your own project, either copy the parent definition into the pom file or start by replacing the NetBeans provided pom.xml file in your project by
+the basic one below. Add dependencies as required.</p>
+</div>
+<div id="basic-maven" class="listingblock">
+<div class="title">Basic pom.xml file setting testeasypom as parent.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+    <span class="tag">&lt;parent&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;realtivePath</span><span class="tag">/&gt;</span><i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="tag">&lt;/parent&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>basicsebimaven<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
+    <span class="comment">&lt;!-- The name in the IDE --&gt;</span>
+    <span class="tag">&lt;name&gt;</span>My App<span class="tag">&lt;/name&gt;</span>
+    <span class="tag">&lt;properties&gt;</span>
+        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+        <span class="tag">&lt;java.release&gt;</span>17<span class="tag">&lt;/java.release&gt;</span>
+        <span class="comment">&lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;</span>
+        <span class="tag">&lt;exec.mainClass&gt;</span>basicsebimaven.Hello<span class="tag">&lt;/exec.mainClass&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+    <span class="tag">&lt;dependencies&gt;</span>
+      <span class="comment">&lt;!--example  --&gt;</span>
+      <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>...<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>...<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>...<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;/dpendencies&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start of parent declaration.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Parent comes from some other repo, not local.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>End of parent declaration.</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_testeasypom_and_java_fx"><a class="anchor" href="#_testeasypom_and_java_fx"></a><a class="link" href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></h3>
+<div class="paragraph">
+<p>If you want to use semipom and build a JavaFX project, you need to activate the <strong>fx</strong>-profile.
+In the commandline that would be</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/mvn-withfx-profile.png" alt="mvn withfx profile">
+</div>
+<div class="title">Figure 1. Commandline. Real software engineers can use the command line.</div>
+</div>
+<div class="paragraph">
+<p>In netbeans you can do that by setting the configuration like in this picture:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/fx-profile-nb.png" alt="fx profile nb">
+</div>
+<div class="title">Figure 2. Activate a profile in netbeans</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_testeasypom_in_your_own_projects"><a class="anchor" href="#_using_the_testeasypom_in_your_own_projects"></a><a class="link" href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></h3>
+<div class="paragraph">
+<p>To use the test libraries and other goodies that will be used throughout our course,
+you should add the <code>testeasypom</code> as parent.</p>
+</div>
+<div class="paragraph">
+<p>Modify the pom.xml file in your project to include testeasypom as parent by adding
+these lines in the previous section <a href="#testeasypom-as-parent">Setting testeasypom as parent.</a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of 2021-09-08, testeasypom reached version 4.0.3. Not all projects may have this version number for
+the parent testeasypom. We improve as we go, sometimes because of tips we receive from our students, you for instance.
+Anyway, if the version is not at the newest, set it to the newest and rebuild.
+Revisit this part of the site to check the latest version number or look in the
+<a href="https://search.maven.org/search?q=g:io.github.sebivenlo" target="_blank" rel="noopener">maven central testeasypom </a>
+for the testeasypom version.<br>
+testeasypom 540.3 enables testing for modular projects but does not enforce modular projects.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The  source code of testeasypom lives at github in <a href="https://github.com/sebivenlo/testeasypom">sebivenlo/testeasypom</a>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_upgrade_all_projects_with_one_command"><a class="anchor" href="#_upgrade_all_projects_with_one_command"></a><a class="link" href="#_upgrade_all_projects_with_one_command">3.3. Upgrade all projects with one command</a></h3>
+<div class="paragraph">
+<p>Since testeasypom is a somewhat moving target, you may have to update the parent pom of the projects that depend on it. All PRC2 projects do.
+This oneliner will do that for all projects below the current directory. After navigating to the parent of all such projects, do this in the shell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">for i in $(find . -name pom.xml); do (cd $(dirname $i); mvn versions:update-parent  &amp; )   ; done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It works on any bash supporting machine, tested on ubuntu and should work on OS-X and under windows when using
+git-bash or the windows subsystem for Linux.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_maven_on_steroids_or_use_it_properly"><a class="anchor" href="#_maven_on_steroids_or_use_it_properly"></a><a class="link" href="#_maven_on_steroids_or_use_it_properly">3.4. Maven on Steroids or: use it properly</a></h3>
+<div class="paragraph">
+<p>Sometimes you think, maven is not your thing because it is slowing you down, certainly if you are trying to work your way through
+your code TDD style: Write test, run test red, implement code, run test green, be happy.</p>
+</div>
+<div class="paragraph">
+<p>But reconsider: Maven takes it&#8217;s job very serious, but since it is a computer program
+it is stubbornly stupid, so it might be that <em>you</em> are using it in the <strong>wrong</strong> way.</p>
+</div>
+<div class="paragraph">
+<p>Let me explain what maven does:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Maven uses build phases: <strong>initialize</strong>, <strong>compile</strong>, <strong>compile tests</strong>, <strong>run tests</strong>, <strong>package</strong> the application etc., when you build your application.
+It will check if all is in order, look if any updates are needed etc. This keeps maven busy and you waiting.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Packaging</strong> (which is what you do when you click <em>build</em> in the IDE) the application and<br>
+is only useful when your are really done: all  tests are complete and the code turns them a nice green.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>So do not <em>mvn build</em>, but instead <strong>mvn test</strong>, then maven will do the minimum required.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>So if you are in the habit of clicking build and then run your tests, you might want to change you habit.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>sebipom sets the default goal to test, so if you run mvn from the command line, you only need to type <code>mvn</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_maven_the_proper_way_when_still_in_the_tdd_phase"><a class="anchor" href="#_maven_the_proper_way_when_still_in_the_tdd_phase"></a><a class="link" href="#_maven_the_proper_way_when_still_in_the_tdd_phase">3.4.1. Maven the proper way, when still in the TDD phase</a></h4>
+<div class="paragraph">
+<p>As long as you are writing test and writing code, just do:</p>
+</div>
+<div class="paragraph">
+<p><code>mvn test</code>, or the equivalent in you IDE (click the test button, not the build button)<br>
+ or <code>mvn clean</code> and then <code>mvn test</code>. (click clean, click test).</p>
+</div>
+<div class="paragraph">
+<p>Only when you are done with all your tests, do</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>clean (mvn clean)</p>
+</li>
+<li>
+<p>build (mvn package  mvn -P fx package for fx projects)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>and then <strong>run</strong> your application.</p>
+</div>
+<div class="paragraph">
+<p>Then maven can do all of it&#8217;s serious work of assembling your application for deployment</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_maven_modules"><a class="anchor" href="#_maven_modules"></a><a class="link" href="#_maven_modules">3.5. Maven Modules</a></h3>
+<div class="paragraph">
+<p>Many projects will have more than just one component (jar or war file).
+Think of the parallel project project 2.</p>
+</div>
+<div class="paragraph">
+<p>It is a good idea to reflect this design in the way your structure you source code:
+Use multiple modules.</p>
+</div>
+<div class="sect3">
+<h4 id="_module"><a class="anchor" href="#_module"></a><a class="link" href="#_module">3.5.1. Module</a></h4>
+<div class="paragraph">
+<p>A module is just a maven project. Has a pom.xml  which defines the relation with
+other modules.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./topics/figures/mavenmodules.svg" alt="mavenmodules">
+</div>
+<div class="title">Figure 3. Modules and parent.</div>
+</div>
+<div class="paragraph">
+<p>As you see in the figure, the parent lists its children. The children may have
+inter-dependencies. Otherwise it is just plain maven.</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from a parent pom</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>parentpom<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>pom<span class="tag">&lt;/packaging&gt;</span>
+    <span class="tag">&lt;properties&gt;</span>
+      <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+    <span class="tag">&lt;modules&gt;</span>
+        <span class="tag">&lt;module&gt;</span>entities<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>db<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>app-logic<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>ui<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>restserver<span class="tag">&lt;/module&gt;</span>
+    <span class="tag">&lt;/modules&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As is usual between parents and children, there is an inheritance relationship.
+The children inherit setting and groupid, and version, if defined as a property.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not declare dependencies of the children in the parent pom, because that introduces a cycle
+in the dependencies: parent depends on child, which depends on parent, which depend &#8230;&#8203;. etc.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The parent pom can declare all external dependencies, that are shared between the children, such as the testing frameworks,
+any other external dependencies. The parent can declare its own parent, allowing it to inherit and pass on anything that
+inherits from such parent.</p>
+</div>
+<div class="paragraph">
+<p>The parent defines the packaging as <code>pom</code>, the children what ever is required, typically jar, war, or ear.</p>
+</div>
+<div class="listingblock">
+<div class="title">example pom for rest server.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span>
+  <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+  <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+
+    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>parentpom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+         <span class="comment">&lt;!-- parent directory .. as parent is natural but not mandatory --&gt;</span>
+        <span class="tag">&lt;relativePath&gt;</span>..<span class="tag">&lt;/relativePath&gt;</span>
+    <span class="tag">&lt;/parent&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>restserver<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>${version}<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+    <span class="tag">&lt;name&gt;</span>Rest server<span class="tag">&lt;/name&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Putting things in modules has the following advantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It promotes loose coupling.</p>
+</li>
+<li>
+<p>It can avoid the hen and egg problem: In a normal build, it wants all tests to pass, to be able
+to continue. For business code that is correct, but things like integration tests need a built war file, which cannot be built with failing tests.<br>
+Solution: Put the integration tests in a separate module of its own, which can be run at any time and will not slow you down or
+worse, disable testing or not having any tests.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flex_your_java_muscles"><a class="anchor" href="#_flex_your_java_muscles"></a><a class="link" href="#_flex_your_java_muscles">4. Flex Your Java Muscles</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No, it is not about heavy lifting. It is about reconfiguring your Java
+environment easily.
+It also assumes that you are in the habit of using the command line over the GUI.</p>
+</div>
+<div class="paragraph">
+<p>Sure, a GUI is 'user friendly' if you are willing to look for the things your want to use, and know where
+you need to look for it. But what about the computer listening to you for a change, instead of you having to scroll through its wealth of
+options and other stuff you may have installed.</p>
+</div>
+<div class="paragraph">
+<p>This is a <strong>POSIX</strong> hack, meaning that it applies to Linux and to Mac OS-X (with a little tweaking) alike.
+It may also apply to Windows when using git-bash, MINGW, Powershell or the 'Linux extensions for windows'. You mileage may vary though.</p>
+</div>
+<div class="sect2">
+<h3 id="_concepts_used"><a class="anchor" href="#_concepts_used"></a><a class="link" href="#_concepts_used">4.1. Concepts used</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>$PATH</code> The PATH environment variable that determines the way programs are found in the command line.<br>
+all commands that you can enter on the commandline are found using the <code>$PATH</code> variable.</p>
+</li>
+<li>
+<p><code>$JAVA_HOME</code> The environment variable that tells where your java installation lives. It is used by apache-ant (ant) and apache-maven (mvn) alike.</p>
+</li>
+<li>
+<p>You set these variables in your start-up script, like <code>.bashrc</code>.</p>
+</li>
+<li>
+<p>You use aliases to abbreviate your commands.</p>
+</li>
+<li>
+<p>You start the IDE from the command line. Always, so YOU are in control of where and how it&#8217;s started.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The whole operation involves three modifications:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the variables in your <code>~/.bashrc</code>.</p>
+</li>
+<li>
+<p>Add a helper script, called J, put it in a directory in your PATH. ${HOME}/bin is a good place, if that is on your path.</p>
+</li>
+<li>
+<p>Create aliases, to make typing the command simple, like <strong>j8</strong> to switch to Java 8 and <strong>j12</strong> to do the same for Java 12.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_in_startup_script"><a class="anchor" href="#_setting_in_startup_script"></a><a class="link" href="#_setting_in_startup_script">4.2. Setting in startup script</a></h3>
+<div class="listingblock">
+<div class="title">setting JAVA_HOME and PATH in ~/.bashrc</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">## DEFAULT IS JAVA 8 HERE
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switching_to_other_java_version"><a class="anchor" href="#_switching_to_other_java_version"></a><a class="link" href="#_switching_to_other_java_version">4.3. Switching to other Java version</a></h3>
+<div class="listingblock">
+<div class="title">updating  JAVA_HOME and PATH to switch java version.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
+
+## This script assumes that the JAVA_HOME environment variable is set
+##   and that the PATH contains ${JAVA_HOME}/bin
+## The java variant that is to be put in JAVA_HOME and PATH is determined
+##   by how what this script is called.
+## J8 for Java 8, J11 for Java 11 and J12 for Java 12. It could easily be
+##   extended to include Java 9 and 10 too, buy at the time of writing I see
+##   little point because 12 is the current open JDK and 11 the LTS version.
+##   J8 is in because it is the default for many still.
+##
+## You typically have (sym) links pointing to this script, so it appears
+##   to have different names, changing its meaning.
+##
+## Usage: eval $(scriptname) e.g. eval $(J12)
+## By using  bash aliases, such as alias j8='eval $(J8)' the use of
+##   this script will become a feast.
+
+
+## get this script name
+thisname=$(basename $0)
+## get the current path setting
+OPATH=${PATH}
+
+## Let my name do the choosing
+case ${thisname} in
+    J8)
+        NJAVA_HOME=/usr/lib/jvm/java-8-oracle;;
+    J11)
+        NJAVA_HOME=/usr/lib/jvm/jdk-11.0.2;;
+    J12)
+        NJAVA_HOME=/usr/lib/jvm/jdk-12;;
+    *)
+        echo call me as 'eval $(J8)', 'eval $(J11)' or 'eval $(J12)'
+        exit 1
+        ;;
+esac
+
+## edit path to use the new java_home
+p=$(echo ${OPATH} | sed -e &quot;s@${JAVA_HOME}/bin@${NJAVA_HOME}/bin@&quot;)
+
+##
+echo export JAVA_HOME=${NJAVA_HOME}
+echo export PATH=${p}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_all_made_simple_with_aliases"><a class="anchor" href="#_all_made_simple_with_aliases"></a><a class="link" href="#_all_made_simple_with_aliases">4.4. All made simple with aliases</a></h3>
+<div class="paragraph">
+<p>You can tie this all together with some <a href="https://www.tldp.org/LDP/abs/html/aliases.html">aliases</a> which classically are stored
+in a file called <code>${HOME}/.bash_aliases</code> and are loaded on login and each time you open a terminal.</p>
+</div>
+<div class="listingblock">
+<div class="title">using aliases to switch with simple command. Excerpt from my .bash_aliases file.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">alias j12='eval $(J12)'
+alias j11='eval $(J11)'
+alias j8='eval $(J8)'</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/j8j11-terminal.png" alt="j8j11 terminal">
+</div>
+<div class="title">Figure 4. see it all work</div>
+</div>
+<div class="paragraph">
+<p>As you will notice, switching Java versions in this way is <em>very fast</em>.</p>
+</div>
+<hr>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. if your method gets big, you should break it up in smaller parts, like private methods
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. In java 11 you can have private static methods in interfaces
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 11:51:29 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

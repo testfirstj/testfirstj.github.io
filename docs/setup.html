@@ -69,15 +69,14 @@
 </li>
 </ul>
 </li>
-<li><a href="#_configuring_maven">3. Configuring Maven</a></li>
-<li><a href="#_sebipom_3_0_3">4. Sebipom 3.0.3</a>
+<li><a href="#_test_easy_pom_3_0_3">3. Test Easy Pom 3.0.3</a>
 <ul class="sectlevel2">
-<li><a href="#_sebipom_and_java_fx">4.1. Sebipom and Java FX</a></li>
-<li><a href="#_using_the_sebipom_in_your_own_projects">4.2. Using the SeBiPom in your own projects</a></li>
-<li><a href="#_upgrade_all_projects_with_one_command">4.3. Upgrade all projects with one command</a></li>
+<li><a href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></li>
+<li><a href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></li>
+<li><a href="#_upgrade_all_projects_with_one_command">3.3. Upgrade all projects with one command</a></li>
 </ul>
 </li>
-<li><a href="#_additional_pointers">5. Additional Pointers</a></li>
+<li><a href="#_additional_pointers">4. Additional Pointers</a></li>
 </ul>
 </div>
 </div>
@@ -889,107 +888,26 @@ The easiest way to do this is using HomeBrew:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuring_maven"><a class="anchor" href="#_configuring_maven"></a><a class="link" href="#_configuring_maven">3. Configuring Maven</a></h2>
+<h2 id="_test_easy_pom_3_0_3"><a class="anchor" href="#_test_easy_pom_3_0_3"></a><a class="link" href="#_test_easy_pom_3_0_3">3. Test Easy Pom 3.0.3</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Maven and maven projects are first class citizens in the NetBeans world.</p>
-</div>
-<div class="paragraph">
-<p>Since we build with maven, we are not really bound to particular IDE,
-other than for editing and maybe the odd debug session.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>.
-This means that you can use other IDE&#8217;s, but expect no help from the teachers.</p>
-</div>
-<div class="paragraph">
-<p>We have many things to share with you, and we use maven for that.</p>
-</div>
-<div class="paragraph">
-<p>We share libraries and project configuration files (pom.xml) with our students. To make them
-work as intended, you will need to configure the maven <code>settings.xml</code> only once. Since this is a maven setting, your IDE should
-pick these settings up as well. Certainly NetBeans IDE will.</p>
-</div>
-<div class="paragraph">
-<p>Start NetBeans IDE and create a Java project with New Project ▷ Java with Maven ▷ Java Application.</p>
-</div>
-<div class="paragraph">
-<p>In the project, right click on Project Files and choose <strong>create settings.xml</strong>.
-Add the Fontys Venlo repository to the settings, which is best done by replacing the xml in the settings
-file with</p>
-</div>
-<div class="listingblock">
-<div class="title">settings.xml which adds <a href="https://www.fontysvenlo.org/repository" class="bare">https://www.fontysvenlo.org/repository</a> as repository</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="tag">&lt;settings</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/SETTINGS/1.0.0</span><span class="delimiter">&quot;</span></span>
-          <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
-          <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;profiles&gt;</span>
-        <span class="tag">&lt;profile&gt;</span>                    <i class="conum" data-value="1"></i><b>(1)</b>
-            <span class="tag">&lt;id&gt;</span>sebivenlo<span class="tag">&lt;/id&gt;</span>
-            <span class="tag">&lt;repositories&gt;</span>
-                <span class="tag">&lt;repository&gt;</span>
-                    <span class="tag">&lt;id&gt;</span>fontysvenlo.org<span class="tag">&lt;/id&gt;</span>   <i class="conum" data-value="2"></i><b>(2)</b>
-                    <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository<span class="tag">&lt;/url&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
-                <span class="tag">&lt;/repository&gt;</span>
-            <span class="tag">&lt;/repositories&gt;</span>
-        <span class="tag">&lt;/profile&gt;</span>
-    <span class="tag">&lt;/profiles&gt;</span>
-    <span class="tag">&lt;activeProfiles&gt;</span>
-        <span class="tag">&lt;activeProfile&gt;</span>sebivenlo<span class="tag">&lt;/activeProfile&gt;</span>  <i class="conum" data-value="4"></i><b>(4)</b>
-    <span class="tag">&lt;/activeProfiles&gt;</span>
-    <span class="tag">&lt;offline&gt;</span>false<span class="tag">&lt;/offline&gt;</span>
-<span class="tag">&lt;/settings&gt;</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>You define a profile inside the profiles section of your settings.xml.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Give the profile a name.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Specify the URL.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Use the given name to make it an active profile by default.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The <a href="topics/settings.xml.txt">raw settings file</a>.</p>
-</div>
-<div class="paragraph">
-<p>Note that the project provided through the PRC2 personal repository will <strong class="role:red">NOT</strong> work without
-the settings file above. From February 2020 will use sebipom version 2.3.0 or above.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sebipom_3_0_3"><a class="anchor" href="#_sebipom_3_0_3"></a><a class="link" href="#_sebipom_3_0_3">4. Sebipom 3.0.3</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Spelled all lower  case: <code>sebipom</code>, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
-dependencies needed. Niceties to do proper Test Driver Development are provided for in the sebipom definitions, including things as being able to create
+<p>Spelled all lower  case: <code>testeasypom</code>, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
+dependencies needed. Niceties to do proper Test Driver Development are provided for in the testeasypom definitions, including things as being able to create
 javadoc in a professional looking way, including code highlighted code snippets, checkstyle, reporting, code coverage with maven, pmd, spotbugs  etc.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/sebivenlo/sebipom">Sebipom is hosted on github</a>.</p>
+<p><a href="https://github.com/sebivenlo/testeasypom">testeasypom is hosted on github</a>.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>sebipom declares no dependencies other than those for dynamic (e.g. JUnit, AssertJ etc) and static <strong>testing</strong> in the form of plugins and their configuration.</p>
+<p>testeasypom declares no dependencies other than those for dynamic (e.g. JUnit, AssertJ etc) and static <strong>testing</strong> in the form of plugins and their configuration.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>This way of using maven, having a <span class="blue">super</span> or parent pom defined globally (in a repository, not on a local path), is the <span class="big black">modern</span> usage.
- It can be seen in well known big java projects such as <a href="https://spring.io/projects/spring-boot">Spring Boot</a> and <a href="https://quarkus.io/">quarkus</a>, to name two contenders in the java-web technology world.</p>
+ It can be seen in well known big java projects such as <a href="https://spring.io/projects/spring-boot">Spring Boot</a> and <a href="https://quarkus.io/">quarkus</a>, and many other modern maven projects.</p>
 </div>
 <div class="admonitionblock tip green">
 <table>
@@ -999,7 +917,7 @@ javadoc in a professional looking way, including code highlighted code snippets,
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Note that we are using a <em>separately installed</em> maven (3.6.3 at the time of writing) which you can download from <a href="http://maven.apache.org/download.cgi">apache maven</a>,
+<p>Note that we are using a <em>separately installed</em> maven (3.8.4 at the time of writing) which you can download from <a href="http://maven.apache.org/download.cgi">apache maven</a>,
   not the one bundled with NetBeans or any other IDE. You can tell NetBeans (via tools&#8594; options &#8594;java&#8594;maven) to use the installed one instead of the bundled one.</p>
 </div>
 <div class="paragraph">
@@ -1009,13 +927,13 @@ javadoc in a professional looking way, including code highlighted code snippets,
 </tr>
 </table>
 </div>
-<div id="sebipom-as-parent" class="listingblock">
-<div class="title">Setting sebipom as parent.</div>
+<div id="testeasypom-as-parent" class="listingblock">
+<div class="title">Setting testeasypom as parent.</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
-      <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-      <span class="tag">&lt;artifactId&gt;</span>sebipom<span class="tag">&lt;/artifactId&gt;</span>
-      <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
       <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="tag">&lt;/parent&gt;</span></code></pre>
 </div>
@@ -1029,22 +947,22 @@ javadoc in a professional looking way, including code highlighted code snippets,
 </table>
 </div>
 <div class="paragraph">
-<p>All of the starter projects we provide already use this parent in some version. To get those working, apply the settings show in the paragraph <a href="#_configuring_maven">Configuring Maven</a>.</p>
+<p>All of the starter projects we provide already use this parent in some version. To get those working, apply the settings show in the paragraph <a href="setup.html.html#_configuring_maven">Configuring Maven</a>.</p>
 </div>
 <div class="paragraph">
-<p>If you want to use sebipom in your own project, either copy the parent definition into the pom file or start by replacing the NetBeans provided pom.xml file in your project by
+<p>If you want to use testeasypom in your own project, either copy the parent definition into the pom file or start by replacing the NetBeans provided pom.xml file in your project by
 the basic one below. Add dependencies as required.</p>
 </div>
 <div id="basic-maven" class="listingblock">
-<div class="title">Basic pom.xml file setting sebipom as parent.</div>
+<div class="title">Basic pom.xml file setting testeasypom as parent.</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
     <span class="tag">&lt;parent&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>sebipom<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;realtivePath</span><span class="tag">/&gt;</span><i class="conum" data-value="2"></i><b>(2)</b>
     <span class="tag">&lt;/parent&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
     <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
@@ -1055,7 +973,7 @@ the basic one below. Add dependencies as required.</p>
     <span class="tag">&lt;name&gt;</span>My App<span class="tag">&lt;/name&gt;</span>
     <span class="tag">&lt;properties&gt;</span>
         <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
-        <span class="tag">&lt;java.release&gt;</span>11<span class="tag">&lt;/java.release&gt;</span>
+        <span class="tag">&lt;java.release&gt;</span>17<span class="tag">&lt;/java.release&gt;</span>
         <span class="comment">&lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;</span>
         <span class="tag">&lt;exec.mainClass&gt;</span>basicsebimaven.Hello<span class="tag">&lt;/exec.mainClass&gt;</span>
     <span class="tag">&lt;/properties&gt;</span>
@@ -1087,7 +1005,7 @@ the basic one below. Add dependencies as required.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_sebipom_and_java_fx"><a class="anchor" href="#_sebipom_and_java_fx"></a><a class="link" href="#_sebipom_and_java_fx">4.1. Sebipom and Java FX</a></h3>
+<h3 id="_testeasypom_and_java_fx"><a class="anchor" href="#_testeasypom_and_java_fx"></a><a class="link" href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></h3>
 <div class="paragraph">
 <p>If you want to use semipom and build a JavaFX project, you need to activate the <strong>fx</strong>-profile.
 In the commandline that would be</p>
@@ -1109,14 +1027,14 @@ In the commandline that would be</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_the_sebipom_in_your_own_projects"><a class="anchor" href="#_using_the_sebipom_in_your_own_projects"></a><a class="link" href="#_using_the_sebipom_in_your_own_projects">4.2. Using the SeBiPom in your own projects</a></h3>
+<h3 id="_using_the_testeasypom_in_your_own_projects"><a class="anchor" href="#_using_the_testeasypom_in_your_own_projects"></a><a class="link" href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></h3>
 <div class="paragraph">
 <p>To use the test libraries and other goodies that will be used throughout our course,
-you should add the <code>sebipom</code> as parent.</p>
+you should add the <code>testeasypom</code> as parent.</p>
 </div>
 <div class="paragraph">
-<p>Modify the pom.xml file in your project to include sebipom as parent by adding
-these lines in the previous section <a href="#sebipom-as-parent">Setting sebipom as parent.</a>.</p>
+<p>Modify the pom.xml file in your project to include testeasypom as parent by adding
+these lines in the previous section <a href="#testeasypom-as-parent">Setting testeasypom as parent.</a>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1126,18 +1044,18 @@ these lines in the previous section <a href="#sebipom-as-parent">Setting sebipom
 </td>
 <td class="content">
 <div class="paragraph">
-<p>As of 2021-04-03, sebipom reached version 3.0.3. Not all projects may have this version number for
-the parent sebipom. We improve as we go, sometimes because of tips we receive from our students, you for instance.
+<p>As of 2021-09-08, testeasypom reached version 4.0.3. Not all projects may have this version number for
+the parent testeasypom. We improve as we go, sometimes because of tips we receive from our students, you for instance.
 Anyway, if the version is not at the newest, set it to the newest and rebuild.
 Revisit this part of the site to check the latest version number or look in the
-<a href="https://www.fontysvenlo.org/repository/nl/fontys/sebivenlo/sebipom/">fontysvenlo maven reposity</a>
-for the sebipom version.<br>
-Sebipom 3.0.3 enables testing for modular projects but does not enforce modular projects.</p>
+<a href="https://search.maven.org/search?q=g:io.github.sebivenlo" target="_blank" rel="noopener">maven central testeasypom </a>
+for the testeasypom version.<br>
+testeasypom 540.3 enables testing for modular projects but does not enforce modular projects.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The  source code of sebipom lives at github in <a href="https://github.com/sebivenlo/sebipom">sebivenlo/sebipom</a>.</p>
+<p>The  source code of testeasypom lives at github in <a href="https://github.com/sebivenlo/testeasypom">sebivenlo/testeasypom</a>.</p>
 </li>
 </ul>
 </div>
@@ -1147,9 +1065,9 @@ Sebipom 3.0.3 enables testing for modular projects but does not enforce modular 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_upgrade_all_projects_with_one_command"><a class="anchor" href="#_upgrade_all_projects_with_one_command"></a><a class="link" href="#_upgrade_all_projects_with_one_command">4.3. Upgrade all projects with one command</a></h3>
+<h3 id="_upgrade_all_projects_with_one_command"><a class="anchor" href="#_upgrade_all_projects_with_one_command"></a><a class="link" href="#_upgrade_all_projects_with_one_command">3.3. Upgrade all projects with one command</a></h3>
 <div class="paragraph">
-<p>Since sebipom is a somewhat moving target, you may have to update the parent pom of the projects that depend on it. All PRC2 projects do.
+<p>Since testeasypom is a somewhat moving target, you may have to update the parent pom of the projects that depend on it. All PRC2 projects do.
 This oneliner will do that for all projects below the current directory. After navigating to the parent of all such projects, do this in the shell:</p>
 </div>
 <div class="listingblock">
@@ -1165,7 +1083,7 @@ git-bash or the windows subsystem for Linux.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_additional_pointers"><a class="anchor" href="#_additional_pointers"></a><a class="link" href="#_additional_pointers">5. Additional Pointers</a></h2>
+<h2 id="_additional_pointers"><a class="anchor" href="#_additional_pointers"></a><a class="link" href="#_additional_pointers">4. Additional Pointers</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1175,12 +1093,6 @@ git-bash or the windows subsystem for Linux.</p>
 </ul>
 </div>
 </div>
-</div>
-</div>
-<div id="footnotes">
-<hr>
-<div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. Working test driven will typically not need those
 </div>
 </div>
 <div id="footer">

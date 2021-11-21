@@ -1,0 +1,20 @@
+:doctitle: TIPS through the weeks
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,d,d,h,d
+include::../adocresources/topmenu.adoc[]
+
+include::{topics}/javastyle.adoc[]
+
+include::{topics}/netbeansProductivity.adoc[]
+
+// include::{topics}/mavensettingsandrepo.adoc[]
+
+include::{topics}/testeasypom.adoc[]
+
+include::{topics}/mavenonsteroids.adoc[]
+
+include::{topics}/mavenmodules.adoc[]
+
+include::{topics}/flexjava.adoc[]
+
+'''
