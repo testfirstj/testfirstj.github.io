@@ -1,0 +1,71 @@
+:sectnums!:
+
+== Java FX Double-Bit Inspector
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Java inspecting doubles</summary>
+++++
+
+
+You will be making a tiny tool to
+inspect doubles at the bit level.
+
+The final UI will look like this, and is provided, because
+it would take much time to recreate, and the focus in this exercise is on bindings.
+
+.Final UI.
+image::doublebitsinspector.png[]
+
+*Double Bits, Bind along*
+
+In this assignment you will use the knowledge you acquired on how
+doubles are stored as bits and how to use binding and *JavaFX* to make a
+GUI that allows the user to fiddle with the bits.
+
+Our initial prototype is presented in figure<<_final_UI, Final UI>>.
+
+*Hints for the implementation*
+
+You should study the bindings once more. See the PRC2 website and the
+links over there. In this assignment, the 'Low-Level' binding is
+probably your friend, because you want to extract parts of the bit
+sequence and present it as an integer, in case you want to create a
+representation of the exponent  field of a double.
+
+If you think of bindings, think of JavaFX properties.
+
+You might also want to use *bidirectional* bindings, for instance between
+the `textProperty()` of your input field and the double
+bits' internal double or long value.
+
+Some bindings may have to be implemented by hand. If so, think of
+*change~ or invalidation listener* concept.
+
+* Double, huh?*
+
+In case you forgot, the IEEE 754  standard for floating point and
+double can be summarized as
+
+* A double uses 64 bits, 52 for the mantissa, 11 bits for the
+  (biased) exponent and 1 bit for the sign.
+* The bias in the exponent is 1023, so the value 1.0D has the bit
+  patterns (starting from the left) 2 zeros, then 10 ones and then 52
+  zeros.
+* The double value 0.0D has all bits equal to zero.
+* To get access to the double bits, you first need to get them as
+  a long (not with a cast but rather with the static method
+  `long Double.doubleToRawLongBits(double d)`). Fiddling with the
+  bits of a long is allowed.
+* There is also a reverse operation double
+  `Double.longBitsToDouble(long bits)`.
+* The exponent can be isolated with +
+  `int e = (int)((bits >> 52) & 0x7ffL);` +
+ see https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#longBitsToDouble-long-[longBitsToDouble]
+
+
+++++
+</details></div><!--end doublebitinspector.adoc  -->
+++++
+
+:sectnums:

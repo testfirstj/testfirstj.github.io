@@ -1,0 +1,92 @@
+:doctitle: W9 Statemachines and Regex
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,d,h,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+// We are going to develop a simple json parses using the pieces we created in the earlier weeks.
+
+include::{topics}/statemachines.adoc[]
+
+//  csv line parse (interprete the quotes) using mapper?.
+== Other uses of State Machines
+
+State machines or https://en.wikipedia.org/wiki/Automaton[Automaton]s are not only of interest
+in actual vending machines or toys, but also in many other problems in the computer science domain.
+One such application is that of regular expressions. Another is what compilers do when
+https://en.wikipedia.org/wiki/Lexical_analysis[Lexing] and https://en.wikipedia.org/wiki/Parsing[Parsing] the source code.
+
+include::{exercises}/templateengine.adoc[]
+
+== State machines and regular expressions
+
+You can find a lot on the relation between state machines and regular expressions.
+In most cases, including in Java, the regex is translated or compiled into a statemachine (just) before matches are attempted.
+
+A nice illustration is given by the
+https://regexper.com/[REGEXPER] website, that turns a regex into a railroad diagram. This make the understanding of a regular expression way easier.
+
+//http://ivanzuzak.info/noam/webapps/fsm_simulator/[Finite State Machine Simulator] by Ivan Zuzak.
+
+
+A simple regex : Dutch postal code: `"\d{4}\s[A-Z]{2}"`
+
+https://github.com/janissl/simple-java-regex-tester[Git hub for simple reges tester]
+
+.with diagram
+image::postcode-regex.svg[]
+
+The postcode railroad diagram reads as a digit followed by 3 more digits, a space, a letter and one more letter.
+
+
+.More complex example:
+[source,java]
+----
+// note that you can break off the regex in java and intersperse it with comments.
+String emailRegex="^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+"+ // quite some rubish before the at sign
+     "@"+ // the at sign followed by a more restricted set of chars,
+          //  with some lengths restrictions
+     "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?"+ // optional non capt grp
+     // any number of letter-number combos
+     "(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+----
+
+.Produces this 'railroad' diagram. which is equivalent to a state machine diagram.
+image::email-regex.svg[]
+
+Note that there is not one TRUE regex for email addresses. If you want to know the nitty-gritty details
+of valid email addresses look at RFC 8398 or RFC 5322, or ask in CSAR class.
+
+[WARNING]
+====
+Once you understand that regexes are state machine specifications, and that is is easy to create state machines
+that never 'terminate', you understand that regular expressions can also be dangerous.
+
+Accepting a regular expression
+from any source may cause a denial of service attack, because such expression may put your server into an endless loop.
+
+Advice: only accept a restricted set of regexes, maybe parse them before use. In particular avoid back tracking constructs.
+
+https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS[Regular expression Denial of Service - ReDoS]
+
+[big black]*So beware*.
+====
+
+include::{topics}/regex.adoc[]
+
+include::{exercises}/gradecapture.adoc[]
+
+:sectnums:
+
+== Reading
+
+* Regular expressions: Horstmann, Vol II Section 2.7
+
+:sectnums!:
+
+* regex tester at https://regex101.com[regex101]
+
+== Exercises in this part.
+
+* <<_exercise_olifantysballs, Olifantys Balls>>
+* <<_template_engine_text_processing_with_state_machines, Template Engine>>
+* <<_reading_grades_from_text_source, Grade Capture>>

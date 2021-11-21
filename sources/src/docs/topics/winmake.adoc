@@ -1,0 +1,10 @@
+= Installing Gnu Make on windows
+
+(Gnu) make is installed almost by default on a linux machine. Same for OSX.
+
+To get the same command line experience on windows, you will want to install http://gnuwin32.sourceforge.net/packages/make.htm[GNU Make for windows] and follow the instructions there, but read the tips below.
+
+Some tips during that install:
+
+* Keep you PATH variable short. To do that, choose to install your `winmake` in `c:\winmake` or something similar, *not* under ..._Program Files_.... +
+Then `c:\winmake\bin` can be added to the PATH environment variable, so you can invoke make in every directory.

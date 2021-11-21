@@ -1,0 +1,191 @@
+== Design for TDD Extension
+
+If you design an API for extension, it would be nice to make life of the [big]*TDD* developer of said extension a bit easier.
+That implies that you not only provide the interfaces, abstract classes, and other helper classes, but also the
+root classes for testing. To do that properly, you need to create a *separate project* that contains the test classes as _business_ code,
+so that the developer can include that project as test dependency. If you [big red]*don't*,
+the extension itself becomes [red]_dependent on the test frameworks you used_, such as JUnit5 and AssertJ, which is [big red]*bad*,
+ because maven would insist on providing it,
+ even in the production artifact, where you do need nor want them.
+
+To make it concrete, for the example in the exercise, also referring to the diagram:
+
+* Put/copy RangeTestBase in a separate project, named rangetest. Move it to the package rangetest.
+* Create a pom file that states the dependencies of RangeTestBase, make them 'provided'.
+* deploy rangetest as separate jar file/component.
+
+.Deployment diagram of Externalized Tests
+image::externalizedtests.svg[]
+
+The image:deployment.svg[role="icon", height="16px"] symbol is used to identify a component, or _deploy-able artifact_, one or more jar files in this case.
+
+[big]*It is important to note the arrows in the deployment diagram. They show the dependencies.
+Following the arrows you can see that the extension only depends (points to) Range and nothing else. Only the _extension tests_
+depend on rangetest and transitively on JUnit5 and AssertJ, which the developer might use anyway, because those are [blue]#cool#*.
+
+[TIP]
+The most important element in a class diagram are the arrows, either the has-A (uses,) or the is-A (extends or implements). +
+_As far as I am concerned a class diagram without arrows showing the dependencies is [red]*useless*._
+
+=== Extension test definition and usage.
+
+Teaching something means verifying that it works, or _practice what you preach_.
+First the dependecies in the pom.xml of the rangetest project.
+
+.pom file in rangetest library. Note that there is no parent pom. This is a choice.
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>rangestest</groupId>
+    <artifactId>rangetest</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>rangestest :: solution-base</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.release>11</maven.compiler.release>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-verbose</arg>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>nl.fontys.sebivenlo</groupId>
+            <artifactId>genericranges</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>[3.18.1,)</version> <!--1-->
+            <scope>provided</scope> <!--2-->
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>[5.7.0,)</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>      <dependencies>
+        <dependency>
+            <groupId>nl.fontys.sebivenlo</groupId>
+            <artifactId>genericranges</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>[3.18.1,)</version> <--1-->
+            <scope>provided</scope>  <--2-->
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>[5.7.0,)</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.7.0</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>[5.7.0,)</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+</project>
+----
+
+<1> Indeed, a range of acceptable versions. Minimum is 3.18.1 for AssertJ, the version that sembipom 3.0.0 uses.
+<2> When used, the jar should already be on the module-path or class-path, which is the case in tests.
+
+.dependencies in the rangeextension
+[source,xml]
+----
+    <dependencies>
+        <dependency>
+            <groupId>nl.fontys.sebivenlo</groupId>
+            <artifactId>genericranges</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>rangetest</groupId>
+            <artifactId>rangetest</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>test</scope> <!--1-->
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+----
+
+<1> Used in tests. The rest is like normal when using sebipom.
+
+In the RangeTestBase and RangeTestFactory I only had to give the methods to be overriden [blue]*protected* visibility instead of my usual _package private_.
+
+The module declaration of rangetest makes is wide [blue]*open*, because that is what the test frameworks need to do their work.
+
+.it is a modular project, ranges
+[source,java]
+----
+module ranges {
+    requires java.base;
+    exports nl.fontys.sebivenlo.ranges;
+}
+----
+
+.module info for rangeextension
+[source,java]
+----
+module rangeextension {
+    requires ranges;
+    exports rangeextension;
+}
+----
+
+.module info for rangetest
+[source,java]
+----
+open module rangetest { //<1>
+    requires ranges;  //<2>
+    requires org.assertj.core;
+    requires org.junit.jupiter.api;
+    requires org.apiguardian.api;
+    requires org.opentest4j;
+    requires org.junit.platform.commons;
+    requires org.junit.jupiter.params;
+}
+----
+
+<1> open to let JUnit and AssertJ use reflection in any way they like. It is meant as a white-box test anyway.
+<2> It needs ranges and for the rest the usual suspects when testing.
+
+include::{exercises}/genericranges3.adoc[]

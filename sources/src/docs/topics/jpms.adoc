@@ -1,0 +1,172 @@
+== Java Platform Module System.
+
+The Java Platform Module System has been introduced with Java 9 and had a long development history at
+the point of introduction. For the Java developers at Oracle and others involved in the OpenJDK project it
+was considered a necessary step to make Java fit for the future and make it possible to shed some old
+nasty problems. In the development of Java there have been only a few *major* release, although each release of
+Java introduces new features that are supposed to play nice with what is already available. This is called forward
+and backward compatibility, so old programs keep working but can be maintained by using new features.
+
+The important major releases were:
+
+* Java 1. Duh.
+* Java 1.2 introducing the collection framework.
+* Java 5 introduces Generics and the first version of the concurrency framework. It also changed the naming scheme. Internally it still is Java 1.5.
+* Java 8 introduced a functional style of programming using Functional interfaces and lambda expressions
+* Java 9 introduced the Java Platform Module System, and the project under which it came into being was called *JigSaw*. +
+  That last name points to the idea of taking the JDK and run-time library apart and recompose it using a better partitioning,
+ actually applying separation of concerns in a big way. The project has been a multi year undertaking.
+
+The changes provide the following advantages for the Java platform developers (from https://openjdk.java.net/projects/jigsaw[project jigsaw])
+
+* Make it easier for developers to construct and maintain libraries and large applications;
+* Improve the security and maintainability of Java SE Platform Implementations in general, and the JDK in particular;
+* Enable improved application performance; and
+* Enable the Java SE Platform, and the JDK, to scale down for use in small computing devices and dense cloud deployments.
+
+As always with Java, the intent is that the new Java release (9) should be able to work very much the same as the earlier versions, and it does, without
+problems. If you use the JVM and JDK in [blue]*classpath* mode, it works very much like older versions. You define the jar files you need for you app and off you go.
+
+Although the intent always has been to make the transition as smooth as possible, when you want to use the module system to the fullest,
+it has some consequences.
+
+* Not everything in the JDK can be used in the same way as before, more protection is taking place as are checks.
+* A module is *closed* by default and must explicitly export [blue]##package##s, if they are needed from outside the module.
+* The classes in a module can't be reflected on by default. If that is needed, the package must be made [blue]##open##ed for reflection.
+* At the moment of writing these restrictions can be modified with startup flags of the JVM. Later Java releases may change the default settings,
+from rather permissive in Java 9 to more restricted in later releases. As an example, some settings became more strict with
+Java 16 and https://openjdk.java.net/jeps/396[JEP 396 Strongly Encapsulate JDK Internals by Default].
+
+video::l1s7R85GF1A[youtube, title=Keynote session by Mark Reinhold 2015 introducing JigSaw,width=848, height=480]
+
+.Java SE module graph
+image::module-graph.png[]
+
+
+
+Having a modular project or a non-modular project depends on the presence of a small file with a well defined name in a specific place.
+
+The module-info.java file should reside in the root folder of the java sources (which makes the defaul package). The name of the file
+is not a valid java type name and that is on purpose. The resulting class file contains the module declarations
+which specifies what a module *needs* (_reads_ in JPMS terms) and what it provides (exports).
+
+The keywords specific to the module declaration are
+
+* [blue]#exports# What the module provides. Use with one package per line.
+* [blue]#module# starts the declaration
+* [blue]#open# if before the module, opens the whole module for reflection.
+  For instance for a module that defines all entities of a multi-module application.
+* [blue]#opens# allows reflection of a package. Use with one per package per line.
+* [blue]#provides# To indicate that a module implements some interface with one or more implementations.
+* [blue]#requires# Indicates what the module itself needs or *reads*. One package per line.
+* [blue]#transitive# Used with requires to indicate that there is a requirement that is then made readable to the users of this module as well.
+* [blue]#to# Used to restrict either exports or opens to specific other module(s).
+* [blue]#uses# To indicate that a module uses a service [blue]##provide##d by another module.
+* [blue]#with# Used with provides to indicate which implementation(s) are available for the
+  provided interface implementation. See the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html[Service Loader API].
+
+As a rule, the module [blue]#java.base# is 'required' by default, the same a [blue]#java.lang# is available or imported by default, considering packages to import.
+
+A few examples.
+
+.Generic Mapper
+[source,java]
+----
+module  nl.fontys.sebivenlo.genericmapper {
+    requires java.logging;
+    requires nl.fontys.sebivenlo.sebiannotations;
+    exports genericmapper;
+}
+----
+
+.Generic DAO
+[source,java]
+----
+module nl.fontys.sebivenlo.genericdao {
+    requires nl.fontys.sebivenlo.genericmapper;
+    requires java.logging;
+    requires java.sql;
+    requires java.naming;
+    requires org.postgresql.jdbc;
+    requires nl.fontys.sebivenlo.sebiannotations;
+    exports genericdao.dao;
+    exports genericdao.memory;
+    exports genericdao.pgdao;
+}
+----
+
+.FXTriangulate
+[source,java]
+----
+module fxtriangulate {
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires javafx.fxml;
+    requires java.base;
+    exports fxtriangulate ;
+    opens fxtriangulate to javafx.fxml;
+}
+----
+
+.The FXTriangulate client, Surveyor
+[source,java]
+----
+module surveyor {
+    requires java.logging;
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires javafx.fxml;
+    requires fxtriangulate;
+    exports surveyor;
+    opens surveyor to javafx.fxml;
+}
+----
+
+.ALDA sorting srevices
+[source,java]
+----
+module sortingserviceapi {
+    exports sortingservice; // <1>
+}
+// and
+open module asortingservice {
+    requires java.logging;
+    requires sortingserviceapi;
+    uses sortingservice.SortingServiceFactory; // <2>
+    provides sortingservice.SortingServiceFactory with asortingservice.SortingServices; // <3>
+}
+----
+
+<1> defines sortingservice.SortingServiceFactory in package sortingservice
+<2> uses and
+<3> provides Sorting Services presumably in tests.
+
+[WARNING,BIG]
+====
+JPMS explicitely forbids:
+
+* Split packages, that is using the same package name in different modules with different content.
+* Cyclic dependencies as in A requires B requires A.
+====
+
+The dependencies are validated at the startup of the JVM, when you start Java.
+If any of the requirements is not met, the JVM refuses to start. This has the benefit
+that it is immediately obvious what is missing, instead of having a runtime error, when a class can't be found, because
+the module has not been specified in the path, as is the case with the classpath mode.
+
+The split package has been a bit of an issue for testing, because in a modern project, (business) source and tests are separated into
+separate source trees, often with the same package structure, which looks a bit like split packages. The build tools (e.g. maven) understand
+this and can organise the files such that the JVM accepts it anyway.
+
+=== Changes in visibility
+
+Java has always had the visibility modifiers [blue]#public#, [blue]#protected#, [blue]#default#, and [blue]#private#, in descending order of access.
+This is still effective with the same rules _within_ a module. However the module boundaries add an extra line of visibility defense.
+A public element from module A is only visible to elements in module B if the public elements is part of an exported package.
+As far as reflection goes. An element in module A is accessible via reflection only if the package of the element is open (with the [blue]#opens# keyword)
+either globally or explicitly to module B ( e.g. `module A { exports aPackage to B;}`).
+
+
+include::{topics}/java-module-testing.adoc[]

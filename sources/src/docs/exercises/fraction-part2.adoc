@@ -1,0 +1,51 @@
+:sectnums!:
+
+=== Exercise Fraction part 2.
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 2, Operations</summary>
+++++
+
+Add the important operations to the Fraction class: times, plus, divideBy and minus.
+
+To multiply two fractions latexmath:[\frac{a}{b}] and latexmath:[\frac{c}{d}] consider the
+property  latexmath:[\frac{a}{b}\times\frac{c}{d} = \frac{a\times{}c}{b\times{}d}]
+Example:  latexmath:[\frac{1}{2}\times\frac{3}{4}=\frac{1\times{}3}{2\times{4}}=\frac{3}{8}].
+
+The methods below can all be tested with one ParameterizedTest and a lookup table, as explained
+in the previous paragraphs.
+
+Start by implementing the test, and add test data as in the example, but keep the
+test records commented out until you are about to implement the helper and operation methods.
+
+* *times helper* +
+  Implement the helper method `Fraction times( int otherN, int otherD )`
+  to multiply `this` fraction with numerator `otherN` and
+  denominator `otherD` of another fraction. The result is a new
+  `Fraction`-object. +
+** *times Fraction* Test and implement the method `Fraction times(Fraction other)`. Re-use (not copy) the helper function.
+
+* *Plus helper* Test and implement the helper method. It should produce a normalized fraction from the two int values.
+  `Fraction plus( int otherN, int otherD )`
+  to create a `new` fraction that is the sum of `this` fraction and `another` fraction with numerator otherN
+  and denominator otherD. The result is a new
+  `Fraction`-object. Formula:
+  latexmath:[\frac{a}{b}+\frac{c}{d} = \frac{a\times{d}+c\times{b}}{b\times{d}}]
+** *plus Fraction* now test and implement the method Fraction plus(Fraction other). Re-use the helper function.
+
+* *Minus, divideBy.*
+  Test and implement minus and divideBy operation.
+  You should re-use the work you did in times and plus, as in
+  invoke the provided helper methods by adapting the parameters, such
+  as changing sign or swapping them.
+* *Unary operators* such as change sign: `Fraction negate()` and `Fraction flip()` that puts it _upside down_.
+A more common name for flip would be *inverse*, however flip landed in the exercise.
+
+[big blue]*And that is 2/3 of the fraction exercise!*
+
+++++
+</details></div><!--end fraction-part2 -->
+++++
+
+:sectnums:

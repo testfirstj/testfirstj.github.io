@@ -1,0 +1,24 @@
+:doctitle: W10 Date/Time API and Internationalization
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,d,d,h,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+include::{topics}/datetimeapi.adoc[]
+
+include::{topics}/numberformats.adoc[]
+
+include::{topics}/localizedexceptions.adoc[]
+
+== Additional Pointers
+* If you haven't read the Horstmann book but you need an introduction into Internationalization,
+ read this tutorial from DZONE link:https://dzone.com/articles/a-beginners-guide-to-java-internationalization[here].
+ Make sure to read the bit about Resource Bundles, as you use them in the exercise for this week.
+* Jakob Jenkov also has a tutorial on http://tutorials.jenkov.com/java-internationalization/index.html[Java Internationalization ^]
+
+include::{exercises}/inthepubspanish.adoc[]
+
+:sectnums!:
+
+== Exercises in this part
+
+* <<_internationalization_i18n_of_a_pub, I18N Pub>>

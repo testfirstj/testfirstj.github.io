@@ -1,0 +1,16 @@
+*In the pub*
+
+For this exercise, you are expanding on the exercise from last week. Develop your own pub simulation,
+_taking possible exceptions_ into account. Declare your own exceptions and consider if they
+should be checked (the application/person/role knows how to deal with such exception) or unchecked. *Work test driven!*
+
+You’ll find the project template in your repository. Note that you not only have to throw exceptions, but must also TEST that they are thrown for the right reasons. When you open the project, the compiler will highlight some errors. Start with implementing the actual Exception classes, which are currently empty. Solve all compilation errors first and then start working test-driven.
+
+_These are the specifications for the *exceptions* of this exercise:_
+
+. The pub can run out of beer. If so, it should re-stock beer.
+. A beer drinker can be full and cannot consume any more beer.
+. Beer consumption is not allowed for people under the age of 18.
+
+Think about what these rules mean for your Pub Simulation. `Drinkers` will definitely need an `age`
+so that you can throw an exception when the age is not 18 or higher.

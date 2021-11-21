@@ -1,0 +1,23 @@
+== Code Coverage in NetBeans IDE
+
+=== What is Code Coverage?
+
+To see if your tests use all the code your write, you can add a plugin to netbeans
+that can show so called coverage data. Coverage is the percentage of lines and branches
+that is executed, shown in a report and in the IDE.
+
+In this case a red (red background) means the code was not executed.
+
+.coverage when testing only the lucky path
+image::workercoverage.png[]
+
+=== How to install a code coverage plugin in NetBeans
+
+The plugin is called TikiOne JaCoCoverage and can be installed form NetBean's default plugin repository. Read JaCoCoverage as Java Code Coverage.
+
+Use the NetBeans Plugin Dialog to add it to your own installation.
+
+.plugin dialog of installed TikiOne JacocCoverage plugin
+image::tikioneplugin.png[]
+
+A plugin like this will be available on the exam stick as well, so use to your advantage.

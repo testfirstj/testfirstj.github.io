@@ -1,0 +1,164 @@
+*TravelAgency*
+
+.A travel agency
+image::TravelAgency.png[]
+
+This assignment is about a travel agency. A travel agency typically books
+assets (something that can be booked and has a price per day, e.g a hotel room)
+for its customers for a certain period of time (called a DateRange). When a hotel
+room has a price per day of € 100,-, booking it for ten days would cost
+€ 1000,-.
+
+An additional aspect is that Asset prices are influenced by seasonality.
+The price per day is for example 60% of the regular price during LOW Season, 160%
+of the regular price during HIGH Season.
+
+The seasons in a year are defined as a map of DateRanges (Key) and belonging Season
+(Value). Each Season has a PriceLevel being `LOW(60% of regular price),` `REGULAR(100%)`,
+`WEEKEND(120%)` and `HIGH(160%)`.
+
+To be able to determine the total price of a Booking, we have to compare Date Ranges:
+the Date Range of the Booking itself (e.g. 26th of June till 10th of July) with defined Date Ranges
+of Seasons (e.g. 1st of June till 1st of July `REGULAR`, 1st of July till 1st of September
+`HIGH`).
+
+* In this example, booking an asset with a regular day price of 100,- euro would
+result in a total price of 5 days in June (5 * 100 * 0,6 = € 300,00 ) plus
+* 9 days in July (9 * 100 * 1,6 = € 1440,00) being € 1740,00.
+
+Comparing `LocalDateRanges` and count how many overlapping days they have is key in this application.
+
+Once an Asset is booked (reserved) for a customer, it is no longer available during
+the booked period for other bookings, not in the whole period nor in part.
+
+*Learning Goals*
+
+This is the final exercise in the Covid-19 ridden semester. It addresses
+the most important topics of this semester:
+
+* Interfaces
+* Lambda Expressions
+* Streams
+* Testable design
+* Maven configuration
+
+and one new topic:
+
+* Java Modules.
+
+The travel agency is about selling bookings in hotels. It can determine availability,
+compute prices of booking that span part of one or more regions and do the actual booking, claiming an
+Asset as being reserved for the customer. Once an Asset is booked, it is no longer available during
+the booked period for other bookings, not in the whole period nor in part.
+
+*Project structure*
+
+The project is both a modular maven project and java platform module system  (JPMS)
+modular project. The project has the following stucture.
+
+* Parent project called (in the IDE/NetBeans) `seasonsandrangesparent`
+* Three sub projects
+** `csvobjectstream`, which has the same content as the earlier exercise in week 5. It is used to read the Season information
+from a csv file.
+** `ranges` that defines LocalDataRanges and operations on ranges which are useful. Ranges is a utility library to do operations
+on different types of ranges, like finding the overlap. In our case, we'll use this as DateRange utility for described reasons.
+This library could also be used for other types of ranges like IntegerRanges.
+** `seasons`, which is the business logic of this application, in the sense as addressed in week 6. The business logic describes
+the business of the travel agency: check availability of assets, make bookings and calculate prices.
+
+The API doc of all three projects is pre-generated and link:../exercises/travelagency-apidocs/index.html[online].
+Same for the link:../exercises/travelagency-testapidocs/index.html[test-apidoc]
+
+*Your tasks will be*
+
+* Complete the java module definitions of the sub projects.
+* Complete some of the methods in the ranges sub project.
+* Complete some of the methods in the seasons sub project.
+
+Have a look at the 'Action Items' window in Netbeans to find your TODO's. Below, you'll find some further explanation of Ranges,
+operations on Ranges and our Java implementation. In the paragraph after that, <<seasons-doc>>, the seasons/travelagency design is further explained.
+
+include::{exercises}/genericranges.adoc[]
+
+[[seasons-doc]]
+*Seasons* +
+The Seasons sub-project make up the business code of the application.
+You could imagine its use and environment as in the following figure.
+
+image::seasonsbusiness.svg[title='Class diagram with Business code. Yellow is business code.']
+
+In the figure above, the yellow parts make the business code of Seasons,
+the other types are either depended-on-components (DOCs) or pre-existing library classes
+or other projects, such as `ranges` and some `DAO` project. Some less important details have been left out,
+and the DAO is just an example of how it could be used in real life.
+
+The Seasons module is about the pricing and booking assets in which prices depend on seasons of Seasons.
+
+// TODO describe seasons
+The Seasons package has a package `entities` which contains some less interesting entity classes,
+and the `bookings` package which defines the asset interface and the BookingSet and Bookings class.
+
+The `Bookings` class contains the main business logic. The important fields are the `seasonMap` and the `bookings`. +
+*seasonMap* maps time periods to season values. The season values determine the price levels and provide a method to compute the season price for a asset, based on the price per day of the asset.
+
+To look up the price for a day during a period, get the price per day of the asset, find the price level for that day (by finding the date range that contains the day) and use the the Season object to get the price level and use that
+`priceLevel enum` to do the computation per day.
+
+The season package differentiates prices by multiplying the regular
+price by some percent value. See the PriceLevel enum for details.
+
+A season object describes the season, its date range, and the price level of the Season.
+
+The `Bookings` class is the business logic class and has the following business methods.
+
+* `long computePrice( Asset asset, LocalDataRange when );` that computes the price
+of an asset for a specific range of days in a year, based on the seasons that are hit by the range.
+* `boolean isAvailable( Asset asset, LocalDateRange when );`
+* `String book(Asset asset, LocalDateRange when)`
+
+*Compute Price*
+
+.Compute price method.
+[source,java]
+----
+ long computePrice( Asset asset, LocalDateRange when ) {
+   // code left as exercise
+ }
+----
+To compute the price of an asset for a certain *period*, you have to consider all date ranges in the `seasonMap`
+that are spanned by the period, including partial data ranges at start or end. This can be done
+by the following algorithm.
+
+* *Stream* the *entryset* of the `seasonMap`. The _key_ is the data range, the _value_ is the `Season`, containing the price level.
+* Filter, such that only the date ranges that overlap the period pass. Use the `boolean overlaps(...)`
+  method to build the predicate needed by the `filter(...)` operation.
+* Find the number of days that the *key* of the map entry and the period have in common by using the
+   `long overlap()` method.
+* Multiply the length, the price level of the season, and the pricePerDay of the asset inside the stream operation
+  `mapToLong( T -> long)` and sum the resulting stream into one long result.
+
+*Is Available*
+
+*Check availability* +
+
+.Bookings.isAvailable method
+[source,java]
+----
+  boolean isAvailable( Asset asset, LocalDateRange when ) {
+  }
+----
+
+To compute the availability of an asset during a date range called *when*,
+look up the `BookingSet` of the Asset in the bookings map and find that the asset
+has no bookings that overlap with *when*. You can use the `isAvailable( LocalDateRange when )` method in BookingSet.
+
+.Bookings.book
+[source,java]
+----
+  boolean book( Booking b ) {
+    // code left out
+  }
+----
+
+The essential feature is that after a booking, the asset mentioned in the Booking is no longer available
+for the time frame mentioned in the Booking.

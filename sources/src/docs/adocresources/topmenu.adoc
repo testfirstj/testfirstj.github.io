@@ -32,7 +32,23 @@ V2.0  2021-01-10
 [[top]]
 [#main-menu,cols="{tabcolumns}"]
 |===
-|link:index.html[TOP] |week|link:week01.html[01] |link:week02.html[02] |link:week03.html[03] |link:week04.html[04] |link:week05.html[05] |link:week06.html[06] |link:week07.html[07] |link:week08.html[08] |link:week09.html[09] |link:week10.html[10] |link:week11.html[11] |link:week12.html[12] |link:setup.html[SETUP] |link:tips.html[TIPS] |link:assessmentcorrectionrules.html[PA]
+|link:index.html[TOP, title='Home']
+|week
+|link:week01.html[01, title="What is TDD"]
+|link:week02.html[02, title="Parameterized Tests"]
+|link:week03.html[03, title="Testability and Mockito"]
+|link:week04.html[04, title="Generics"]
+|link:week05.html[05, title="Lambdas and Streams"]
+|link:week06.html[06, title="Reflection"]
+|link:week07.html[07, title="Java Database Access"]
+|link:week08.html[08, title="Java FX Bindings and Java Module System"]
+|link:week09.html[09, title="Statemachines and Regex"]
+|link:week10.html[10, title="Data Time Api anmd Internationalization"]
+|link:week11.html[11, title="Exceptions, Assertionas and logging, File IO"]
+|link:week12.html[12, title="Security"]
+|link:setup.html[SETUP, title="Setup your System"]
+|link:tips.html[TIPS, title="Tips Through the Weeks"]
+|link:assessmentcorrectionrules.html[PA, title="Performance Assessment"]
 |===
 
 

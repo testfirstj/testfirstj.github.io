@@ -1,0 +1,82 @@
+=== Custom Test Data Class.
+
+There are cases where a csv file does not cut it and
+the test data need some massaging before being able to use them.
+
+In such cases rolling your own data class can be helpfull.
+
+First you design a data class, that provides the data you need in a test, then
+create static instances of the data, and provide  a stream stream of them.
+
+The example is from the templating engine in week 9.
+
+.test data class ET
+[source,java]
+----
+static class ET {
+
+    final String prefixSigil;
+    final String postfixSigil;
+    final String in;
+    final String expected;
+    final Map<String, String> map = new HashMap<>(); //<1>
+    ET( String presig, String postSig, String s1, String s2, String... kv ) {
+        this.prefixSigil = presig;
+        this.postfixSigil = postSig;
+        in = s1;
+        expected = s2;
+        for ( int i = 0; i < kv.length; i += 2 ) {
+            map.put( kv[ i ], kv[ i + 1 ] );
+        }
+    }
+}
+
+static ET et( String presig, String postSig, String s1, String s2, String... kv ) { // <2>
+    return new ET( presig, postSig, s1, s2, kv );
+}
+----
+
+<1> The test data provide a map.
+<2> Helper method to ease the definition on the test data values.
+
+.test data instances (abbreviated) as a stream
+[source,java]
+----
+static Stream<ET> getTestValues() { //<1>
+    // we use a helper class ET to collect strings into a engine test data object.
+    ET[] testData = new ET[]{
+        et( "{{","}}", "hello {{world}}...", "hello Schöne Heimat...",
+        "world", "Schöne Heimat" ),
+        et( "{{","}}", "hello {{süßes}}", "hello Schöne Heimat", "süßes", "Schöne Heimat" )
+    };
+    return Arrays.stream(testData);
+}
+----
+
+<1> Name of the stream providing method is `getTestValues`
+
+.test method declaration
+[source,java]
+----
+@ParameterizedTest
+@MethodSource( "getTestValues" ) // <1>
+public void testEngine( ET et ) {
+  // remainder left out
+}
+----
+
+<1> The method name in this snippet is the one declared in the previous code snippet.
+
+The way you combine test data generation is up to you, you could for instance have
+a stream generating method read the data from a file, converting them to objects in a way similar
+as in the csv to object approach and provide the stream to the test framework in a way similar to the above.
+See the example below.
+
+.example test data from file using CSVObjectStream.
+[source,java]
+----
+Stream<Truck> getTestValues(){
+  return new CSVObjectStream( Truck.class, Paths.get( "trucks.csv" ) )
+  .stream(Truck::new, x -> ! x[o].startsWith("#"));
+}
+----

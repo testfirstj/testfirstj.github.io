@@ -1,0 +1,48 @@
+:doctitle: W5 λ & Streams
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,h,d,d,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+[.lead]
+We will start with a short recap and some refinements on λ-expressions,
+followed by application in streams.
+
+include::{topics}/lambdaandfunctions.adoc[]
+
+include::{topics}/lambdastreams.adoc[]
+
+include::{exercises}/simplestream.adoc[]
+
+include::{exercises}/csv2objects.adoc[]
+
+include::{exercises}/lambdalibrary.adoc[]
+
+
+== Testing Lambda expressions needed to implement an API interface.
+
+include::{exercises}/minmaxcollector.adoc[]
+
+include::{topics}/collectionenhancements.adoc[]
+
+include::{topics}/optional.adoc[]
+
+:sectnums!:
+
+== Exercises in this part
+
+* <<_exercise_simple_stream,Simple Stream>>
+* <<_exercise_csv_to_objects,Csv to objects>>
+* <<_exercise_lambdalibrary,Lambda Library>>
+* <<_exercise_minmaxcollector,MinMax Collector>>
+
+
+== Reading
+
+* Horstmann Core Java, Ed 11, Vol I CH 6.2 Lambda Expressions
+* Horstmann Core Java, Ed 11, Vol I CH 9 Collections
+* Horstmann Core Java, Ed 11, Vol II CH 1 Streams
+
+== Slides
+
+* link:../pdf/050_lambda_sheets_en.pdf[Lambda Recap^].
+* link:../pdf/060_streams_sheets_en.pdf[Java Streams^].

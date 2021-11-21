@@ -1,0 +1,78 @@
+== Data First or Objects first?
+
+You have seen in part 6 that you can retreive information about
+objects and that you can even derive code from that. +
+The same applies to the database. You can retrieve information
+from the data base objects (tables, views) and use that to 'reflect' on it,
+for instance, as has been shown, to get type and names of columns.
+
+There are two approaches
+
+. Objects First.
+. Data (database) first.
+
+=== Objects First.
+
+Objects is the approach you use when the design in the programming language is leading.
+You can use all the features of object orientation, and may have to bend the [big]#OO#-rules
+a bit to fit stuff into the database. As an example for the less than perfect match:
+There is no real (usable) inheritance in the database, so the best you can do is
+join tables to go from person to teacher-attributes to teacher. The teacher is then a view. (How exactly is left as an exercise).
+The example below shows some design and implementation details for **Student**s.
+
+* You create you entities in Java first.
+* With reflection you code mappers and table definitions.
+
+=== Database First.
+
+You define your data in tables and views first and use 'reflection' on it's metadate
+to derive your entity types. Generating entities and entity mappers, which you still need,
+can be very easy, certainly with either https://projectlombok.org/[project lombok], or the modern https://openjdk.java.net/jeps/395[java record like in Java 14+].
+
+At the time of writing, one must be a bit carefull. Not everything works with Java 16. It is particularly annoying that the
+maven surefire plugin refuses to work with java 16 byte-codes. That should not be an excuse for dropping tests.
+
+
+.Relation between data in the RDBMS and the object model using views.
+image::ormappingandviews.svg[]
+
+
+.Quiz: The devil is in the details. What relation is the Student Object representing?
+[%collapsible,role="Quiz"]
+====
+The Student object are actually records from the students_v *VIEW*, which can be defined as +
+[source,sql]
+
+----
+CREATE OR REPLACE VIEW students_v AS
+SELECT person.name,person.dob,student.*  -- <1>
+FROM students_t natural join persons_t
+----
+
+<1> It would be better to also _name_ the columns you want to have, so you have a *stable* view, even after
+re-defining it.
+====
+
+=== What is best?
+
+*Rule one* +
+[big]*In all cases, keep the objects you transfer stupid. Apply the https://nl.wikipedia.org/wiki/KISS-principe[KISS principle].*
+
+* In legacy systems, the legacy will decide the way forward, but you can use the techniques described to improve stuff. Either way.
+* In green field project you can go either way, or even mix and match. As long as what you communicate with your backing store
+ is a simple data carrier, generating one format from the other is equivalent in both approaches, objects first or database first.
+
+In all cases, you win, because when you have one definition you can transform it into the other. [big black]*That works*.
+
+=== Proper Design Promotes Security.
+
+In the picture above you can see that you can go to quite some lengths to keep secret data private. +
+For instance with the postgresql *roles*, *rules*, and *row level security* (latexmath:[R^3]),
+you could design a system in which no unneeded data is exposed to someone who does not need it,
+and you could expose the secret data to its rightful owner like the real person, that is identified by the personid.
+But that is a [red]*red tape* area for other users.
+
+It takes some work to get it done, but you see that can build to grade secure systems, only by cooking with water and
+sufficient expertise.
+
+For those that do not stop at a *TL;DR* signs: An interesting read might be on https://www.cybertec-postgresql.com/en/postgresql-row-level-security-views-and-a-lot-of-magic/?gclid=Cj0KCQjw0oCDBhCPARIsAII3C_FFc2UhfqqHEdYwm8pdBya4dgzSm9iuTl7szYY31sgKW5lDRyzuWBEaApSzEALw_wcB[PostgreSQL row level security]

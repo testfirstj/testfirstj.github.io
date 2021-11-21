@@ -1,0 +1,218 @@
+
+*Fraction TDD*
+
+Test driven development of a fraction class.
+
+//The task has been a Java1 (the precursor of PRC1) exam task.
+
+Here is a task description.
+We will insert a rather empty project into your repository, which in not only quite empty but also broken.
+
+.fraction class
+image::fraction.svg[]
+
+*Test Driven*
+
+Test driven development does *not* mean that you write all tests before
+you can write any implementation code. On the contrary, you write a
+tiny test for one of the functionalities, implement that functionality
+to make it past the test and then go to the next. All in tiny steps.
+
+
+Now to the meet (requirements) of this task:
+The project contains the classes
+`Fraction` and `Main`.
+
+[TIP]
+====
+Because this may be your first venture into test driven territory, we have
+added `@Order` annotations in the test class, which will help you finding your way.
+Normally one would and should not have a fixed order of test executions, but in this case it is
+there to help you. Enable the tests and work your way through completing the test methods and
+implement the Fraction business code.
+====
+
+You do not have to implement all aspects of a requirement in
+your first test. Take it a small step at a time.
+
+The source code is in English, using the common names *fraction*,
+*numerator* and *denominator*. +
+The mathematical representation typically is:
+  latexmath:[\frac{\text{numerator}}{\text{denominator}}], example: latexmath:[\frac{1}{2}].
+
+*Fraction Constructor*
+
+. Write a *test* that calls the fraction  constructor with two distinct ints, say 4 and 5,
+ and then invokes the getters `int getNumerator()` (should produce 4) and `int getDenominator()` (should produce 5)
+ to assure that the fraction instance is properly constructed.
+.  Implement the constructor of Fraction with parameters n and d for
+  numerator and denominator respectively.
+. Run the tests.
+
+In a similar fashion, develop the remaining requirements of the Fraction class.
+
+* Make sure the (negative) sign is attached to the numerator.
+* Ensure that the resulting Fraction is
+    normalised. Fractions like latexmath:[\frac{2}{4}] should  automatically be
+    transformed into latexmath:[\frac{1}{2}].
+  By dividing numerator latexmath:[a] and denominator
+    latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] you produce a
+    fraction with the same mathematical value, called a _normalised fraction_.
+* Have the constructor throw an
+    `IllegalArgumentException` if the denominator is 0.
+    This ensures that further calculations can be done without
+    having to consider a zero value here. You could say that it provides a safety net for the
+    code following the non-0 check.
+    *NOTE*: You do not have to test this exception throwing yet, we show the techniques for that in week 3.
+
+*Implement toString* +
+  Implement the method `toString()`. As example for the
+  expected output of `toString())` for the fraction
+  latexmath:[f=\frac{3}{4}] is `(3/4)`. +
+*Implement times*  Implement the helper method
+  `Fraction.times( int otherN, int otherD )`
+  to multiply `this` fraction with numerator `otherN` and
+  denominator `otherD` of another fraction. The result is a new
+  `Fraction`-object.
+
+To multiply two fractions latexmath:[\frac{a}{b}] and latexmath:[\frac{c}{d}] consider the
+property  latexmath:[\frac{a}{b}\times\frac{c}{d} = \frac{a\times{}c}{b\times{}d}]
+Example:  latexmath:[\frac{1}{2}\times\frac{3}{4}=\frac{1\times{}3}{2\times{4}}=\frac{3}{8}].
+
+If this method works,  it should be easy to implement `Fraction times(Fraction other)`. We do not mean
+copy and waste, but invoke the already available method cleverly.
+
+[TIP]
+====
+Code re-use, one of the promises of Object Oriented Programming, is NEVER copy code, but instead call on already available and tested functionality.
+====
+
+* *Test plus*  Write the method `FractionTest.testPlus()`. Make up some
+  example values, or use the one given below.
+* *Plus*   Implement the helper method
+  `Fraction.plus( int otherN, int otherD )`
+  to create a `new` fraction that is the sum of `this` fraction and `another` fraction with numerator otherN
+  and denominator otherD. The result is a new
+  `Fraction`-object. Formula:
+  latexmath:[\frac{a}{b}+\frac{c}{d} = \frac{a\times{d}+c\times{b}}{b\times{d}}]
+* *Same for minus and divideBy.*
+  Test and implement minus and divideBy operation.
+  You can re-use the work you did in times and plus, as in
+  invoke the provided helper methods by adapting the parameters, such
+  as changing sign or swapping them.
+* *Add a constructor* that takes one `int` as numerator and an implied
+  denominator of 1, so that you can do +
+  `Fraction three = new Fraction(3);`
+* Test and implement implement the required `int compareTo(Fraction other)` method. +
+  The trick here is to multiply numerator of on fraction by the denominator of the other
+  and then compare the resulting products. You are actually computing the parts of numerator of a fraction
+  that would result from `this` minus the `other` without creating a new fraction (which would be wasteful).
+* *Add static helpers* `frac(int, int)` and `frac(int)`, so you can
+  use shorter notations such as `Fraction twoThirds= frac(1).subtract(frac(1,3));`
+
+Now you have developed the Fraction class, the Main program, is able
+to use it with the code given. Note that we do not yet address the
+problem of how to test the proper use of standard input or
+output. That may be  be part of a later exercise.
+
+
+A NetBeans starter project will be in your respository.
+
+*The properties of fractions*
+
+The mathematical properties of fractions in a typical Java
+  implementation.
+
+Let latexmath:[f_1] be a fraction with numerator latexmath:[a]
+and denominator latexmath:[b] thus:
+latexmath:[f_1=\frac{a}{b}].
+And
+latexmath:[f_2] a fraction with numerator latexmath:[c] and denominator
+ latexmath:[d], thus latexmath:[f_2=\frac{c}{d}].
+
+*Greatest Common Divisor*
+
+The function latexmath:[\gcd(p,q)] is called Greatest Common Divisor. With
+  parameters latexmath:[p] and latexmath:[q] it produces integer value latexmath:[g], which is the
+  greatest integer value that divides both latexmath:[p] and latexmath:[q] evenly (divide
+  with zero remainder).
+
+*Fraction Properties*
+
+With the above definitions these rules apply:
+
+* *Minimum integral denominator*
+  With fractions that have integral
+  (whole) numerator and denominator, the denominator is always
+  positive and unequal to 0.
+  Therefore the minimal  denominator is +1.
+  latexmath:[ \forall f,  f =\frac{a}{b}, b \ge +1]
+
+* *Unity value* When denominator and numerator are equal, say latexmath:[a], then the value of
+  the fraction is latexmath:[1].
+  latexmath:[\frac{a}{a} = 1]
+* *Integral value*  A fraction with numerator latexmath:[a] and denominator latexmath:[1] has the same value
+  as latexmath:[a].
+  latexmath:[ f = \frac{a}{1} = a]
+* *Idempodence*  Dividing or multiplying numerator and denominator of latexmath:[f]
+  by the same number latexmath:[n] produces a fraction with the same value.
+  Follows from _unity_: Multiplying latexmath:[f] by latexmath:[1] or latexmath:[n/n]
+  produces a fraction with the same value.
+  latexmath:[ f = \frac{a}{b} = \frac{a}{b}\times 1 =\frac{a}{b}\times\frac{n}{n}=
+    \frac{a\times n}{b \times n} = \frac{a/m}{b/m}]
+* *Normalisation*  By applying _idempodence_, dividing numerator latexmath:[a] and denominator
+  latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] produces a
+  fraction of same value, called a _normalised fraction_.
+  With latexmath:[g =gcd(a,b)]
+  latexmath:[f_1 = \frac{a}{b} = \frac{a/g}{b/g}]
+* *Negation*  The negative of a fraction is the same as a fraction with
+  the numerator negated.
+  latexmath:[ -f_1 = -\frac{a}{b} = \frac{-a}{b} ]
+* *Move sign to numerator*
+  When at construction time of a fraction the denominator is
+  negative, negate both numerator and denominator.
+  latexmath:[ f_1=\frac{a}{-b} = \frac{-a}{b}] +
+* *inverse*  The inverse of a fraction is the same as the swapping places of
+  numerator and denominator. Note that multiplying a fraction with its
+  inverse is latexmath:[1], by applying the rules _idempodence_ and _unity_.
+  latexmath:[\frac{1}{f_1} = \frac{1}{(\frac{a}{b})} = \frac{b}{a}] +
+* *Addition*   Add two fractions.
+  latexmath:[f_1+f_2 = \frac{a}{b}+\frac{c}{d}=\frac{a\times d + c\times b}{b\times{}d}] +
+* *Subtraction*  Subtraction of two fractions latexmath:[f_1] and latexmath:[f_2] is the *same as addition*
+of latexmath:[f_1] and the *negation* of latexmath:[f_2].
+  latexmath:[f_1-f_2 = \frac{a}{b}-\frac{c}{d}=\frac{a}{b}+\frac{-c}{d}] +
+* *Multiplication*  latexmath:[ f_1\times{}f_2 = \frac{a}{b}\times\frac{c}{d}=\frac{a\times{}c}{b\times{}d}] +
+* *Division*
+  Dividing fraction latexmath:[f_1] by latexmath:[f_2] is the *same as multiplication* latexmath:[f_1]
+  with the *inverse* of latexmath:[f_2]. +
+  latexmath:[ f_1/f_2 = \frac{a}{b}/\frac{ c }{ d }=\frac{a}{b}\times \frac{ d }{ c }  ]
+
+[TIP]
+====
+The fraction class implemented with the operations above can and should have final fields. It will only need two fields.
+Such a class has the important property of being *immutable*, which is a very nice property to have for a class. It makes
+it easy to reason about the state of the instances after construction: They will always be the same. This means that they are cache-friendly, which
+is important if you have a multi-core processor. This and other properties will be addressed in later weeks or courses.
+====
+
+.Compute gcd in Java
+[source,java]
+----
+  static int gcd( int a, int  b ) {
+    // ensure loop uses positive values
+    a = Math.abs( a );
+    b = Math.abs( b );
+    while ( b != 0 ) {
+      int t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  }
+----
+
+Note that inside a Fraction class, latexmath:[b] is the denominator with a
+  minimum value of +1.
+  Also, if latexmath:[a] or latexmath:[b] equal 0, the method returns the correct
+  value latexmath:[b] or latexmath:[a], which is
+  easily shown.

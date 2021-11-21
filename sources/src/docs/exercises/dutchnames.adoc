@@ -1,0 +1,16 @@
+=== Dutch names
+
+Studying in an international study program exposes you to cultural things.
+One of those is the peculiarity of Dutch names, in particular those with 'tussenvoegsels' of affixes,
+such as in my name, Pieter *van den* Hombergh.
+
+In PRC1, you already encountered regular expressions as a way to deal with validation and maybe analyzing
+textual information.
+
+In this exercise you work on one class, DutchNameValidator.
+
+given name
+family name
+affix
+
+csv file.

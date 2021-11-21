@@ -1,0 +1,71 @@
+
+:sectnums!:
+
+== Reading grades from text source
+
+:testsourcedir: ../topics/solution/gradecapture/src/test
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Grade Capture</summary>
+++++
+
+[TIP]
+====
+Use capture groups.
+====
+
+To be able to insert student grades into progress, the teachers want to be able to copy and paste
+grades from a spreadsheet (which is the typical way grades are assembled) into a text area.
+In this exercise, a simple file will do as the source of the grades, because working with a real clipboard is a project in itself.
+
+* The spreadsheet is replaced by a text file with one or more spaces or tabs ("white space") as column separator.
+* The spreadsheet has the typical format that the student number is in the first column and the +
+  grade for that student is in the last column. The columns in between are arbitrary and may contain anything.
+* You may ignore the spreadsheet part, because the paste action is done in a text area,
+  which can be collected as a text, that can be divided into lines and columns, the column separator being white space.
+* The student number consist of 7 consecutive digits, the grade can consists of one digit, +
+  two digits (a 10) or two digits separated by a dot or period (.) or a comma (,), +
+  since both continental Europeans and English speaking teachers want to enter grades this way.
+* The number of columns is not fixed and may change within one input, e.g. having separate column(s) for the optional Dutch 'tussenvoegsel'.
+  A regex pattern to represent this is available in the `GradeFilter` class.
+* When no grade is found in the input line, and the getResult method is invoked anyway,
+  the result should contain  key=`null`  and value =`null`.
+** So both the `grade` and `studentId` methods should in that case return `null`
+
+A set of test data is given and has the exact input as the table below.
+
+.Test data
+[format="csv", options="header,small",cols="5h,1h,1h,1h,1h"]
+|===
+include::{testsourcedir}/resources/gradecapture/testdata.csv[]
+|===
+
+*Note* that the first column of the csv file is the *"quoted input"*, so should be seen as one input.
+The rest of the columns are the output values to be used in the assertions. Empty cells represent `null` values.
+
+The result type of the `getResult()` method in the `GradeCapture` class may look a bit strange: `AbstractMap.SimpleEntry<Integer,Double>`.
+The type is what is stored in hash maps and such, and is a way to use a tupple without having to declare the class. It is a kludge, just a way to have a pair
+of objects. It stems from the fact that the student-number-grade pairs will typically land in a Map of sorts anyway. +
+Java 14 has a preview feature called https://openjdk.java.net/jeps/359[`record`] which will make this more way  more elegant. There you would write `record GradeResult(int snummer,double grade){}` as the full 'class' definition,
+including constructor, getters, toString and hashCode and equals. It is likely to have that as a standard feature in Java 15 and onward, and will be quite useful in case
+you want a method to return more than just one value.
+
+*Your Tasks*
+
+* Complete the TODOs in the test classes. (Press control+6 in NetBeans IDE)
+* In the *GradeFilter* class complete all TODOs.
+* In the client class there is a last todo and that is to use the grade filter in the `getGradesAsMap()` method, by reading a file as lines,
+  applying the gradefilter on each line and collect the student numbers and grades in a map with student number as key and grade as value.
+
+[TIP]
+====
+There are a few naming problems in the exercise, because of incomplete (renaming) refactoring. Where you see the class name `GradeFilter` read (or replace it with)
+`GradeCapture`.
+====
+
+++++
+</details></div> <!-- gradecapture -->
+++++
+
+:sectnums:

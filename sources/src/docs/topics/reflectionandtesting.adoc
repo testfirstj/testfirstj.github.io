@@ -1,0 +1,133 @@
+==  Reflection and correcting student exams.
+
+[big]*Not unit testing, but assessing the grades student get for their solutions.*
+
+We teachers use reflection quite a bit when correcting the tasks in performance assessments.
+This is also the way that the MOOC in PRC1 does parts of it's testing.
+This is a special kind of unit testing, that is [red]*NOT* the norm.footnote:[It is utterly unsuited for TDD] but serves as an illustration on what
+you can do with reflection.
+
+As teacher / examiners
+
+* We cannot expect that a class that the candidate should write is present.
+* At the time of writing the tests the class certainly is not available. We therefore have
+  to instantiate the objects using reflection.
+* Sometimes the task states the requirement of only having a specific set of field types with specific visibility or other properties.
+* We want the candidates to stick to the naming conventions.
+* When you run the jacoco coverage plugin, jacoco itself adds so called _synthetic_ members, which
+  are not found in the source code of the business class, but are added by jacoco by way of instrumentation.
+* We want to check that a method or field has the required visibility, [blue]##static##-ness, [blue]##final##ity, or [blue]##abstract##ness.
+// This information is defined as the set of modifiers of the member, and implemented as a simple set of bits, packed in a int.
+
+As an example verifying the visibility and other modifiers such as `static` and `final` may be subject
+of the correction work we need to do.
+
+In the java .class file, the [blue]#Modifier# of fields, methods, and of types such as classes and interfaces
+are simply defined as a bit set packed into an int, and store with the byte code in the class file.
+
+The following modifiers are defined:
+
+[cols="<,^,>,^",header]
+|====
+| Modifier     | keyword       | int value |  Applies to
+| PUBLIC       | `public`	       |    1      |  C, F, M
+| PRIVATE      | `private`       |    2      |  C, F, M
+| PROTECTED	   | `protected`     |    4      |  C, F, M
+| STATIC	     | `static`        |    8      |  C, F, M
+| FINAL	       | `final`         |   16      |  C, F, M
+| SYNCHRONIZED | `synchronized`  |   32      |  M
+| VOLATILE	   | `volatile`      |   64      |  F
+| TRANSIENT	   | `transient`     |  128      |  F
+| NATIVE	     | `native`        |  256      |  M
+| INTERFACE	   | `interface`     |  512      |  C
+| ABSTRACT	   | `abstract`      | 1024      |  C, M
+| STRICT	     | `strict`        | 2048      |  C, M
+|====
+
+*Applies* to means **C**lass, **F**ield or **M**ethod.
+
+*Note* that default or package private has no modifier bit of its own. If none of
+`public`, `protected`, or `private` is set, then that is when you get the default.
+
+As an example, a [blue]#public# final method has modifier [green]#1+16+1024 = 1041, or 0x411#.
+
+Below you see a selection of the helper methods we use to correct performance assessments.
+
+.Does the class' field name comply with the standard naming conventions?
+[source,java]
+----
+/**
+     * Check the field definition of a class, including naming conventions.
+     *
+     * @param targetClass to check
+     * @param modifiers visibility, static, final
+     * @param type of the field
+     * @param fieldName of the field
+     * @throws SecurityException when field is not accessible.
+     */
+    public static void checkFieldAndNaming( Class<?> targetClass,
+                                            int modifierMask,
+                                            int modifiers,
+                                            Class<?> type, String fieldName )
+            throws SecurityException {
+        if ( ( PUBLIC | STATIC | FINAL ) == modifiers ) {  // <1>
+            assertAllUpper( fieldName );
+        } else {                                           // <2>
+            char firstChar = fieldName.charAt( 0 );
+            assertEquals( "first char not lower case", "" + (char) Character.
+                          toLowerCase(
+                                  firstChar ), "" + (char) firstChar );
+        }
+        checkField( targetClass, modifierMask, modifiers, type, fieldName );
+    }
+----
+
+<1> Needs to be all UPPER CASE
+<2> Needs to start with a lower case character.
+
+.Check the modifiers on a field.
+[source,java]
+----
+/**
+ * Check the field definition of a class.
+ *
+ * This method tests if the required modifiers are set. Example: to check
+ * private, but not require final, specify modifierMask == Modifier.PUBLIC |
+ * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired
+ *
+ * @param targetClass to check
+ * @param modifierMask visibility, static, final
+ * @param modsRequired required modifiers
+ * @param fieldType of the field
+ * @param fieldName of the field
+ * @throws SecurityException when field is not accessible
+ */
+public static void checkField( Class<?> targetClass,
+                               int modifierMask,
+                               int modsRequired,
+                               Class<?> fieldType,
+                               String fieldName )
+        throws SecurityException {
+    Field f = null;
+    try {
+        f = targetClass.getDeclaredField( fieldName );
+        assertEquals( "field " + fieldName + " should be of type "
+                + fieldType, fieldType, f.getType() );
+        int fieldModifiers = f.getModifiers();
+        if ( ( modifierMask & fieldModifiers ) != modsRequired ) {
+            fail( "field '" + f.getName()
+                    + "' should be declared '"
+                    + Modifier.toString( modsRequired )
+                    + "', you declared it '"
+                    + Modifier.toString( fieldModifiers ) + '\'' );
+        }
+    } catch ( NoSuchFieldException ex ) {
+        fail( "your class '" + targetClass
+                + "' does not contain the required field '"
+                + Modifier.toString( modifierMask )
+                + " "
+                + fieldType.getSimpleName()
+                + " " + fieldName + "'" );
+    }
+}
+----

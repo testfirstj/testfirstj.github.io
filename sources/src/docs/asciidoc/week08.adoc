@@ -1,0 +1,49 @@
+:doctitle: W8 Java FX Bindings, Jigsaw (JPMS)
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,h,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+
+[.lead]
+In this week we will look into the Java Platform Module System.
+This is the way for modern java applications.
+
+include::{topics}/jpms.adoc[]
+
+// include::{exercises}/fxbouncingball.adoc[]
+
+include::{topics}/javafxbindings.adoc[]
+
+// include::{exercises}/fxclock.adoc[]
+
+
+include::{topics}/usingscenebuilder.adoc[]
+
+include::{exercises}/fxtriangulation.adoc[]
+
+include::{topics}/switchingscenes.adoc[]
+
+== Reading
+
+* Horstmann Core Java, Ed 11, Vol II, Ch 9, Bonus Chapter Volume I on JavaFX
+
+== More Links.
+
+=== On JPMS
+
+* https://www.oracle.com/corporate/features/understanding-java-9-modules.html[Understanding Java 9 Modules]
+* http://tutorials.jenkov.com/java/modules.html[Jakob Jenkov on Java Modules]
+
+=== On JavaFX
+
+* https://openjfx.io/[openjfx landing page] and https://fxdocs.github.io/docs/html5/[fxdocs]
+* https://docs.oracle.com/javafx/2/get_started/jfxpub-get_started.htm[JavaFX at Oracle]
+* An excellent site at http://tutorials.jenkov.com/javafx/index.html[Jakob Jenkov's JavaFX Tutorials]
+* https://dlsc.com/javafx-openjfx-11-interview-series/[Dirk Lemmerman's blog on JavaFx] is an treasure trove on advanced JafaFX usage.
+* Both https://www.youtube.com/user/jjenkov[Jakob] and https://www.youtube.com/channel/UCFyRQ_euxxPDwlqyhff-x0Q[Dirk] have a presence on youtube too.
+
+:sectnums!:
+
+== Exercises in this part.
+
+* <<_fx_triangulation, FX Triangulation>>

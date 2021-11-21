@@ -1,0 +1,44 @@
+
+:sectnums!:
+
+=== Exercise Generic Ranges part 3: Extension.
+
+Apply the above theory.
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Generic Ranges Part 3</summary>
+++++
+
+In the starter project rangesextension, the pom file and the module-info file are already declared.
+You only need to configure the test classes and implement the interface Range int the leaf classes below.
+
+*Create an extra set of ranges in the separate project rangesextension* Add the ranges
+
+* *DoubleRange*. For 'distance' use Double.
+* *BigIntegerRange*. For 'distance' use BigInteger.
+* *BigDecimalRange*. For 'distance' use BigDecimal.
+** For BigDecimal  you may run into the issue that the  overlap test method tells that *0* and *0E27* (ZERO at some large exponent)
+are not equal. You can either suppress the test by overriding it in the leaf test class and effectively silence it by commenting
+out the super call, or, better, improving the [blue]`distance` method in the _test_ leaf class and the [blue]`meter` method in the BigIntegerRange class.
+The later will then look like:
+
+.if two points are equal, the return ZERO distance.
+[source,java]
+----
+    @Override
+    public BiFunction<BigDecimal, BigDecimal, BigDecimal> meter() {
+        return ( a, b ) -> {
+            if ( a.equals( b ) ) {
+                return BigDecimal.ZERO;
+            }
+            return b.subtract( a );
+        };
+    }
+----
+
+++++
+</details></div><!--end genericranges3.adoc -->
+++++
+
+:sectnums:

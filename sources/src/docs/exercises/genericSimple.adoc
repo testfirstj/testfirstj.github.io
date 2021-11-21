@@ -1,0 +1,92 @@
+:sectnums!:
+
+=== Exercise Generic Box
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Exercise 1: Box of things</summary>
+++++
+// include::{exercises}/genericSimple.adoc[]
+
+[WARNING]
+All your classes must be in the package [blue]#boxes#
+
+Before you learnt that generics exist, you had to get by. You needed classes
+that store information for you and let you retrieve it, too. So after a semester
+of Java, you have a bunch of classes in which you store stuff. For example, you have the
+class `IntegerBox`:
+
+[source,Java]
+-----
+public class IntegerBox {
+  private Integer value;
+
+  public void putIntegerInBox(Integer anInt) {
+    value = anInt;
+  }
+  public Integer getInteger() {
+    return value;
+  }
+}
+-----
+This little box class is pretty straight-forward. It has an Integer field at
+which you store the Integer that you put in the box, and you have a getter
+(getInteger) and a setter (putIntegerInBox) method to store and retrieve your
+Integers.
+
+The trouble is, this box can't deal with `Double`. Or `String`. Or anything that
+is not an Integer. So calling `myBox.putIntegerInBox("Text")` will not work.
+That means that for every new kind of variable, you need a new class. Quickly,
+your list of classes grows: `IntegerBox`, `StringBox`, `DoubleBox`, `ListBox`,
+`StudentBox`, `BoxBox`... this is very inefficient.
+
+This is where you and Java generics come in:
+
+* Create a class named `Box` that can take *any* type using a `type parameter`.
+* Inside that class, have a private final field that stores the same *any* type.
+* Constructor that takes the same *any* type
+* Create getter method for the class named: `get`.
+
+.Test your implementation by using this main method.
+[source,Java]
+-----
+public static void main(String[] args) {
+
+   Box<Integer> iBox = new Box<Integer>(5);
+   Box<String> sBox = new Box<String>("Some Text");
+
+
+   System.out.println("My integerBox contains: "+ iBox.get());
+   System.out.println("My stringBox contains: "+ sBox.get());
+}
+
+-----
+
+To make the exercise complete, also test and implement `Box.equals(Object o)`` and `hashCode()`.
+
+Next create a class named `Pair`:
+
+* that can take *two* different type parameters
+* store them in two separate fields (*P* and *Q*)
+* constructor that takes *both* types
+* getters for both types (`getP` and `getQ`)
+* Also test and implement equals and hashCode.
+
+.Test your implementation by using this main method.
+[source,Java]
+-----
+public static void main(String[] args) {
+
+   Pair<String,Integer> box = new Pair<>("Test", 4);
+
+
+   System.out.println("My String contains: "+ box.getP());
+   System.out.println("My Integer contains: "+ box.getQ());
+}
+
+-----
+
+++++
+</details></div><!--end ex 4-->
+++++
+
+:sectnums:

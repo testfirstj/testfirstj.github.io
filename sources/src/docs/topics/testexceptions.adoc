@@ -1,0 +1,75 @@
+== Testing exceptions
+
+Exceptions can occur anywhere but most of the time when calling a method.
+When testing code that throws or should throw exceptions, we can distinguish three cases,
+each with a different approach. Assume in all cases that the method is defined with a throws clause,
+as in `void read( int mount ) throws IOException`.
+
+. The exception should not be thrown.
+. The exceptions should be thrown.
+. The exception is thrown, but unexpectedly.
+
+To test these cases we use two distinct approaches, covering the first two cases. The last case
+is automatically dealt with by the JUnit test framework, because any exception
+that occurs is considered a failure. If unexpected by the test then it is typically the test's problem.
+
+=== Exception is not expected: forward it.
+
+Simply forward the exception. Remember that a (test) method signature is only name and parameter types, not throws clause. So if you do not
+expect the checked exception to occur in a test method, DO NOT deal with it, but forward it.
+
+.Forward exception by having a throws clause
+[source,java]
+----
+@Test
+void testRead() throws IOException {
+  String s = this.reader.read();
+  assertThat(s).isEqualTo(...);
+}
+----
+
+=== Exception is expected to be thrown
+
+The test method sets up the tests so that the exception should occur. You want to make sure that the
+exact proper method call does the throwing, not any expression before or after the 'culprit'.
+In that case you wrap the expression as a lambda expression of
+type https://javadoc.io/doc/org.assertj/assertj-core/latest/org/assertj/core/api/ThrowableAssert.ThrowingCallable.html[ThrowingCallable].
+
+.Method definition of throwing callable.
+[source,java]
+----
+  void call() throws Throwable;
+----
+
+.Lambda expersion with shape of ThrowingCallable
+[source,java]
+----
+   () -> {ExceptionThrowingCode}
+----
+
+.The trivial but instructive example from the AssertJ assertion framework.
+[source,java]
+----
+   assertThatThrownBy(() -> { throw new IOException("boom!") }, "Test explosive code") // <1>
+           .isInstanceOf(IOException.class) // <2>
+           .hasMessageContaining("boom"); // <3>
+----
+
+<1> This is of course not a real test, because the code in the lambda throws the exception by itself. +
+ Instead imagine that a method is called or some other expression is evaluated that throws the expected exception
+<2> Assert that the proper exception is caught and thus thrown.
+<3> Assert that the message has the correct info. For further details see https://javadoc.io/static/org.assertj/assertj-core/3.15.0/org/assertj/core/api/Assertions.html#assertThatThrownBy(org.assertj.core.api.ThrowableAssert.ThrowingCallable,java.lang.String,java.lang.Object...)[assertThatThrownBy API doc ]
+
+=== Exception occurs unexpectedly
+
+Well, if you did not expect the exception, the only way to go about is to revise your test code, because
+there may be something wrong in the test setup. You might need another test to assert that an exception is not thrown.
+There is a construct for exactly that too.
+
+.Make sure the ThrowingCallable is NOT the culprit
+[source,java]
+----
+   ThrowingCallable doNothing = () -> {}; // <1>
+   assertThatCode(doNothing).doesNotThrowAnyException();
+----
+<1> replace lambda by actual suspect code.

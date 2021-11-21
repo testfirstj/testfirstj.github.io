@@ -1,0 +1,145 @@
+:sectnums!:
+
+=== Exercise Testable Design
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Perishable Products</summary>
+++++
+
+Build part of a cash register system used in sales of products that
+might be perishable.
+
+.Class diagram
+image:perishablesales.svg[]
+
+In the design we left out the GUI-controller, which would normally invoke the `correctSalesPrice(bb: LocalDate)`,
+the `submit()`, and the `print()` methods on the cash register business component.
+
+Perishable products are products with a limited shelf life. Think of fresh products
+such as milk, meat, vegetables, fruit, or anything that has a best before date.
+
+Assume that all products are labeled with a bar-code which identifies the product and that a perishable product
+has a best before date or similar.
+
+The cashier normally scans the product and that product is marked sold and optionally appears on the cash receipt.
+
+A perishable product undergoes the same procedure, but in case the best before date is less than 2 days, the product should also
+be marked sold, but the the sales price should be 35% off. 0 days left 65% off, less than or equal 0 days left 100% off, no longer on sale but
+product will be donated to a food bank.
+
+[cols=">,>,>", header]
+|====
+| days left | percent off | remaining price in %
+| >= 2       | 0       | 100
+| 1         | 35   | 65
+| 0         | 65 | 35
+| < 0       | 100 | 0
+|====
+
+The cash register uses the following service API
+
+.Sales API
+[source,java]
+----
+   Product lookupProduct(int barcode);
+   int salesPrice(int barcode, LocalDate bestBefore);
+   String sold(SalesRecord sale);
+----
+
+As extra info: the `SalesService.sold` produces a string which is supposed to appear on the
+cash receipt and should therefore be printed using the Printer interface. Printing of all data is postponed until the cashier can ask: _Do you want a receipt?_
+The sold items should be ordered on the receipt as follows:
+
+* Perishable products should come first, non-perishables second.
+* The sold items should be printed in scan order.
+** If an item has been scanned multiple times, it should not be added to the list, but instead the count for the item should increase.
+
+// *** [red big]#DROPPED REQUIREMENT# In a real cash register, if a second or third perishable product is scanned with a different best before date *that affects the sales price* it should be added as sales record. +
+//  [red]_This requirement is dropped from the exercise, because it would be beyond the learning goals of testable design and mocking._
+
+The `CashRegister` is given a clock and a `SalesService` at construction time. In dependency injection parlance this is called constructor injection for obvious reasons. +
+The clock is to be used to determine the actual date, the sales service to register to look up products and perform the sales registration.
+Both SalesService and Printer should be mocked for the purpose of testing.
+
+Actual payment has been left out of this exercise.
+
+*Abbreviated Use Case Normal sale*
+
+As a cashier I want to scan a product, compute a sales record and submit the sales record when I scan the next product.
+This can keep me in a continuous flow of scanning products. Beep, Beep, Beep....
+
+*Abbreviated Use Case sale of Perishable Product*
+
+As a cashier I want to scan a perishable product and select the best before date that I can read on the label.
+When the product is perishable, I expect a calendar to be shown, in which I can select the best before date of the actual product.
+I have two alternatives:
+
+. When I select a best before date on the presented calendar, the cash register should correct the price if applicable.
+. When I select submit, the best before date is not considered.
+
+// After this there would be use cases fro multiple product of the same type with different freshness. However, dropped from this (2021) version
+
+[TIP]
+When the operator did not select a best before date before she scans the next product, then the register should beep with a low tone and wait for me to comply. +
+This can be realised by having the cashregister throw an exception.
+
+After either alternative the cash register should construct a sales record and submit it to the Sales Service.
+Then the cash register is ready for the next scan, or complete.
+
+The low beep will be implemented by the Gui. To get this done throw an [blue]*UnKnownBestBeforException*.
+
+[TIP,green]
+====
+* In case of non-perishables, the `accept(int)` method can immediately use the sales service `sold(SalesRecord)` method.
+* In case of perishables, the cashregister operator must be show a calendar, and has two options, either
+. accept the standard price by pressing the button that invokes the `submit()` method of the register, [green]*OR*
+. select a date from the calendar, so that the price correction can be computed by invoking `correctSalesPrice(LocalDate)`.
+* Either of these methods should then use the `sold(SalesRecord)` in which the SalesRecord should have the correct price.
+====
+
+*Abbriviated Use Case Print receipt*
+
+As a cashier I will ask the customer if he or she wants a receipt. If the answer is yes, I select print and the printer should print a receipt
+as specified above.
+
+*Your Tasks* +
+Design your tests. You are supposed to use Mockito to mock the SalesService and Printer.
+Complete the class diagram with the things needed for testing and submit too. The updated class diagram is
+part of the exercise.
+
+The `Product` and `SalesRecord` classes are given, complete with tests.
+There are no implementations for `SalesServiceImpl` and `Printer` yet, nor should they be created. [blue]*Mock* these services.
+
+The mocked printer should be used to test that the information is printed in the specified order. In the implementation
+of the your CashRegister you can use a structure like a map of maps to organize the inputs.
+Choosing the proper map implementation is the trick here. Get inspired
+by the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html[lava.util.Map API].
+
+Test driven develop the Cash Register class.
+
+It is sufficient to throw an exception when the perishable's best before date is not selected. Beeping in a low tone can be done in a later version.
+
+[TIP, role="white"]
+====
+*Hints* in designing your tests:
+
+* First sell one product, to verify that printing contains all the relevant info for the product, quantity and price.
+** printReceipt and ask the mock what it received and inspect (verify, assert) that.
+* Then sell two of the same products (two scans, same barcode), non-perishable, to see if the count and price are correct. Same assertions, different values.
+//* Then do the same with some perishable product, with one of the items best before date near expiry. (For say 35%).
+* Then scan more products and ensure that the cash receipt contains the information as per requirement.
+* same approach with testing if the sales service is used properly. Here you do not need to keep the order.
+* The test method [blue]*priceReductionNearBestBefore* should probably be a [blue]*@Parameterized* test with a [blue]*@CsvSource*,
+  in which you specify different best before days left.
+** You might also use a map to lookup products in a map, like "banana" will give you the defined banana product.
+  Revisit link:week02.html#_lookup_in_a_map[part 02] on parameterized test where
+   such usage is shown.
+====
+
+[green]#In this exercise you do not have to distinguish between different best before dates in the sales records for perishable.
+Assume that the tests only use one of each product type. This relevant business requirement might be included in a future version, that includes refactoring.#
+
+++++
+</details></div> <!-- end perishables sales -->
+++++

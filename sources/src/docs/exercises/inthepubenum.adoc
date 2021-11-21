@@ -1,0 +1,14 @@
+*In the pub Enum*
+
+For this exercise, you are again expanding on the exercise from last week.
+Amend the pub simulation by turning the volume of a drink into an `enum`.  *Work test driven!* for the parts that you add.
+
+This is also a refactoring exercise, so you start out by copying the source and test classes for the week 1 in the pub exercise.
+
+You’ll find the project template in your repository. This time, the project is mostly empty packages.
+Copy over your code from last week to continue here. Remember to write the tests to test the `enum` class. +
+After that the project should have the same package structure as the original. Keep you solution  for week 1 intact and
+only modify the code in this weeks project.
+
+. Beer can be either of size SMALL (0.2L), LARGE (1.0L) or PINT (0.57L)
+. The Enum should contain exactly 3 values (small, large, pint), not more not less.

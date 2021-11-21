@@ -1,0 +1,43 @@
+=== Lambda based calculator
+
+[{extra}]
+NOTE: *Challenging exercise:*
+
+Create a simple console based calculator.
+
+You can use a scanner to take the input.
+
+Use an `enum` to define the operations and use a functional interface, in particular `java.util.function.IntBinaryOperator` to do the calculations.
+
+The netbeans project to start with will be injected into your repository. This is a fill in the blanks exercise.
+
+In this exercise you will use a *parameterised* test, as described in [Kaczanowski, ch 3], the variant that is built in in JUnit 4. The test data is given in the project.
+
+==== TDD: write your tests.
+
+You have to do two things in the given test class:
+
+. Create the *Constructor* for the test class, which takes 5 parameters, which are all saved as fields in the test class. +
+ The test framework will invoke this constructor for each test with one of the lines that is produced by the `testData()`` method. The parameters are
+.. `String` message, shown when the test fails.
+.. `String` representing the operation, like "+" for the add operation.
+.. `int` expected value.
+.. `int` a first input and
+.. `int` b second input to the operation.
+. Write the one and only test method, which uses the fields you initialised in the constructor. +
+This test should assert that the result of the computation matches the expected value, by using the enum class' `Operation get(String symbol)` method to lookup the Operation object. +
+As usual, the JUnit will output the message if and only if the test fails.
+
+==== Implement the Operator enum.
+
+. Start with the Constructor, which takes two parameters
+.. `String` symbol, like `*` for times
+.. `IntBinaryOperator operator` as a lambda expression, specifying the actual computation.
+. implement `get(..)` or `getOp(...)` (you decide which has your preference, adapt the test to match your choice), which translates symbol to the actual enum value.
+.. get(...) simply loops through the `values[]` of the enum to see if its symbol maps. If it does, return the enum value, if not found return `null`;
+.. getOp(...) uses a static map. This static map is initialised by a `static {...}` block, which is the way Java allows you to do work when your class is loaded.
+. implement `compute(...)` by letting the stored lambda expression do its work.
+
+==== Play with it.
+
+Enable the commented code in the main class, and lo and behold: You made it working.

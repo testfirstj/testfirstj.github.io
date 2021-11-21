@@ -1,0 +1,288 @@
+*Donald's messy restaurant*
+
+[TIP]
+====
+The story of a restaurant may sound  a bit silly, but when you think that
+the way this works is similar to how a web server works with
+multiple clients at the same time, you might accept the purpose of the exercise.
+====
+
+image::gordonramsay.jpg[role='thumb left']
+
+
+In this execise you will be exploring the effects, both positive (improved throughput) and negative
+(add complexity) of running code in _parallel_ and/or _concurrent_.
+
+[TIP]
+====
+Concurrent and parallel are two distinct ways of modeling. +
+*Parallel* is having work done simultaneously, but without interference between the parts of the work. Compare a highway and a normal road.
+As long as the traffic does not cross lanes, the throughput of the highway is increased because it can support more traffic per unit of time. +
+*Concurrent* is also working simultaneously, but also sharing one or more resources. This means that the workers may interfere with on another,
+which is fraught with complexity, same as when crossing lanes on a highway. You must take care not to tread on another driver that currently passes.
+====
+
+*The narative*
+
+Donald has been in the restaurant business for years and is making
+  up a plan to provide for a proper pension plan, now he has come into
+  the dusk of his famous years and notices he has put up little to
+  provide for his elderly years. With the Olympics ahead
+  he comes up with a plan to increase his income substantially. To do
+  this he adapted his menu to the chinese kitchen (for what he
+  thinks Chinese would eat or rather what fellow country ducks would
+  enjoy as Chinese food). Completely in style with Chinese restaurant
+  usage in the Netherlands, you can order your meal 'by the numbers'.
+
+Donald is not known as the smartest of ducks and his current
+  restaurant implementation in Java already has some flaws. As an
+  example: the kitchen is very fussy and serves not found when a meal is not on the menu.
+ View the TV shows of Gordon Ramsay on TV, if you think this inspirational.
+
+.donalds job
+[source,java]
+----
+public class DonaldTask implements Runnable {
+
+    final Restaurant china;
+    final Customer customer;
+
+    public DonaldTask( Restaurant china, Customer mrBig ) {
+        this.china = china;
+        customer = mrBig;
+    }
+
+    @Override
+    public void run() {
+
+        china.setCustomer( customer );
+        while ( !customer.areYouDone() ) {
+            china.submitOrder( customer.getTableNumber(), customer.wouldLike() );
+            china.procesOrders();
+            china.serveReadyMeals();
+        }
+        System.out.println( customer.areYouSattisfied( "Are you sattisfied?" ) );
+    }
+}
+----
+
+*The new employees*
+
+He now wants to be able to serve the customers in parallel, say up to the number of parallel threads your hardware supports
+by involving his nephews as employees Huey, Dewey, and Louie, and maybe some more.
+
+*The simulation*
+
+To be prepared, Donald wants to simulate the restaurants behavior
+  on his computer. His target is of course to make his employees work as
+  efficient as possible, so that he can take care of the till without
+  further worries. He wants all employees (threads) to use the restaurant and all the things
+  inside in parallel to push more customers through the restaurant in a shorter time.
+
+The restaurant package defines a Customer interface, which is implemented in the
+client package by the class MrBig, a client with a huge appetite. The client
+is also able to eat multiple rounds.
+
+The restaurant simulation can be run with a script in the projects root.
+To start the script, open a terminal or command line in the working directory of the project
+
+[source,sh]
+----
+./run.sh client.Main
+----
+
+Starting the script with no parameters will show the default (old) situation
+and is used as a reference. In that case 44 meals will be served with a total value (turn over) of € 468.00.
+
+.Running the program should show a lot of text, ending with
+[source,text]
+----
+You asked "Are you sattisfied?" table 1 Client says: No I missed some:
+orders  44 => 4, served missing
+served 404 => 4, orders missing
+######################## Restaurant Mei Ling is closed #########################
+total cookingTime = 616 milliseconds on 44 meals.
+restaurant Mei Ling was open for 766 miliseconds
+Turnover this round: €        468.00
+expected turnover  : €        468.00
+served 1 round to 1 customer , which should add up to 44 meals served
+
+real	0m1,036s
+user	0m0,921s
+sys	0m0,085s
+----
+
+The important numbers, and part of the functional requirement are
+
+* the number of meals cooked and served (44 in the example),
+* the total cooking time, because the meals should be 'well done', and
+* the turnover which for 1 round and customer is € 460.00.
+
+The _non_ functional numbers are the opening time (766 milliseconds) and the total running time of the program, real, user and sys.
+These are the numbers that might improve when applying the proper measure of parallel work. However, take proper care of the concurrent
+aspects otherwise you leave the kitchen in shambles. +
+The times at the end may differ and depend on the speed of you system.
+
+The program (`client.Main`) reads its arguments array and interprets the first value as the number of rounds
+for the one customer. The meals and turnover should simply be multiplied by that number to be correct.
+
+There is a variant of the Main program called `client.MainWithThreads`, which understands
+more positional parameters.
+
+. The number of rounds that mrBig will order (and consume).
+. The number of mrBig instances that are allowed in the restaurant in this run.
+. 's' or 'p' a character that defines if the customers are served on after the other (s = sequentially)
+ or in parallel (p). s is the default, if you do not specify it.
+
+.Example run with sequential serving.
+[source,sh]
+----
+./run.sh client.MainWithThreads 2 4 s
+----
+
+This will work for all sequential cases, where the number of meals and the turn over will be multiple
+of rounds times customers times the baseline meal count of turn over.
+
+
+.example run with parallel serving
+[source,sh]
+----
+./run.sh client.MainWithThreads 2 4 p
+----
+
+When you choose the parallel option (p as last parameter), you will see
+that the meals and turnover do not properly add up.
+
+Therein lies part of the problem. The current implementation of the restaurant and helper (i.e. the Queue class)
+is not *Tread Safe*. You can see that from the last experiment.  In a parallel run you will see that the outcome is different from
+the expectation based on the base line. You will even notice that the outcomes are non-deterministic or by chance,
+because they typically differ from run to run. Once in a while you may even be _lucky_, because there is a chance that the numbers add up, proving
+the point that running a test once might not be enough to detect problems.
+
+[WARNING]
+====
+A program that is used in a parallel or concurrent context but is not Thread Safe is a broken program.
+====
+
+All work to be done, restaurant application wise, is in the Restaurant and Queue classes.
+Doing the work (invoking the methods) is done in the DonaldTask class.
+
+We will approach this task differently from the tasks in the previous weeks, in that
+a working and tested program is already given. The intend is that you first explore
+the effects of improper concurrent use of resources by either running the program with different parameters
+or enable some of the test in the csvsource test in the `ConcurrentClientTest` test class.
+
+As known from the theory and tips and warnings in this exercise, the problem lies in the
+concurrent use of several resources of the restaurant.
+
+. Identify the shared resources (i.e. fields) in the restaurant.
+. Investigate how you can make their use concurrent or  *Thread Safe*, which is the common term for
+  that in the java world. There is one class that is under your control and can be improved in this aspect.
+. Modify the shared resources to thread safe types and retest the program. The baseline program should work and give
+  the same outcome.
+. making the queue class thread safe by making all methods `synchronized`, and retest.
+
+[WARNING]
+====
+Beware of the check-then-act problem. This problem occurs when there is time gap
+between a check, like an empty() check and acting upon that result, like getting the next element with a get(). Another
+thread might have taken the last element in that time gap, making the checking thread fail.
+====
+
+*Your task*
+
+It is up to you to repair this simulation
+  program. Happily there already is a working program, which
+  faithfully simulates the work like Donald does it *on his own*. In
+  programming terms: Donald is modelled as one Thread.footnote:[Notice that ducks have tiny heads. They do not support
+    very much of multithreading. Donald even less so.]. It is your job
+  to add more threads, as a simulation for the jobs of the nephews. In the
+  cooking part of the program `sleep()` calls are used to
+  simulate cooking time. You are not allowed to add more
+  sleeps. Of course we expect an optimal program, meaning that you
+  should use the resources (CPU, Memory) sparingly, and make sure that the
+  results match the baseline with optional multiplication by rounds and customers.
+
+*A customer in shop, help.* +
+Of course we have a customer too. In comparison to earlier versions, complaining (exception
+throwing) has been turned into serving a *404 meal* immediately. This is similar to the behavior of a web sever,
+that will serve a 404 page when it cannot find a requested page.
+The customer simulation class will check and tell what has been ordered
+and served and will say if this differs. It *will* differ when
+the customer orders a non existing meal.
+
+You will be given a maven project of the current implementation, Donald only.
+
+[TIP]
+====
+Concurrency problems can occur with all shared fields, in particular when such
+field is modified by multiple cooperating threads. The queue class is a typical problem area. But there
+are more problematic places in this restaurant.
+====
+
+There are multiple solutions to solving the thread safety issues in the queue class. The simplest
+is to synchronization, which what we used. Using Lock Objects as described in Hortsman Vol I sections 12.4.3
+and is more modern, but also a bit more complex. The condition to check is the empty condition.
+It is sufficient to use the simpler approach spelled out in section 12.4.5 and/or 12.4.6.
+
+
+*Testing*
+
+Testing is done with four test classes:ff
+
+. The restaurant.QueueTest that tests the queue.
+. The restaurant.RestaurantTest that ensures that the restaurant outputs something to its system out.
+. The restaurant.ConcurrentQueueTest that test the queue for thread safety. The
+. The client.ConcurrentClientTest which is a kind of _integration_ test, that tests the whole system. The approach is similar to
+  what happens in the main classes. +
+  MrBig uses a separate library to verify that all orders are served: https://javabits.fontysvenlo.org/tallymap/apidocs/index.html[tallymap].
+
+
+In this exercise the only thing that you need to do with the given tests in the test classes is enable them
+when you are solving the problem. Testing concurrent code is an art in itself and beyond the scope of PRC2.
+
+//
+//
+// the QueueTest tests the Queue. In the ConcurrentClientTest
+// test several scenarios, one to set the baseline (which of course is expected to stay working)
+// and one to test several combinations of customers in parallel and a number of rounds.
+//
+// *Restaurant V1* +
+// In restaurant V1 you apply will thread safety constructs.footnote:[as introduced in class] using the
+// synchronization primitives provide by the Java platform. You may (or
+// should) add threads, but leave the work definition (the method that
+// order, serve and cook) in the restaurant class. Add synchronization where needed.
+//
+// *Rules for V1* +
+// You should not (as in forbidden) move any of the methods for cooking
+// or serving from the restaurant class into another class. The work
+// definition is part of the application (the restaurant) so leave it
+// there. You ARE allowed to break the methods or loops apart, (e.g. move
+// to new method) so you may solve the concurrent access and
+// synchronization puzzle. Note that the queues are not the only things
+// that are not thread safe. In the first version, leave the queue
+// alone. Synchronize in the restaurant on any object that will do the
+// trick.
+//
+// You should start with some analysis of your initial restaurant. Then
+// start designing the improvements.
+//
+// * Select and elaborate your policy for making the Restaurant thread safe, that
+//   is, the policy that you used to move Version 0.1 to your version
+//   1.0, thread safe, using three employees. Well, ducks, if you insist on sticking to the narative.
+// * Analyze all possible situations where things could go wrong and come
+//   up with your  solutions and implement them.
+// * Test your code against the chosen policy. Don't alter your code
+//   in your Restaurant 1.0, except for possible testing code lines. Also
+//   look at the CPU-usage.
+//
+//
+// Now improve on the implementation: +
+// *TIP*: Make the given queue thread safe and add a \Code{T
+//   take()} method that blocks on an empty queue.
+//
+// You may have to break some methods in the restaurant apart, as in
+// introduce new methods. NetBeans IDE knows how to help you there. Some
+// methods in V0.1 have some nasty loops which you may want to modify to
+// optimally use your Thread Safe Queue without hogging the CPU any
+// longer than required.

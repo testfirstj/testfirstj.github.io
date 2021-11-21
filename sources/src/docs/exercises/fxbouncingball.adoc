@@ -1,0 +1,16 @@
+== FX Bouncing Ball
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>FX Bouncing Ball</summary>
+++++
+
+
+This exercise serves as a simple illustration of using a binding and
+JavaFX time line animations.
+
+.Simple bouncing ball.
+image::fxbouncingball.png[]
+
+++++
+</details></div><!--end fxclock.adoc -->
+++++

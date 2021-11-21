@@ -1,0 +1,50 @@
+== CSV Syntax
+
+
+CSV is one a the very simply file formats that is easily understood. We will use it to
+explain **E**xtended **B**ackus-**N**aur **F**orm, and as bridge to the fact that lexers and parsers can in fact be implemented using state machines.
+
+Th easiest to read representation is a so call https://en.wikipedia.org/wiki/Syntax_diagram[Railroad Diagram].
+There is a lot of detail in the drawing style.
+
+The rules are simple: you are only allowed to drive forward in a straight line or in a curved line,
+but no across an acute angle, because that will run the train off the track, causing a train wreck.
+
+In the diagram the train starts at the left and can either go straight through the quoted track or turn right to the unquoted
+track. Turning left is not allowed, because that would run the train off the track.
+
+.RailRoad diagram for CSV row. Click on the image to see the complete syntax definition for a csv row.
+image::csv-railroad-row.png[link="../images/csvsyntax-railroad.xhtml"]
+
+The diagrams are helpful for us humans to understand. Note how close these railroad diagrams are to https://en.wikipedia.org/wiki/State_diagram[state diagram]s,
+and indeed there is a close relation.
+
+A computer will have a hard time to grasp the meaning of the diagram, but breaks no sweat when it needs
+to create the diagram from a notation it can comprehend. One such notation is the Backus-Naur Form or
+ https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form[EBNF ^]. +
+Backus-Naur is named after John Backus and Peter Naur.
+
+The diagram above has been generated from the following definition, by the nice website https://bottlecaps.de/rr/ui[Railroad Diagram Generator].
+Thank you, Gunther Rademacher.
+
+.EBNF of CSV row
+[source,sh]
+----
+row       ::= (quoted|unquoted) (',' (quoted|unquoted))* '\n'
+quoted    ::= '"' (Char|'\"'|'\\')* '"'
+unquoted  ::= (Char|'\"'|'\\')*
+----
+
+In an earlier exercise we create a small library called CSVObjectStream. That has an unmentioned flaw, is that
+it does not really understand what it is doing. It only knows how to chop up lines with separators. This in itself
+relies on another application of state machines, Regular Expressions.
+However, the CSV format allows columns to contain commas, put if they are processed by the naive approach in CSVObjectStream,
+than what should be in one column, will land int two. So we need something more sophisticated.
+
+We need a csv-row lexer, that can separate the column values out from the csv rows, considering quotes as a way to
+project embedded commas from being column-breaks.
+
+We need a small state machine that takes the separate characters from the rows, which a simply strings, and
+collects those characters into tokens, with a specific meaning. There are x states, between which the state machine will switch,
+and which can tell their context that a token is complete and what its 'class' is. In the CSV example the class does not have much meaning,
+it is just a value, but in advanced versions, we will not make here, it could be numbers, or text values or dates, etc.

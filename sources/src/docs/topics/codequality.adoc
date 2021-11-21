@@ -1,0 +1,93 @@
+== Code quality, not just in testing
+
+One easily forgets that one of the most important qualities of
+good source code is _readability_. If the code is incomprehensible to the reader,
+and that might be you in 6 weeks time, than that code is not maintainable. It's fate
+will be: Try what it does, then rewrite it from scratch and put the original in the trash can.
+
+Readability is a feature that is influenced by code style, proper naming,footnote:[One of the really difficult problems in informatics]
+and documentation.
+
+In all cases you may assume a versed reader of java code. You are about to be one.
+
+If you write code and then have write an explanation on how it works, you should rewrite the code instead. Typically
+you selected the wrong names. Code should be readable as a story.
+Renaming methods and fields is easy with an IDE, it is called refactoring.
+
+=== The compiler: Semantic correctness
+
+The first line of defense against errors is the compiler. It is probably the first reader of your code.
+It will flag when it can't make sense of your code or when you used an illegal construct
+or a statement that is syntactically wrong..
+
+=== Checkstyle and friends
+
+Apart from testing, the java world has a plethora of quality verification tools.
+Many of these can be configured as maven plugins and indeed, the sebi pom has a few.
+
+image::spotbugs_logo_300px.png[role="related thumb right", title="spot bugs logo"]
+*https://en.wikipedia.org/wiki/Checkstyle[checkstyle]* Does a source code analysis and comments on the way your code is formatted, placement of your curly braces, white space,
+naming conventions, javadoc etc. +
+*https://pmd.github.io/[pmd]* Analyses the source code but now scans for coding defects. +
+*https://spotbugs.github.i[spotbugs]* The successor of findbugs does code analysis on the byte code level.
+
+You can easily run all these plugins by calling maven as `mvn site`. It will, on success,
+produce a website inside your target folder, aptly calls `target/site`. Use your browser to open it
+or open the target/site folder in the files tab of the IDE and right-click view on index.html.
+
+You can find the link:../sebivenlo_checks.xml[sebivenlo_checks.xml ^]footnote:[will be maintaned at the same place where you find sebipom.] check-style rules on this server by following the link 9 word to the left.
+
+[WARNING]
+====
+The source code repository has been configured to check your code with check-style in a pre-commit hook.
+We insist that you format your code properly and add documentation where required. We use the *google java style*, with a few tweaks.
+
+[role="red"]*The bottom line is: Apply the proper Java code  style, or your code will not be accepted by the versioning system.*
+====
+
+The tools above are complementary and help to improve your code quality.
+Since you are supposed to be a learner, accept the given advise, even if it is from a program, and use
+it to improve your coding style.
+
+[TIP]
+====
+If you are about to commit your solution to the PRC2 repo, and all tests pass, run `mvn site` in the root of your project
+or run maven from netbeans with target site:site. If all is well, you have a nice website with
+a lot of reports, including dependency info, javadoc of both business code and test code, and checkstyle,  pmd, and spotbugs reports.
+
+*Note* that some plugins will refuse to work when the project does not pass the tests.
+
+If your commit is not accepted due to checkstyle issues, look at the checkstyle report.
+You can also run checkstyle from NetBeans/maven : run maven goal `checkstyle:checkstyle`. If it is not okay, you will see
+the problems in the output window.
+====
+
+[TIP]
+====
+*WHAT*, not _how_. +
+Your class and method documentation should document what the class/method does, not how it does it.
+If required, you should document the constraints on the parameters and of the state the object before you may
+call a method.
+====
+
+=== Where is javadoc required?
+
+The short list is:
+Javadoc is required for all *public* or *protected* _members_ and _constructors_.
+
+In detail:
+
+* On the class (or interface) declaration.
+* all (visible) methods (or constructors) with more than 2 lines of code.
+
+No javadoc is required for methods annotated with `@Test` or `@ParameterizedTest`
+or methods that overwrite a definition in a super type (class or interface) which is already documented.
+In such case you can (and probably should) inherit the documentation.
+
+[TIP]
+====
+Of course you can teach NetBeans to have all your code comply with a code style
+that is acceptable by checkstyle. Here you can find my link:../topics/netbeans-settings-hom.zip[editor settings].
+Import them into NetBeans and after that, you can make your code look really good (to my eyes and at least to checkstyle), by pressing kbd:[Alt+Shift+F]. +
+On a Mac that is different. But you knew that.
+====

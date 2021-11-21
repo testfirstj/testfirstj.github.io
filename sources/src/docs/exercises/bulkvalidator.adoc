@@ -1,0 +1,137 @@
+:sectnums!:
+
+== Bulk validator
+
+Quite often when dealing with user input, validation has to be done.
+This validation is often repetitious work for the programmer.
+How about validating all inputs of a form in one go, and at the same time apply necessary conversions.
+
+The *bulkvalidator* project is exactly fit for this purpose.
+It takes all inputs as a map, validates _and_ converts (e.g. parses to `Integer`, `double`, `long`, `LocalDate` etc.)
+and returns them as result.
+
+While checking the validity of the values in the input map, it checks for correctness.
+In the inner loop, it catches and collects the exceptions that can occur when a validation fails.
+
+.Usage of the collecting validator: (Derived from the test code)
+[source,java]
+----
+class BusinessLogic {
+
+  static BulkValidator bv = new BulkValidator().addValidations( //<1>
+      Map.of( "customer.id", ( String s ) -> Integer.valueOf( s ),
+        "customer.someInt",
+            validateWith( Integer::valueOf,
+                  BusinessException::new, "Invalid integer" ),
+        "customer.dob", LocalDate::parse,
+        "customer.postcode", BusinessLogic::validatePC
+      )
+  );
+
+  void submit( Map<String,String> inputs ) throws BulkException { // <2>
+      Map<String,Object> validInputs=bv.validate( inputs );
+      process( validInputs );  // <3>
+  }
+
+  private void process(Map<String,Object> validInputs) {  // <4>
+    // use inputs. With a mapper and some
+    customer = new Customer( validInputs.get( "name" ), validInputs.get( "dob" ));
+    // do something with customer.
+  }
+}
+----
+
+<1> Give the validator validation rules. You typically do that only once per client class, like the customer controller.
+<2> This method will fail with an exception if validation fails.
+<3> Validate, but notice that when an error occurs, the submit method stops with a [blue]`BulkException`, which is passed to the caller, typically
+    a GUI class in a JavaFX app. +
+   If the validation runs without issues, process the result, which are now valid key-value pairs.
+<4> Do the normal processing on the now known to be correct values.
+
+
+Bulk validation can be used in any form based UI, where you collect the data from the UI Controller.
+In a JavaFX based project that would be a JavaFX controller, such as a CustomerController.
+
+.Example use in JavaFX GUI, FX controller side
+[source,java]
+----
+    // injected logic
+    final BusinessLogic bl;
+
+    FXUIScraper scraper = () -> root; //<1>
+    @FXML
+    private void submit( ActionEvent event ) { //<2>
+        Map<String, String> keyValues = scraper.getKeyValues( x -> true );
+        try {
+            bl.submit( keyValues );
+        } catch ( BulkException bex ) { //<3>
+            displayerrors( bex );
+        }
+    }
+
+    /**
+     * The exception passed in contains a map with name of the failing controls
+     * and the exception thrown.
+     * @param bex exception information
+     */
+    void displayerrors( BulkException bex ) {
+        Map<String, Throwable> causes = bex.getCauses();
+        // do something smart with the map, like asking for cause of problem
+        // maybe get internionalized message
+        // maybe change style or toiltip of the control.
+    }
+----
+
+<1> https://javabits.fontysvenlo.org/fxuiscraper/apidocs/nl.homberghp.fxuiscraper/nl/homberghp/fxuiscraper/package-summary.html[FXUIScraper] is a small library that can be used as companion to the BulkValidator.
+  It is a dependency in the BulkValidator project and there is testcode too. The project is hosted at https://github.com/homberghp/fxuiscraper[homberghp/fxuiscraper].
+<2> The GUI code submits to the business logic, whatever it found when scraping.
+<3> When the business code refuses with an exception, update the UI with the error info.
+
+In all cases it is the business code that does the validation, and the UI that does the input collecting and display.
+Proper separation of concerns.
+
+[TIP]
+====
+If compilation does not work because maven can't find a dependency, you may have to change the dependency on genericmapper to version 3.0.2.
+====
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Bulk Validation</summary>
+++++
+
+The work in the BulkValidator project should be obvious. Complete the test and
+implementation code.
+
+The hardest part is in the tests.
+Let the IDE guide you. AssertJ is very powerful but as with all haystacks, it is sometimes hard to find
+what you want. For instance after you type +
+
+[blue]`assertThatThrownBy(code).isExactlyInstanceOf( BulkException.class )`. +
+and  then force completion, you see a whole slew of completions. The ones named [blue]`extractingXXX` open new possibilities.
+
+.completions after `assertThatThrownBy(...)`
+image::extracting-completions.png[]
+
+This should be sufficient to complete the puzzle.
+
+Also ensure that the validator logs with level info and that the log messages contain the correct 'words'.
+
+
+
+
+[TIP]
+====
+[big]*Present* +
+In your personal repository you will find two projects, the [black]*BuldValidator* which is
+[blue]#this# exercise and a GUI example project, [blue]`bulkexample`, that shows how
+this BulkValidator is supposed to be used an can be combined with the [blue]`fxuiscraper`.
+
+There is [big green]*NO* work in the bulkexample project, it only serves as an example.
+ It might have relevance for project 2. Enjoy.
+====
+
+++++
+</details></div><!--end Bulk Validation -->
+++++
+
+:sectnums:

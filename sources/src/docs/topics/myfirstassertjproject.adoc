@@ -1,0 +1,52 @@
+=== Your First Assertj Project.
+
+==== TDD and libraries
+
+Test Driven means that you write some kind of tests. We want writing tests to be as simple
+as possible, but at the same time very powerful and expressive. For 2020 we choose to use
+https://assertj.github.io/doc/[AssertJ ^] as the library to write the assertions in your tests.
+As test base framework we use https://junit.org/junit5/docs/current/user-guide/[JUnit version 5.x ^].
+Both are well documented, properly maintained (both at GitHub) and modern in style, function, and facilities.
+
+==== Meet Greeter
+
+We will start with a very simple hello world style project.
+
+Greeter is the first little demo program to show the power of AssertJ.
+
+.complete pom.xml of greeter.
+[source,xml]
+----
+include::../topics/code/myfirstassertj/pom.xml[]
+----
+
+<1> Define the first coordinate of your project id: groupId. Choose a name that relates to its purpose. To make it useable world wide, use a reversed internet web domain.
+<2> Define the second coordinate, the artifactId with the group. You can have multiple within a group, as long as the atrifactId is unique within the group.
+<3> Define the version. Keep the -SNAPSHOT on while developing. It is a signal to update each time maven refers to it.
+<4> Define a name for the project visible in the IDE.
+<5> Define the start point of your program.
+
+=== Let's Assert.
+
+Test driven means write your test of a class/method with assertions before your write any code of said class or method.
+But as any ingredient, use it sparingly and in the right _flow rate_, meaning: write a test for ONE method; create or
+improve said method under test, and keep doing until all requirements have been met.
+
+Our first complete tests looks like this:
+
+.assertJ in action
+[source,java]
+----
+include::{topics}/code/myfirstassertj/src/test/java/myfirstassert/GreeterTest.java[]
+----
+
+<1> Assert that is all about the first parameter, *greet*
+<2> states that greet should not be null
+<3> nor empty like `""`
+<4> nor contain only white-space (spaces and or tabs)
+<5> It should contain the strings `"Hello"` and  `"World"`
+<6> and lastly it should be equal to "Hello World"
+
+Of course the example is a bit convoluted, but at the same time should the might of the
+fluent style of AssertJ. In a typical case you might combine the not null test 2 and one of 5 or 6.
+5 might be the best choice is further formatting the string is of no interest.

@@ -1,0 +1,53 @@
+:doctitle: W6 Reflection
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,h,d,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+
+.Use standard techniques
+****
+In cooking, working with traditional techniques often provides the best results.
+The recipes have had the most testing and have been optimized over time. Compare to cooking with water.
+We know the properties of cooking in water well: The maximum temperature is more
+or less self regulating (as long as there is water in the cauldron) and under otherwise
+similar conditions such as pressure, the result is pretty much predictable and almost risk-free.
+
+The same with programming. The techniques shown in this part about reflection should [big red]*NOT* be used on a daily basis but
+be reserved for special cases, such as making a tool set (maybe called a framework), that can then make working on standard recipes
+a bit more efficient for the programmer.
+Frameworks typically pay their keep with a little performance degradation, because they need some extra work either at application startup,
+in preparation of the executable, when used or all of the former.
+
+If the use of a framework makes the normal programming more complex, you might want to consider [big red]*not* using it. +
+In all cases, you should be aware of the consequences.
+****
+
+include::{topics}/reflection.adoc[]
+
+include::{topics}/reflectionandtesting.adoc[]
+
+include::{exercises}/genealogy.adoc[]
+
+include::{exercises}/entitydeconstructor.adoc[]
+
+include::{topics}/selfregistration.adoc[]
+
+include::{topics}/optional.adoc[]
+
+include::{exercises}/genericmapper.adoc[]
+
+include::{exercises}/sqltablegenerator.adoc[]
+
+:sectnums!:
+
+== Reading
+
+Horstmann V1 Ch 5.7
+
+== Exercises in this part.
+
+* <<_class_genealogy, Class Genealogy>>
+* <<_entity_deconstructor_generator, Entity Deconstructor Generator>>
+* <<_self_registering_deconstructor, Self Registering Deconstructor>>
+* <<_generic_mapper, Generic Mapper>>
+* <<_exercise_sql_table_sqlgenerator, SQL Table Generator>>

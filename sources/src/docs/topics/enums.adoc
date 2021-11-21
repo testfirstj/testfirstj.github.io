@@ -1,0 +1,98 @@
+
+== Enums
+
+In this week we revisit enums, which you already know from PRC1. The standard examples are WEEKDAYS, CARDS, and COLOURS. But they can do much better.
+
+Since an enum is just a class in disguise with some extra rules that have to be observed.
+
+* an enum class must start with declaring its instances, called the *values*, the constant values that will be the only available
+  instances.
+* The enum values are implicitly `public static final`. Public static final also implies a special writing style for the values: All caps *SNAKE_CASE*.
+* The enum class itself is `final` too, meaning that you cannot extend the enum, so no one can sneak in an extra value or other behavior but you.
+* The constructor(s) are implicitly private, even if you leave the modifier keyword out. It is actually good style if you do in an enum definition.
+* The enum implements Comparable, in which the order of declaration determines the 'natural ordering'.
+
+You get some predifined methods for free:
+
+* `E[] values` produces the array of all values of the enum E.
+* `E valueOf(String name)` translates/looks up the enum by name. This allows you to use the enum values in a plain text file and still get the proper enum value.
+
+The actual declaration of the super type of all enums is a bit convoluted and you will not yet understand all of it's intricacies. That is okay for now.
+
+.Enum, the superclass of all enums
+[source,java]
+----
+public abstract class Enum<E extends Enum<E>>
+   implements Comparable<E>, Serializable {
+  // stuff left out intentionally
+}
+----
+
+
+.Suite enum with some
+[source,java]
+----
+/**
+ * Card suite definition with colour and picture.
+ */
+enum Suite {
+  HEART("RED", "heart.png"),
+  CLUB("BLACK","cclub.png"),
+  SPADE("BLACK", "spade.png"),
+  DIAMOND("RED", "diamond.png");
+
+  /** One of RED or BLACK. */
+  String colour;
+  /** Path to png file used in UI. */
+  String symbolPicture;
+
+  /** Sole constructor setting colour and symbol. */
+  Suite( String colour, String symbol ){
+    this.colour = colour;
+    symbolPicture = symbol;
+  }
+}
+----
+
+Some other things and enum can do:
+
+* an enum can extend an interface
+* the enum can class can have abstract methods, which must be implemented in every instance
+** you can combine both points, provide a default implementation in the interface, and only override where needed. We will use that later on in the course weeks.
+
+.enum with abstract method, details left out
+[source,java]
+----
+enum BinaryOperator {
+  PLUS("+"){
+    // detail left out
+  },
+  TIMES("x"){
+    // same here
+  }
+
+  /** The operation shape. */
+  abstract int apply(int a, int b); // <1>
+
+}
+----
+<1> The apply method must be implemented in each value. It is the detail left out.
+
+This can be written easier, with less work and better, because it integrates well
+with lambdas:
+
+.enum implementing a functional interface
+[source,java]
+----
+import java.util.function.IntBinaryOperator;
+enum BinaryOperator implements IntBinaryOperator {
+  PLUS("+"){
+    // detail left out
+  },
+  TIMES("x"){
+    // same here
+  }
+}
+----
+
+Note that you must change a small thing: rename the apply method to `applyAsInt`, to make it really implement the functional interface `IntBinaryOperator`.

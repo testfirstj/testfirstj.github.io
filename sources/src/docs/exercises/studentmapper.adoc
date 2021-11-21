@@ -1,0 +1,148 @@
+
+:sectnums!:
+
+== Exercise StudentMapper.
+
+[big]*Disclaimer: No students were hurt or will be hurt by developing a student mapper.*
+
+A *mapper* is a technical term that describes that something is turned it something else.
+That still sounds dangerous like turning naughty kids into frogs, but in this case it
+is simply turning an object into something the other side can deal with. Like
+turning a student object into an array of its constituting parts, so it can be put into a database
+or sent across a wire. Mwah, still sounds scary...
+
+
+++++
+<div class='ex'><details class='ex' open><summary class='ex'>Student Mapper</summary>
+++++
+
+We want to make a first step to applying what we learned so far in the earlier weeks,
+using generics and reflection to avoid copy and waste style of coding.
+
+In this first part of the exercise we will pluck an object apart and put the fields' content
+into an array of Object. We will use method handles to do that.
+
+As ever, the victim will be student objects, but to compensate, we will apply the same trick on tutors.
+Both will be fine. You need two types anyway to show that what you concocted works in all `<generic>` cases.
+
+A brief description of the approach is
+
+. Reflect on the type (Class<E>.class) to find the declared fields, and save this info in an array for later use. (Cache)
+. For each declared field, in declaration order (which you got in step 1), derive the name of the getter 
+  (uppercase first letter of fieldname and prefix with `"get"`).
+.. with the derived name use the MethodHandle Lookup in combination with a method-type to find the method using findVirtual.
+. Also save the method handles in an array.
+
+Now for every E-object you want to take apart, use the arrays you collected on the Class of E.
+
+
+
+
+You start small, by discovering the MethodHandle API in the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/invoke/package-summary.html[java.lang.invoke] package
+the with some tests, to promote your understanding.
+
+So start with a https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/invoke/MethodHandles.Lookup.html[publicLookup]
+and use it to find a method you know is available using the method https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/invoke/MethodHandles.Lookup.html#findVirtual(java.lang.Class,java.lang.String,java.lang.invoke.MethodType)[findVirtual()]
+
+. use the method name for e.g. [blue]`"getFirstName"`, which you should be able to invoke on an instance of student.
+. From there use https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getDeclaredFields()[Class.getDeclaredFields()]
+  to find all fields. Keep the resulting array, because it will become handy.
+. Use the name of the field do compute the name of the getter. This means uppercasing the first letter of the fieldname and prefixing it with `"get"`.
+. Use the approach you learned in the first step  to find the getters for all fields. Save the getters also in array in the same order as the fields.
+. Now you have almost all ingredients you need to create and _array_ of objects from the fields in an instance.
+.. The length of the arrays is the same as the length of the array of fields.
+.. To get the value in a field, use the getter method you found in step 1, by simply using them in field declaration order to get the n-th element in the array.
+
+This resulting array of objects is now the result of the the operation [blue]`toArray(E entity)`.
+
+
+// Since we need handles and fields in pairs, we can iterate through each synchronously 
+// by using this trick:
+
+Now we can implement this initial design, a generic mapper (green, public ) and a package private EntityMapper that does most of the work.
+
+image::entitymapper2.svg[]
+
+The Mapper has a cache of mapper, in which it saves EntityMappers when they have been requested.
+So all the work the entity mapper does when analysing a type is done only once.
+
+The mapper can now be used as follows:
+
+.mapper in action deconstructing a Student.
+[source,java]
+----
+    static Object[] studentArgs = new Object[]{
+        snummer, lastName, tussenVoegsel, firstName, dob, cohort, email, gender,
+        group, true
+    };
+
+    static Student jan = new Student(
+            snummer, lastName, tussenVoegsel, firstName, dob, cohort, email,
+            gender, group, true
+    );
+
+    @Test
+    public void tMapperCanDeconstruct() {
+        Object[] array = studentMapper.toArray( jan );
+        assertThat( array ).containsExactly( studentArgs );
+//        fail( "tMapperCanDeconstruct completed succesfully; you know what to do" );
+    }
+----
+
+
+*Construct from Objects* +
+
+To create an object we either need a constructor or some fitting factory method.
+The idea is that this constructor should have exactly the types and order of the (non-static) fields in the 
+class. This is what you get when you let an IDE create the constructor but also when you use a Java 14 [blue]#record#.
+
+Again you use a MethodHandle for the constuctor. This MethodType is the way to find the proper constructor by asking
+the lookup for a constructor with the exact types that you have stored in the fields array:
+
+[source,java]
+----
+    Class[] fieldTypes = Stream.of( fields ) // <1>
+            .map( f -> f.getType() )
+            .toArray( gen -> new Class[arraySize] );
+    MethodType ctorType = MethodType.methodType( void.class, fieldTypes ); <2>
+----
+
+<1> Derive type array from field array
+<2> Use to find the method Type. For a constructor, the return type should be [blue]#void#, in case you wonder. In actuallity that
+  would be the type that the constructor constructs.
+
+
+*Approach to implement an EntityMapper*. 
+
+* Save the entity type in the constructor.
+* For the type, reflect the declared fields. Save that as final Field[].
+* In the constuctor you now know the length of all arrays used by the mapper, so all fields can be made final.
+* To also make the reflected constructor a final field, the constructor is the return value of the final method `analyseClass()`.
+* `analyseclass()` uses the field array to make names for all getters and creates a method handle for a getter for each field. These are saved in 
+  the appropriate array.
+* As last step in to find the constructor using the proper method provided by the Lookup.
+
+
+For a later feature we need to iterate of fields and handles in unison, to make a stream of field names and field values.
+Use an IntStream to get a stream of indices and use the indices to make a FieldPair for each field in the field, using the field's name 
+and the methodhandle from the methodHandle array.
+
+[source,java]
+----
+  return IntStream
+          .range( 0, fields.length )
+          .mapToObj( i -> get( fieldGetters[i], fields[i].getName(), e ) ); // <1>
+----
+
+
+<1> The get method applies the handle, the string, and the entity **e** you want to pick the value from 
+and return name plus value. 
+
+This can then be used quite easily to create a json string from an entity.
+
+
+++++
+</details></div> <!--studentmapper-->
+++++
+
+:sectnums:

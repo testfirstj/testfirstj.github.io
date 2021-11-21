@@ -1,0 +1,405 @@
+== The TAO of DAO.
+
+The Data Access Object (DAO) pattern provides an abstraction to the business logic
+that hides and thus decouples persistence from the business logic.
+When done right, one DAO implementation can be replaced with another one, for instance
+for the purpose of testing (with a mocked DAO), speed (with an in-memory DAO) or different service,
+for instance by replacing the relational database with a (remote) rest service.
+
+Lets first start with a example of why one would like to use a `DAO`.
+
+In the CSV to Objects exercise we saw that it's possible to use
+CSV files to store and retrieve `Students`.
+Files can be used for this purpose, however it's not always the best solution.
+For example if we want to make sure values are of the correct type,
+model relationships between different objects or
+make sure that certain values are unique.
+
+For this level of control we can use a Relation Database Management System (RDBMS).
+
+So imagine that we want to use the database to store and retrieve `Students`,
+as done in the CSV to Objects exercise.
+The `Student` class itself is of course not responsible for anything to do with the database.
+So we need a class that is specifically for database interaction for `Students`.
+For example a `StudentDAO`. This `StudentDAO` contains methods to save, get, update and delete `Students`. For example the update method could look as follows:
+
+.StudentDAO.update(student) method
+[source,java]
+----
+public Optional<Student> update(Student student){
+    String query =
+                "update students set (lastname, firstname, email)"<1>
+                + "= (?, ?, ?) "<2>
+                + "where snummer=?"<3>
+                + "returning lastname, firstname, email";<4>
+    try(Connection con = dataSource.getConnection();){
+        try(PreparedStatement pst = con.prepareStatement(query)){<5>
+            pst.setString(1, student.getLastname());<6>
+            pst.setString(2, student.getFirstname());
+            pst.setString(3, student.getEmail());
+            pst.setInt(4, student.getSnummer());
+
+            try (ResultSet rs = pst.executeQuery();) {<7>
+                if ( rs.next() ) {<8>
+                    return Optional.ofNullable( recordToEntity( rs ) );<9>
+                } else {
+                    return Optional.empty();
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        throw new RuntimeException(ex.getMessage(), ex);
+    }
+}
+----
+<1> Specify all the names of student fields
+<2> Specify the correct number of placeholders
+<3> Specify which student record to update
+<4> Specify the values we want back from the database
+<5> Prepare the statement (send it to the database)
+<6> Set all the required values
+<7> Execute the query
+<8> Check if the `ResultSet` contains values (rows)
+<9> Convert the `ResultSet` back to an entity (including `snummer`)
+
+One of the problems with this approach is that the `StudentDAO` has to be
+updated if the `Student` entity changes. E.g. if we add a new field to `Student`
+or change the name of an existing field we have to update the `StudentDAO`.
+
+Thankfully in the previous week we created a `GenericMapper`. This `GenericMapper`
+has exactly the functionality that we need to generate the
+`query` and the `PreparedStatement`.
+
+.StudentDAO.update(student) using the `StudentMapper`
+[source,java]
+----
+public Optional<Student> update(Student student){
+    var studentMapper = Mapper.mapperFor(Student.class);
+    var columnNames = studentMapper.entityFields()<1>
+            .stream()
+            .map( Field::getName )<2>
+            .collect( toList() );
+    String columns = String
+            .join( ",", columnNames );<3>
+    String placeholders = makePlaceHolders( columnNames.size() );<4>
+    String query = format(
+            "update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)"
+            + " returning  %2$s",
+            "students",
+            columns,
+            placeholders,
+            mapper.getKeyFieldName() );
+    try(Connection con = dataSource.getConnection();){
+        try(PreparedStatement pst = con.prepareStatement(query)){
+            fillPreparedStatement(pst, student);<5>
+            try (ResultSet rs = pst.executeQuery();) {
+                if ( rs.next() ) {
+                    return Optional.ofNullable( recordToEntity( rs ) );
+                } else {
+                    return Optional.empty();
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        throw new RuntimeException(ex.getMessage(), ex);
+    }
+}
+----
+<1> Retrieve all the fields of `Student`
+<2> Map the fields to their names
+<3> Join the column names
+<4> Helper function that creates a string containing the placeholders
+<5> Fill the `PreparedStatement` with the values from `Student` using the `StudentMapper.deconstruct(student)`
+
+By doing it this way, we don't have to update the `StudentDAO` if the `Student`
+is changed (we can auto-generate the new StudentMapper instead).
+
+This now works for the `Student` class, but of course we need this functionality
+for more entities, e.g. `Lecturer`, `Course`, etc. We can do that by making our `StudentDAO` generic. In the previous weeks we have seen how to convert an implementation
+for a specific type to a generic base implementation. By following the same steps
+we can come to the following generic `DAO`.
+
+.generic DAO
+[source, java]
+----
+public interface DAO<E, K> extends AutoCloseable{<1>
+    Optional<E> update( E e );
+    ....<2>
+}
+----
+<1> Where `E` is the type of the entity (e.g. `Student`) and `K` is the type of the
+primary key (e.g. Integer)
+<2> Removed additional methods for brevity
+
+.Usage example
+[source,java]
+----
+  DAO<Employee,Integer> sdao = daoFactory.createDao( Student.class );
+  Student j = sdao.save( new Student(....) ).get(); // <1>
+
+----
+
+.Sequence diagram of simple operation
+image::daosequencesimple.svg[]
+
+<1> The return value of the save operation is an `Optional<Student>`. If present
+the student object contains the exact same values as the record in the database, primary key and generated field and all the rest.
+
+[TIP]
+====
+A DAO is a use-once object. So you get a DAO, use and then discard it (let the garbage collector take care of it).
+If you need to work on more than one entity, you should get a transaction token, that can then be used to commit or
+rollback the operation.
+====
+
+.Transaction example.
+[source,java]
+----
+    try (
+            DAO<Department, Integer> ddao = daof.createDao( Department.class );  // <1>
+            TransactionToken tok = ddao.startTransaction();              // <2>
+            DAO<Employee,Integer> edao = daof.createDao( Employee.class, tok ); ) {  //<3>
+
+        savedDept = ddao.save( engineering );
+        int depno = savedDept.getDepartmentid();
+        dilbert.setDepartmentid( depno );
+        savedDilbert = edao.save( dilbert );
+        System.out.println( "savedDilbert = " + savedDilbert );
+        tok.commit();                                                             //<4>
+    } catch ( Exception ex ) {
+        ttok.rollback();                                                        //<5>
+        Logger.getLogger( TransactionTest.class.getName() ).
+                        log( Level.SEVERE, null, ex );
+    }
+----
+
+<1> Create a Dao,
+<2> and have it make a token for all other daos involved in this transaction to use
+<3> as here with the edao.
+<4> If this point is reached we have success and commit,
+<5> otherwise any exception from the try-block above leads us here and we abort the transaction, thereby undoing everything that might have happened, database wise.
+
+.Sequence diagram of transactional operation
+image::daosequencetransaction.svg[]
+
+
+Now we can use this generic `DAO` to create a `StudentDAO`, `CourseDAO`, etc.
+The implementing class of a `DAO` needs to retrieve the correct mapper for the entity type.
+Thankfully that was also already implemented in last weeks exercise.
+
+.retrieving the correct mapper for entity type
+[source, java]
+----
+final Mapper<Student, Integer> mapper = Mapper.mapperFor(Student.class );
+----
+
+The are only two changes needed to make the `update` method from the non-generic `StudentDAO` work.
+
+1. Retrieve the correct mapper based on the generic type.
+2. Auto-generate the table name from the generic type
+
+And now we have a generic `DAO` that can update entities in the database.
+
+And now back to the theory.
+
+A DAO is defined as an interface, and the implementations can be generated by a factory and are reused
+when registered in a registry. A lot like the things we saw in week 6.
+
+.DAO Methods
+[source,java]
+----
+  // K is id, E is entity
+interface DAO<K,E> extends AutoClosable {
+    Optional<E> get( K id );
+    List<E> getAll();
+    default List<E> getByColumnValues( Object... keyValues );
+    Optional<E> save( E e );
+    E update( E e );
+    void deleteEntity( E e );
+    void deleteById( K k );
+    default TransactionToken startTransaction();
+    default DAO<E, K> setTransactionToken( TransactionToken tok );
+    default TransactionToken getTransactionToken();
+    default int size();
+    default int lastId();
+    default void close() throws Exception;
+    default List<? extends E> saveAll( List<E> entities );
+    default List<? extends E> saveAll( E... entities );
+    default void deleteAll( Iterable<E> entities );
+    default void deleteAll( E... entities );
+    default List<E> anyQuery( String queryText, Object... params );
+}
+----
+
+A database specific DAO may have extra methods.
+
+
+.Class diagram of a DAO and its collaborators
+image::daoclassdiagram.svg[]
+
+
+In the class diagram you see that the DAO can have multiple realizations:
+
+. *In memory:* The DAO is simply keeping the data in memory, typically in lists or maps.
+. *RDBMS:* Like a PostgreSQL based implementation, or even one that is database dialect agnostic.
+. *REST:* A DAO that uses rest service(s) do provide its service.
+
+In all cases, the business logic knows a DAO factory to get a DAO, but does NOT need to know
+the implementation. The better you stick to rule of low coupling, that is let the business logic know as little as possible
+about the implementation, the better the business logic is portable to a world with different service implementations.
+For instance, the same business logic would be able to run on top of or talk to a backing RDBMS database, a rest service, a no-SQL database
+or a file-system.
+
+To make this work, the service should be rich enough, to avoid the need for the circumvention of the abstract definitions.
+One could imagine to define an abstract expression language that can express things like [blue]`'give me all contracts that expire before a specific date'`,
+including means to combine these mostly boolean expressions.
+But that would be an exercise for another day.
+
+Lets get our hands dirty implementing a DAO using PostgreSQL as the supported database.
+
+
+=== Update
+
+We will now take a look at how the update method is implemented in the `PGDAO`.
+
+
+[blue]`E update( E t );`, We get an object E and should update the correct row
+in the database, based on the primary key.
+
+The SQL statement for that is basically `update tablename set (col1, col2) = (val1, val2)
+where idcolumn=?`.
+But we want more control, because we want to get column values in the order of the entity
+so we can create an entity instance of it using the mapper.
+We can ask the same mapper for the field order.
+
+So in terms of Student: update students set `(firstname,... active,)`,
+with all defined field names in between.
+
+The DAO code, from top (near the user of the method) to the bottom (implementation details).
+
+.Constructor
+[source,java]
+----
+    final Mapper<E, K> mapper;<1>
+
+    PGDAO( PGDAOFactory fac, DataSource ds, Class<E> entityType,
+            QueryFactory queryTextCache, AbstractQueryExecutor qe ) {
+
+        this.mapper = Mapper.mapperFor( entityType );<2>
+        ....<3>
+    }
+----
+
+<1> The Mapper<E,K> used by DAO<K,E> is as abstract (that is in terms of E) as the dao.
+<2> Get the mapper for the entity type
+<3> Rest of the constructor left out for brevity
+
+.Update method
+[source, java]
+----
+@Override
+public E update( E t ) {
+    if ( null != transactionToken ) {<1>
+        return update( transactionToken.getConnection(), t );
+    }
+    try ( Connection con = this.getConnection(); ) {<2>
+        return update( con, t );<3>
+    } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
+        Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE,
+                ex.getMessage() );
+        throw new DAOException( ex.getMessage(), ex );
+    }
+}
+----
+<1> In case of a pending transaction, there is a token. Use the token's transaction.
+<2> Get the connection in a try-with-resources block and do it all by yourself.
+<3> And do the work in the method `E update(con, id);`
+
+So what does the update helper method do?
+
+.Update helper method
+[source, java]
+----
+private E update( final Connection c, E e ) {
+    String sql = queryFactory.updateQueryText();<1>
+    K key = mapper.keyExtractor().apply( e );<2>
+    return (E) qe.doUpdate( c, sql, e, key );<3>
+}
+----
+<1> Retrieve the actual query text (update tablename set ....)
+<2> Retrieve the primary key
+<3> Execute the actual update
+
+We will have a look at the `updateQueryText` method in the exercise of this week, so for
+now let us focus on the `doUpdate`.
+
+.doUpdate method, create the prepared statement
+[source, java]
+----
+@Override
+E doUpdate( final Connection c, String sql, E e, K key ) throws DAOException {
+    try ( PreparedStatement pst = c.prepareStatement( sql ); ) {
+        Object[] parts = mapper.deconstruct( e );
+        int j = 1;
+
+        // all fields
+        for ( Object part : parts ) {
+            if ( part == null ) { //<1>
+                pst.setObject( j++, part );
+                continue;
+            }
+            Object po = factory.marshallOut( part ); //<2>
+            if ( po instanceof PGobject ) {
+                pst.setObject( j++, part, java.sql.Types.OTHER ); //<3>
+            } else {
+                pst.setObject( j++, part ); //<4>
+            }
+        }
+        pst.setObject( j, key ); //<5>
+        try ( ResultSet rs = pst.executeQuery(); ) {
+            if ( rs.next() ) {
+                return (E) recordToEntity( rs ); //<6>
+            } else {
+                return null;
+            }
+        }
+    } catch ( SQLException ex ) {
+        Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                ex );
+        throw new DAOException( ex.getMessage(), ex );
+    }
+}
+----
+<1> [blue]`null` needs no conversion.
+<2> Do required type conversions. The dao factory is specific to a database dialect.
+   You should [red]*not* do this in the mapper, because that would bind the mapper to a database.
+<3> So called [blue]`PGobjects` get special treatment. Needed for none-standard JDBC types such as TIMERANGES
+<4> Walk through all columns in the PreparedStatement.
+<5> Put the key value at the place of the last `?`.
+<6> We know this guy.
+
+Not lets have a quick look at how to convert a record from the `ResultSet` to an instance
+of the entity type.
+
+.recordToEntity, convert a record of the `ResultSet` to an instance of entity type
+[source, java]
+----
+@Override
+E recordToEntity( final ResultSet rs ) throws SQLException {
+    Object[] parts = new Object[ mapper.getArraySize() ]; <1>
+    for ( int i = 0; i < parts.length; i++ ) {
+        Class<?> type = mapper.entityFields().get( i ).getType();<2>
+        parts[i] = factory.marshallIn( type, rs.getObject( i + 1 ) );<3>
+    }
+    return mapper.construct( parts );<4>
+}
+----
+<1> Create an array that will hold all the entity fields
+<2> Get the type of the entity field
+<3> Convert the object from the record to the correct field type
+<4> Construct a new entity instance
+
+Now we know how the `PGDAO` update works, except for the `updateQueryText`.
+This part will be discussed in the following exercise.

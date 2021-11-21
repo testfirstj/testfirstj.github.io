@@ -1,0 +1,23 @@
+== Booking System
+
+In this exercise, you need to write a booking system for cockpit 1.91. Lots of students
+use the cockpits without booking and your booking system should help solve the problem.
+
+Your booking system should be able to return a list of hours that are already booked.
+It should also prevent people from double-booking an hour: for instance, if the cockpit is
+already booked for 8:00-9:00, it is blocked from being booked at that time again. The system
+only allows booking for whole hours, so a booking from 8:30 to 9:45 would not be possible.
+To make things easier, the booking system does not need to store any information about who
+booked the cockpit and when. There is also no need to have days in the booking system. It only
+uses the 24-hour time slots.
+Lastly, your booking system should deal with illegal inputs: invalid times, empty inputs, or
+wrong type of input.
+
+*Remember to start with the tests, not with the implementation!*
+
+[NOTE.extra,caption="Extra Challenge"]
+// NOTE: *EXTRA CHALLENGE:*
+(1) Allow for booking times that are not round hours;
+(2) Include days of booking;
+(3) Include a method to cancel a booking;
+(4) Write your own exception class for illegal inputs.

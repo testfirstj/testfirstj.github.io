@@ -1,0 +1,50 @@
+:doctitle: W12 Security
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,h,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+include::{topics}/security.adoc[]
+
+// Java modules
+//
+// .Java SE module graph
+// image::module-graph.png[]
+//
+// video::1Z_h55jMe-M[youtube, title="Victor Rentea: Unit Test like a Pro: The Circle of Purity",width=640, height=360]
+//
+// We really like https://victorrentea.ro/[Victor Rentea ^] as advocate on Testing, Unit testing in particular. Watch the video and enjoy yourselves.
+//
+// Best to watch it on https://youtu.be/1Z_h55jMe-M[youtube ^].
+//
+// == Reading
+//
+// * Horstmann Core Java, Ed 11, Vol II, Ch 9
+//
+//
+// include::{topics}/collectionsareinvariant.adoc[]
+//
+// include::{topics}/java-module-testing.adoc[]
+//
+// include::{topics}/testrecipes2.adoc[]
+//
+// === Slides:
+//
+// // TODO one slide on extended accessibility/visibility.
+//
+// === Additional pointers
+//
+// == Video on project Jigsaw.
+//
+// video::fxB9cVNcyZo[youtube, title="Java 9 Modules explained by the architect",width=800, height=450]
+//
+// Watch on https://youtu.be/fxB9cVNcyZo[youtube ^].
+//
+// == Week 13 Exercises
+//
+// ++++
+// <div class='ex'><details class='ex'><summary>Travel Agency</summary>
+// ++++
+// include::{exercises}/travelagency.adoc[]
+// ++++
+// </details></div>
+// ++++

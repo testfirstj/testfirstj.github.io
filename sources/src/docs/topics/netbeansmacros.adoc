@@ -1,0 +1,41 @@
+== NetBeans Macros
+
+These macros or 'code templates' might be useful.
+
+=== JUnit test method, Junit 5 version
+
+.*jutm* junit 5 version
+[source,java]
+----
+// @Disabled("think TDD")
+@${baseType type="org.junit.jupiter.api.Test" default="Test" editable="false"}
+public void ${method}() {
+    fail("method ${method} reached end. You know what to do.");
+}
+----
+
+* The base type ensures that the correct `@org.junit.jupiter.api.Test` annotation is imported.
+
+
+=== Student test data, immutable list of students.
+
+Create a set of students quickly
+.students
+[source,java]
+----
+List<String> ${names}= {
+  "Malvina Moulden",
+  "Eugenio Elias",
+  "Eleanore Estey",
+  "Olympia Oliphant",
+  "Candi Cortinas",
+  "Edmundo Evett",
+  "Nicol Neufeld",
+  "Dewitt Dossey",
+  "Waneta Woodley",
+  "Patrica Paden",
+  "Alanna Ardoin",
+  "Sixta Savala",
+  "Melva Maillet"
+};
+----

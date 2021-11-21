@@ -1,0 +1,35 @@
+// NOTES: 100L constructor should be tested with a stock getter.
+//        the 2-5L requirement is not tested, should be in there
+//        the barkeeper.serve() test is incomplete
+
+*In the pub*
+
+For this exercise, you are modeling and implementing the process of drinking beer in a pub.
+ Develop your own pub simulation. Write unit tests to test if your implementation works and
+ if it conforms to the specification and if exceptions are properly handled. *Work test driven!*
+
+You’ll find the project template in your repository.
+
+_Here are the specifications of this exercise. Turn them into *testable requirements* before you start your TDD process._
+
+. Initially the pub has 100L of beer available.
+. A barkeeper and beer drinkers belong to a Pub.
+. Beer drinkers can ask the barkeeper for beer.
+. Beer is handed out either in small format (0.2L) or pint format (0.57L).
+. Beer drinkers can only drink a limited amount of beer, between 2L and 5L.
+
+Here is how you could start the BarkeeperTest class. First you create a barkeeper that you use in your tests.
+[source,java]
+----
+    private Barkeeper barkeeper;
+
+    @BeforeEach
+    public void setUp() {
+        barkeeper = new Barkeeper();
+    }
+----
+
+In your first test method, you want to test whether the tapping of beer works as intended. Let the test fail first,
+then implement the logic of that test. When you have finished,continue to the next part.
+
+The exercise is finished when you have tested and implemented each requirement.

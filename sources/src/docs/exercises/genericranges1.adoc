@@ -1,0 +1,365 @@
+:sectnums!:
+
+// version 2
+=== Exercise Generic Ranges part 1
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Generic Ranges Part 1</summary>
+++++
+
+A *range* is a mathematical concept with quite a few applications in software systems.
+
+* Availability of a person or resource according to some agenda.
+* Booking resources like rooms in hotels or renting cars in a holiday.
+* Computing prices of an arrangement or rent when it crosses different price-zones,
+  like top-season or low-season.
+* Computer memory inside the computer is a resource to be shared. It also can't
+  overlap in the normal case, in particular not for data segments that are written by a program
+
+The examples are often related to date or time, and are the most common use.
+In the physical 3D world, the simple 1 dimensional linear model of ranges will not always be sufficient.
+
+A range is some segment between two points. These points could be points on a number line or on a timeline.
+Initially it looks like a simple concept, in particular a number line of say `long`, but in most physical
+cases, the dimension of a *point* differ substantially of that of the distance between two points. To make the case,
+you will find it natural to express a point in time as 1995-Aug-12 but you would wonder what exactly 6 * 25 August would mean.
+
+This aspect is modeled in the Range [blue]*interface*, the type of the Points is *P*, the dimension between them with *D*. The mnemonic way
+to remember is *P* for **p**oint in time, *D* for **D**istance. The **R**ange get the letter **R**.
+
+An example of an (important) operation is expressed as a Functional interface called MeasureBetween, which provides the shape of
+a lambda expression. `(P a, P b) -> D`, which says that the method computes the distance `D` between two `Points` `a` and `b`.
+
+image::range-classes.svg[title='Class diagram of the ranges project']
+
+*Operations.*
+
+* Compute the length of a Range as type Distance.
+* Compute the distance between two points.
+* Join and union to join two ranges producing a new Range.
+* Intersection of two ranges, returning the overlap as Range.
+* Divide into parts, such that a range is chopped up into 1, 2 or three parts (Ranges), dependent
+  on the relative position of the operands in the operation. Useful to make reservations from available date or time ranges.
+
+All tests use a limited set of test values, basically just points, *a*, *b*, *c*, *d*, *e*, and *f*.
+These are the same point as used in the diagrams.
+A requirement to those points is that they are in ascending order [blue]`a < b < c < d < e < f`.
+
+The ranges project is meant as a reusable library to define some ranges and operations on ranges.
+The most important operation in this case is to compute the overlap between to ranges.
+[[operations]]
+image::rangesoperations.svg[title='Operations between ranges']
+
+The *contained* case is interesting one, because it can be used to determine if an availability matches a request.
+For instance you want a 3 day holiday and the rooms that you can book must have a free range that contains your request.
+If you then book, the free range is then cut up into a (optional) free part _before_, your booking, and an (optional) free part _after_.
+
+[[cutter]]
+image::rangecutter.svg[title='The cutter cuts red and blue and takes green as a whole']
+
+The intersection operation in the ranges package is called `Range.intersectWith( Range other )` and is defined
+_and_ implemented in the Range interface as a [blue]#default# method.
+Because the Range interface is defined as a Generic type, the implementing classes can use the `intersectWith` method without change.
+
+The same applies to methods `boolean overlaps(Range other)` and `D overlap(Range other)` which test if there [blue]#is# an overlap and
+measure the length of such overlap.
+
+The `Range intersectWith(Range other)` can be used to find conflicting ranges, but the information
+you gain by this method is typically the same as `boolean overlaps(Range other)`. In a planning scenario you typically want to avoid overlaps.
+You would not like to find other guests plundering your minibar.
+
+The final operation, `D overlap(R other)` can be used  to compute prices. Use case: prices vary per season,
+and the length of an overlap of a reservation with seasons determines the price of the parts.
+
+Completely in line with the Duck example in the theory, we want maximum reuse, or
+as much as possible work done in the Range super type, so that a specialization has little or no work to do.
+
+Let us start simple and show what an integer range could look like when we get the design done.
+The `IntegerRange` is also the first leaf class in our design.
+
+.IntegerRange is a Range of Integer
+[source,java]
+----
+public class IntegerRange implements Range<IntegerRange, Integer, Integer> {
+
+    final Integer start;
+    final Integer end;
+
+    private IntegerRange( Integer[] p ) { // <1>
+        this.start = p[ 0 ];
+        this.end = p[ 1 ];
+    }
+
+    @Override
+    public Integer start() {
+        return start;
+    }
+
+    @Override
+    public Integer end() {
+        return end;
+    }
+
+    @Override
+    public BiFunction<Integer, Integer, Integer> meter() { // <2>
+        return ( a, b ) -> b - a;
+    }
+
+    @Override
+    public int hashCode() {
+        return rangeHashCode();
+    }
+
+    @Override
+    @SuppressWarnings( "EqualsWhichDoesntCheckParameterClass" )
+    public boolean equals( Object obj ) { // <3>
+        return rangeEquals( obj );
+    }
+
+    @Override
+    public String toString() {
+        return rangeToString();
+    }
+
+    @Override
+    public IntegerRange between( Integer start, Integer end ) { // <4>
+        return IntegerRange.of( start, end );
+    }
+
+    public static of(Integer start, Integer end) {
+        return new IntegerRange(  Range.minmax( start, end ) ); // <5>
+    }
+}
+----
+
+<1> Private helper constructor that takes an array of two T's
+<2> This method returns a function in the form of a lambda expression
+<3> The interface defines helper methods for equals and hashcode. Because you cannot
+   overwrite methods of a class in an interface, we use this trick to avoid duplicate work or copy-and-waste-errors.
+<4> Factory helper that can be used by the default methods in the Range interface
+<5> Using helper method that ensures that parameters are passed in correct order.
+
+.IntegerRange as Java 16+ feature, less boilerplate.
+[source,java]
+----
+public record IntegerRange( Integer start, Integer end) implements
+        Range<IntegerRange, Integer, Integer> {
+
+    @Override
+    public BiFunction<Integer, Integer, Integer> meter() {
+        return ( a, b ) -> b - a;
+    }
+
+    @Override
+    public IntegerRange between( Integer start, Integer end ) {
+        return new IntegerRange( start, end );
+    }
+
+    @Override
+    public Integer zero() {
+        return 0;
+    }
+}
+----
+
+[TIP]
+====
+When you want to enable java preview features with projects that use sebipom,
+set the #java.release# to the version you want to use, and
+add a build section to tell the compiler to turn on the preview-features.
+[source,xml]
+----
+   <java.release>16</java.release>
+.
+.
+
+  <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArguments>--enable-preview</compilerArguments>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+  </build>
+----
+====
+
+.The Range interface class header
+[source,java]
+----
+/**
+ * Range with start and end and some operations.
+ *
+ * @param <R> self referencing range type.
+ * @param <P> the demarcation type of start and end point.
+ * @param <D> the distance Dimension between start and end points.
+ */
+ public interface Range<R extends Range<R,P,D>,
+                        P extends Comparable<? super P>,
+                        D extends Comparable<? super D>
+                        >
+        extends Comparable<R>, Serializable {
+// code omitted
+}
+----
+
+The interface definition may look a bit daunting but it reads as: +
+_a range which has subtypes [blue]`R`, and has two [blue]#Comparable# endpoints of type [blue]`P`, with distance of type [blue]`D` and is itself [blue]#Comparable#
+  with something of it's own type [blue]`R`_.
+The comparison is done by comparing the starting boundaries, a and c in the drawings above.
+
+The type parameters are a bit special, because generic ranges may have endpoints of a different type
+than the distance between them. Compare to two locations on earth. The location is expressed as https://www.latlong.net/[lat-long] which
+is a two-dimensional value, but the distance is expressed as a length in meters, kilometers, or miles. +
+Same for time and dates. A date is a position on some scale with an arbitrary origin, like the Gregorian Calendar,
+but the 'distance' is not of type date, but of some
+kind of time-duration such or `Period` of `Duration`. If you ask a Duration its 'length', you need to specify the unit, such
+as `ChronoUnit.DAYS`, `ChronoUnit.HOURS` or `ChronoUnit.NANOS`.
+
+The definition of the leaf class `LocalDateTimeRange` therefore looks like this:
+
+[source,java]
+----
+public class LocalDateTimeRange implements Range<LocalDateRange, LocalDateTime, Duration> {
+  // code omitted
+}
+----
+
+The https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/ChronoUnit.html[ChronoUnit ^]
+allows the range to be measured in any of the unit types defined in that `enum`, from nano seconds to centuries, with days somewhere in between.
+Not all units are applicable all of the time. HOURS and DAYS are precise, but MONTHS and YEARS are not, because they vary in length.
+
+The interesting or special methods defined in the interface may also need some explanation.
+
+.Between. Note that [blue]*a* is included, [red]*b* is excluded in the range a-b
+[source,java]
+----
+ /**
+   * Is a midpoint between a (inclusive) and b (exclusive).
+   *
+   * @param a first point
+   * @param b second
+   * @param inBetween point
+   * @return true if inBetween is at or after a and strictly before b.
+   */
+  default boolean isBetween( P a, P b, P inBetween ) {
+      return a.compareTo( inBetween ) <= 0 && inBetween.compareTo( b ) < 0;
+  }
+----
+
+.Do two ranges have points in common?
+[source,java]
+----
+/**
+ * Does this range overlap with another one.
+ *
+ * @param other to check
+ * @return true on overlap with other
+ */
+default boolean overlaps( R other ) {
+    // code left as exercise
+}
+----
+
+.The getLength() method evaluates the method returned by the meter() method implemented in the above class.
+[source,java]
+----
+/**
+ * Get the length of this range in some unit. The effective operation is
+ * (end - start), but since we do not know how to subtract the sub-types,
+ * that is left to the implementer. The exception thrown on incompatibility
+ * of range and unit is also left to the implementer.
+ *
+ * @param unit of measurement
+ * @return the length
+ * @throws RuntimeException when the unit and this range are not compatible
+ */
+default long getLength( D unit ) {
+    return meter().apply( this.start(), this.end() );
+}
+----
+
+The [blue]`default` method above uses the abstract method below.
+
+.The measurement [blue]_device_ is a BiFunction<P,P,D> that is applied in the above method.
+[source,java]
+----
+    /**
+     * Return the 'device' to measure the distance between two points Compute the distance in dimension D.
+     * The implementer has the choice to return a class, lambda expression, or a (static) method reference.
+     * The lambda has two inputs of type P: a and b.
+     *
+     * @return the distance meter lambda or BiFunction Implementation.
+     */
+    BiFunction<P,P,D> meter();
+}
+----
+
+
+.One of methods that makes the Range interface and its sub-classes worth their keep.
+[source,java]
+----
+/**
+ * Compute the length that this and an other range overlap.
+ *
+ * @param other range
+ * @param unit of measurement
+ * @return the length of the overlap as a number of 'long' units
+ */
+default D overlap( R other ) {
+   // sorry, this is your work. And 0 is wrong most of the time.
+}
+----
+
+[[punchthrough]]
+image::punchthrough.svg[title='The punch only punches if it has a full hit']
+
+.The punching on test stage as shown in figure <<punchthrough>>
+[source,java]
+----
+   Stream<Range<R, T, U>> result = range.punchThrough( punch ); // <1>
+   assertThat( result )
+        .as( "punch " + range + " with " + punch )
+        .containsExactlyElementsOf( expectedParts );
+----
+
+<1> Note that the punch operation takes a single `Range punch` but produces a Stream that contains +
+* Either the 'green' range as a whole, in case the punch 'missed', or more formally is not completely contained in the target,
+* part(s) of the green range and the punch as a whole,
+* or only the punch if it completely knocks out and thereby replaces the green range. In this last case the punch and target completely overlap.
+
+From the above you can infer that the resulting [blue]`Stream` from the [blue]#punchThrough# operation has at least one (1) element and at most three (3).
+
+[TIP]
+====
+Whenever a method produces a Stream from an element of a Stream with a single operation,
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html#flatMap(java.util.function.Function)[flatMap]
+ is your friend.
+====
+
+*Parameterized Tests* +
+Many of the tests in the Ranges project are parameterized.
+Test driven in this instance means adding a row of test data to the data source, or un-comment a row.
+
+In this first part you need to complete the Range and RangeTest in the given project using the IntegerRange as leaf class.
+
+
+Range types expected at the end of this part:
+
+[options="header"]
+|====
+| Range               | Point | Distance
+| IntegerRange        | Integer  | Integer
+|====
+
+++++
+</details></div><!--end genericranges2.adoc -->
+++++
+
+:sectnums:

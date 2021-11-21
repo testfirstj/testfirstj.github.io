@@ -1,0 +1,22 @@
+= pg jdbc lesson
+
+* explain details in PgJDBCDemo
+** get connection from DriverManager
+** alternative: connection factory, read secrets from file.
+
+* explain details of sql injection demo.
+
+* prepared statements from now on.
+** take the pain out, fluent interface
+
+[source,java]
+----
+	// something like.
+	connection.prepare("sql").execute(params ...);
+----
+
+* transaction demo
+** turn off auto-commit (safety belt)
+* commit when completed until en of line
+* abort when exception (in catch branch)
+

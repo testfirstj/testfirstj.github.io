@@ -1,0 +1,32 @@
+== The Date and Time API
+
+In Java, an `Instant` represents a point on the time line. The origin (called epoch) is arbitrarily set at midnight
+of the first of January 1970 Greenwich time (UTC). `Instant.now()` returns the current point on the time line,
+being the number of seconds since the epoch (stored as `long`) and the number of nano seconds (stored as `int`). Each
+day has 24x60x60 = 86400 seconds. A `Duration` is the amount of time between two instants. Both `Instant` and `Duration`
+are immutable.
+
+An `Instant` does not have a human readable format. The two kinds of human time in the java API are _local date/time_ and
+_zoned time_. Local date/time has a date and/or time of day, but no associated time zone. Examples:
+
+image:calendar_example_LocalDate.png[width=25%, title="Local Date example"] Local Date example.
+image:alarmclock_example_LocalTime.jpg[width=25%, title="Local Time example"] Local Time Example.
+
+Do not use zoned time, unless really necessary. Today's date can be retrieved using `LocalDate.now()`, an arbitrary date
+with `LocalDate.of(<year>, <month>, <day>)` like `LocalDate.of(2021, 5, 1)` being first of May 2021. The amount of time
+between dates is called a `Period`. Check the java API to read about convenient methods of `LocalDate` and `Period`. An
+interesting one is the `datesUntil(...)` method on `LocalDate`, which returns a `Stream<LocalDate>`.
+
+`LocalTime` objects can be created like LocalDates, e.g.: `LocalTime endOfLecture = LocalTime.now().plusHours(1);`
+
+Zoned times make use of time zomes. Java uses the IANA database: https://www.iana.org/time-zones
+To make a zoned time out of a `LocalDateTime` you can use the `ZonedDateTime.of()` method or do it like this:
+`ZonedDateTime current = LocalDateTime.now().atZone(ZoneId.of("Europe/Amsterdam"));`. Now you get a specific `Instant` in time.
+The other way around, you can can find the corresponding `ZonedDateTime` in another time zone using `instant.atZone(...)`.
+
+To represent dates and times in readable and customizable formats, use the `DateTimeFormatter` class. It can use predefined
+standard formatters, `Locale` specific formatters and formatters with custom patterns.
+
+This paragraph is based on Core Java Volume 2, 11th edition, chapter 6 by Cay Horstmann.
+
+ 

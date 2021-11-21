@@ -1,0 +1,72 @@
+== Modules and Modules
+
+Maven has modules too, and that already for a long time. Maven modules however are not modules
+in the Java 9 sense. Maven modules are to be understood as a collection of coherent projects
+that are split up into smaller projects. Each smaller project is a _module_ that produces separate artifacts such as jar or war files.
+Either because the components are not deployed as one on one machine, or because of potential separate reuse of sub sets of the components.
+
+=== Java 9 Modules and Testing
+
+A project intended as  java module project should
+
+* declare the API of that module as in what packages are exported (`exports`), and optionally to whom,
+* who is allow to reflect on what part of the API (Optional) (`open` or `opens`)
+* what services it provides (optional)
+* and on what modules itself depends. `requires`.
+
+.Example module-info.java from https://github.com/sebivenlo/sebidao[sebidao]
+[source,java]
+----
+module nl.fontys.sebidao {
+    exports nl.fontys.sebivenlo.dao;
+    exports nl.fontys.sebivenlo.dao.memory;
+    exports nl.fontys.sebivenlo.dao.pg;
+    requires java.logging;
+    requires java.naming;
+    requires java.sql;
+    requires org.postgresql.jdbc;
+}
+----
+
+If you have java classes in packages, whose use in a context requires reflection, then you must `open`
+those packages to the reflecting modules. As an example: JUnit uses reflection to find the annotations in the test classes,
+so you typically need to open up your test classes for JUnit. The same goes for Mockito and other tools that are used during testing.
+Opening up everything just for testing sounds a bit scary and if it would be needed, it would defeat the purpose of the
+java 9 module system in the first place.
+
+The virtual machine has two ways to find classes:
+
+. The class-path, which is the traditional way.
+. The module-path, which is the java 9 way.
+
+Ideally, when your modern java 9 application is deployed, it will use the module path.
+However, based on the absolute need for backward compatibility, the class path can still be used
+and opens up some ways to temporarily at least open up a module without its cooperation.
+
+This works as of 2020-05-15 as follows, and can be used for testing.
+
+For those packages/classes that need reflective access by some test module or library,
+you can open up the packages by adding a configuration for the maven surefire test plugin that tells the JVM to
+open up the packages that are used in the tests.
+
+.Demo opens line in daodemo, part of the sebidao project.
+[source,xml]
+----
+<artifactId>maven-surefire-plugin</artifactId>
+      <configuration>
+          <!-- add add-opens lines for all packages in your module that are tested.
+              For testing it is fine to open your packages for the whole world, which includes
+              e.g. junit, assertj, and mockito.
+              Also leave ${atgLine} because it is set/used by the coverage plugin.
+          -->
+          <argLine>
+              ${argLine}
+              --add-opens sebidaodemo/demo=ALL-UNNAMED
+              --add-opens sebidaodemo/entities=ALL-UNNAMED
+              --add-opens sebidaodemo/pgtypes=ALL-UNNAMED
+          </argLine>
+      </configuration>
+----
+
+In the plugin configuration, the package `demo`, `entities`, and `pgtypes` are all opened to to the "unnamed modules", which
+are all libraries loaded via the class path. Because this configuration is only whilst running the tests, it is fine.

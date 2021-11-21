@@ -1,0 +1,236 @@
+== Java FX Bindings
+
+The graphic style of JavaFX is already quite nice. The architecture
+of JavaFX applied the lessons learned from the earlier Java framework AWT and Swing.
+
+[TIP]
+https://en.wikipedia.org/wiki/Swing_(Java)[Swing] and https://en.wikipedia.org/wiki/Abstract_Window_Toolkit[AWT] are the Java GUI
+frameworks with which NetBeans IDE and Intelij is built.
+That proves that these framworks are still in use in the industry. +
+There is another Java GUI framework word mentioning, which is https://www.eclipse.org/swt/[SWT], developed by IBM under the Eclipse flag.
+You may be familiar with the style if you have used for instance https://dbeaver.io/[DBeaver].
+
+One of the other important innovations are the JavaFX bindings.
+They provide an elegant way to distribute dynamic information throughout a
+GUI application, and help separating business and GUI code.
+
+The concept of bindings relies on the https://en.wikipedia.org/wiki/Observer_pattern[Observer Pattern],
+which says that a change producing instance can inform an interested party about a change that happenend.
+
+The classic observer pattern informs all of its *Observers*, or *Listeners* immediately of and change.
+The JavaFX approach is to relax a bit and take the Lazy approach.
+Being lazy is good, because avoiding work that is (not yet) needed is a way to reduce work and
+in the end speed up an application.
+
+.tubmling dominos. source stkinfo.com
+image:dominos2.gif[role="thumb left related"]
+The idea is to only invalidate a value when a change happens, and only start the computation when some one
+actually needs the result, for instance the GUI layer that needs to do a redraw. +
+Since Observables can be chained, changing one value may trigger a whole avalanche of computations.
+In JavaFx, it is still an avalanche, but of [green]*invalidations*, and [green]_no_ computations. The computation is only done
+when some one needs the result.
+
+'''
+
+JavaFX defines so called Properties in the `javafx.beans` package and its sub-packages `javafx.beans.properties` and `javafx.beans.bindings`.
+
+The https://docs.oracle.com/javafx/2/binding/jfxpub-binding.htm[Oracle tutorial] by Scott Hommel sheds some light on the matter.
+
+The Bindings and Properties packages provide several ways to create bindings, including expressions of various types,
+with specialized properties for [blue]#int#, [blue]#long#, and [blue]#double# as the most important
+specializations.
+
+// simple Examples
+// Fluent Api
+=== Binding APIs
+
+.In all examples we use two IntegerProperties.
+[source,java]
+----
+    IntegerProperty num1 = new SimpleIntegerProperty( 1 );
+    IntegerProperty num2 = new SimpleIntegerProperty( 2 );
+----
+
+.Bindings using Fluent API, from Oracle Tutorial
+[source,java]
+----
+    NumberBinding sum = num1.add( num2 ); // <1>
+    System.out.println( sum.getValue() );
+    num1.set(2);                          // <2>
+    int result= sum.getValue();           // <3>
+    System.out.println( result );
+----
+
+<1> Creates the binding but does NOT compute anything
+<2> Set the value, and invalidates the value, so observers must recalculate.
+<3> The get is the observer's action that actually triggers the actual computation.
+
+
+.Bindings class
+[source,java]
+----
+    NumberBinding sum = Bindings.add(num1,num2); //<1>
+    System.out.println(sum.getValue());
+    num1.setValue(2);                            // <2>
+    int result= sum.getValue();                  // <3>
+    System.err.println( result );
+----
+
+<1> Creates the binding but does NOT compute anything
+<2> Set the value, and invalidates the value, so observers must recalculate.
+<3> The get is the observer's action that actually triggers the actual computation.
+
+.Low level API
+[source,java]
+----
+    IntegerBinding sum( IntegerProperty n1, IntegerProperty n2 ) {
+        return new IntegerBinding() {      // <1>
+
+            {                              // <2>
+                super.bind( n1, n2 );
+            }
+
+            @Override
+            protected int computeValue() { // <3>
+                return n1.get()+n2.get();
+            }
+        };
+    }
+----
+
+<1> Anonymous inner class with `IntegerBinding` as [blue]#super# class.
+<2> Anonymous 'constructor' that tells the binding what its dependencies are.
+<3> The computation, which can be arbitrarily complex, and is only executed if
+some one ask the super for get(), which will then invoke `computeValue()`. Note the use of protected, so
+this method is only callable from within the hierarchy between the IntegerBinding and its anonymous sub class.
+computeValue is the only abstract method in [blue]#abstract class# *IntegerBinding*.
+
+// asString() vs toString()
+
+[WARNING]
+Quite often, and certainly when dealing with a GUI, you need to translate the values of a binding into
+its String representation. In this case [red]#toString()# does [big red]*NOT* cut it. +
+What you need is a https://openjfx.cn/javadoc/16/javafx.base/javafx/beans/binding/StringBinding.html[StringBinding] that is created
+from the Binding you want to show as text. That is what [blue]#public StringBinding asString()# in the Binding framework is for.
+
+
+=== Unbinding DoubleBinding dependencies
+
+There are use cases where you have to unbind bindings. One such use case is the exercise FXTriangulate.
+The DoubleBinding abstract class implements [blue]#javafx.beans.binding.Binding#, which states in its doc that the `getDepencies()` method should not be used
+in production code. We therefor will us a simpler approach.
+
+Since the [blue]`protected# bind(...)` and [blue]`protected unbind()` methods both take a _varargs_ argument, which is an array in disguise,
+the only thing you can do is to remember all bound bindings and
+when you have to unbind one, unbind all and then rebind the remaining.
+This appears the most reliable method.
+
+The binding and unbinding is necessary to make the binding listen to its dependencies.
+
+.The code for that looks like this.
+[source,java]
+----
+class ModifyableDoubleBinding extends DoubleBinding {
+
+    Set<ObservableDoubleValue> values = new HashSet<>();
+
+    @Override
+    protected double computeValue() {
+        double result = values.stream()
+                .mapToDouble( ObservableDoubleValue::get ).sum();
+        return result;
+    }
+
+    void add( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue[]::new ) ); //<1>
+        values.add( v );
+        bind( values.toArray( ObservableDoubleValue[]::new ) );
+        invalidate();
+    }
+
+    void remove( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue[]::new ) );
+        values.remove( v );
+        bind( values.toArray( ObservableDoubleValue[]::new ) );
+        invalidate();
+    }
+}
+----
+
+<1> `Collection.toArray(IntFunction<T[]> generator)` is a method introduced in Java 11.
+
+=== Caching bindings
+
+Creating bindings is powerful but can still lead to a performance bottleneck. If you create bindings willy-nilly, it might very well
+be that the same computation is done at several places and in a GUI screen redraw at almost the same time (or at least the reason) too.
+
+To mitigate that problem, it can be wise to cache a binding once it's created, and serve out the same binding on each subsequent call.
+A binding can have many *Listeners*, and it will dutifully inform all of them with either an invalidation call or change event.
+The Bindings themselves cache the value of the (last) computation and serve that out until it is 'discarded' on an invalidate call.
+
+[TIP]
+The secret sauce in many speed optimizations is avoiding work. Thereby you avoid burning CPU cycles.
+And burning them is useless when nobody really needs the result (yet). Being lazy is good, but
+it needs some extra work from the programmer.
+
+
+.Naive approach using computeIfAbsent.
+[source,java]
+----
+    DoubleBinding lengthBinding( Line aLine ) { // <1>
+        return lengthBindings
+            .computeIfAbsent( aLine,
+                l -> lengthBinding(
+                      l.startXProperty(),
+                      l.startYProperty(),
+                      l.endXProperty(),
+                      l.endYProperty()
+                )
+            );
+    }
+----
+
+<1> We use the line object as key in the map
+
+A naive approach to caching is to inspect a value for [blue]#null# and then instantiate one value when it is.
+In this case, because both the creation of the cache entries and the retrieval of the vale take place on the event thread, this naive approach works.
+
+If you want that thread safe, you could use the same map as above with a _surrogate_ key, like a simple object named `Object AREA_KEY = new Object();`.
+You then can rely on the thread-safety properties of
+ a https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentMap.html[ConcurrentMap]
+ instead of using a 'normal' hash map.
+
+.Caching a single value.
+[source,java]
+----
+   /**
+    * Cache for area binding.
+    */
+   private DoubleBinding areaBinding = null;
+
+   /**
+    * Create a binding to compute the area with a triangle determined by side
+    * lengths a, b and c. This method consults the cache and has the value computed
+    *
+    * @return the area binding
+    */
+   final DoubleBinding areaBinding() {
+       if ( areaBinding == null ) {
+           areaBinding = areaBinding( distanceBinding( redCircle, greenCircle ), //<1>
+                   distanceBinding( greenCircle, blueCircle ),
+                   distanceBinding( blueCircle, redCircle ) );
+       }
+       return areaBinding;
+   }
+   // method that creates the binding is left as an exercise
+----
+
+<1> Compute the binding if not yet available.
+
+
+[WARNING]
+The approach of inspecting a value for null and then instantiating a new object when null is NOT threadsafe.
+The approach works in this case, because it all happens on the event thread, on the same thread, so there will
+be no interfering threads.
+
+'''

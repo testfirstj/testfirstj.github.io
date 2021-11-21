@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent> <!-- 1 -->
+        <groupId>nl.fontys.sebivenlo</groupId>
+        <artifactId>sebipom</artifactId>
+        <version>3.0.0</version>
+        <realtivePath/>
+    </parent> <!--2 -->
+    <groupId>nl.fontys.sebivenlo</groupId>
+    <artifactId>basicsebimaven</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <!-- The name in the IDE -->
+    <name>My App</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.release>11</java.release>
+        <!-- change mainClass to the proper starting point of your program, if any.-->
+        <exec.mainClass>basicsebimaven.Hello</exec.mainClass>
+    </properties>
+    <dependencies>
+      <!--example  -->
+      <dependency>
+        <groupId>...</groupId>
+        <artifactId>...</artifactId>
+        <version>...</version>
+      </dependency>
+    </dpendencies>
+</project>

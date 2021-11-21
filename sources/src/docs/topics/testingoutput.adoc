@@ -1,0 +1,97 @@
+=== Testing output
+
+Quite often your program should simply print to `System.out`. How to verify that what is
+printed is correct?
+
+There are two approaches.
+
+. Pass a `PrintStream` to the application and have it use that. This is similar to dependency injection you have seen in week 6.
+. Replace `System.out` by another `PrintStream` which can be done with the method `System.setOut(PrintStream ps)`.
+
+In either case you need a PrintStream implementation, whose printed output is easily inspected in a test.
+
+.Test printer usage
+[source,java]
+----
+
+  PrintStream oldOut;  // <1>
+  @BeforeEach
+  void setupSout(){
+       origOut = System.out; // <2>
+  }
+
+  @Test
+  void someTest(){
+      StringOutput sout = new StringOutput(); // <3>
+      PrintStream out = sout.asPrintStream(); // <4>
+      System.setOut(out);              // <5>
+
+    // do interaction
+
+      assertThat( sout.toString() ) // <6>
+              .contains( expectedText );
+
+  }
+
+  @AfterEach
+  void restoreSout(){
+      System.setOut( origOut );  // <7>
+  }
+
+----
+
+<1> Define a field to save old output to be able to restore it.
+<2> Save it before each test
+<3> If the test needs to verify the output, use a StringOutput as printStream
+<4> use it as a PrintStream
+<5> Replace System.out with this test printstream
+<6> Do the asserts after the interaction with the SUT
+<7> Restore the printstream that was saved before the test.
+
+Below you see the implementation of a StringOutput as given in one of the exercises.
+
+.StringOutput implementation
+[source,java]
+----
+public class StringOutput extends OutputStream {
+
+    private final ByteArrayOutputStream byteArrayOuputStream = new ByteArrayOutputStream();
+
+    @Override
+    public void write( int b ) throws IOException {
+        byteArrayOuputStream.write( b );
+    }
+
+    public void clear() {
+        byteArrayOuputStream.reset();
+    }
+
+    @Override
+    public String toString() {
+        return new String( byteArrayOuputStream.toByteArray(), StandardCharsets.UTF_8 );
+    }
+    // Flag to help prevent creation of second PrintStream from this StringOutput.
+    private volatile boolean secondPrinter = false;  // <1>
+
+    /**
+     * Create a print stream that writes to this string output.
+     *
+     * @return a print stream
+     * @throws IllegalStateException on second invocation on this StringOutput.
+     */
+    public PrintStream asPrintStream() {
+        if ( secondPrinter ) {
+            throw new IllegalStateException( "cannot create multiple "
+                                    + "printstreams for one StringOutput" );
+        }
+        secondPrinter = true;
+        return new PrintStream( this );
+    }
+}
+----
+
+<1> If you are wondering about the meaning of the keyword `volatile`, it has to do with multiple threads that might want to do the same.
+  Volatile ensures that all threads see that the `secondPrinter` boolean has been set by the first thread that creates a printer.
+  If you want to read more on the subject, read the explanation on http://tutorials.jenkov.com/java-concurrency/volatile.html[Java Volatile Keyword] by Jan Jenkov. +
+  The website containing this page is actually a quite complete tutorial on http://tutorials.jenkov.com/java-concurrency/index.html[Java concurrency and multi threading]. +
+  We will come back on the subject of multi threaded applications in week 10.

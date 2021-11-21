@@ -1,0 +1,117 @@
+:sectnums!:
+
+=== Exercise Generic DAO
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Generic DAO</summary>
+++++
+
+To make your part better testable we introduced a few helper types.
+
+.The detailed class diagram for the PGDAO and its helpers.
+image::pgdaodetails.svg[]
+
+* Refactoring out the execution of the queries to the actual database
+and introducing the interface allows you to mock the AbstractqueryExecutor.
+The default implementation is given, and can be left as is.
+
+The other class is the QueryFactory, which both computes AND caches
+the queries that are specific for an operation and entity type.
+
+In this exercise you will work with the `genericdao` project.
+The layout of the project is as described in the class diagram.
+
+The task is to test and implement the `QueryFactory` class.
+
+* The project you get is a complete DAO implementation with the tests and implementations
+for the QueryFactory for you to complete. Look for the **TODO**s (in netbeans kbd:[ctrl+6]).
+* An actual database will not be needed by your tests. However, if you would like to experiment
+with that, you need the have an `application.properties` file in the root of your directory.
+There is a template for that file to start with, but do not commit the applications.properties file.
+
+[TIP]
+If you are only testing your own work, remove the application.properties file, so you do not enable the database tests.
+In that case the tests take about 3 seconds to run; with the database tests active, if takes 25 seconds on a fast machine.
+
+
+For every operation there are two goals:
+. Write/complete the test to assert that the query contains the required parts such as
+ the sql command, column names, the placeholders (?,?,?,?,?,?) and table name.
+. In the implementation
+.. Generate the correct query string
+.. Cache the calculated query string for future use.
+
+Lets have a look at the `QueryFactory` and especially the `updateQueryText`.
+
+.Constructor of `QueryFactory`
+[source, java]
+----
+final Mapper<?, ?> mapper;<1>
+
+ConcurrentMap<String, String> queryTextCache = new ConcurrentHashMap<>();<2>
+
+public QueryFactory( Mapper<?, ?> mapper ) {
+    this.mapper = mapper;<3>
+}
+----
+<1> We need a mapper to be able to create the correct query strings
+<2> Cache so we don't need to recompute the query string every time
+<3> Save the correct mapper for this entity type
+
+.updateQueryText
+[source, java]
+----
+String updateQueryText() {
+    return queryTextCache
+        .computeIfAbsent( "update", x -> computeUpdateQueryText() <1>
+    );
+}
+----
+<1> Check if "update" is already in the cache, if not compute the update query text
+
+So now we get to the actual computation of the update query string.
+
+.Compute the update query string
+[source, java]
+----
+private String computeUpdateQueryText() {
+    var columnNames = mapper.entityFields()<1>
+            .stream()
+            .map( Field::getName )<2>
+            .collect( toList() );
+    String columns = String
+            .join( ",", columnNames );
+    String placeholders = makePlaceHolders( columnNames.size() );<3>
+    String sqlt = format(
+            "update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)"
+            + " returning  %2$s",
+            tableName(),
+            columns,
+            placeholders,
+            mapper.getKeyFieldName() );<4>
+    return sqlt;
+}
+----
+<1> Get all the entity fields
+<2> Map the fields to their respective names
+<3> Helper method to create a string containing the number of placeholders
+<4> Get the key field
+
+And finally have a look at the `makePlaceHolders` helper method.
+[source, java]
+----
+final String makePlaceHolders( final int count ) {
+    String[] qm = new String[ count ];
+    Arrays.fill( qm, "?" );
+    return String.join( ",", qm );
+}
+----
+
+Now your task is to do the same for the other methods in `QueryFactory`. +
+*Test driven* of course, so first complete the test and then implement.
+
+++++
+</details></div>
+++++
+
+:sectnums:

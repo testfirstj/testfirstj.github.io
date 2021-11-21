@@ -1,0 +1,84 @@
+= Integration testing of a rest API using RestAssured
+Pieter van den Hombergh
+v0.1, 2016-03-16
+:toc: right
+:source-highlighter: coderay
+:coderay-linenums-mode: inline
+:linkcss: true
+:stylesdir: adoc-css
+:scriptsdir: adoc-js
+:theme: golo
+:icons: font
+:sourcedir: ./solution//src
+:testsourcedir: ./solution/olifanty
+
+`RestAssured` is a simple to use yet very powerfull framework.
+Its purpose is to do integration test of Rest APIs. A Rest API is the outer interface of a service (and server) to the outside world. When we test it, we test the classes that are involved in the interaction, from the boundary layer (the service classes such as StudentsService), the business layer (if available) and the persistence layer, talking to the database.
+
+Using rest assured does not depend on the internal architecture or
+design of the service, it can only use and test the public interface
+or API using http methods such as GET, PUT, POST, and DELETE.
+
+The Javadoc documentation in the class `http://static.javadoc.io/io.rest-assured/rest-assured/3.0.2/io/restassured/RestAssured.html[io.restassured.RestAssured]` is a good starting point to get some ideas on how to use it.
+
+The power of rest assured comes from the (fluent) programming style,
+made possible by the design, such that you can express in almost natural language what you want to do and test.
+
+Because rest-assured uses quite some external libraries, you will be glad that we use maven in such projects.
+
+
+== A first rest assured test
+
+Rest assured uses a similar idiom as most test frameworks:
+
+* Setup an interaction, by providing input, if any.
+* Invoke the method (or rest end-point)
+* get the result
+* verify that the result meets the requirements outlined in the testplan and codified in the test.
+
+In the test below the test classes can not only test and acess the Rest-API, but
+can also interact with the database. A few convenience functions, which are not part of rest-assured have been used in the test above, to prepare
+the database for the test data. These methods are `delete` and `tableSize`. Delete is use for cleanup, and in this test makes sure that a certain record is NOT
+in the database, because we want to insert in the database using the test.
+`readWholeFile` is another method that is used in the test classes. It allows the testdata to be in separate files. In this case it also avoid ugly java strings
+with escape double quotes and such.
+
+.Rest assured post test
+[source,java]
+----
+    @Test
+    public void test3ddStudent() throws IOException, SQLException {
+        delete( "students", "email='dirkofdanmark@student.olifantys.nl'" ); // <1>
+        int tableSize = tableSize( "students" ); // <2>
+        String json = readWholeFile( "newstudent.json" ); // <3>
+        RestAssured.given() // <4>
+                .header( "  Content-Type", "application/json" ) // <5>
+                .body( json  ) // <6>
+                .when() //   <7>
+                .post( uri )	// <8>
+                .then() // <9>
+                .assertThat() //	<10>
+                .statusCode( 200 ) // <11>
+                .body( "email", equalTo( TEST_EMAIL ) ); // <12>
+
+        assertEquals( tableSize + 1, tableS	    ize( "students" ) ); // <13>
+    }
+----
+
+<1> Prepares the test to make sure that some test dat is NOt in the database. The delete function is a NOT part of
+rest-assured, but is defined elsewhere in the test class.
+<2> The method tableSize is also
+<3> define some test data, reading it for the file newstudent.json. You may expect that the file contains all data for the student *Dirk of Danmark*.
+<4> starts the rest-assured test. If you do a static import, you can drop the class RestAssured in the text. Here is is the start marker, to show where the rest assured test starts.
+<5> Tels the server that we want json.
+<6> specified the body of the (post) request we want to send
+<7> starts the actual sending
+<8> of the post message
+<9> and the *then* starts the verifications or assertions. It starts the ResponseSpecification (that what we want to verify)
+<10> `assertThat()` is _syntactic sugar_, making the expression more readable. You can leave it out
+<11> Verifies the status code
+<12> verifies that the body (a josn object) contains the key email with the value defined as TEST_EMAIL (dirkofdanmark@student.olifantys.nl).
+<13> is a separate (minimal) test to see if the students table has increased in the number of records. This is not a very comprehensive test but added to show
+that you could test at multiple places.
+
+'''

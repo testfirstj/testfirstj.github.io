@@ -1,0 +1,99 @@
+
+== Regular Expression Engine
+
+Regular expressions are another use or state machines. The terse format in which
+you write (perl style) regexes is actually a specification of a state behavior, which can be quite complex.
+At least the Java implementation of regexes first 'compile' the regular expression into some kind of efficiently executable state machine.
+
+:sectnums!:
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Finding numbers</summary>
+++++
+
+In this exercise you are introduced to regular expressions. The basic task is
+to find numbers in a text.
+
+In the `FindNumbers` class below, you can see a simple pattern matching an integer.
+However, there are many more numbers than just integers.
+
+[source,java]
+----
+public class FindNumbers {
+    private static final String REGEX = "\\d";
+    private static final String INPUT = "The fox jumped over 7 fences.";
+    private static Pattern pattern;
+    private static Matcher matcher;
+    public static void main( String[] args ){
+        pattern = Pattern.compile(REGEX);
+        matcher = pattern.matcher(INPUT);
+        System.out.println("Number found: " + matcher.group());
+    }
+}
+----
+
+Your task is to write a regex matcher that
+can find more complex numbers. Remember to work test-driven!
+What might a Unit Test look like that tests whether a certain digit is found?
+
+Here is the table with the kinds of digits that your regular expression needs
+to capture (and which it should not!).
+
+[width="50%",options="header"]
+|===
+|Digit | Should match?
+|7 | True
+|123 | True
+|-123 | True
+|4.0|True
+|1.23E-04 | True
+|six | False
+|06/04/2019 | False
+|===
+
+
+.Here is a test for the first digit to get you started:
+[source,Java]
+-----
+   @Test
+   public void singleIntegerTest() {
+       input = "The sly fox jumps 7 fences";
+       assertThat(myMatcher.getDigit(input)).isEqualTo("7");
+   }
+-----
+
+[{extra}]
+NOTE: *EXTRA CHALLENGE:*
+Include the following three cases in your regex matching engine:
+[width="50%",options="header"]
+|===
+|Digit | Should match?
+|hex | False
+|3d4 | True
+|5fdea|True
+|===
+Be careful that the tests for the first part of the exercise still work!
+
+
+=== Part 2: Finding real names in text
+In English, names are sequences of letters (words), the first a capital
+and no digits or punctuation in between. The pattern looks something like
+Xxxxx Xxxxxx where the length can vary. Usually, first names have at least two,
+last names have at least three letters. Examples of names are are: Piet Janssen,
+Hermione Granger, Albert Einstein.
+
+Your task is to write a small program that can detect real names out of some
+text: in this case, it's a table with student data. Here is the complete String
+for your to read and extract the names from: //'
+
+[source,text]
+-----
+3785895 Jan Jansen              8.7.1997    6.6  8.3   2.4  6,8  => grade 6.8 for student 3785895
+3895785 Piet Jansen             8.7.1997                         => missing grades
+3785985 Henk Jansen             8.12.1994   6.6  8.3   2.4  7.9  => grade 7.9 for student 3785985
+1245717 Joepie Hombergh van den 18.03.1992 10.0 10.0  10.0 10    => grade 10 for student 1245717
+-----
+
+++++
+</details></div> <!-- end template engine -->
+++++

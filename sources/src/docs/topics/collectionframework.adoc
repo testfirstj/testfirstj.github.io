@@ -1,0 +1,17 @@
+=== Kaos at HQ
+
+include::homelink.adoc[]
+
+The java collection framework is powerful and a need to know because is very useful and has many aspects of good object oriented design.
+
+
+
+Task link: link:/pdf/kaos.pdf[Kaos narative].
+
+Netbeans starter project: Project in link:/zip/kaos..zip[zip]
+
+The pictures in the pdf files are the actors/characters in the original series.
+
+You kids may have seen the modern movie http://www.imdb.com/title/tt0425061/mediaviewer/rm442471936[Get Smart], 
+featuring Steve Carell as the dumb ass agent and Anna Hathaway as the kick butt side kick. 
+

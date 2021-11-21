@@ -1,0 +1,61 @@
+:doctitle: W2 Parameterized Tests
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,h,d,d,d,d,d,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+// == Reading
+
+include::{topics}/parameterizedtests.adoc[]
+
+// EX
+[TIP]
+====
+Think test driven! So write tests FIRST, and then code. Testing is ensuring that the code is usable.
+To make code testable is also a design exercise: you need to make decisions about the design of your program when you write your tests. If you cannot test it, you cannot use it.
+====
+
+include::{exercises}/passwordvalidator-flawset.adoc[]
+
+include::{exercises}/enumcalculator.adoc[]
+
+:sectnums!:
+
+== Exercises in this part
+
+* <<_exercise_fraction_part_1,Fraction Part 1 Constructor and normalisation>>
+* <<_exercise_fraction_part_2,Fraction Part 2 operations>>
+* <<_exercise_fraction_part_3,Fraction Part 3 better API, nicer toString>>
+* <<_exercise_flawless_password,Flawless Password>>
+* <<_exercise_enum_calculator,Enum Calculator>>
+
+
+== Links
+
+* https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 Parameterized Tests ^]
+* https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-CsvSource[CSV Source Tests ^]
+* https://www.baeldung.com/parameterized-tests-junit-5[Baeldung on Parameterized Tests with JUnit 5 ^]
+
+
+
+// ++++
+// <div class='ex'><details class='ex'><summary>Exercise 1: Comparing students</summary>
+// ++++
+// include::{exercises}/comparingstudents.adoc[]
+// ++++
+// </details></div><!--end ex 1-->
+// ++++
+//
+// ++++
+// <div class='ex'><details class='ex'><summary>Exercise 2: In the pub (with an enum)</summary>
+// ++++
+// include::{exercises}/inthepubenum.adoc[]
+// ++++
+// </details></div><!--end ex 1-->
+// ++++
+//
+// ++++
+// <div class='ex'><details class='ex'><summary>Exercise 3: Enum Calculator</summary>
+// ++++
+// ++++
+// </details></div><!--end ex 2-->
+// ++++

@@ -1,0 +1,50 @@
+:doctitle: W7 Java Database Access
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,d,d,d,h,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+// [big]#How to work with a database directly from Java in a command line, desktop or web application.#
+
+
+
+// Basic connection and datasource use and configuration OUTSIDE of the code.
+
+
+include::{topics}/sausageisnotsteel.adoc[]
+
+include::{topics}/jdbc1.adoc[]
+
+include::{topics}/transactions.adoc[]
+
+include::{topics}/usingstoredprocedures.adoc[]
+
+// include::{topics}/jpmsandmethodhandles.adoc[]
+
+include::{topics}/DAO.adoc[]
+
+include::{exercises}/genericdao.adoc[]
+
+include::{topics}/dbtesting.adoc[]
+
+include::{topics}/datafirstquestion.adoc[]
+
+//Simple DAO using direct object manipulation.
+
+// Generic DAO using helpers with entity classes and prescribed constructor. Compare to java 14+ records.
+// Dash of reflection to get field names, field types and annotations.
+//
+// Approach: per entity, get list of field names and field types to find the correct constructor, to create an entity from a db record.
+// In the entity class or helper class, have a "deconstructor" that returns all fields as one array.
+// If the helper lives in the same package (it could be the dao), it can have access to package private info of the class, which
+// simplifies fidling with access etc.
+
+
+Study the https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html[JDBC Introduction].
+
+* link:pdf/070_jdbc_sheets_en.pdf[JDBC sheets ^].
+
+:sectnums!:
+
+== Exercises in this part.
+
+* <<_exercise_generic_dao, Generic DAO>>

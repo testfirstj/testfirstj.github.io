@@ -1,0 +1,209 @@
+
+:sectnums!:
+
+== Template Engine: Text processing with state machines.
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Exercise Template Engine</summary>
+++++
+
+
+Use case: Think serial mail or mail merge or something similar.
+
+The code is also a kind of template, you need to fill in the empty spots, like in an assessment.
+
+image:https://www.ancient-symbols.com/images/collages/1300-1000/sigil-symbols.jpg[role="left thumb", title="Sigil from 'https://www.ancient-symbols.com/images/collages/1300-1000/sigil-symbols.jpg'", width=240]
+There will be talk about *sigil*, a magic sign. In the example we use two: +
+'{{'  as starter and '}}' as terminator,
+but the solution is flexible enough to take any other pair you like. Sigil stands for the character or character-sequence
+given and is there to make parsing of template text easier. By choosing a proper set, they will not handicap what you can write in your template text.
+The defaults are quite reasonable.
+And if you do, you can always *escape*.
+
+https://en.wikipedia.org/wiki/Sigil_(magic)[Wikipedia on What is a sigil?]
+
+*Use case and idea* +
+This exercise is about a simple templating engine.
+
+Its usecase is a typical serial letter generator. This comes in handy when
+you want to send 'personalised' emails to students. A seasoned
+informatics person knows you should not use `eval(...)` for
+that, because that will potentially execute any code.
+
+Say you have some text and you want to substitute certain words with
+something from a data source, such as student names and/or
+grades. Then you could embellish the text with special tokens called
+sigils (magic signs) that help to find the words to be substituted. An
+example may help:
+
+[source,text]
+----
+Dear {{teacher}},
+
+We would like to complain about the module {{mod}}.
+We learn to little and the examples are way too trivial.
+We would like to receive our moneys worth of teaching.
+Kind regards,
+The students.
+----
+
+In the example the magic signs are the `{{` and `}}` sequences, anything in
+between is understood as key in the map, and when found, replaced by
+the mapped value.
+
+.If the map is filled like:
+[source,java]
+----
+Map<Object, String> map = Map.of(
+        "teacher", "Richard van den Ham",
+        "mod", "Programming Concepts 2 (PRC2)"
+);
+----
+
+.Then the engine can be created and started as
+[source,java]
+----
+Function<String, String> lookup = ( s ) -> map.getOrDefault( s, "" );
+// write to file.
+new Engine( "{{", "}}", lookup )
+        .reading( "letter.txt" )
+        .writing( "mail-out.txt" )
+        .run();
+----
+
+This program will print to a the file name 'mail-out.txt'.
+
+.sample output
+[source,text]
+----
+Dear Richard van den Ham,
+
+We would like to complain about the module Programming Concepts 2 (PRC2).
+We learn too little and the examples are way too trivial.
+Kind regards,
+The students.
+----
+
+*Design*
+
+The design is about a simple state machine with five states. See figure <<states>>.
+
+
+In addition the "templating engine" has two helper classes, a `SigilMatcher` and the `enum TemplateState`. See the
+<<class-diagram>> These classes are package private and so are the methods in them.
+
+The methods you use to configure the engine, constructors, the
+`readingXXX(...)`, and
+`writing(...)` are part of a so called *fluent* API. They, plus the
+`accept(int)` and `run()` methods are the only methods that are
+part of the public API.
+
+Given the sigils as above, the Test data in the EngineTest test class are:
+
+.test data
+[source,java]
+----
+static Stream<ET> getTestValues() {
+    // we use a helper class ET to collect strings into a engine test data object.
+    ET[] testData = new ET[]{
+                et( "{{", "}}", '\\', "hello {{world}}...", "hello Schöne Heimat...",
+                "world", "Schöne Heimat" ),
+                et( "{{", "}}", '\\', "hello {{süßes}}", "hello Schöne Heimat", "süßes", "Schöne Heimat" ),
+                et( "{{", "}}", '\\', "now somethings with {{two}} words to {{replace}}", // template
+                "now somethings with more words to work with", // expected
+                "two", "more", //  kv 1
+                "replace", "work with" // kv 2
+                ),
+                et( "{{", "}}", '\\', "Niks geen substituties", "Niks geen substituties" ),
+                et( "{{", "}}", '\\', "Leave me {alone}}", "Leave me {alone}}" ), // incomplete starter
+                et( "{{", "}}", '\\', "Leave me { {alone}}", "Leave me { {alone}}" ), // broken starter
+                et( "{{", "}}", '\\', "Leave me {{alone}, go away", "Leave me {{alone}, go away" ), // broken postfix
+                et( "{{", "}}", '\\', "Leave me {{alone}}, go away I am Broken at the {{Tail}",
+                "Leave me , go away I am Broken at the {{Tail}" ), // broken postfix at tail
+                // text below for escaping version only.
+                // Note the duplication of the \ char to make the strings valid Java strings.
+                et( "{{", "}}", '\\', "Look ma, this is how you write a sigil"
+                + " text in your letter: \\{{my dear boy}}"
+                + " and I used \\\\ to write this example",
+                "Look ma, this is how you write a sigil"
+                + " text in your letter: {{my dear boy}}"
+                + " and I used \\ to write this example",
+                "not used", "not used either" // kv1
+                ),
+                // below different sigil lengths, 1 and 3.
+                et( "{", "}", '\\', "hello single char template {world}...", "hello single char template Schöne Heimat...",
+                "world", "Schöne Heimat" ),
+                et( "{{{", "}}}", '@',
+                "And it works with three and other escape as well."
+                + "text in your letter: {{{my dear boy}}}.",
+                "And it works with three and other escape as well."
+                + "text in your letter: well, that depends.",
+                "my dear boy", "well, that depends" ), // kv1
+            };
+    return Arrays.stream( testData );
+}
+
+----
+
+*Your Task.*
+
+The sigil matcher is complete, tested and implemented. It is also a
+state full class, however NOT using the state pattern, but simply
+counting the characters matched. So that implementation will provide
+little help in your real task. Sorry.
+
+Implement this design. Develop test driven. (Should be easy. The test data are already waiting in the code).
+
+. Implement the `reading` method in `Engine`.
+. You only need to complete the `testEngine` method in the `EngineTest` test class.
+. Implement the state machine in the `TemplateState` class, 
+see the <<states>>.
+
+Look for the todo's with kbd:[CTRL+6] in NetBeans IDE.
+
+
+*Hints* +
+A statemachine reacts to 'events' or method calls.
+
+* The functions in java.util.function have no member that processes chars. The reason for that is
+that in many case chars can be processed as ints. Also, when retrieving the character elements from a CharSequence (an interface implemented by the java.lang.String class)
+using either the method `IntStream chars()` or `IntStream codePoints()` will produce an `intStream`. For the processing part that is just fine. One needs only to remember
+to cast the values to `char`s when writing them to the output.
+* In this state machine the event of importance
+  is the invocation of the method `Engine.accept(int char)`, which is stipulated by the `IntConsumer` functional interface.
+* The Engine provides an accept(int) method that matches the `IntConsumer` functional interface.
+  This means  that is the engine is fed one character at the time. You can use that method as a method reference (`this::accept`) or a lambda expression.
+  (`(c) -> accept(c)`).
+* To use a file with text as input template you will have to turn that file into many accept calls.
+** Think of streams, and use the method `Files.lines()`, study what
+  *flatMap* and *flatMapToInt* is all about and use it to get the result: from
+  stream of strings to stream of int, one int per character of the string. In the String API you have two options. Either one will do in most cases.
+* Make a drawing (pencil, paper). `Files.line` produces a stream, the Engine puts
+  itself at the end, consuming the stream of `int`s. You have to tie
+  these parts together.
+
+[[class-diagram]]
+.class diagram
+image::engineclassesx.svg[]
+
+In the class diagram of engine substitute Engine for the T in the `ObjIntConsumer<T>`. +
+Remember that an ObjIntConsumer takes two inputs and produces no direct return value. State Pattern in action with a twist of enum thrown in.
+
+[[states]]
+.state diagram
+image::templaterStateMachinex-i.svg[]
+
+[TIP]
+====
+There is a difference between the state machine diagram on this website and in the source folder in the project.
+The diagram on this website should take precedence, because this is how we test it now.
+The difference actually only affects the way wrongly formatted template documents are handled, so the choice is arbitrary. In the
+design in this website, the 'junk' is output, in the other it is discarded. Showing the junk may help the user to find the error
+in the template earlier. A more professional variant might produce some diagnostics, but we left that out of the exercise.
+====
+
+++++
+</details></div> <!-- end template engine -->
+++++
+
+:sectnums:

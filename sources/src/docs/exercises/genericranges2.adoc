@@ -1,0 +1,271 @@
+:sectnums!:
+
+=== Exercise Generic Ranges 2: Adding tests and Leafs
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Generic Ranges Part 2</summary>
+++++
+
+*Plan* We are going to _refactor_ our tests, so that we get tests for new leaf classes
+almost for free. See the explanation in the part above.
+
+The idea is that you separate the test data from the tests. Doing this in a generic way
+allows you to specify the tests in terms of the generic types, *R*, *P*, and *D*. Let this be mnemonic for _**R**ange between **P**oints at a **D**istance_.
+
+There will a test base class `RangeTestBase`, generic with the type tokens R,P and D.
+The Leaf-Test class then only has to provide
+a test data provider or factory. The [blue]`RangeTestBase` class defines a helper() method that returns an instance
+of a [blue]`RangeTestDataFactory`, that has to be configured for the specific test leaf class.
+
+The test data factory is of course defined as a generic type, an [blue]#abstract class# to be precise.
+
+To do that follow the plan described in the text above:
+
+First define the `RangeTestDataFactory` [blue]#abstract class#. Actually, it is already in the project.
+This is an abstract class, because that allows us to 'pull' the test helper methods
+into this factory, so that the data massaging to get the types right can be done in that class.
+The important factory methods are [blue]`createRange`, and [blue]`distance`, both [blue]#abstract#.
+The factory also expects a map of String to P: Map<String,P>, that allows it to create points, ranges,
+and distances with the given abstract methods, so that it can produce the test values that are required (and actually already are) in the tests.
+Remember we started by copying the complete test class for the IntegerRange as a starting point.
+
+// In class demo pull up/push down.
+
+.Important members of RangeTestDataFactory.
+[source,java]
+----
+public abstract class RangeTestDataFactory<R,P,D > { // <1>
+
+    protected final p[] points;  // <2>
+
+    /**
+     * Remember the type of the class under test.
+     *
+     */
+    protected RangeTestDataFactory( P[] points ) {
+        this.points = points;
+    }
+
+    /**
+     * Lookup up a point from the spec.
+     * @param key for lookup
+     * @return the mapped value.
+     */
+    P lookupPoint( String key ) {
+        return points.get( key );
+    }
+
+    /**
+     * Create a test range,`P a()`,
+     *
+     * @param start or range
+     * @param end   of range
+     * @return the range
+     */
+    abstract R createRange( P start, P end );   // <3>
+
+    abstract D distance(P a, P b);              // <4>
+    // remainder left out
+}
+----
+
+<1> Simple type tokens are enough.
+<2> Point lookup, to be provided by leaf configuration.
+<3> and
+<4> helper methods to be provided by the factory leaf (inner) class.
+
+The factory leaf classes have to implement the abstract methods and pass a map of points via the constructor.
+In all classes they have been implemented using an _anonymous_  inner class.
+For LocalDateRange that inner class definition looks like the code below, the other inner classes look similar enough.
+Again you see that the abstract methods are trivially implemented.
+The construction used is very much like the typical way an Iterable<T> class returns the requited Iterator<T>.
+
+[NOTE]
+We have chosen https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html[*Duration*] as the type for distance with LocalDate instead of the more 'natural' https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Period.html[_Period_],
+because we think it is useful to have the demarcation points of a range to be comparable, so you can tell early and late apart.
+Period is NOT comparable, because it cannot keep that promise in all cases, because of the invention of *daylight saving*,
+where you loose and hour of sleep in Spring and gain one when you don't need it in the autumn. That's politics for you.
+And even without daylight saving, the idea of leap year and leap day also throw some fly in the ointment.
+
+.LocalDataRangeTest inner class extending RangeTestFactory
+[source,java]
+----
+   RangeTestDataFactory<LocalDate, Duration, LocalDateRange> daf;
+
+   static final ChronoUnit UNIT = ChronoUnit.DAYS;
+
+   static final LocalDate A = LocalDate.EPOCH.plus( 12, UNIT );
+
+   static Map<String, LocalDate> dateMap = Map.of(     // <1>
+           "a", A,
+           "b", A.plus( 5, UNIT ),
+           "c", A.plus( 7, UNIT ),
+           "d", A.plus( 14, UNIT ),
+           "e", A.plus( 21, UNIT ),
+           "f", A.plus( 28, UNIT )
+   );
+
+   @Override
+   RangeTestDataFactory< LocalDateRange, LocalDate, Duration> helper() {
+       if ( null == daf ) {
+           daf = new RangeTestDataFactory<>( dateMap ) { // <2>
+               @Override
+               LocalDateRange createRange( LocalDate start, LocalDate end ) {
+                   return LocalDateRange.of( start, end );
+               }
+               @Override
+               Duration distance( LocalDate a, LocalDate b ) {
+                   return Duration.between( a, b );
+               }
+           };
+       }
+       return daf;
+   }
+   // public static void main( String[] args ) {
+   //      new LocalDataRangeTest(); // <3>
+   //  }
+----
+
+<1> Data set for LocalDateRangeTest.
+<2> Start of anonymous inner class defining Test Factory leaf class, at the same time
+  Passing the map to the super class, i.e. RangeTestDataFactory.
+<3> Main that helped to show what went wrong.
+
+[WARNING]
+====
+In the test data you see the use of a ChronoUnit. I have run into trouble when I selected
+some value that looked useful, like ChronoUnit.YEARS, but was called back from that choice by the Runtime,
+because not all values defined in ChronoUnit are allowed in all cases.
+Because the error was covered by a lot of testing output, I added a tiny main method, which you can see commented out above. That revealed that
+Duration choked on the wrong choice of ChronoUnit. That is a tip in disguise: You can simply add a main to a test class, to see what happens when you
+run it as a normal class. +
+
+That is why I choose [green]*DAYS* with [blue]`LocalDate` ranges, and [green]*HOURS* with [blue]`LocalDateTimeRanges`. For instance [red]#YEARS# does not work.
+====
+
+Your task:
+
+* Copy your class RangeTest to RangeTestBase, and make it generic by adding
+the following declaration:
+
+[source,java]
+----
+public abstract class RangeTestBase<
+              R extends Range<R, P, D>,
+              P extends Comparable<? super P>,
+              D extends Comparable<? super D>
+              >
+               {
+                // class left out
+}
+----
+
+* Give RangeTestBase one abstract method [blue]`abstract RangeTestDataFactory<R, P, D> helper();`,
+  that returns a data factory.
+* Adapt all tests so that any use of [blue]`Integer` as Point is replaced by generic [blue]`P`,
+ any use of [blue]`Integer` as distance by generic [blue]`D`, and any [blue]`IntegerRange` by the generic [blue]`R`.
+* Create an [blue]`IntegerRangeTest` as given above. It is a leaf class of [blue]`RangeTestBase` and only
+  configures the helper with the anonymous inner class Implementation
+  of the [blue]`RangeTestDataFactory`.
+* Now make sure that the test results are the same as before with the simple RangeTest. +
+  You may want to [green]*disable* the whole RangeTest class by putting an [gray]`@Disabled` annotation
+  on the class, so that you can see only one class doing its work. +
+  In this way you are effectively testing the new test. You can of course also inspect
+  the code coverage, to see if indeed all code of the target business class is put through it's paces.
+
+Next you apply this to create more range leaf classes. Start with [blue]`LongRange`:
+[blue]`public class LongRange implements Range<LongRange, Long, Long>`.
+
+First create the test class: [blue]*LongRangeTest*. Mold it after the pattern in IntegerRangeTest. Copy and replace Integer with Long
+works in most cases. +
+Then implement [blue]*LongRange*. Here too most is prescribed by the Range interface.
+
+* Implement the two fields as [blue]#final#, add a [blue]#private# constructor that takes an array of long and uses the
+  first two values,
+* create the public static [blue]`of( Long start, long end )` method and in it use the private constructor like so:
+   [blue]`return new LongRange( Range.minmax( start, end ) );`. +
+  The static helper in Range  [blue]`P[] Range.minmax(P,P)` returns an array with two elements, minimum value first, to
+  help ensure that the least value lands at the start of a Range.
+* Implement the methods that are defined [blue]*abstract* in [blue]#Range#. They might already have been generated by the IDE,
+  with bodies throwing a [red]`UnsupportedOperationException`. Replace the body with the correct return expression. All abstract methods are non-void.
+* *Override* the methods [blue]*equals*, [blue]*hashCode* and [blue]*toString* inherited from Object. You can't override a
+  method of a concrete class in an interface, you must do it here. +
+  But most work is already done in [blue]#Range#, because these three methods only use the fields.
+  For all said methods there is a equivalent [green]*rangeXXX*, which you can use to do the work.
+  In case of equals, do it like this:
+
+[source,java]
+----
+    @Override
+    @SuppressWarnings( "EqualsWhichDoesntCheckParameterClass" )
+    public boolean equals( Object obj ) {
+        return rangeEquals( obj );
+    }
+----
+
+Make sure everything still works for both classes and their tests.
+
+Then continue with:
+
+* *Instant* (point in time). For 'distance' use Duration.
+* *LocalDateRange*. For 'distance' use Duration.
+** Test for a getDays() method that tells the length in days. Implement getDays.
+** Test for an isBefore(LocalDate) method, which can tell if the whole range is before a date. Implement isBefore. +
+ Similar for isAfter.
+* *LocalDateTimeRange*. For 'distance' use Duration.
+** Add isBefore and isAfter similar to LocalDateRange.
+
+
+You get 67 tests per implemented range, maybe a few more if the range has some specialized needs, like LocalDateRange.
+[big]*Do not forget to override the methods [blue]#equals#, [blue]#hashCode#, and [blue]#toString#*, or some of the tests will fail.
+
+More useful ranges to come.
+
+
+* *DoubleRange*. For 'distance' use Double.
+* *BigIntegerRange*. For 'distance' use BigInteger.
+* *BigDecimalRange*. For 'distance' use BigDecimal.
+** For BigDecimal  you may run into the issue that the  overlap test method tells that *0* and *0E27* (ZERO at some large exponent)
+are not equal. You can either suppress the test by overriding it in the leaf test class and effectively silence it by commenting
+out the super call, or, better, improving the [blue]`distance` method in the _test_ leaf class and the [blue]`meter` method in the BigIntegerRange class.
+The later will then look like:
+
+.if two points are equal, the return ZERO distance.
+[source,java]
+----
+    @Override
+    public BiFunction<BigDecimal, BigDecimal, BigDecimal> meter() {
+        return ( a, b ) -> {
+            if ( a.equals( b ) ) {
+                return BigDecimal.ZERO;
+            }
+            return b.subtract( a );
+        };
+    }
+----
+
+If you still not satisfied, find other comparable 'points', define their distance function and implement those too. Tests first of course.
+
+Our version gives us [green]*486* successful tests with a coverage of [green]*100%*. YMMV.
+
+Range types expected at the end of this part:
+
+[options="header"]
+|====
+| Range               | Point | Distance
+| LongRange           | Long  | Long
+| InstantRange        | Instant | Duration
+| LocalDateRange      | LocalDate | Duration
+| LocalDateTimeRange  | LocalDateTime | Duration
+|====
+
+++++
+</details></div><!--end genericranges3.adoc -->
+++++
+
+By completing the above exercise you will have learned that there can be reuse in tests as well,
+you only need to know what tricks to apply.
+
+More useful ranges to come, but first back to some explanation.
+
+:sectnums:

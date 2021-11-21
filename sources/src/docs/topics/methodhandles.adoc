@@ -1,0 +1,265 @@
+== Method Handles
+
+[.lead]
+Method handles have been introduced in Java 7 together with https://www.baeldung.com/java-invoke-dynamic[Invoke Dynamic], which
+help to make dynamic languages on the JVM easier to implement. For Java itself invoke-dynamic or _indy_
+has been key in introducing lambda expressions in Java 8.
+
+Method handles alleviate some of the problems of using reflection to get to fields
+and methods in classes.
+
+* With reflection, each method use or field access has to go through
+ *all* the security checks. You can recognize the checks by the exception
+ that are potentially thrown and you must catch.
+* With method handles you only have to pay only once for the security checks that have to been done:
+ is this client allowed to access this objects member.
+* You can create methods handles for private fields, and pay only once for making
+ the field accessible to the client class.
+
+As a demonstration: In the first piece of code we get a method by its name `"getFirstname"`
+name from the student class using reflection.
+
+.In both cases, the things we know are class, a test student instance and the name of the mentod.
+[source,java]
+----
+      Class<Student> clz = Student.class;
+      Student sam = new Student( 12134, "Simons",
+                                 null,
+                                 "Samantha",
+                                 LocalDate.of( 199, 9, 11 ),
+                                 2020, "s.simons@student.fontys.nl,",
+                                 "F",
+                                 "INF1-A" );
+
+      String methodName="getFirstName";
+----
+
+To obtain the [blue]`Method` using reflection you need this:
+
+.get Method from class using reflection
+[source,java]
+----
+      try {
+         getFirstNameMethod = clz.getDeclaredMethod( methodName );
+      } catch ( NoSuchMethodException ex ) {
+         Logger.getLogger(MainUsingReflection.class.getName() )
+                 .log( Level.SEVERE, null, ex );
+      } catch ( SecurityException ex ) {
+         Logger.getLogger(MainUsingReflection.class.getName() )
+                 .log( Level.SEVERE, null, ex );
+      } catch ( IllegalArgumentException ex ) {
+         Logger.getLogger(MainUsingReflection.class.getName() )
+                 .log( Level.SEVERE, null, ex );
+      }
+----
+
+To do almost the same, now getting a MethodHandle,
+
+.using a method handle.
+[source,java]
+----
+      try {
+          MethodHandles.Lookup publicLookup = MethodHandles.publicLookup();
+          MethodType mt = MethodType.methodType( String.class ); //<1>
+          getFirstName = publicLookup.findVirtual( clz, methodName, mt );
+      } catch ( NoSuchMethodException ex ) {                     //<2>
+          Logger.getLogger( MainUsingHandles.class.getName() )
+                  .log( Level.SEVERE, null, ex );
+      } catch ( IllegalAccessException ex ) {
+          Logger.getLogger( MainUsingHandles.class.getName() )
+                  .log( Level.SEVERE, null, ex );
+      }
+----
+
+<1> A https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/invoke/MethodType.html[MethodType]
+ specifies the 'shape' of a method: The return type, and a list of parameter types.
+ To create a MethodType, you invoke one of the factory methods, all of which are variations on
+ [blue]`static MethodType 	methodType​(Class<?> rtype, Class<?>[] ptypes)`.
+ You might see similarities with the shapes in lambda expressions.
+<2> Happens when you can't type.  &#x1F605;, but is the same a with reflection.
+
+But the resulting code is not really impressive. One exception less to worry about, but you need to create
+a method type, which looks like extra work.
+
+The difference is in the use of the method. You can almost recognize the extra work from the exceptions you
+should deal with.
+
+[WARNING]
+One of the code fragments below catches Throwable, which is the most unspecific thing you can catch. +
+[red]*DO NOT USE* [blue]`Throwable` as the catch-all type, when you have more specific information on
+the wrongs (exceptions) that can occur. It will work, but you will forget what you had to deal with, and
+interpreting the exception when it does occur may be hard.
+
+Now that is out of the way, first the Reflection way.
+
+.Using the method with parameters.
+[source,java]
+----
+    if (getFirstNameMethod !=null) { //<1>
+           try {
+               String realName  = (String )getFirstNameMethod.invoke( sam);
+               System.out.println( "realName = " + realName );
+           } catch ( IllegalAccessException ex ) {
+               Logger.getLogger( MainUsingReflection.class.getName() )
+                       .log( Level.SEVERE, null, ex );
+           } catch ( IllegalArgumentException ex ) {
+               Logger.getLogger( MainUsingReflection.class.getName() )
+                       .log( Level.SEVERE, null, ex );
+           } catch ( InvocationTargetException ex ) {
+               Logger.getLogger( MainUsingReflection.class.getName() )
+                       .log( Level.SEVERE, null, ex );
+           }
+    }
+----
+
+<1> Test because the first try-catch might not have produced the method. This occurs in both cases.
+
+You see in total 3 exceptions that have to be dealt with, because of the checks that occur at runtime.
+
+Now the MethodHandle  version.
+
+.MethodHandle in action
+[source,java]
+----
+    if ( getFirstName != null ) { //<1>
+        try {
+            String realName = (String) getFirstName.invoke( sam ); //<2>
+            System.out.println( "r = " + realName );
+        } catch ( Throwable ex ) {
+            Logger.getLogger( MainUsingHandles.class.getName() )
+                    .log( Level.SEVERE, null, ex );
+        }
+    }
+----
+
+<1> For the same reason as above.
+<2> Cast to get the proper type out.
+
+The reason that there still is a [blue]*Throwable* to be caught is not because the Handle has no
+clue, but because the business class may throw an exception. A case of https://en.wikipedia.org/wiki/Murphy%27s_law[Murphy's law].
+Actually, the object on which you use the handle might not be of the correct type, which can cause a [red]*WrongMethodTypeException*, whose name spells out
+what is wrong, or a [red]*ClassCastException* _if the target's type can be adjusted to the caller, but a reference cast fails_.footnote:[from the api doc]
+But since Throwable catches all, that suffices. If you have the situation where you can't make sense of the exception information,
+add the more specific exceptions before the Throwable, so you may be able to find the issue at hand.
+
+[TIP]
+[big green]*Document you API using tests.*  See the examples
+in https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/invoke/MethodHandle.html[MethodHandle]. +
+That same source implicitely gives another advice: +
+[big green]*Explore an API using tests*. Write small test to check if your understanding of
+the API is correct. And then keep these tests as notes to your understanding.
+
+We have learned that we need to specify the _name_ and the _parameter list_.
+With method handle also specify the _return type_, to get the *shape* information of the method.
+
+== Dynamic casting
+
+There is +
+
+* The cast operation e.g `String name=(String) methodReturningObject()`,
+* The instanceof - expression to test a type before use, both available to the compiler.
+
+You can also cast at run-time. Each class object `Class<T>` has a `T cast​(Object obj)`, which does the same thing.
+You can use that to cast the object to the provided run-time type. The method will throw a [blue]`ClassCastException` if the cast is not allowed,
+and otherwise accepts the object of being of the _new_ type.
+It is almost the same trick as the
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#checkedCollection(java.util.Collection,java.lang.Class)[checkedCollection]
+method uses. The throwing of the exception is the effect of a failing type check if the cast is not applicable.
+
+So if you know the type of the thing you are supposed to create or return, you can use the `Class<E>.cast(...)`
+method to return the correct type `E` instead of some Object.
+
+=== LambdaMetaFactory
+
+My journey through reflection land provided we some other useful insight, namely that some things can get overly complex.
+
+* Benefit versus cost. Prefer the AbstractMapper model with as much standard Java techniques over too much of the magic
+ reflection dust. The final product may help when it has an easy to use api, but may not be amortized over a small project.
+
+On of these paths is my attempt to use the *LambdaMetaFactory* which sounds like a promise to the holy grail of
+being able to whip up a class or a bunch of methods that can produce *Method Rerences* which you then could use in
+the places where lambda expressions would be allowed.
+
+.theoretical API of a getter factory
+[source,java]
+----
+  // function defintion
+   Function<E,R> getterFactory( Class<E> entityType, String fieldname ); // <1>
+   // use
+   R r = fun.apply(e);  // <2>
+----
+
+<1> Create a getter method reference for a field of an entity.
+<2> Use the function to get the field value.
+
+My attempt to make this work took quite a lot of experiments and led me into the rabbit hole of
+reflection, type erasure, lambda__meta__factories, the java type system etc.
+
+The fruit of my labor are two methods which can find the all-args constructor and find or synthesize a deconstructor, but is still
+limited in the number of types it supports. In particular, primitive types need a different approach as reference types, and do not yet
+play nicely with generic.
+
+I decided to stick with a class that provides the construction and deconstruction of the entity.
+This in the end strikes a reasonable balance between effort and complexity on one hand and the relative ease of use of the _API_.
+
+== Reflection or normal Java, a guide to compromise.
+
+The techniques we show here are powerful, but should be used judiciously.
+For instance, while it is attractive to remove all repetitive code from entity handling, using normal Java is
+in many cases faster or more efficient and some of the extra coding may help performance. This lead to the
+previous exercises on the Deconstructors, with a bit of self registration thrown in.
+
+In the exercise below we want to de-construct an entity into an array of its constituent fields, so that the array can be
+used for further processing, like turning it into a Json object or maybe to populate a jcbc record (in week 7).
+Coding a de-constructor in each entity is not much work, and the gain is better perfomance, because the real thing can be
+found and used and is more efficient than _constructing_ the de-constructor from getters of all fields. We have seen that such deconstructor can be generated
+\with relative ease.
+In this final solution, a mapper (subject of the next exercise) might try to find a candidate de-constructor first and if not found,
+compute one using method handles and reflection. Such candidate de-constructor could be made findable by either a naming convention or
+an annotation (in the entity), like the annotation below.
+
+[source,java]
+----
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Flag a method to be the de-constructor for a type.
+ *
+ * The method should take no parameters and return an array containing
+ * the field values if field declaration order.
+ *
+ * @author Pieter van den Hombergh {@code Pieter.van.den.Hombergh@gmial.com}
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Deconstructor {}
+----
+
+[big]#TL;DR# Prefer a real (annotated) de-constructor with a mapper over a purely reflected one.
+
+'''
+
+include::{topics}/jpmsandmethodhandles[]
+
+include::{exercises}/studentmapper.adoc[]
+
+.Dealing with Exceptions that are hard to catch.
+****
+Sometimes you are in the situation that you must catch a checked exceptions, but have no way to trigger the catch because the
+preconditions of the call of the throwing method all have been met, so the Exception can't occur. This gives you an ugly red in
+your coverage report. This applies to the [blue]`EntityMapper` too. Since you are using known field names (which you got by reflecting on the class)
+there is almost no way to trigger the exception, under the condition that the mapper works. +
+If this bothers you, or your boss wants high coverage numbers, then apply this trick:
+
+Move the try catch block to a separate [blue]`final` method with such parameters that you can trigger the exception by feeding the method
+a parameter that triggers the exception. Let this method catch the exceptions and log them. If you still want the exception in the caller of
+the new method, wrap the check exception into a unchecked one, which you do not have to catch,
+_but if it occurs, will crash your program_.footnote:[which is a good enough reason to not do this at home OR to absolutely check that all preconditions have been met in all cases.]
+For instance a method name that does not exists and will trigger a [red]*NoSuchMethodException*.
+It is an extra method call but if the method is called from the constructor and nowhere else, that that keeps you object safe, because
+any further call will have no effect on the object created, if it does not alter the object. Read access to fields is allowed.
+The safest bet is to make the method [blue]`static` like a utility function, so that it will not _have_ access to fields.
+****

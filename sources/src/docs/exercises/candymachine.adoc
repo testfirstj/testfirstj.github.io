@@ -1,0 +1,17 @@
+=== Candy Machine
+
+
+[{extra}]
+NOTE: *EXTRA CHALLENGE:*
+====
+The Candy Machine exercise is a variant on an exam exercise a few years back.
+====
+
+
+
+The candy machine is about bindings and about using mockito.
+
+The task desciption is in this link:../pdf/candyvendingmachine.pdf[pdf file].
+
+The link:{exercises}/candyvendingmachine/apidocs/index.html[javadoc] of the application
+and the link:{exercises}/fcandyvendingmachine/testapidocs/index.html[test javadoc] are available by following the links.

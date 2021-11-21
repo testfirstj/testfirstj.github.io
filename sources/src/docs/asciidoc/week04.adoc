@@ -1,0 +1,29 @@
+:doctitle: W4 Generics
+//           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
+:tabcolumns: d,h,d,d,d,h,d,d,d,d,d,d,d,d,d,d,d
+include::../adocresources/topmenu.adoc[]
+
+
+include::{topics}/generics1.adoc[]
+
+:sectnums!:
+
+== Reading
+
+* Horstmann, Ed 11, chapter 8, Generic Programming section 8.1-8.8
+
+== Slides
+
+* link:../pdf/031_generics_sheets_en.pdf[Generics^].
+
+* Lesson demos in repository: https://www.fontysvenlo.org/svn/2021/prc2/svnroot/lessondemos/
+
+[TIP] The generic ranges exercise had a third part, but that has been dropped and may be part of a future week.
+
+== Exercises in this part
+
+* <<_exercise_generic_box,Exercise Generic Box>>
+* <<_exercise_shapefilter,Exercise Shape Filter>>
+* <<_exercise_generic_ranges_part_1,Exercise Generic Ranges part 1>>
+* <<_exercise_generic_ranges_2_adding_tests_and_leafs, Exercise Generic Ranges part 2: adding tests and Leafs>>
+//* <<_exercise_generic_ranges_part_3_extension,Exercise Generic Ranges part 3: Extension>>

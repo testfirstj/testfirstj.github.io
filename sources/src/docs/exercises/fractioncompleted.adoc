@@ -1,0 +1,52 @@
+*Fraction complete*
+// follow up, add hash code, equals, better to string and helper ctor
+// and static factories. Introducing parameterized test and csvsources for effecient test writing.
+
+When you did the fraction exercise according to the specifications, it is
+functionally complete, or as we formally say, the *Functional Requirements* given
+are fulfilled. However, the fraction class can be improved a bit, addressing the
+non functional requirement of user friendliness.
+
+* Creating a fraction in which the denominator is 1 should be written as `new Fraction(x)`, thereby improving the API.
+* Writing a fraction expression is a bit tedious: `Fraction oneThird= new Fraction(1,2).times(new Fraction(2,3))` is a bit of a mouth full. +
+  We want to be able to write `Fraction oneThird=frac(1,2).times(frac(2,3))`. For that we need a _static factory method_,
+  that takes two ints and creates a new Fraction from them.
+* With fraction you want to be able to see quickly if its value exceeds 1 or not, so we want the fraction `"(3/2)"` to produce a to string
+of `"(1+1/2)"`.
+* Adding to, subtracting from , multiplying with, or dividing by an integer value should be easier to write. +
+  For instance `Fraction two = frac(1,4).times(8)`, which means the times, divideBy, plus and minus methods all get an _overloaded_ sibling with just one int parameter.
+
+There are also a few functional requirements we would like to add
+*Equals* The fraction cannot test itself against another fraction object for equality. Even if numerator and denominator
+    are equal, the (inherited) equals method says false.
+*Comparable Fraction* The fraction class should implement the comparable interface, making it easy to test which of two fractions is the biggest.
+
+You quickly see that the number of test methods may become big. But there is a solution to the problem: Combining test scenarios and using *Parameterized tests*.
+
+.fraction factory tests
+[source,java]
+----
+    @ParameterizedTest
+    @CsvSource( {
+        // n, d, expected toString.
+        "1, 3,   '(1/3)'", // simple to string, known output <1>
+        "6, 2,   '3'",     // int
+        "-9, 3,   '-3'",     // negative int
+        "9, 5,   '(1+4/5)'", // fraction bigger than one
+        "14, -4, '(-3+(-1/2))'", // fraction bigger than one
+         })
+    void testFracToString(int n, int d, String expected){ // <2>
+         Fraction f = new Fraction( n, d ); // <3>
+         assertThat( f.toString() )
+                .isEqualTo( expected ); // <4>
+
+    }
+----
+
+<1> Each record contains a numerator, denominator, and the expected toString result.
+<2> Each value in the record is presented to the test as a method parameter.
+<3> Create a fraction with the given numerator and denominator.
+<4> Verify that the result of the toString invocation matches the expected value.
+
+We also combine test scenario values here to save a bit in the number of tests. Both proper normalization as well
+as the toString values for the various case for less 0, between 0 and 1 and aboce are tested.

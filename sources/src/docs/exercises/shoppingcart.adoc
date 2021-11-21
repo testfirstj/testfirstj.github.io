@@ -1,0 +1,46 @@
+*Shopping Cart*
+
+The shopping cart exercise is about working with interfaces and exceptions.
+
+//Task description link:../pdf/shoppingcart.pdf[Shopping cart].
+
+You model a shopping cart. It is a simplified model of a web shop.
+
+The cart contains items. Items have name and price.
+The shopping car stores the items in a hash map that maps items to
+integer amounts.
+The hash map allows lookup of the items in the cart.
+
+The cart computes the total price of the contained items.
+The cart also has a special price calculator that allows the shop to
+implement actions like one bubble gum when you take two bottles of
+cola.
+
+The Item and the ShoppingCart are defined as interfaces.
+Each has an implementing class. These classes are provided to you and
+you have to write the tests and the implementation.
+
+The class diagram of this library is given below.
+
+*Way of working*
+
+. Determine the order in which you will test your classes and methods.
+. For each method that is to be implemented, write the test
+  first.
+. Commit this test as soon as it is written. Use 'test xxx
+  written' as commit log.
+. Implement the method you want to test. If the method satisfies
+  the test, commit it. use 'method xxx implemented and tested' as
+  commit log.
+
+*The design*
+In figure below you find the class diagram of the
+whole package.
+
+Inside the sources you find the documentation.
+If you are more comfortable reading html, generate the javadoc.
+
+.shoppingcart class diagram
+image::shoppingcart.svg[]
+
+A NetBeans starter project will be available in your repo.

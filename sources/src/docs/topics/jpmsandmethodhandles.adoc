@@ -1,0 +1,74 @@
+== JPMS and Method handles
+
+Reflection and MethodHandles belong to the advanced magic.
+
+MethodHandles were introduced in Java 7. They work fine inside a java release <= 8 project.
+
+Java **Modules** where introduced in Java 9. The concept is known as the Java Platform Module System or JPMS.
+JPMS is a watershed between somewhat encapsulated and really encapsulated code. The java Guys and Girls mean business.
+
+One of the design goals of JPMS is to provide and maintain developer flexibility and
+protection against unwanted access. Since Java 9, the control and defaults have been turned up with almost every release.
+Java 9 had all the mechanism in place but is quite permissive by default.
+Java 16 denies a lot more, and flipped from opt-in to opt-out as far as (reflective) openness is concerned.
+
+*We will give more details on JPMS in a later week*
+
+For our Mapper approach that means a modular project
+introduces some new [red]*bleeding* edge problems. (Actually headache :-| )
+In particular, the entities are not reachable for reflection or rather the method
+handles that try to access the code in entities from the mapper module.
+And having the mapper open or require the entities is a no go, because:
+
+* The mapper is a reusable component. It should be ignorant of its users.
+* It would introduce a   https://en.wikipedia.org/wiki/Circular_dependency[[red big]*cycle*], because we want to put the leaf-mappers with the entities in the same module,
+and the leaf-mapper all point to their [blue]*super*, *Mapper* in the generic mapper module.
+
+Code wise the solution below appears to work in Java 11 and 16, at least as far as I have tried.
+This is what the MapperGenerator should 'code'.
+
+.In the constructor you pass a MethodHandles.Lookup up to the mapper.
+[source, java]
+----
+// No public ctor
+private EmployeeMapper() {
+    super( Employee.class, java.lang.invoke.MethodHandles.publicLookup() ); //<1>
+}
+
+// self register
+static {
+    Mapper.register( new EmployeeMapper() );
+}
+// remainder left out. Code template is in genericmapper project 2.2
+----
+
+<1> Pass a [green]*token* to allow access by my super with the same rules as I (EmployeeMapper) can do.
+
+.Watch out for snipers.
+image:two-rabbits-in-crosshair.png[role="thumb right", width="300px"]The Employee mapper lives in the entities world, and has been dropped there to
+ 'operate' on the classes in the modules "below", but needs privileges in the land it is tele-ported in. +
+
+* With this "access token", the JPMS will allow it. +
+* You see that the code in the module [green]*itself* can now allow access, instead of being a willing victim
+  to any kind of reflector that may point it's cross+hair at you.
+
+As a metaphor: The mapper is a veterinary, that knows all about about rabbits and has healing powers but can also be deadly. +
+The patient should trust his doctor, but only so far.
+
+'''
+
+.The module diagram (syntax elements from deployment, class and package diagrams)
+image::mapperandmodules.svg[]
+
+
+You see that the module diagram is free of cycles.
+All point at the annotations, the entities module [blue]#requires# the `genericmapper` module
+and the client module can use the entities and genericmapper to do its business, like use or extend the mapper.
+Add another module (a generic DAO) will be part of the exercise of this week.
+
+.Quiz: Can you draw the DAO in the module diagram including its associations?
+[%collapsible,role="blue"]
+====
+Add the JPMS DAO somewhere in the diagram and have it require the mapper and the entities, and have the
+client require the DAO.
+====

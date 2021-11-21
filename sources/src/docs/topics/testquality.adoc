@@ -1,0 +1,107 @@
+== Test quality
+
+So testing is to improve code quality. But is there any quality measure to tests?
+
+Sure there is:
+
+* Work test driven, duh. In the standard TDD cycle, you should have your test
+  to be red first. That's one.
+* You can *break* your code and see if the tests make you aware of it. They should show
+  a nice deep red (at least some of them). If they do not, you are working according to the TDD cycle. That's two.
+* You can measure the coverage of your tests. Sebipom provides a tool for that called https://www.eclemma.org/jacoco/[JaCoCo]
+that you can turn on in your IDE or when running form the command line.
+It shows how much of the _business_ code is executed by your tests. That's three.
+* For the lazy ones (aren't we all) and easily repeatable too: Have you code automatically mutated
+  by some tool. Your tests should find most if not all issues after mutating. The tool provided for this
+  is https://pitest.org/[pit-test]footnote:[A British synonym for mine is pit, that is why you have the bird with the helmet as logo]
+
+Let's go through the method one by one.
+
+=== TDD
+
+These you know:
+
+* There is no test before there is a requirement.
+* And there is no business code before a test.
+
+So if a method is not specified, then do not write a test for it, and do not write the method either.
+
+The only reason to have a method is because the specs demand it. And they should state
+
+* what the method is supposed to do
+* in which states of the object the method call is legal
+* any requirement of the parameters to the method
+* specification of result, possibly in a set of input-output tests cases.
+* any exceptions that can be thrown and under what conditions
+* the state that the object is left after completion of (or return from) the method.
+
+If the user stories are complemented with proper scenarios (which they should to help you write your test),
+then you can write the tests easily, feature for feature and thereby test-driven develop the business code.
+
+Writing your test first, which makes the business break first. +
+ Always give the IDE a chance to code-complete whatever you try to
+  invoke in your test, because the business code does not yet exist, so that the test is meaningful.
+  A IDE generated `throw new UnsupportedOpretaionException( "this method needs implementation" )` is not very useful,
+  but returning something of the proper type (for non-void methods) is a better choice.
+  If you think it is a sly trick to return the correct value
+  the first time, then you are in bad luck because:
+
+. You will have a test that has not been red.
+. You will have to invent other test cases, to complement the 'correct' one.
+
+So best start with return `0`, `false` or `null`. If your test is already green in that case, choose another
+'impossible' value such as `42`, `true` or a simplest version of the expected result type , such as `"wrong"` for Strings.
+
+=== Break your code
+
+image::mario_smashes.png[role="right thumb", title="take that!, from imgflip.com meme generator".]
+If you do not, we will force you. We will regularly, but only after a commit, ask you to break some of the business code
+to see that the tests notice. We will also do something similar in the correction of the performance assessment, that is
+we will feed your test broken business code and the test code should notice that.
+
+As promised, breaking your code by a program is easy. It is built in by the magic of pit-test.
+
+.Command line First
+[source,sh]
+----
+mvn test org.pitest:pitest-maven:mutationCoverage
+----
+
+.Pit mutationCoverage is about in the middle.
+image::maven_pittest.png[role="thumb left"]
+You can also use NetBeans ID.
+Click on the project. Then the navigator should show the possible maven goals. +
+Choose pittest mutationCoverage. This will produce an index.html report
+in target/pit-reports which contains date-time-stamped folders cont. Choose the latest if you have more of those folders. +
+You can also have NetBeans IDE remember this by going *run maven -> Goals ->*, then in the dialog
+add `test org.pitest:pitest-maven:mutationCoverage` and save it as e.g. *pit*.
+
+This last results in an addition to the *nbaction.xml* file like this:
+
+.Pit saved in nbaction.xml
+[source,xml]
+----
+    <action>
+        <actionName>CUSTOM-pit</actionName>
+        <displayName>pit</displayName>
+        <goals>
+            <goal>test</goal>
+            <goal>org.pitest:pitest-maven:mutationCoverage</goal>
+        </goals>
+    </action>
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''

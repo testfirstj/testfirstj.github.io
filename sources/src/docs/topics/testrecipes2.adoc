@@ -1,0 +1,104 @@
+== Test Recipe 2: Parameterized test and varargs.
+
+=== Sometimes it is easier to do a lookup or a compute than write CSV
+
+There are case where writing the csv records is a lot of tedious and repetitive work.
+When the test values you need are from a limited set and you only need them
+in varying order, why not make a lookup.
+That is the trick we use multiple times. The ingredients are a supplier of the things you need
+and a lookup.
+
+[[lookup-supplier]]
+.Lookup supplier
+[source,java]
+----
+  abstract T a(); // etc for b, c, and d
+
+  // Lookup, key is a char here, but could be any convenient key.
+  Map<Character, Supplier<T>> abcdSup = Map.of(
+            'a', () -> a(),
+            'b', () -> b(),
+            'c', () -> c(),
+            'd', () -> d()
+    );
+----
+
+.parameterized test using the lookup
+[source,java]
+----
+  @ParameterizedTest
+  @CsvSource({
+    "42, abcd", // just examples, no relation
+    "131,badc"  // with any known use case.
+  })
+  void useFour( int expected, String elementOrder ) {
+    List<T> input = stringToElements( order ); // helper
+    // use test values define by x and the order
+    assertThat( sut.f( input ) ).isEqualTo( expected );
+  }
+----
+
+.helper example
+[source,java]
+----
+    List<T> stringToElements( String label ) {
+        List<T> pt2 = new ArrayList<>();
+        char[] abcd = label.toCharArray();
+        for ( char i : abcd ) {
+            pt2.add( abcdSup.get( i ).get() ); // <1>
+        }
+        return pt2;
+    }
+----
+
+<1> Lookup the supplier of the desired type and apply it. `abcdSup` is the map defined in the earlier code snippet <<lookup-supplier>>.
+
+
+=== Var args in parameterized tests.
+
+Parameterized tests have the advantage that you can create a lot of tests with a little
+amount of code. A lot of bang for your test buck so to speak.
+There are situations where you want to test something with a parameterized,
+whose outcome has a various number of elements. Examples: The result of the operation
+is a List or Stream with varying number of contained elements.
+
+At the time of writing, there is no easy way to get the unit test framework to
+convert from a comma separated line to a var args parameter.
+
+.Ideal situation: varargs in csv source. DOES NOT WORK.
+[source,java]
+----
+    @ParameterizedTest
+    @CsvSource({
+      "X,b,c",
+      "Y,b,c,d,e"
+      "Z"
+
+    })
+    void someTest( X input, A ... expected){
+      // code left out
+    }
+----
+
+With a trick you can get it to work. You create the csv table such that it has
+a fixed number of strings, and for the one where you want a varying number of elements, you use another separator, for instance a '|'.
+
+.Var Args with a trick
+[source,java]
+----
+    @ParameterizedTest
+    @CsvSource({
+      "X,b|c", // two outputs
+      "Y,b|c|d|e" // four
+      "Z," // none
+
+    })
+    void parametereTest( X input, String expected){
+      String[] expectedElements= expected.split("\\|"); //<1>
+      // code left out
+    }
+----
+
+<1> From there on you have your 'varying args ' and can do what you like, including applying earlier tricks, parse as int etc..
+
+'''

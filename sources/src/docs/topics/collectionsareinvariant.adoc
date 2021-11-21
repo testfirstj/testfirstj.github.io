@@ -1,0 +1,43 @@
+== Collections are Invariant.
+
+The Java generic type system has some peculiarities that are sometimes hard to understand.
+
+One is the fact that classes and return types of methods are typically co-variant,
+but returning a collection from a sub class does not return a collection of sub type elements.
+
+If you have the classes `class A {  }` and `class AA extends A{}` then
+a method defined in A that returns say a `List<A>` will NOT return a `List<AA>` in class
+AA, _unless_ you overwrite the method in AA.
+
+The documentation and theory say that collections are _invariant_ with respect to sub-classing of
+the contained type. +
+This also applies to Stream and Optional.
+
+This makes designing with generics quite laborious.
+
+=== Half way solution for Stream and Optional.
+
+In case you can or do apply streams or optional (which you can think of as a stream of at most one element),
+than you cal alleviate the problem a little bit, but alas you have to do this at the receiving end
+or call site of the stream or optional returning method.
+
+To stay with the example: If a method `A` produces a `Stream<A>`, and you know that calling that method on an instance of `AA` does indeed
+return a `Stream<AA>`, but the compiler does not agree, you can make it well behaved by converting the Stream with a map function to
+be seen as a Stream of A, by applying the Function  `AA.class::cast`.
+
+[source,java]
+----
+  class A {
+    Stream<A> method();
+  }
+
+  class AA extends A {
+    // method is NOT overwritten, but you know will produce a Stream of AA.
+  }
+
+  // Then this will convince the compiler to the idea
+  // If you lied, then the run-time will bite you.
+  Stream<AA> = method().map( AA.class::cast );
+----
+
+We had to apply this trick in the ranges and seasons exercise.

@@ -1,0 +1,40 @@
+[[try-with-resources]]
+=== Try with resources.
+
+`File` is one of the classes that has operations (methods) that throw
+exceptions. `java.util.Scanner` implements `AutoCloseable` and as such has a `close()` method.
+When constructed with file as argument, it will use said file as input and close the file, when the scanner is closed. It is good practice to close
+a resource once it has been 'consumed', because this releases the resource. The purpose of such a close
+operation is to signal that the resource should be brought to a state
+that is safe and can be freed for other use.
+
+Classes that have such properties are known by the generic name
+*resource*, something that you need but is potentially scarce. +
+Since Java 7, we have a feature called *try with resources* . It adds a new construct to the try-catch block, namely
+the resources that you are about to use. There can be more than one resource.
+
+.try with resources, using a scanner and a file.
+[source,java]
+----
+include::trywith/src/Trywith.java[lines="16..25"]
+----
+<1> Scanner is also autoclosable.
+<2> No catch needed, that is only required if you want to deal with the exceptions that could
+ occur.
+
+Once the try with resources is done with the resources, the resources
+are automatically closed and freed. For this to work, the resource must implement the `java.lang.Autoclosable` interface.
+You also save yourselves the tedious work of closing when an exception
+occurred. That is also taken care of. So when your Java level is
+greater or equal to Java 7, use *try-with-resources* whenever you can, because it will save you the work
+of closing the resources in the finally block.
+
+You declare the resources in the try-with-resources in the natural
+order, the earlier resource being used by those further on.
+They will be closed in the reverse order of declaration. In the above case that would mean:
+
+. Scanner scanner closed
+. InputStream in closed
+. File f closed
+
+which is the natural order of freeing or closing the resources.

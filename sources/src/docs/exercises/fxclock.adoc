@@ -1,0 +1,119 @@
+:sectnums!:
+
+== FX Clock
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>FX Clock</summary>
+++++
+
+
+This exercise is about bindings and a bit about a JavaFX toy clock.
+
+. ticker helper
+. the java fx clock
+
+You will also learn how to combine maven projects into one final result.
+
+You should build the projects in order.
+
+The toy clock will look like the thing in the picture.
+
+.BB8 as a clock face
+image::bb8clock.png[]
+
+You’ll program a clock like this, including all its functionality and
+both the digital as well as the analog display, step by step.
+
+
+The clock's operation mimics a mechanical clock, driven
+by a synchronous electric motor, which drives the right hand time
+element which in turn drives the element on  its left and so on.
+
+*Tasks*
+
+Start by answering the questions below in a README.md file inside the
+maven project, at the same level as the pom.xml file.
+
+
+You can also take notes there, to keep things in one place.
+
+. What are functions available in this design?
+.. Think of display(s), buttons and what time means.
+.. Describe these functions.
+.. Is there any interaction between the elements in the display?
+
+. Describe how you would thoroughly test this device.
+
+
+The project has two maven projects: *TickerHelper* and the *fxclockstart*.
+
+Build the javadoc of the TickerHelper library and study it to see how it can be used.
+
+* Complete the unit tests in TimeElementTest to test your time-element implementation.
+* Add seconds and days: Make sure that your clock registers days, hours,
+  minutes and seconds too.
+* Consider your implementation and check if it is DRY (*D*on't
+  *R*epeat *Y*ourselves).
+
+Note to use the *fx*- profile when building and running the fxclock project.
+
+.time element object diagram
+image::time-element-objectdiagram.svg[]
+
+.time element class diagram
+image::timeelement-classdiagram.svg[]
+
+*JavaDoc*
+
+The link:{exercises}/tickerhelper/apidocs/index.html[javadoc of ticker helper]
+ and the of the application  link:{exercises}/fxclock/apidocs/index.html[fxclock javadoc]
+ and link:{exercises}/fxclock/testapidocs/index.html[fxclock test javadoc] are available by following the links.
+
+*Corrections to the start project code*
+
+[WARNING]
+Due to the way the FXMLLoader works, having incorrect or incomplete code in the
+*controller* class will throw exceptions that are not very helpful to say the least.
+
+That the students experience this problem has to do with the fact that
+we make the code incomplete on purpose, to give you some work :-). +
+However, our quality checks where not properly in place, so there you have it.
+
+
+To avoid this problem,
+
+* you can _comment_ out some of the given code (which *IS* needed for the complete solution)
+* and re-enable (uncomment) it once your controller is complete and has its fields both declared and properly initialised.
+
+Code to temporarily comment out:
+
+.comment in method clockWork
+[source,java]
+----
+  private void clockWork() {
+//      second.increment();
+  }
+----
+
+
+.comment in method setupAlarm
+[source,java]
+----
+ private void setupAlarm() {
+        ahourLabel.opacityProperty().bind( alarmOpacity );
+        aminuteLabel.opacityProperty().bind( alarmOpacity );
+        ahourSep.opacityProperty().bind( alarmOpacity );
+////// comment to make it work with missing field initialisations
+//      setPerspective();
+//      alarmTimeReached = ahour.valueProperty()
+//            .isEqualTo( hour.valueProperty() ).and( aminute.valueProperty()
+//            .isEqualTo( minute.valueProperty() ) );
+//       alarmTimeReached.addListener( this::soundAlarm );
+ }
+----
+
+++++
+</details></div><!--end fxclock.adoc -->
+++++
+
+:sectnums:

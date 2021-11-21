@@ -1,0 +1,25 @@
+=== Have a candy bar.
+
+Well, actually a candy bar vending machine.
+
+It has been an exam exercise a few years back an could be considered
+an application where business and presentation are (almost) perfectly
+separated.
+
+Your task in this practical exercise is *not* so much to solve the exam exercise, although it gives you the change too what an exam exercise would look like.
+NO, it is to study the design of this application and see how it was made testable, in particular one question: +
+What is/are the injection points of this design, to minimise coupling, by studying the source code and the given class diagram in the exam link:../pdf/candyvendingmachine.pdf[candyvending machine documentation].
+
+The documentation is given as is and may contain more then is shown in the remaining but working maven project. Simply ignore the bits that you do not have to address
+to solve the task given.
+
+
+[TIP]
+====
+Put your answer in a simple text file named answer.adoc or answer.md
+in the root of the netbeans/maven project.
+====
+
+You can have your virtual bar by starting the application.
+
+image::candyvendingmachine.png[title=have a bar]

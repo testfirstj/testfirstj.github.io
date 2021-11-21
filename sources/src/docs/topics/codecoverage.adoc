@@ -1,0 +1,138 @@
+== Code Coverage and Code Complexity
+
+image::jacoco-profile.png[role="thumb right", title="select jacoco profile"]
+A popular and readily available method to get some estimate of
+the value of your tests is how much of the code it 'covers', that is executes.
+If all is well (TDD), it is easy to  reach 100% code lines covered, including every
+branch or loop. Sometimes those nasty *checked* exceptions are in the way, because you either
+have to catch them and have a hard time reaching that catch block, because it is hard to setup
+a test case where the required exception actually occurs, thereby excluding the catch block from coverage. +
+
+In sebipom we provide Jacoco as the coverage plugin.
+You must activate it using a maven profile.
+
+'''
+
+=== Measuring Code Coverage
+
+image::coverage-report.png[title='activating the jacoco maven plugin after selecting the profile']
+
+Measuring coverage involves a technique that is called instrumenting the (business) code.
+To do that effectively, the instrumenting agent inserts something like a flagging statement at the
+beginning of each method and of each branch or loop. Jacoco calls it a probe.
+
+To show this, compare the bytecode ( using `javap -v Fraction.class`) of the method Fraction plus(Fraction) and its instrumented version.
+
+.Java source code snippet
+[source,java]
+----
+    public Fraction plus( Fraction other ) {
+        return plus( other.num, other.denom );
+    }
+----
+
+.Orginal byte code
+[source,java]
+----
+public fraction.Fraction plus(fraction.Fraction);
+  descriptor: (Lfraction/Fraction;)Lfraction/Fraction;
+  flags: (0x0001) ACC_PUBLIC
+  Code:
+    stack=3, locals=2, args_size=2
+       0: aload_0
+       1: aload_1
+       2: getfield      #6                  // Field num:I
+       5: aload_1
+       6: getfield      #7                  // Field denom:I
+       9: invokevirtual #9                  // Method plus:(II)Lfraction/Fraction;
+      12: areturn
+    LineNumberTable:
+      line 80: 0
+    LocalVariableTable:
+      Start  Length  Slot  Name   Signature
+          0      13     0  this   Lfraction/Fraction;
+          0      13     1 other   Lfraction/Fraction;
+----
+
+.Byte code instrumented by jacoco
+[source,java]
+----
+public fraction.Fraction plus(fraction.Fraction);
+  descriptor: (Lfraction/Fraction;)Lfraction/Fraction;
+  flags: (0x0001) ACC_PUBLIC
+  Code:
+    stack=6, locals=3, args_size=2
+       0: ldc           #133     // PROBE Dynamic #2:$jacocoData:Ljava/lang/Object;
+       2: checkcast     #135     // PROBE class "[Z", array of boolean
+       5: astore_2               // PROBE save array ref in local
+       6: aload_0
+       7: aload_1
+       8: getfield      #6                  // Field num:I
+      11: aload_1
+      12: getfield      #7                  // Field denom:I
+      15: invokevirtual #9                  // Method plus:(II)Lfraction/Fraction;
+      18: aload_2                // PROBE Load array reg from local
+      19: bipush        8        // PROBE push array index which happens to be the nineth value in the array for this block
+      21: iconst_1               // PROBE push constant 1
+      22: bastore                // PROBE save in array using value and index
+      23: areturn                // original return
+    LineNumberTable:
+      line 80: 6
+    LocalVariableTable:
+      Start  Length  Slot  Name   Signature
+          6      18     0  this   Lfraction/Fraction;
+          6      18     1 other   Lfraction/Fraction;
+
+----
+
+You can imagine that instrumenting will slow your code down, however, it makes no functional changes.
+If your read the above code and comments we added, you see that whenever this method is executed, the 9th Boolean in the jacoco coverage array is set to one.
+
+Having only a Boolean per code-path is well a considered compromise. If you would like to count the number of executions,
+the probe-code would get longer and the execution substantially slower (updating counts, etc). Jacoco chose this solution, cobertura another once popular coverage tool the other.
+You see that this efficient code probing can have a serious impact on the number of instructions for short (e.g. one statement) methods.
+
+We showed a simple example of a straight through method. When a method has loops or branches each of those
+will have a probe of its own. From this you can infer the the coverage agent needs to know about these loops and branches and
+uses them for another purpose too.
+
+=== Code Complexity
+
+image::Control_flow_graph_of_function_with_loop_and_an_if_statement_without_loop_back.svg[role="thumb left", title="from wikipedia"]
+Complex code is never a good thing. It is hard to write, hard to read and therefor hard to maintain, and all in all expensive.
+This simplest code is just a list of assignments and method calls, properly mixed to make it's execution meaningful.
+Such code would count as one code block and only needs one probe.
+
+Introducing one or more branches increases complexity, and because paths after these branches can exclude one another, thereby increasing that chance that
+one or the other code-path is not executed.
+
+This complexity can be computed from the number of code-paths found.
+This complexity computation also know as https://en.wikipedia.org/wiki/Cyclomatic_complexity[McCabe Cyclomatic Complexity].
+
+When using jacoco, you get this complexity computation for free, because it is useful in the context of code coverage AND
+jacoco already has all the data.
+
+.High complexity leads to low coverage. The highlighted column is the most interesting.
+image::high-complex.png[]
+
+In the jacoco report above you see the complexity ranging from 1 to 19.
+As a rule of thumb, something above 5 is reason for concern, with the exception of the `boolean equals(Object)` method, that starts with three and grows
+by one with every field considered in the equals method. According to the doc, there are ways to exclude equals from the jacoco report, but that will be for another time.
+
+.Low complexity means easier in everything including in reaching high coverage.
+image::low-complexity.png[]
+
+The second jacoco report is the same application implemented by a different developer. Here the complexity ranges from 1 to 5 which
+leads to way easier to maintain code.
+
+[NOTE]
+====
+If you got curious about java byte code, the byte code listing above were generated as follows
+
+`mvn clean compile` +
+`javap -v target/classes/fraction/Fraction.class > Fraction.class-orig.txt` +
+`mvn jacoco:instrument` +
+`javap -v target/classes/fraction/Fraction.class > Fraction.class-instrumented.txt`
+
+and then editing out the relevant pieces for this narrative.
+====

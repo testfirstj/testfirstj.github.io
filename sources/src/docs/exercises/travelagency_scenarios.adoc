@@ -1,0 +1,11 @@
+*Scenarios*
+
+For integration test
+subdir with name, like eg
+
+
+FullhamCity/
+   setup.properties
+   Asserts.csv
+   Bookings.csv
+   Scenarios.csv

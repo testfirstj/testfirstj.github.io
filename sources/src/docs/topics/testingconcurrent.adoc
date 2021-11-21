@@ -1,0 +1,185 @@
+== Testing concurrent programs.
+
+[{extra}]
+NOTE: *EXTRA Testing stuff*
+Testing is way to show that a program has flaws, not to show that it is correct.
+Remember that a proper test must be red, not green to show its worth. +
+This is even worse under concurrent conditions and testing concurrent programs is
+therefor quite hard. Multiple runs with multiple outcomes may be needed, you (test) program may freeze
+up etc.
+
+
+*There are a few guidelines we want to share.*
+
+* Start testing your algorithm or whatever you have with a single thread, as is the
+normal case in unit testing
+* Of course you must apply multiple threads when you want to test concurrent behavior.
+* Organize the test as a kind of race. All threads should start at the same time
+  to maximize parallel work and thereby potential concurrency problems.
+* Wait for the race to finish and then check the results, by inspecting the resource,
+  assessing that the numbers are Okay, you have no unexpected exceptions such as null pointer.
+* Configure some reasonable timeout on the test, so that in case the test does not finish, because the
+  threads are somehow locked or waiting for a condition that will not occur.
+* Try to modify the program as little as possible, so any instrumentation like starting and stopping
+  the tasks should be done by wrapping the normal tasks (e.g. Runnables) in another layer of
+  runnables that facilitate starting and stopping of the tasks in a race like fashion.
+  Adding say print statements will change the timing of your program and may either introduce effects
+  of the concurrency problems in your code or conceal them. Such bugs are called https://en.wikipedia.org/wiki/Heisenbug[Heisenbugs] after
+  the effect described by Werner Heisenberg.
+
+.concurrent queue test
+[source,java]
+----
+/**
+ * Enable the test below once you are about to make your queue thread safe.
+ *
+ * @throws InterruptedException unexpected
+ */
+@Timeout( value = 2, unit = SECONDS )
+@Test
+void concurrentTest() throws InterruptedException {
+
+    final CountDownLatch startSignal = new CountDownLatch( 1 );  // <1>
+    final CountDownLatch doneSignal = new CountDownLatch( putter.length + getter.length ); // <2>
+
+    setupRace( startSignal, doneSignal );                // <3>
+
+    startSignal.countDown();                             // <4>
+    doneSignal.await();                                  // <5>
+
+    final int succesfulPuts = countPutSucces();
+    final int succesfulGets = countGetSuccess();
+
+    SoftAssertions.assertSoftly( softly -> {
+        softly.assertThat( succesfulPuts ).isEqualTo( PUTTERS * PUTS_PER_THREADS );
+        softly.assertThat( succesfulGets ).isEqualTo( GETTERS * PUTS_PER_THREADS );
+    } );
+}
+----
+
+<1> Have a start line and
+<2> Finish line
+<3> Configure the race, details follow
+<4> image:startsignal-tiny.png[role="thumb left"]Bang ! Start.
+<5> 🏁 wait for all to finish and stay *off* the track while doing so.
+
+After the finish it is a normal test with usual asserts. Using mocks during the race may be tricky because there
+the mocks are not likely to be thread safe themselves.
+
+.Set up the race
+[source,java]
+----
+/**
+ * Details of setting up the concurrent test objects.
+ *
+ * @param startSignal to wait for start of match
+ * @param doneSignal signaled when all completed.
+ */
+private void setupRace( final CountDownLatch startSignal, final CountDownLatch doneSignal ) {
+    for ( int i = 0; i < getter.length; i++ ) {
+        getter[ i ] = new Getter( instance, PUTS_PER_THREADS ); // <1>
+    }
+
+    for ( int i = 0; i < putter.length; i++ ) {
+        putter[ i ] = new Putter( instance, PUTS_PER_THREADS );  // <2>
+    }
+
+    int p = 0;
+    for ( Putter putter1 : putter ) { // <3>
+        p++;
+        new Thread( new TestWorkWrapper( putter1, startSignal, doneSignal ), "putter" + p ).start();
+    }
+
+    int g = 0;
+    for ( Getter getter1 : getter ) {
+        g++;
+        new Thread( new TestWorkWrapper( getter1, startSignal, doneSignal ), "getter" + g ).start();
+    }
+}
+----
+
+<1> The Getter
+<2> and Putter classes are the tasks to be done under concurrent conditions.
+  They all use the same Queue instance. The race is configured to have 5 putter and getters each,
+  both attempting a PUTS_PER_THREADS operations on the queue.
+<3> Each are wrapped in a TestWorkWrapper and the start and done signals for this race.
+  These wrappers themselves are given as tasks (Runnable) to named threads, who are started immediately.
+
+.Getter as example task to test the quality of the queue under concurrent access by both putters and getters
+[source,java]
+----
+/**
+ * Simple getter class. Tries in a loop until somethings is retrieved and
+ * then prints that. Attempts a configured number of times.
+ */
+static class Getter implements Runnable {
+
+    final Queue<String> q;
+    int attempts;
+    int successCount = 0;
+
+    Getter( Queue<String> q, int attempts ) {
+        this.q = q;
+        this.attempts = attempts;
+    }
+
+    @Override
+    public void run() {
+        while ( attempts > 0 ) {
+
+            String x = null;
+            // wait until we have something
+            while ( x == null ) {
+                x = q.get();
+            }
+
+            successCount++;
+            System.out.println( "x = " + x );
+            attempts--;
+        }
+    }
+}
+----
+
+.Match or race instrumentation to make all runnables to commence at the same time and have them signal when done.
+[source,java]
+----
+/**
+ * Helper class to wrap a runnable, hold it until start is given and signal
+ * when done.
+ */
+static class TestWorkWrapper implements Runnable {
+
+    final Runnable work;
+    final CountDownLatch startSignal;
+    final CountDownLatch doneSignal;
+
+    TestWorkWrapper( Runnable work, CountDownLatch startSignal, CountDownLatch doneSignal ) {
+        this.work = work;
+        this.startSignal = startSignal;
+        this.doneSignal = doneSignal;
+    }
+
+    @Override
+    public void run() {
+        try {
+            startSignal.await();                     // <1>
+            work.run();                              // <2>
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( ConcurrentQueueTest.class.getName() ).log( Level.SEVERE, null, ex );
+        } finally {
+            doneSignal.countDown();                  // <3>
+            System.out.println( "finished worker " + Thread.currentThread().getName() );
+        }
+    }
+
+}
+----
+
+<1> Wait for start signal
+<2> Run, run.
+<3> Signal that the work returned from running by countdown for this wrapped work.
+
+
+The example given might be useful in other cases, but we will not give a guarantee
+that it will work reliably in all or any cases.

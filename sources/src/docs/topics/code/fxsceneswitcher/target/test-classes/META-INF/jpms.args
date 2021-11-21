@@ -1,0 +1,4 @@
+--patch-module
+switcher=_
+--add-reads
+switcher=ALL-UNNAMED

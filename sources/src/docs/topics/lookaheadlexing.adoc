@@ -1,0 +1,33 @@
+== Look Ahead Lexing and Parsing
+
+How a token is understood, depends how it starts, but also how it is embedded in the context of the remainder of a text.
+To make Lexing and Parsing easy for the computer, one can add separates between the tokens, and that is indeed what CSV does.
+It is also what the command line implementations in Windows, Linux and OS-X do. In this case the 'inter-field-separator' or *IFS* defaults to the space character.
+
+[TIP]
+So now you understand why it is NOT a good idea to use spaces in directory and or file names.
+Although you might reason that using spaces helps us to read the names, it makes the interpretation by the computer harder,
+which can only be mitigated by writing scripts. Is it not much better to be [big]*lazy* and not have to write the scripts, but instead avoid the problem?+
+Remember that code not written has no flaws.
+
+There are however syntaxes which do *NOT* rely on separators, but use the _change_ of *character class* as an indication of a need for state-change.
+
+The approach we use us is to have a character consumer that returns true when it 'ate' the character and false when it rejects it.
+This allows for instance _sentences_ like `value=42`, in which there is a name (value), an operator (assignment) and a number (12).
+In the example, which could in fact be part of some program, the name is understood because it starts with a letter,
+the operator, because it is NOT a letter and the number because it starts with a digit.
+
+In Java you can ask the Character class what kind (or class) of character a certain char value is. It is in fact expressed in a bunch of [blue]#static#
+fields in the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html[Character class].
+
+You can use the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#getType(int)[getType(int)] method to get
+the type or character. For instance some possible types  or classifications are
+*DECIMAL_DIGIT_NUMBER*, *LETTER*.
+
+There are quite a few static helper methods to say for instance if a character https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#isDigit(int)[is a digit].
+or a character that can https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#isJavaIdentifierStart(int)[start]
+or https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#isJavaIdentifierPart(int)[continue]
+ an identifier such as the [green]`value` above.
+
+// If you would study the values a bit, you will notice that the classification is somewhat encoded into bit values,
+// For instance a LETTER is

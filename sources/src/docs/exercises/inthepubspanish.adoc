@@ -1,0 +1,111 @@
+:sectnums!:
+
+== Internationalization (I18N) of a Pub
+
+++++
+<div class='ex'><details class='ex'><summary class='ex'>In the pub (Spanish beer)</summary>
+++++
+
+*In the pub Spanish*
+
+For this exercise, you are expanding on the pub exercise again. This time, enums and exceptions are all implemented and tested. The focus this week is on Internationalization! We want to make sure that the pub can run in different languages.
+
+image::spanishBeerResources.png[The resources in this project,role="related thumb right" ^]
+
+Open the project folder in Netbeans. Let's first look at the resources of the project. You will  notice a bunch of new files in the resources folder. The files contain the translations of error messages into Dutch, German and Spanish. For example, the `inthepub_nl_NL.properties` file contains
+
+A good way of working is to create languages files for other that the default (typically English)
+to have the English text as comment and as a hint for the translator.
+Then the key value (the string at the left side of the equals sign) do not have to contain the full english texts,
+which might need escaping, such as when the key contains whitespace. In this exercise we banned the white space
+in the key altogether, and derive the keys from the default message with
+
+[source,java]
+----
+    String msg = getMessage(); //<1>
+    String key = msg.toLowerCase().replaceAll( "\\s", "_" ); //<2>
+    String lMessage = bundle.containsKey( key ) ? bundle.getString( key ) : msg; //<3>
+----
+
+<1> get the original message.
+<2> translate to lower case and replace spaces with underscores, which yields the key.
+<3> If that key is found, use its message, otherwise use the default, non-internationalized version.
+
+.The dutch file
+[source]
+----
+#hello=Hello
+hello=Hallo
+#good_morning=Good Morning
+good_morning=Goede Morgen
+#you_drank_too_much=You drank too much
+you_drank_too_much=U hebt te veel gedronken
+#beer_is_sold_out=beer is sold out
+beer_is_sold_out=Het bier is uitverkocht
+#you_are_too_young_to_drink=you are too young to drink
+you_are_too_young_to_drink=U bent te jong voor drank
+----
+
+So when the pub raises an `EmptyStockException` and the `Locale` is Dutch, it should display the _Dutch_ error message, not the English one. You don't need to touch the language properties files, unless you want to add more languages (or perhaps our Spanish is too horrible!).
+
+In this exercise you work on the files:
+
+. `LanguageTest.java`, which is your main file for testing your implementation. Remember, work test-driven! What you should check is that the Exceptions are thrown with a message in the correct language.
+. `PubException.java`, this is a new Exception that all other Exceptions inherit. It is the one responsible for translating the error messages. Your implementation goes here.
+. `HablasEspañol.java`, which provides a `main` method for you to play around with the languages. Feel free to change this code to your liking to familiarize yourself with Internationalization, it is not tested.
+. `MainSimulationTest.java` to complete the simulation tests. The business code is given. Push up the coverage.
+
+If you want to run the program, you can use the `run.sh` file that we provided in the project's repository. Simply execute it to test the pub simulation. Alternatively, simply type `java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.ParlezEspañol` in your command line interface. Of course, this will throw errors as long as you haven't written your implementation!
+
+*Where should I start?*
+
+Start with the `PubException.java` class and implement the constructor so that the compilor errors will go away.
+Then, move to `LanguageTest.java` and work on the rest of the exercise, first writing the tests and then implementing in the `PubException` class.
+
+//
+// *Corrections*
+//
+// There are some inconsistencies in the property bundle files. The keys should be the same and they are not.
+//
+// The following keys are to be used. Please adapt the property files and or the test and source code where appropriate.
+//
+// [source,shell]
+// ----
+// # default messages and know message keys
+// hello=Hello
+// good_morning=Good Morning
+// you_drank_too_much=You drank too much
+// beer_is_sold_out=our beer is sold out, left in stock = {0}
+// you_are_too_young_to_drink=you are too young to drink
+// ----
+//
+// in particular `beer\ is\ sold\ out` is wrong.
+//
+// The key and values are actually missing from the default properties as well.
+
+// .Corrected inthepub.properties properties
+// [source,shell]
+// ----
+// hello=Hello
+// GoodMorning=GoodMorning
+// You\ drank\ too\ much=You drank too much
+// You\ are\ too\ young\ to\ drink=You are too young to drink
+// We\ are\ sold\ out=We are sold out
+// ----
+
+.Windows run command
+[source,cmd]
+----
+@echo off
+rem @author David Greven - https://github.com/grevend
+if not exist target/classes call mvn clean compile
+chcp 65001
+cls
+java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.HablasEspañol
+java -Duser.language=es -Duser.country=ES -cp target/classes/ pub.HablasEspañol
+pause
+----
+
+++++
+</details></div><!--end ex 1-->
+++++

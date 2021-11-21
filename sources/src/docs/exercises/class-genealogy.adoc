@@ -1,0 +1,25 @@
+=== Reflection to investigate class hierarchy.
+
+Create a program that lists the class hierarchy of class names given on
+the command line.
+
+The output should be a tree-like structure with `Object` at the top and
+the `named class` at the bottom and all intermediate super classes in
+between in proper order. For every level in the hierarchy, add
+two spaces for indentation.
+
+To get a class object, you can use `Class.forName(String name)` which, if
+the class is loadable by the JVM, is loaded.
+To be able to load the class, the class should be on the class path.
+
+.example output for input javax.swing.JButton.
+[source,sh]
+----
+class hierarchy of [javax.swing.JButton]
+ java.lang.Object
+   java.awt.Component  implements java.awt.image.ImageObserver, java.awt.MenuContainer, java.io.Serializable
+     java.awt.Container
+       javax.swing.JComponent  implements javax.swing.TransferHandler$HasGetTransferHandler
+         javax.swing.AbstractButton  implements java.awt.ItemSelectable, javax.swing.SwingConstants
+           javax.swing.JButton  implements javax.accessibility.Accessible
+----

@@ -1,0 +1,105 @@
+[[json]]
+=== JSON materials
+
+The JSON part can be picked up using the <<id:videos,youtube videos>> linked below.
+
+The most common thing you do with Data is transport it.
+The modern approach is to use a programming language agnostic format: JSON, which stand for JavaScript Object Notation.
+
+Although the name suggests it is JavaScript only, the format is so simple to encode and relatively simple to decode that it is currently the most use format, in particular for web services.
+
+In this week's topic you will once again see that encoding is typically simpler than decoding. The same as shouting is simpler than listening.
+
+Encoding an object can be as simple as turning the object into a String that conforms JSon´s format and syntax, so no library would be required.
+However, if you have the opportunity to write
+
+.simply use the gson library
+[source,java]
+----
+  gson.toJson(student);
+----
+
+without even knowing the internal structure of the Student-object, or
+instead have to write:
+
+.hand coded json string formatter for student.
+[source,java]
+----
+ static String toJson(Student student){
+        return "{\"snummer\":"+student.getSnummer()
+                +",\"firstname\":\""+student.getFirstName()
+                +"\",\"lastName\":\""+student.getLastName()
+                +"\",\"born\":{"
+                + "\"year\":"+student.getBorn().getYear()
+                + ",\"month\":"+student.getBorn().getMonthValue()
+                + ",\"day\":"+student.getBorn().getDayOfMonth()
+                +"\"},"
+                + "\"gender\":\""+student.getGender()+"\"}";
+    }
+
+----
+
+your choice to opt for a library is easily made, if not for anything else as to avoid testing and debugging your way through to a properly format json string.
+
+
+// == Sheets and handhout PRC
+// Sheets on Restful services with JAX-RS link:../pdf/150_restful_sheets_en.pdf[sheets ^] and
+//     link:../pdf/150_restful_handout_en.pdf[handout ^]
+
+
+// Sheets on link:../pdf/81_resttesting_workshop.pdf[testing and mocking restful services ^]. By Loek Ehren and Rick van Osch.
+
+== Useful links on json testing.
+
+Test Driven means start with the tests.
+
+A *brittle* test is a test that is too specific, in this case a test that fails with the slightest difference between expected and actual, although actual still matches its requirement.
+In the case of a JSON document: Using `String.equals(Object jstring)` is the worst imaginable test of this kind, because:
+
+* White space outside the quotes is irrelevant.
+* The order of the key-value pairs is NOT significant.
+* The types of quotes, whether single ''' or double '"' does not matter, as long as they match.
+* Interpretation of escape characters influences the result.
+
+Here is where a special assertion library has its role.
+
+https://www.baeldung.com/jsonassert[Baeldung on JSON Assert]
+
+The jsonassert library can be used by any json generating frame work or library
+
+=== GSon, Google's JSON processing library.
+
+You can imagine that google moves a lot of data around. As one of the by-products of their software development, GSon has been created.
+
+[[id:videos]]
+The guys at https://futurestud.io/[Future Studio] created a nice and short 5 part tutorial on GSon, and placed it on youtube. Thx Future Studio.
+
+video::BbI8FdQOKNs[youtube, title=Future Studio Gson tuturial part 1: Getting started,width=424, height=240]
+video::ou2yFJ-NWr8[youtube, title=Future Studio Gson tuturial part 2: Mapping of Nested Objects,width=424, height=240]
+video::ZZddxpxGQPE[youtube, title=Future Studio Gson tuturial part 3: Mapping of Arrays and Lists,width=424, height=240]
+video::3niP4rVXMHs[youtube, title=Future Studio Gson tuturial part 4: Mapping of Nulls,width=424, height=240]
+video::qTXQGmYSazk[youtube, title=Future Studio Gson tuturial part 5: Change naming of fields,width=424, height=240]
+
+// TODO add slides
+//
+// TODO write exercises
+//
+
+// http://www.baeldung.com/rest-assured-tutorial[A Guide to REST-assured ^] on the baeldung site. Get acquainted with the concept. We will NOT use groovy etc. For that we have the workshop.
+
+// http://www.baeldung.com/introduction-to-wiremock[Intro to wire mock ^] on the baeldung website.
+
+// The http://wiremock.org/[wiremock website ^] will have more info on rest mocking.
+
+//For manual rest api testing the https://github.com/advanced-rest-client/arc-electron/releases[Advanced Rest Client] could be used. It is based on nodjs, electron and chromium, the same technology stack as Atom, VS-Code and more.
+
+//An alternative and nice and good looking rest inspection client https://insomnia.rest/[Insomnia ^], suggested by Jordi Limpens.
+
+// image:images/payarafish.png[link=https://www.payara.fish,title=Paraya5 also known as badass fish,window="_blank"]
+// Payara5, the preferred JEE constainer for PRC and Project 2. Payaras are related to Piranha, also a well known bad-ass fish.
+//
+// video::jhg6jfjw8nc[youtube,title=Payara the bad ass fish, width=424, height=240,float="right"]
+
+// == Rest Assured, how to post a student.
+//
+// link:topics/restassured.html[Short intro] into rest assured on how it is used in the lesson demo with the fantys university grading system.

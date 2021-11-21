@@ -1,0 +1,23 @@
+== Kaos at HQ
+
+//include::../homelink.adoc[]
+
+Intro into the value of testing, and why test first and not afterwards. +
+
+Kaos shows a stupid way of implementing something in a non test driven fashion. The resulting code
+is really bad and only partially tested. If fact the tests were written afterwards, because who is to know anyway?
+
+[TIP]
+====
+Do not get inspired by the code or the test code you see here. It is bad on almost every front, and serves only as example
+to how bad things can get when NOT done Test Driven
+====
+
+Task link: link:/pdf/kaos.pdf[Kaos narative].
+
+Netbeans starter project: Project in link:/zip/stackkaos.zip[zip]
+
+The pictures in the pdf files are the actors/characters in the original series.
+
+You kids may have seen the modern movie http://www.imdb.com/title/tt0425061/mediaviewer/rm442471936[Get Smart],
+featuring Steve Carell (Gru's voice in Despicable Me) as the dumb ass agent and Anna Hathaway as the kick-ass side kick.

@@ -1,0 +1,20 @@
+
+*Something Broken in the Land of Exceptions*
+
+_Read The Fine Compiler Messages_
+
+What is the effect of the code below? It may be wrong.
+
+. Explain what will happen.
+. Feed it to the compiler, e.g. by using NetBeans-IDE and see what the compiler thinks of it. Explain any messages you may get.
+
+This is an exercise in RTFCM (Read The Fine Compiler Messages).
+
+[WARNING]
+Do not repair the code if it appears broken.
+
+[source,java]
+.Something with Exceptions
+----
+include::{sourcedir}/X.java[]
+----

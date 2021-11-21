@@ -1,0 +1,127 @@
+:sectnums!:
+
+== Exercise SQL table sqlgenerator
+
+[.lead]
+You cannot only generate Java code, but also code in another programming domain, such as
+[green]*SQL*. In the exercise below we will create a table definition (DDL) for a
+postgresql database using the information from the entity classes
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>SQL table generator</summary>
+++++
+
+Write an application that interprets the class definition of an entity class
+via reflection and spits out an SQL table definition. This definition can be saved or be fed to a database server to create a table.
+
+The following java types and their SQL counterparts should be supported. PostgreSQL types are used.
+
+The *name* of the generated table should be the name of the entity class sans package name and in simple plural.
+Simple plural means append an *'s'* character to the name. Rationale: A table contains Student**s**, plural, not _one_ student.
+That is because SQL  defines both the row definition and the table at the same time.
+
+The relationship between the table and the entity is the definition of columns in the table versus the fields in the entity.
+
+[cols=2,header]
+|====
+|  Java                    |  SQL
+| java.lang.String         |  TEXT
+| java.lang.Character      |  CHAR(1)
+| java.lang.Integer        |  INTEGER
+| int                      |  INTEGER
+| java.lang.Short          |  SMALLINT
+| short                    |  SMALLINT
+| java.lang.Long           |  BIGINT
+| long                     |  BIGINT
+| java.math.BigDecimal     |  DECIMAL
+| java.math.BigInteger     |  NUMERIC
+| java.lang.Float          |  REAL
+| float                    |  REAL
+| java.lang.Double         |  DOUBLE PRECISION
+| double                   |  DOUBLE PRECISION
+| java.time.LocalDate      |  DATE
+| java.time.LocalDateTime  |  TIMESTAMP
+|====
+
+The generator should also support the following annotations on the fields of the entities.
+
+`@Id` should generate a *SERIAL* or *BIGSERIAL* dependent on the field being a [blue]`Integer` or a [blue]`Long` and have the *PRIMARY KEY* attribute. +
+`@NotNull` should result in a `NOT NULL` constraint. +
+`@Check` should copy the value (text) of the annotation as parameter to the CHECK constraint. +
+`@Default` should copy the value as the *DEFAULT* value. Quote the value where needed.
+
+[WARNING]
+====
+*Beware of primitives with table definitions* +
+If your entity has fields of *primitive* types, make sure that you give the table definition
+a [green big]*NON NULL* constraint for the corresponding column, otherwise a query might result in a null value, which
+can't be cast to a primitive type. If you forget this you will be bitten by unexpected **NullPointerException**s.
+By implication, having a primitive field implies non-null, with or without annotation.
+====
+
+The resulting table definition should be acceptable by a PostgreSQL database. Test that manually.
+
+.Example Module class.
+[source,java]
+----
+@Data                // <1>
+@AllArgsConstructor  // <2>
+public class CourseModule {
+
+    @ID
+    private Integer moduleid;
+
+    @NotNull
+    String name;
+
+    @NotNull @Default( value = "5" ) @Check(credits > 0)
+    Integer credits;
+    // extra ctor to make the default values take effect.
+    public CourseModule( Integer moduleid, String name ) {
+        this( moduleid, name, 5 );
+    }
+}
+----
+
+<1> https://projectlombok.org/features/Data[Lombok framework Data annotation],
+    that add getters (for all fields) and setters (for non-final fields), equals and hashcode and a readable toString.
+<2> Makes sure there is a constructor that takes values for all fields.
+
+The ID field is a bit special, because when creating an entity _before_ putting it in the database will NOT have an ID yet, because
+the ID value is typically assigned by the database by means of a sequence or other identity generating mechanism.
+
+.Example Output.
+[source,sql]
+----
+CREATE TABLE coursemodules (
+  moduleid SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  credits integer NOT NULL DEFAULT (5) CHECK (credits > 0)
+);
+----
+++++
+</details></div><!--end sqltablegenerator -->
+++++
+
+.Windows run script to run the sqlgenerator from the command line.
+[source,cmd]
+----
+@echo off
+rem @author David Greven - https://github.com/grevend
+set jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if not exist %jar% cls & echo Maven... & call mvn package
+echo.
+java -jar %jar% %*
+----
+
+.bash script to do the same as the above. Will work in git-bash too.
+[source,shell]
+----
+#!/bin/bash
+jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if [ ! -e ${jar} ]; then mvn package; fi
+java -jar ${jar} "$@"
+----
+
+
+:sectnums:

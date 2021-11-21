@@ -1,0 +1,176 @@
+:sectnums!:
+
+=== Exercise Fraction part 1.
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 1, Constructor and normalisation</summary>
+++++
+
+This is a 3 part exercise.
+
+In this exercise, you are writing a _Fraction_ class test-driven, meaning you write the tests first.
+The mathematical properties of fractions are at the end of this exercise, if you need to look them up.
+The source code is in English, using the common names *fraction*, *numerator* and *denominator*. +
+The mathematical representation typically is:
+  latexmath:[\frac{\text{numerator}}{\text{denominator}}], example: latexmath:[\frac{1}{2}].
+
+[TIP]
+In this exercise the tests are predefined, to direct you towards using Parameterized tests.
+Some the test values are given, some other have to enabled by un-commenting the test value lines.
+
+*Fraction Constructor*
+
+. *Write a test* that calls the fraction  constructor with two distinct ints, say 4 and 5,
+ and then invokes the getters `int getNumerator()` (should produce 4) and `int getDenominator()` (should produce 5)
+ to assure that the fraction instance is properly constructed. +
+ Use a ParameterizedTest with cvs source and have the csv records have 5 columns, a message, int a and int b to form fraction latexmath:[\frac{a}{b}],
+  the expected numerator, and the expected denominator.
+  Use link:week01.html#_soft_assertions[soft assertions] to test both getters in one test.
+  Add at least the sample values, but be prepared to add more rows.
+. *Implement* the constructor of Fraction with parameters `n` and `d` for
+  numerator and denominator respectively. In the constructor, save the parameters in the _fields_ `numerator` and `denominator`, the only two fields.
+  Make sure the fields are [blue]#final#. _Inside_ the constructor you are allowed to use _local variables_.
+. *Run* the tests. If they are still red, improve your code to make them green.
+
+.softly example
+[source,java]
+----
+    /**
+     * Test getters for numerator and denominator.
+     * Use SoftAssertions.assertSoftly to always test both getters
+     * even if the first assert fails.
+     * @param a num in frac
+     * @param b denom in frac
+     * @param num expected
+     * @param denom expected
+     */
+    //@Disabled("Think TDD")
+    @ParameterizedTest
+    @CsvSource( {
+      // message, a,b, num, denom
+        "half,1,2,1,2",
+        "one third,2,6,1,3",
+        "minus one half,9,-18,-1,2",
+    } )
+    void testGetters( String message, int a, int b, int num, int denom ) {
+        Fraction f = new Fraction( a, b );
+        SoftAssertions.assertSoftly( softly -> { // <1>
+            softly.assertThat( f.getNumerator() )
+                .as( message + " numerator" ) // to tell fails apart
+                .isEqualTo( num );
+            softly.assertThat( f.getDenominator() )
+                .as( message + " denominator" )
+                .isEqualTo( denom );
+        } ); // <2>
+//        fail( "method testGetters reached end. You know what to do." );
+    }
+----
+
+<1> Start sequence of soft assertions. Notice the use of the `softly` object.
+<2> End of seqiencs of assertions. This reports all found failing assertions.
+
+Ensure that the resulting Fraction is
+    normalised. Fractions like latexmath:[\frac{2}{4}] should result in latexmath:[\frac{1}{2}]. +
+By dividing numerator latexmath:[a] and denominator
+    latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] you produce a
+    fraction with the same mathematical value, called a _normalised fraction_.
+Normalisation should take place in the constructor.
+
+[TIP]
+====
+* A fraction  is normalized when the denominator is non-negative
+  and the greatest common divisor of numerator and denominator is 1.
+
+* Thereby the minimum value of the denominator of a normalized fraction is +1.
+* If the fraction is negative, the numerator carries the sign.
+====
+
+. *Write test for ToString* Create a fraction from the inputs of the CsvSource and check that it is equal to the expected string.
+. *Implement* Create a toString() method, by modifying the IDE generated on such that it outputs like this: +
+  `(1/2)` for latexmath:[\frac{1}{2}], `(-1/3)` latexmath:[\frac{-1}{3}], and (-3-(1/6)) for latexmath:[-1-\frac{1}{6}] which is equal to latexmath:[\frac{-7}{6}].
+
+[big blue]*You are at 1/3 of the fraction exercise.*
+
+++++
+<div style='background-color:#eee; padding:1em'>
+++++
+
+'''
+
+[big]*The properties of fractions, for reference*
+
+The mathematical properties of fractions in a typical Java implementation.
+
+Let latexmath:[f_1] be a fraction with numerator latexmath:[a]
+and denominator latexmath:[b] thus:
+latexmath:[f_1=\frac{a}{b}].
+And
+latexmath:[f_2] a fraction with numerator latexmath:[c] and denominator
+ latexmath:[d], thus latexmath:[f_2=\frac{c}{d}].
+
+*Greatest Common Divisor*
+
+The function latexmath:[\gcd(p,q)] is called Greatest Common Divisor. With
+  parameters latexmath:[p] and latexmath:[q] it produces integer value latexmath:[g], which is the
+  greatest integer value that divides both latexmath:[p] and latexmath:[q] evenly (divide
+  with zero remainder). Method is given below.
+
+* *Normalisation*  By applying _idempodence_, dividing numerator latexmath:[a] and denominator
+  latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] produces a
+  fraction of same value, called a _normalised fraction_.
+  With latexmath:[g =gcd(a,b)]
+  latexmath:[f_1 = \frac{a}{b} = \frac{a/g}{b/g}]
+* *Negation*  The negative of a fraction is the same as a fraction with
+  the numerator negated.
+  latexmath:[ -f_1 = -\frac{a}{b} = \frac{-a}{b} ]
+* *Move sign to numerator*
+  When at construction time of a fraction the denominator is
+  negative, negate both numerator and denominator.
+  latexmath:[ f_1=\frac{a}{-b} = \frac{-a}{b}] +
+* *inverse*  The inverse of a fraction is the same as the swapping places of
+  numerator and denominator. Note that multiplying a fraction with its
+  inverse is latexmath:[1], by applying the rules _idempodence_ and _unity_.
+  latexmath:[\frac{1}{f_1} = \frac{1}{(\frac{a}{b})} = \frac{b}{a}] +
+* *Addition*   Add two fractions.
+  latexmath:[f_1+f_2 = \frac{a}{b}+\frac{c}{d}=\frac{a\times d + c\times b}{b\times{}d}] +
+* *Subtraction*  Subtraction of two fractions latexmath:[f_1] and latexmath:[f_2] is the *same as addition*
+of latexmath:[f_1] and the *negation* of latexmath:[f_2].
+  latexmath:[f_1-f_2 = \frac{a}{b}-\frac{c}{d}=\frac{a}{b}+\frac{-c}{d}] +
+* *Multiplication*  latexmath:[ f_1\times{}f_2 = \frac{a}{b}\times\frac{c}{d}=\frac{a\times{}c}{b\times{}d}] +
+* *Division*
+  Dividing fraction latexmath:[f_1] by latexmath:[f_2] is the *same as multiplication* latexmath:[f_1]
+  with the *inverse* of latexmath:[f_2]. +
+  latexmath:[ f_1/f_2 = \frac{a}{b}/\frac{ c }{ d }=\frac{a}{b}\times \frac{ d }{ c }  ]
+
+.gcd (already in project)
+[source,java]
+----
+    /**
+     * Compute Greatest Common Divisor. Used to normalize fractions.
+     *
+     * @param a first number
+     * @param b second number, gt 0
+     * @return greatest common divisor.
+     */
+    static int gcd( int a, int b ) {
+        // make sure params to computation are positive.
+        if ( a < 0 ) {
+            a = -a;
+        }
+        if ( b < 0 ) {
+            b = -b;
+        }
+        while ( b != 0 ) {
+            int t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+----
+
+++++
+</div></details></div><!--end fraction-part1 -->
+++++
+
+:sectnums:

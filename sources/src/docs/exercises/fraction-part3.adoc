@@ -1,0 +1,84 @@
+:sectnums!:
+
+=== Exercise Fraction part 3.
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 3, Comparable, hashCode and equals</summary>
+++++
+
+// follow up, add hash code, equals, better to string and helper ctor
+// and static factories. Introducing parameterized test and csvsources for effecient test writing.
+
+When you thus far did the fraction exercise according to the specifications, it is
+functionally complete, or as we formally say, the *Functional Requirements* given
+are fulfilled. However, the fraction class can be improved a bit, addressing the
+non functional requirement of user friendliness.
+
+[TIP]
+====
+Instead of writing new tests, in some case you can simply add more test data records to your test class for
+the tests that probably already exists. It is completely legal to use only part of the the test data.
+Or make a special operation in your operation lookup , that produces a fraction with an op out of two
+fractions and then  'abuse' the 2nd fraction by taking it's numerator to get an int that you need in the operation `f.plus(int)`. +
+That can look like [blue]`"plusInt", ( f1, f2 ) -> f1.plus( f2.getNumerator() )`,[gray]`// ignoring f2.denom`
+====
+
+* Creating a fraction in which the denominator is 1 should be written as `new Fraction(x)`, +
+thereby improving the API.
+* Writing a fraction expression is a bit tedious: +
+ `Fraction oneThird= new Fraction(1,2).times(new Fraction(2,3))` is a bit of a mouth full. +
+  We want to be able to write `Fraction oneThird=frac(1,2).times(frac(2,3))`. +
+  For that we need a _static factory method_,
+  that takes two ints and creates a new Fraction from them.
+* Do the same thing for a one argument `Fraction frac( int )`.
+* With fraction you want to be able to see quickly if its value exceeds 1 or not, +
+  so we want the fraction `"(3/2)"` to produce a to string
+  of `"(1+(1/2))"`.
+
+[TIP]
+====
+Overloading, the term used in the text below, means that you have the [green]*same* method name, but
+a [green]*different* parameter list. The difference here is in the difference in the parameter types, not names.
+====
+
+* Adding to, subtracting from , multiplying with, or dividing by an [blue]__int__eger value should be easier to write. +
+  For instance `Fraction two = frac( 1, 4 ).times( 8 )`, +
+  which means the *times*, *divideBy*, *plus* and *minus* methods all get an _overloaded_ sibling with just one int parameter.
+  As an example of such overloading: for divideBY whe will have `Fraction divideBy(Fraction other)` and `Fraction divideBy(int number)`.
+
+There are also a few functional requirements:
+ we would like to add
+
+* *Equals* The fraction does not yet support equals. +
+  Even if numerator and denominator are equal, the inherited from `Object.equals` method will say false when the
+  instances don't refer to the same fraction object. We need to do better.
+* *hashCode* The fraction has (should have) final fields only, making it a perfect candidate for key in a `HashMap` or `HashSet`. +
+  It is also good practice to override *hashCode* whenever you override *equals*.
+* *Comparable Fraction* The fraction class should implement the comparable interface, making it easy to test which of two fractions is the biggest.
+
+//You quickly see that the number of test methods may become big. But there is a solution to the problem: Combining test scenarios and using *Parameterized tests*.
+
+* *Test equals and HashCode* Write a test method to test for `equals` and `hashCode`. +
+  Use the utility method mentioned in the previous paragraphs. It is given in the test class.
+** *Implement hashCode and equals*. Use the IDE to generate the methods and accept the result.
+* *Test Comparable* Write a Parameterized test to test the comparable fractions. +
+  A csvsource record  could look like `"'one third is less that one half', 1|3,1|2, -1"`. +
+  Use at least 3 such records to test all possible outcomes of `compareTo()`. +
+  Pay attention to the fact that the result of a comparison with compareTo is interpreted wisely,
+  that is, the test record specifies the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#signum(int)[signum ^] of the result,
+  so assert the signum of the compare-result is equal to the expected value.
+** *Implement Comparable* Make the Fraction comparable by having it implement the corresponding interface. +
+  If the fractions are latexmath:[\frac{a}{b}] and latexmath:[\frac{c}{d}], then it is sufficient to compare
+  the cross product of numerators and denominators latexmath:[a\times{d}] and latexmath:[c\times{b}],
+  because the denominator in the comparison should be made equal, latexmath:[b\times{d}], but needs
+  not to be used. To avoid overflow, use long-math. +
+  This is easily done by using `Long.compare( long, long )` to do the compare work and use the proper expressions as input for the ints. +
+  Cast one of the inputs in the expression to long does the https://docs.oracle.com/javase/specs/jls/se11/html/jls-5.html[trick].
+  It is called a promotion, in particular a widening conversion.
+
+[blue big]*And that makes 3/3 or one whole fraction.*
+++++
+</details></div><!--end fraction-part3 -->
+++++
+
+:sectnums:

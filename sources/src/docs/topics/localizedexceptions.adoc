@@ -1,0 +1,26 @@
+== Testing Localized Exceptions
+
+The standard way of testing exceptions with assertj is explained in link:week01.html#_assert_exceptions[week01].
+
+To get to the localized message, which contains the message as translated by the locale framework is a bit more involved.
+
+Luckily, AssertJ allows you to extract information from a Throwable, by using an extractor function. Now the Lambda bells should ring.
+
+.To make a long story very short: here is an example:
+[source,java]
+----
+    String[] keys = keyWords.split( "\\|");
+    assertThatThrownBy( () -> {
+                MainSimulation.main( args );
+    } ).isExactlyInstanceOf( exceptionMap.get( expectionClassName ) )
+            .extracting( e -> e.getLocalizedMessage() ) // <1>
+            .asString()           //<2>
+            .contains( keys ); //<3>
+----
+
+<1> extract using [blue]`Function<? super Throwable,​T>`, [black]`e -> getLocalizedMessage()` in this case.
+<2> Get the assertion for in String. Do [red]*not* use `toString()`, because that produces a _String_, not an [blue]*AbstractStringAssert*.
+<3> And use the assert to check that the string contains the required key information.
+
+.If you turn on type hints in NetBeans-IDE (or in intelij) you can see what the type is on which you call `contains(keys)`
+image::assertjtypehints.png[]

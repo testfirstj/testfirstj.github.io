@@ -1,0 +1,60 @@
+//NOTES: MAKE THE SOLUTION TO THIS EASIER, DONT USE THE :: METHOD REFERENCE. JUST COMPARE TWO THINGS IN SEQUENCE
+
+*Comparator as lambda*
+
+If you study the https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Comparator.html[Java doc of the Comparator interface ^],
+you will see there is only one `abstract` method.footnote:[equals(Object other) does not count, it is already defined in Object]
+This makes this interface a candidate for a functional interface, and indeed it is.
+
+[NOTE]
+====
+A functional interface is an interface that has only one abstract method in it.
+Some of them you already know. For example, the interfaces `Runnable` or `ActionListener` are functional interfaces.
+====
+
+In this exercise, you will write a series of `Comparator` in a utility class StudentComparator[blue]**s**, each handling a different comparable aspect.
+
+The business side of the project has only one class, a Student class. The student class is given, so
+you can focus on the lambda expressions you are about to write.
+
+A student instance has 5 fields, the rest is most boring, only getters, toString and a helper method that is
+not relevant for this exercise.
+
+.Student members. Gender is an inner enum.
+[source,java]
+----
+class Student {
+    enum Gender {
+        F, M, U;
+    }
+
+    private final long id;
+    private final String firstName;
+    private final String lastName;
+    private final Gender gender;
+    private final LocalDate dob;
+
+    // rest is boring
+}
+----
+
+Use the following template to create your comparators, written as lambda expressions:
+
+You will create your comparators in the utility class StudentComparators. It will only Have
+static members, like static lambda expressions and static methods.
+You may use methods to simplify writing the lambda expressions if your prefer that.
+
+Example `static Comparator<Student> byBirthDate = StudentComparators::byBirthDate;`
+
+.comparator template in student
+[source,java]
+----
+class StudentComparators {
+  static Comparator<Student> firstNameComparator = ( s1, s2 ) -> ....;
+  static Comparator<Student> lastNameComparator = ( s1, s2 ) ->  ....;
+}
+----
+
+The tests in the test class are documented and you can read the actual tasks there.
+There is NO work to be done on the Student class.
+Do all your experiments on the test side of the project and in the `StudentComparators` class.

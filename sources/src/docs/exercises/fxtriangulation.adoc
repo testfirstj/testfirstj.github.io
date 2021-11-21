@@ -1,0 +1,173 @@
+:sectnums!:
+
+== FX Triangulation
+
+The widget you will create is to do https://en.wikipedia.org/wiki/Polygon_triangulation[Polygon triangulation].
+It is an activity done by surveyor teams.
+
+In the first part we will create a custom https://en.wikipedia.org/wiki/Graphical_widget[widget]
+with its own controller and https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/Node.html[Java FX Node],
+in this particular case a https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/Group.html[Group]
+
+You will complete a GUI component or Widget that will be used in the SurveyorApp in the second part.
+
+The advantages of developing a widget is a separate project are:
+
+* Potential reuse.
+* Separation of concerns.
+* Example of work separation. That what has been unit tested and coverage tested\
+  can be put as a separate task for a developer.
+* Didactic: show the use and impact of JPMS
+
+.Conventions in the triangulator.
+image::triangle-bindings.svg[]
+
+*Roles of the bindings*
+
+* The corners of the triangle are represented as circles.
+* *Length of leg* The leg of a triangle is used to determine the distance between the corners. +
+  when they coincide with the legs of a polygon, they measure the length of that leg.
+* *Midpoint* of the lines are used in the GUI to position the attached length- and
+  name labels of the triangle edges.
+* *Center point or center of gravity of the triangle*. Used to place the area label of the triangle.
+* *Active lines* To be able to measure the sum of lengths of the edges, some, but not all edges of the triangle are relevant.
+
+=== Use of the Triangulator in the Surveyor App.
+
+.Surveyor App UI
+image::surveyor-in-use.png[]
+
+The Triangulator is a component that is used in the Surveyor App.
+You will find the app in your repository too, as an example to play with, but has no tests nor
+required business code for you to complete. See is as a code example of JPMS modular use and how a self created widget
+can be integrated in another project.
+
+The requirements are more or less given by the (picture) of the UI and:
+
+* The user must be able to manipulate both the points of the triangle by dragging them with a mouse,
+and set the individual coordinates of the points in text fields.
+* The UI should show the area measured by the triangulator in a separate label.
+* Same for the lengths of the lines.
+* Since not all lines participate in the measurement of the border of a polygon, it should be able
+  to specify which lines participate in the border length for a certain measurement.
+* It should be able to summarize as in sum up the results of the measurements, so as to determine both the *total border length* and the *total area* of a _polygon_.
+* The polygon must be visible and loadable in some way.
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>FX Triangulation</summary>
+++++
+
+.Class diagram Triangulatort Widget
+image::fxtriangulator-cd.svg[]
+
+You will use JavaFX bindings to show the changing values of side lengths and area
+of a triangle. This is a tool that might be of use for surveyors. It uses the
+same mathematical computations to compute the enclosed area of a triangle.
+
+A triangle is determined by three points, A, B, C.
+The sides are called a,b, and c, where _a_ is opposite point *A* etc.
+[red]#A#, [red]#a#, [green]#B#, [green]#b#, [blue]#C#, and [blue]#c#, have the colours [red]#red#, [green]#green#, and [blue]#blue#.
+
+The length of a side is determined by the formula of Pythagoras.
+stem:[ l= \sqrt{(x_2-x_1)\times(x2-x1)+(y_2-y_1)\times(y_2-y_1)} ]
+
+Let stem:[A_x,A_y] be the coordinates for point stem:[A], similar for stem:[B] and stem:[C].
+
+
+The length  stem:[a] of the side opposite stem:[A]:
+stem:[ a= \sqrt{(C_x-B_x)\times(C_x-B_x)+(C_y-B_y)\times(C_y-B_y)}].
+
+With this we can also compute side lengths stem:[b] and stem:[c].
+
+With lengths a, b, and c  the area of a triangle can be determined with https://en.wikipedia.org/wiki/Heron%27s_formula[Heron's formula].
+
+Let stem:[s = \frac{a+b+c}{2}]
+
+Then the area of the triangle is  stem:[\text{Area}= \sqrt{s\times(s-a)\times(s-b)\times(s-c)}].
+
+The link:{exercises}/fxtriangulate/apidocs/index.html[javadoc] of the application
+and the link:{exercises}/fxtriangulate/testapidocs/index.html[test javadoc] are available by following the links.
+
+image::../images/triangulate.png[title="screenshot of app"]
+
+* In the diagram you have three lines, red, green and blue, and three circles, also red, green and blue.
+* In all cases the circle is opposite the line of the same color.
+* The lines connect the circles of the _other_ colors.
+
+The triangulator supports the concept of *active lines*. An active line participates in the binding to find the total length of the
+circumference. When using the triangulator to survey an polygon shaped area, not all legs of the triangle should be used. The only exception
+is when the polygon to survey is itself a triangle.
+If a triangle leg  coincides with one of the sides of the polygon, it can be used to measure the length of that side,
+but only once for each coincidence, to prevent double count.
+
+You can find the test descriptions and the methods to be tested in the source code. +
+Look for the todo's with kbd:[CTRL+6] in NetBeans IDE.
+
+If you want to run the triangulator as a separate app,
+you may have to include a property in the [blue]#pom.xml# file that states
+what the main class is.
+
+.Set the main class in the properties section
+[source,xml]
+----
+   <properties>
+   ...
+    <exec.mainClass>fxtriangulate.App</exec.mainClass>
+   ...
+   </properties>
+----
+
+To start it from the command line you can use a script that creates a jpms image and runs the jvm from there.
+
+.Linux and Mac script
+[source,sh]
+----
+#!/bin/bash
+
+if [ ! -f target/fxtriangulate/bin/java ]; then
+    mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink # <1>
+fi
+
+## run the java version in the fxtriangulate image.
+target/fxtriangulate/bin/java -m fxtriangulate/fxtriangulate.App # <2>
+----
+
+<1> Build an java image.
+<2> Run the app from the image directory.
+
+.Windows version (untested)
+[source,bat]
+----
+@echo off
+set java=target/fxtriangulate/bin/java
+if not exist %java% call mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink
+echo.
+target/fxtriangulate/bin/java -m fxtriangulate/fxtriangulate.App
+----
+
+[TIP]
+====
+If one of the givens tests. in particular GUITests.tLength fails on your machine, it may have to do
+with the locale of your machine. In week 10 we provide a link:week10.html#_number_formats[solution for that exact problem].
+We have put it there because it belongs to the topics of that week.
+====
+
+++++
+</details></div><!--end fxtriangulation.adoc -->
+++++
+
+When running the scripts in the above example, the file [black]*target/fxtriangulate.zip* contains a complete image for the application.
+You should be able to deploy it on another machine with the same architecture. Because the image brings along its own java virtual machine and
+libraries, you do not have to have java installed on the target machine.
+This way of deployment is very similar to what you see in app stores on mobile devices. The app brings along its complete set of
+required dependencies and resources. The advantages are easy deployment. The disadvantage is big images, which take up a lot of space.
+But that appears to be a minor problem nowadays. And since the image created by jlink contains only the required parts of the JDK and
+not all of it, there is a gain in using [blue]*jlink* as a path to deployment.
+
+The trimming down of the image is one of the features made possible by the Java Platform Module System.
+
+.You can run the triangulator from netbeans (green play button at the top) with the following settings:
+image::netbeansaction-fx.png[]
+
+
+:sectnums:

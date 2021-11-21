@@ -1,0 +1,161 @@
+:sectnums!:
+
+=== Exercise MinMaxCollector
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>MinMaxCollector</summary>
+++++
+
+The java Stream class provides multiple reduce operations, such as `findFirst()`, `findAny()`, `sum()`, `min()`, `max()`, and `average()` (for number values).
+In case you want to have the extreme values of a collection, and try to do that with a streaming operation,
+you need both [blue]#min# and [blue]#max#. Streaming the collection twice would be a sub-optimal solution,
+because when streaming the collection once, both the minimum and maximum value have been seen,
+and it would be smarter to catch both in one go.
+
+You can solve this problem using the reduce method
+[blue]`<U> U	reduce​(U identity, BiFunction<U,​? super T,​U> accumulator, BinaryOperator<U> combiner)`, but that
+requires you to come up with three parts, identity (simple) accumulator and combiner every time you need min and max.
+From the programmers perspective, streaming *twice* will then become attractive, because it is minimal programming. Or the programmer
+might fall back to old-skool for-loops (or even use `forEach(...)`), which will do the trick but is not the way to use streams. +
+And simple for-loops can't be parallelized.
+
+In this exercise you will be implementing the [blue]`Collector<T,A,R>` interface, such that the resulting class can add functionality to already existing classes.
+Special with this interface is that is returns [blue]*functions*, implemented as lambda expressions that do the required work, which
+are the used to to build the required [blue]*Collector* object.
+
+[TIP]
+[big]*If* the stream is simply a stream of numbers such as a stream of int, long, or double, do not bother to create this class.
+Instead use https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#summarizingDouble(java.util.function.ToDoubleFunction)[summarizingDouble ^]
+and its siblings defined in https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html[Collectors ^].
+You should always first look for an available solution in some library or in the JDK, and adapt your problem a bit to minimize the amount of new code your write. See Horstmann Vol II chapter 1. +
+Unless it is an exercise.
+
+
+When developing this exercise, I learned the hard way that theory and practice do not always meet head-on. In this case, I hoped
+that using a parallel stream would improve the performance gain, and it does, but not as spectacular as hoped.
+
+.test with 20,000,000 elements. Times in nano seconds
+[options="header"]
+|====
+| mode | i7 4 core 2012 | AMD Ryzen 9 3900X 12-Core Processor
+| standard | 699,012,000 ns |  423,917,000 ns
+| min-max time | 579,755,000 ns |  423,917,000 ns
+| standard parallel | 211,857,000 ns | 104,720,000 ns
+| min-max parallel  | 177,224,000 ns | 76,433,000 ns
+|====
+
+Standard is `stream(...).min()` followed  by `stream().max();`
+
+.Simple API, that can be used in the following way:
+[source,java]
+----
+   List<Student> students=...;
+
+   Optional<MinMax<Student>> extremesByAge =
+       student.stream()
+               .collect( minmax ( comparing(Student::getDob ) ) ); // <1>
+----
+
+<1> The resulting Optional will contain a MinMax with two students, the min and max aged student. Explain why the youngest is at position max.
+
+You will implement your own reducer, which actually is also a kind of collector, because it will produce a `MinMax` Pair.
+The class is called [blue]#MinMaxCollector#, which has an static inner class [blue]#MinMax#.
+
+To be able to determine min and max, you must construct the MinMaxCollector with a `Comparator<T>`
+
+The design is already done, it is part of the stream API and is captured in the
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collector.html[Collector] interface, which prescribes the following
+methods: (from the API doc).
+
+* `Supplier<A>	supplier()`	 A function that creates and returns a new mutable result container. +
+  In your solution this simply returns a new MinMax with e.g. `() -> new MinMax(comparator)`
+* `BiConsumer<A,​T>	accumulator()`	A function that folds a value into a mutable result container. +
+  A will be our MinMax, T the next element, so that the lambda shape will be `(a, t) -> a.accept( t )`.
+* `Set<Collector.Characteristics>	characteristics()`	Returns a Set of Collector.Characteristics indicating the characteristics of this Collector. +
+  This tells the stream framework what the characteristics of our collector component. Simply return `Set.of( UNORDERED, CONCURRENT )`, meaning that your
+  solution can be used concurrently, as in with many threads in parallel. We will test that it can.
+* `BinaryOperator<A>  combiner()`. A BiOperator takes two elements of the same time and combines
+  them into a third element of the same time. The same as '+' combines two ints into a third int. In our case it will combine two MinMax objects into one.
+  You can use one of the two to `accept()` the minimum and maximum of the other, so that the first will then contain min and max of both.
+* `Function<A,​R>	finisher()`	Perform the final transformation from the intermediate accumulation type A to the final result type R. +
+  This turns the result into an `Optional` if the stream produced data (one element is sufficient, will be min and max at the same time).
+  If no element was in the stream, an empty `Optional` has to be returned.
+
+.Complete class diagram
+image::minmaxcollector.svg[title="class diagram"]
+
+The class diagram shows all members of the two classes involved, the MinMaxCollector and the inner MinMax class.
+
+*TDD*
+
+Since we implement an interface, the IDE will want to implement all methods in one fell swoop. That is okay,
+because it will make implementations that will for certain fail the test, and that is good because it will have the [red]*red* we need at the start.
+
+We will start the tests in the same package as the collector, allowing access to the package private members and constructor,
+such as that of the MinMax inner class and its package private methods.
+
+We also want an inner class `MinMax`, which will carry the result and will also play the role of accumulating object.
+Because in unit testing it is always smart to start from the bottom up, we will start at MinMax.
+Since we do not want to tie the MinMax inner class to the MinMaxAccumulator, we make it a [blue]#static# inner class.
+To make that work properly, you should choose a different generic type token for the inner and outer class. If the outer uses `<T>` then the inner could used `<E>`.
+
+. Since there is no real test to assert the effects of the constructor, we just implement it. The test will follow. +
+ The minmax object should have three fields, E min, E max and a Comparator<E> to determine who is who of the former.
+. *TEST* There are getters for min and max. Implement them and assert (test) that they both return null on a fresh minmax object. +
+
+The MinMax class has one [blue]`accept` method which it inherits by being a `Consumer<E>`. On each invocation of accept a MinMax object will consider
+if the newly accepted e is a better candidate for either min or max.
+
+*The following 3 tests can be combined into a parameterized test. Use the link:week02.html#_split_it_yourselves[split trick] from part 1*
+The test data for the tests can look like this:
+
+[source,java]
+----
+@ParameterizedTest
+   @CsvSource(value={
+       // input, min, max
+       "P,P,P",
+       "A|B,A,B",
+       "B|C|A,A,C",
+
+   })
+----
+
+[start=3]
+. *TEST* The `accept(E)` should feed the min max with elements. To test, create a `MinMax<String>` with a `Comparator<String>`: `(a,b)-> a.compareTo(b)`. +
+  Feed it one String and ensure that both min and max are no longer `null`, and have the same value as the accepted string.
+. *TEST* Add a String distinct of the other and test that it lands at the proper spot, min or max.
+. Add a third distinct string.
+
+An aspect that you cannot really test for, but can help performance a bit is to return immediately after
+you assigned both min and max on the first accept (when either was still null). Note that if you do well you only need to check one field, not both.
+
+*You are done with the inner class.*
+
+Let us go to the outer class MinMaxCollector.
+
+. *TEST* that `supplier()` returns an MinMax object with the proper comparator. +
+ then implement.
+. *TEST* that the characteristics return the correct set: `UNORDERED` and `CONCURRENT`. Then implement.
+. *TEST* that the combiner method works. Give it two MinMax-es _one_ with `A,C` as strings, one with `B,D` as strings. The result of the
+   lambda should return a `MinMax(A,D)` that you should test for proper content. Then implement.
+. *TEST* that finisher returns an empty optional when min or max (either test will do) is null, and a optional containing the minmax otherwise. Then implement.
+. *TEST* that accumulator accepts a MinMax object and a new T, such that if T is less than min, it will replace min and if it is greater that max, it will replace that. +
+  start with a MinMax that already accepted one value, between min and max. Here too, you can use a tabular test. Just invoke the `accumulator()` method and do the testrecipes with
+  the returned object.
+
+The collector is now complete.
+
+*Integration test from different package, client.*
+
+Create a test in a different package, so you are sure that you will only use the public API (public and protected members of public types).
+
+. *TEST* Use the collector as reduction step at the end of a stream with some unique strings. Assert that the result is as expected.
+
+There is a demonstration program in the client package,  ready for use, that demonstrates the use of the collector.
+
+++++
+</details></div> <!-- end minmax collector -->
+++++
+
+:sectnums:

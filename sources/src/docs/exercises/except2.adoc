@@ -1,0 +1,19 @@
+*More Broken Exceptions*
+
+What is the effect of the code below? It may be wrong.
+
+. Explain what happens what will happen.
+. Feed it to the compiler, e.g. by using NetBeans and see what the compiler thinks of it. Explain any messages you may get.
+
+This is an exercise in RTFCM (Read The Fine Compiler Messages).
+
+[TIP]
+Do not repair the code if it appears broken.
+
+[source,java]
+.something with Exceptions
+----
+include::{sourcedir}/Y.java[]
+----
+
+'''

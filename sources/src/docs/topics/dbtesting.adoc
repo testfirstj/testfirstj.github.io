@@ -1,0 +1,37 @@
+== Testing databases
+
+Your database design is an essential part of your application architecture.
+Using a database properly, as in declaring constraints and let the database
+decide what is acceptable constraint wise is the way to go.
+
+
+When you declare a constraint, the database will `raise` (sql terminology for `throw`) an exception,
+that is delivered to the java client as an SQLException or a subclass thereof. The SQLException will contain all
+the relevant information for either the programmer (syntax problem in the statement)
+or the program's user because the input is not acceptable.
+
+[WARNING]
+====
+Client side validation is no substitute for proper database checks. Client side validation
+is at best an improvement to the user experience, because the client software can help prevent problems further down (after submitting the form) the line.
+====
+
+=== Transactions
+
+Often the interaction with the database involves the update of or insert into more then one record in one or more tables.
+Each of these operations may cause a constraint violation, meaning that the operation is not accepted. This will cause an exception.
+
+When you have such a scenario, we call that a transaction. A transaction in databases means: It either completes successfully or not at all.
+
+The setup typically is
+
+.jdbc transaction example
+[source,java]
+----
+try (Connection co= datasource.getConnection) {
+
+} catch(SQLException sqe) {
+  co.rollback();
+
+}
+----

@@ -1,0 +1,148 @@
+:sectnums!:
+
+== Currywurst is not made of steel and vice versa.
+
+// First an intermezzo about a smoldering fire, a.k.a. an seemingly different opinion among teachers on when to use what
+// regarding diagrams. +
+// In particular, should a _class diagram_ have or not have arrows and or cardinalities.
+
+[.lead]
+There seems to be a controversy about when to add https://en.wikipedia.org/wiki/Cardinality_(data_modeling)[cardinalities] and when not. +
+The answer is, as always: [big black]_it depends_. +
+The [blue]*purpose* of the diagram is what counts, so apply separation of concerns in the diagrams
+you make in analysis and design too.
+That does *not* mean that analysis is about data, and design is about the software system, but that the
+aspect you are dealing with in your model will decide what kind of information is needed in a diagram. +
+
+=== The purpose of modeling is communication
+
+A model in any form is a _simplification_ of reality. Model is the art of _leaving out details_ that are not relevant.
+Not relevant for the _purpose_ of the model. Modeling in this sense also implies that there can be more models of the same reality.
+Each of these models can then highlight different aspects of interest for what you want to communicate. You want to express these aspects to
+communicate a meaning, relation, dependency, composition etcetera. A model is always about abstraction because it never IS the real thing
+but only describe some of it's aspects.
+
+Models can have different form. Formulas in math, screenplay or scripts for a movie, descriptive text, and diagrams.
+In UML we have many model types. The trick is to choose the correct model type for the aspects you want to discover.
+Drawing can be done with a pencil and paper is willing, so you can easily become confused about syntax and semantics of
+the modeling language, in particular on what to use when.
+
+A natural order of modeling, diagram wise, is something like this:
+
+* A sketch of the things involved, or a picture, which serves as an initial model. This is what you collect in an interview.
+* The UML equivalent is an https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-object-diagram/[Object diagram],
+  in which you can simply draw 6 dogs if that is what fits in a kennel.
+* Or simplify it and draw 1 dog and and add 6 to say that you have six. It makes the model simpler and still have the same information.
+* You want to model relations between objects, like ownership or space to live. In an object diagram that is a line between objects, and as far
+as dogs and owner goes the 'direction' of the line goes both ways, because _'you know your boss, don't you George?'_.
+* Drawing many owners and dogs becomes tedious, so you need another simplification to leave details out. This gets you to
+   an entity relation diagram or domain model. The diagram does what the name implies: objects and their associations. So one icon to represent dog and
+owner plus the connecting line suffices. Add multiplicites to express that an owner can have multiple dogs, but no less than one, less he/she not
+be an owner. As far as the dog is concerned there is only one real pack leader at any time.
+The graphical syntax you use (lines and boxes) can look a lot like an object diagram. The relevant details are in the relations
+and multiplicities or cardinalities at the ends.
+* A next abstraction is wanting to reason about *types* a.k.a. classes in UML. The class diagram actually has the wrong name, it should have been called
+the *type diagram*. Its purpose is to find the relations between types, who uses whom or who determines what. It is about dependencies and further abstraction.
+For instance, both a dog and child should be able to listen, so they have a commonality you want to express, like `Obeyor` which is not a word
+but expresses what you want the sub-types to do. It does not change dog nor child but extracts the detail you want to reason about.
+
+[big]*Modeling serves to highlight the important aspects.* Choose the proper kind of diagram and try to closely
+stick to the syntax and semantics of the diagram *and its purpose*, so it helps the understanding of the details you _DO_
+want to communicate.
+
+[big gray]*Modeling is always about [black]#leaving out details#. Making things simpler*. +
+[big black]*Do not add details to a diagram that make no sense.*
+
+To paraphrase someone famous https://www.championingscience.com/2019/03/15/everything-should-be-made-as-simple-as-possible-but-no-simpler/[Everything should be made as simple as possible, but no simpler].
+
+The above implies that the situation is not [black]*black* or [white]*white*, but some shade of [gray]#gray#. +
+That grayness is the reason of the confusion, because there is not one answer that fits in all situations. +
+It also means that you do [big red]#not# have to draw all diagrams all of the time, but only the diagrams that are needed. The question of
+course is: How do you know that it is needed? The answer is: as soon as you want to discover or explain something.
+Discovering is explaining to yourself. In a course where you need to learn the syntax and semantics of a language you must
+of course practice it and use the "words" (icons, lines) to form proper sentences (models, diagrams).
+
+A model is a kind of plan and help to keep oversight, both overall and in the details, where required.
+
+Let me explain: +
+
+First you should consider the purpose of the diagram.
+
+* If you want to play out a scenario, you need objects (instances), and a box and line
+  or stick model actors suffices. Boxes often will do because they are easily drawn (simplification).
+* Object diagram could be the next step.
+
+Then
+
+* If it is about *data* analysis, a.k.a. *domain modeling*, relations between entities, then multiplicities [big]*DO* matter.
+* A domain model show the relations between data elements. These relations often go two ways, and is natural, hence there is no prevalent direction.
+* If it is about designing your system architecture, then the [big]*directions* of the associations (*is-A*, *uses*, or *has-A*) take precedence.
+* A proper class diagram of a software system is a https://en.wikipedia.org/wiki/Directed_graph[directed graph].
+  The relations [green]*need* to have a direction, so you can discover what should or can go where, or can't.
+  The directions are especially important because in dependencies (which is what these arrows show),
+  https://en.wikipedia.org/wiki/Circular_dependency[you are not allowed to have cycles].
+
+image:meatgrinder.jpg[role="thumb right", width=250, title="A meat grinder is not made of meat"]
+
+* In a *software system* class diagram, that serves to find potential reuse (using an already existing idea or type etc), cardinalities have no meaning.
+** Its suffices to know the *types* (class, interface) and their relation, and you rarely need to specify how many instances you will have.
+** If you _do need_ to specify a number, then typically [blue]*enum* is the solution, which implicitly also serves as https://dzone.com/articles/java-singletons-using-enum[_Singleton_].
+
+Let us use metaphores. *Sausage* and *Sausage Machines*.
+
+* A *domain model* is about the data. It is about _sausage_.
+** In the domain you specify what proportions of meat, fat, spicing, and skin you use. This is called the recipe. The processing takes place in machines.
+
+* A system design is about the _sausage machines_.
+** What type of bolts and nuts do we need. What is the type of steel for the grinder, and what is it's shape etc.
+   You need *only one* design ( ==template, class ) of each.
+** The size (diameter) and consistency of the sausage matter, but for the rest it is metal, wood, plastic, rubber etc.
+** The temperature and preparation time of course also matter, but that is how you _use_ the machine.
+* The assembly process of the machine is the last part as far as producing machines goes.
+** In the assembly you need to know the number of bolts, grinder wheels etc. Meat nor sausage is involved, unless you hit yourselves with a spanner.
+ The sausages *will* be involved in the test lab. (Think test scenarios).
+** You will find places where count matters, like a GUI that shows items of a varying number. +
+   But than also, that count comes from the data. (Show the customers in a GUI list). +
+** In all other cases the GUI widgets will have _names_. These names can be applied to the system components. Those are specialized by
+   for instance inheritance or composition but also by configuration, like the colour of the handle of the meat grinder or the text on a label.
+   Or even applying plugins like in a meat grinder by replacing the grind wheel and extruder to get a different sausage type.
+
+[big]_Transformation of the domain model into the system class diagram sounds reasonable, 
+  but is in fact a https://en.wikipedia.org/wiki/Fallacy[fallacy]._ +
+[big]_It would be as if you could turn sausage into a sausage machine. I'm pretty sure your Butcher will tell you different when you would propose such a solution._
+
+.The domain and (part of ) the system.
+[.clearfix]
+--
+[.left]
+.A. Data to process.
+image:../images/Salsiccia-700x467.jpg[width="300", scaledwidth="45%"]
+[.right]
+.B. System plan.
+image:../images/howtomeatgrinder.jpg[width="300", scaledwidth="45%"]
+--
+
+.Quiz: What UML diagram type describes the images above best?
+[%collapsible]
+====
+The sausages come close to an object diagram. Not much details is shown, which is proper for sausages. _You do not want to known_.
+The model is there to express [black]*yummy* none-the-less.
+
+The meat grinder picture is actually also an object diagram, it is the model to be used for assembly.
+It does have type names though, and luckily for my case only uses one of each. Ikea build plans are different.
+
+_Lucy, where is that Alan-wrench?_
+====
+
+Sometimes it helps to go from the meta level to metaphors, to explain things, because latexmath:[\text{meta} = \text{abstract}^2]. +
+Do so if you have to explain something, but once the abstraction has been understood by the reader, you can stop simplifying.
+
+_It is easier to model sausages than dogs, because the former sit still._
+
+That concludes this intermezzo on https://www.chefkoch.de/rezepte/1180961224164162/Currywurst.html[currywurst].
+
+//Pieter van den Hombergh, March 2021.
+
+'''
+
+:sectnums:

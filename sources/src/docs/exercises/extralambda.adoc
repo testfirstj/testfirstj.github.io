@@ -1,0 +1,12 @@
+== Extra lambda exercises
+
+=== Design functional interfaces.
+
+Create a functional interface that takes three parameters of different types and produces an instance of a
+fourth type. Choose you name wisely and be inspired by the naming conventions in the `java.util.function` package.
+
+
+* Assume to have class holding a collection of objects of some type. Let's call  the class `Container`. The type of the object supports an operation `void op()`.
+
+Design the signature of a method defined on the Container that takes a method that will be applied on all object contained.
+This method takes one parameter, the

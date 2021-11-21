@@ -1,0 +1,120 @@
+:sectnums!:
+
+=== Exercise Enum Calculator
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Exercise 3: Enum Calculator</summary>
+++++
+
+In this exercise you build a calculator that has its operations expressed in an [blue]*enum* called `Operator`. +
+This enum uses a field of type `IntBinaryOperator` which itself is a *Functional* interface, specifies the method `applyAsInt(int a, int b)`.
+You will use that field to evaluate the expression.
+The enum values in Operation and ADD, SUBTRACT,
+   MULTIPLY, DIVIDE, and POWER with the usual meaning. +
+Each enum value has a symbol of type String
+`"+"` for ADD, etc and `"**"` for the Power operation.
+
+Your task is to test driven develop the Operator-enum. The main class called Calculator is given. It uses the Operator to do the actual computation.
+It can compute simple space-separated integer expressions like `2 + 3` of `2 ** 10`.
+
+The functional requirements are:
+
+* The Operator class has a constructor that takes 2 parameters:
+. a symbol string and
+. a https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/IntBinaryOperator.html[IntBinaryOperator ^]
+  functional interface, which defines the shape of a lambda expression. +
+  You use these to supply the actual computation to the enum value
+  like in `ADD( "+", ( a, b ) -> a + b )` for value ADD, symbol + and lambda `( a, b ) -> a + b )`.
+  Both constructor parameters are saved as fields.
+* You should be able to lookup the Operator by its symbol, using a static method `Operator get(String symbol)`.
+* The Operator has a compute function `int compute(int a, int b)`, which does the actual work and uses the method applyAsInt.
+* In most cased the lambda expression fits on the same line as the symbol. In case of the `**`, use a loop or stream to do the exponentiation.
+
+.All operations
+[cols="<,^q",options="header"]
+|====
+| Op | Symbol
+| ADD | '+'
+| SUBTRACT | '-'
+| MULTIPLY | '*'
+| DIVIDE | '/'
+| POWER | '**'
+|====
+
+The main class, Calculator reads the input as lines and splits the input by white space, to make parsing easier.
+So you will have to give the input values and operator separated by white space. See below.
+
+The non-functional requirements regarding the tests are that you use a JUnit 5 `@ParameterizedTest`.
+
+.A csv source could look like this. Abbreviated.
+[source,java]
+----
+   @ParameterizedTest
+   @CsvSource( {
+        // the compiler will turn the lines in one string each.
+        // eg the first line results in the String "add,+,6, 2, 3 "
+        // we use this technique to let the compiler
+        // do the _hard_ work of computing the result values.
+        // message, sym, expected, a,b
+        "add,       +," + ( 2 + 3 ) + ", 2, 3 ",
+        "subtract,  -," + ( 2 - 3 ) + ", 2, 3 ",
+        "multiply,  *," + ( 2 * 3 ) + ", 2, 3 ",
+        "divide,    /," + ( 2 / 3 ) + ", 2, 3 ",
+        "power,    **," + ( 2 * 2 * 2 ) + ", 2, 3 ",
+   } )
+    public void testOperator( String message, String symbol,
+                             int expected, int a, int b  ) {
+      // test code left out, the exercise ;-))
+    }
+----
+
+The app that uses the Operator class is shown below.
+
+.Calculator at work
+[source,java]
+----
+class Calculator {
+    public static void main( String[] args ) {
+        Scanner scanner = new Scanner( System.in );
+        System.out.print( "calc: " );
+        String line = scanner.nextLine();
+        String[] tokens = line.split( "\\s+" );
+        while ( tokens.length >= 3 ) {
+            System.out.println( line + " = " + compute( tokens ) );
+            System.out.print( "calc: " );
+            line = scanner.nextLine();
+            tokens = line.split( "\\s+" );
+        }
+    }
+
+    /**
+     * Compute takes three tokens, a, operatorSymbol, and  b as in "5", "+"," "6".
+     * @param tokens to be evaluated.
+     */
+    static int compute( String... tokens ) {
+        if ( tokens.length < 3 ) {
+            return 0;
+        }
+        int a = Integer.parseInt( tokens[ 0 ] );
+        int b = Integer.parseInt( tokens[ 2 ] );
+        String symbol = tokens[ 1 ];
+
+        return Operator.get( symbol ).compute( a, b ); // <1>
+    }
+}
+----
+
+<1> lookup operation and apply it to the values.
+
+.sample output
+[source,sh]
+----
+calc: 3 ** 8
+3 ** 8 = 6561
+calc: 4 + 12
+4 + 12 = 16
+----
+
+++++
+</details></div><!--end enum calculator -->
+++++

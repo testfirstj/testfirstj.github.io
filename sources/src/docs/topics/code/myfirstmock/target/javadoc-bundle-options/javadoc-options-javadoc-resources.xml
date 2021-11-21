@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<javadocOptions>
+  <docletArtifacts>
+    <docletArtifact />
+  </docletArtifacts>
+  <tagletArtifacts>
+    <tagletArtifact />
+  </tagletArtifacts>
+  <resourcesArtifacts>
+    <resourcesArtifact>
+      <groupId>nl.fontys.sebivenlo</groupId>
+      <artifactId>javadochighlighter</artifactId>
+      <version>1.0</version>
+    </resourcesArtifact>
+  </resourcesArtifacts>
+  <javadocResourcesDirectory>src/main/javadoc</javadocResourcesDirectory>
+</javadocOptions>

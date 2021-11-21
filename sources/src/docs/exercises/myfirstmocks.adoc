@@ -1,0 +1,89 @@
+////
+LGs:
+. <DONE> DOC explain
+. <DONE> SUT explain
+. make picture?
+. <DONE> mock annotation (that you fake an object and you don't implement its functionality)
+
+. <DONE> when (training a mocked object what to return)
+. <DONE> verify (see if the interaction with the mock (DOC))
+. <DONE> assert (check if SUT produced the correct outcome of the interaction)
+. capture (make sure that the info passed from DOC to SUT is correct)
+  -> captor muss vorher erklaert werden!
+  verify is required to make sure the captor asks the mock what it received in the method invocation (printLn)
+////
+
+:sectnums!:
+
+=== Exercise My First Mock
+
+[big blue]_DOC Rhymes with mock_
+
+// dumbed down version iof in the pub.
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>My First Mock</summary>
+++++
+
+In this exercise, you will use your first mocks. To mock something is essentially to _fake_ something. Mocking, or
+faking classes is a common way of testing code. For example if you test code that writes
+something to a database, you want to make sure that the writing of data works correctly.
+But setting up a database and connecting to it introduces LOTS of ways the code could fail,
+rendering your test meaningless. To circumvent this problem, you _mock_ the database.
+You create a dummy object and say "this is my pretend database". In this exercise, you will mock something else: a `Printer`.
+
+Let's check out our _myfirstmock_ project.
+We have a `Printer` interface with the methods `void Println(String print)` and `int countCharactersPrinted();`.
+The first method does the actual printing, the second method returns the count of the characters printed.footnote:[Maybe page count or ink usage should be used, this is just an example]
+
+Looking at the _Business.java_ class, we see the code that makes use of the Printer interface. There is a `void work(String input)`
+ method, which should print the input given to the method. Interesting is the `double computePrintingCost(double price)` method.
+ With this method, the business class computers the cost of a print by multiplying the price with the number of characters printed.
+
+As usual, we start with the *Test* class. Straight away, we see two fields in this test class: `printer` and `business`.
+The *business* is the *System Under Test*, also called a *SUT*. It's the code that we want to test, i.e. the one we want to make sure is working.
+The business class however can't do its work without implementing some form of printer.
+It *depends* on the printer. The *printer* is therefore the *depended-on component*, also called the *DOC*.
+
+When testing, we *mock the DOC* and we *verify that the SUT is working*. The *DOC* will not be fully implemented- it will
+only be mocked, i.e. faked! We can see that the printer is mocked thanks to the annotation `@Mock`.
+The business class won't be mocked, because we want to test it- you can't test a fake object!
+But before you can test a class that uses a mocked object, we first need to *train* it.
+For example, if you mock a calculator, you don't implement the `add(int a, int b)` method.
+Instead, you train it to return `2` when the input is `1` + `1`. Check the pseudo-code below to see how to train mocked objects.
+
+.To help you, here is a series of commands that will be handy:
+[source,java]
+----
+   when(mockedObject.methodOfObject()).thenReturn(something); // <1>
+   verify(someObject).methodOfObject();                       // <2>
+   assertThat(someCalculatedStuffFromBusinessObject)
+       .isEqualTo(someValue); // <3>
+----
+
+<1> here we train the mocked object
+<2> verifies that the method of the mocked object was called
+<3> here we use our usual assert statement when we test the BUSINESS object (SUT), not the DOC!
+
+Now to the exercise: write the three test methods provided and the implementation that it tests, TDD style.
+Start with the top test and work your way down. `doesItPrint()` only needs a verify, `calculatePrintingCosts`
+needs training, verification and assertion. The third test method, `doesPrinterGetCorrectArgument()`,
+is more complex. It makes use of the `ArgumentCaptor`. It basically is a catcher that captures (or catches)
+arguments that are passed to methods. In our example, our argument is a string, therefore we have a stringCaptor:
+[source,java]
+----
+ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass( String.class );
+----
+In your `verify` statement, you should pass the stringCaptor's `capture` method. It allows the captor to catch
+the String that is sent to the business class to print. Then you assert that the stringCaptor's values contain
+the String you are looking for. As usual, type the dot `.` after `stringCaptor` and see what options are available.
+
+[TIP]
+Use this *myfirstmock* project, _after submitting the solution_, to experiment with mocking.
+Experimenting is a first class activity for students!
+
+++++
+</details></div> <!-- end myfirstmock -->
+++++
+
+:sectnums:

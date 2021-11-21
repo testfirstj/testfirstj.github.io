@@ -1,0 +1,5 @@
+#!/bin/bash
+export CLASSPATH=target/pgjdbcdemon-mvn-1.0-SNAPSHOT.jar:${HOME}/Library/postgresql/postgresql-42.2.2.jar
+
+echo "$@"
+java -cp ${CLASSPATH}  pgjdbcdemo.QueryTester "$@"

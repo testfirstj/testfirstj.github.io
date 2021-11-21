@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="nl.fontys.sebivenlo.switcher.SwitcherTest" time="5.148" tests="2" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher/target/test-classes:/home/hom/.m2/repository/org/openjfx/javafx-controls/16/javafx-controls-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-fxml/16/javafx-fxml-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-graphics/16/javafx-graphics-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-base/16/javafx-base-16.jar:/home/hom/.m2/repository/org/testfx/testfx-junit5/4.0.15-alpha/testfx-junit5-4.0.15-alpha.jar:/home/hom/.m2/repository/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar:/home/hom/.m2/repository/org/testfx/testfx-junit/4.0.15-alpha/testfx-junit-4.0.15-alpha.jar:/home/hom/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/hom/.m2/repository/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha.jar:/home/hom/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/hom/.m2/repository/org/testfx/openjfx-monocle/jdk-12.0.1+2/openjfx-monocle-jdk-12.0.1+2.jar:/home/hom/.m2/repository/org/assertj/assertj-core/3.18.1/assertj-core-3.18.1.jar:/home/hom/.m2/repository/org/mockito/mockito-core/3.5.13/mockito-core-3.5.13.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy/1.10.15/byte-buddy-1.10.15.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy-agent/1.10.15/byte-buddy-agent-1.10.15.jar:/home/hom/.m2/repository/org/objenesis/objenesis/3.1/objenesis-3.1.jar:/home/hom/.m2/repository/org/mockito/mockito-junit-jupiter/3.5.13/mockito-junit-jupiter-3.5.13.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar:/home/hom/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-commons/1.7.0/junit-platform-commons-1.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.7.0/junit-jupiter-params-5.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-engine/1.7.0/junit-platform-engine-1.7.0.jar:/usr/lib/jvm/jdk-11.0.10+9/lib/jfxrt.jar:"/>
+    <property name="java.vm.vendor" value="AdoptOpenJDK"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptopenjdk.net/"/>
+    <property name="user.timezone" value=""/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="os.name" value="Linux"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-11.0.10+9/lib"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher/target/surefire 2021-06-06T20-13-40_684-jvmRun1 surefire1443563342552347620tmp surefire_05848417603172742294tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher/target/test-classes:/home/hom/.m2/repository/org/openjfx/javafx-controls/16/javafx-controls-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-fxml/16/javafx-fxml-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-graphics/16/javafx-graphics-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-base/16/javafx-base-16.jar:/home/hom/.m2/repository/org/testfx/testfx-junit5/4.0.15-alpha/testfx-junit5-4.0.15-alpha.jar:/home/hom/.m2/repository/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar:/home/hom/.m2/repository/org/testfx/testfx-junit/4.0.15-alpha/testfx-junit-4.0.15-alpha.jar:/home/hom/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/hom/.m2/repository/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha.jar:/home/hom/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/hom/.m2/repository/org/testfx/openjfx-monocle/jdk-12.0.1+2/openjfx-monocle-jdk-12.0.1+2.jar:/home/hom/.m2/repository/org/assertj/assertj-core/3.18.1/assertj-core-3.18.1.jar:/home/hom/.m2/repository/org/mockito/mockito-core/3.5.13/mockito-core-3.5.13.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy/1.10.15/byte-buddy-1.10.15.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy-agent/1.10.15/byte-buddy-agent-1.10.15.jar:/home/hom/.m2/repository/org/objenesis/objenesis/3.1/objenesis-3.1.jar:/home/hom/.m2/repository/org/mockito/mockito-junit-jupiter/3.5.13/mockito-junit-jupiter-3.5.13.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar:/home/hom/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-commons/1.7.0/junit-platform-commons-1.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.7.0/junit-jupiter-params-5.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-engine/1.7.0/junit-platform-engine-1.7.0.jar:/usr/lib/jvm/jdk-11.0.10+9/lib/jfxrt.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/hom"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="jdk.module.path" value="/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher/target/classes:/home/hom/.m2/repository/org/openjfx/javafx-controls/16/javafx-controls-16-linux.jar:/home/hom/.m2/repository/org/openjfx/javafx-fxml/16/javafx-fxml-16-linux.jar:/home/hom/.m2/repository/org/openjfx/javafx-graphics/16/javafx-graphics-16-linux.jar:/home/hom/.m2/repository/org/openjfx/javafx-base/16/javafx-base-16-linux.jar"/>
+    <property name="java.version.date" value="2021-01-19"/>
+    <property name="java.home" value="/usr/lib/jvm/jdk-11.0.10+9"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="/home/hom/.m2/repository/org/apache/maven/surefire/surefire-booter/2.22.2/surefire-booter-2.22.2.jar:/home/hom/.m2/repository/org/apache/maven/surefire/surefire-api/2.22.2/surefire-api-2.22.2.jar:/home/hom/.m2/repository/org/apache/maven/surefire/surefire-logger-api/2.22.2/surefire-logger-api-2.22.2.jar:/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher/target/test-classes:/home/hom/.m2/repository/org/openjfx/javafx-controls/16/javafx-controls-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-fxml/16/javafx-fxml-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-graphics/16/javafx-graphics-16.jar:/home/hom/.m2/repository/org/openjfx/javafx-base/16/javafx-base-16.jar:/home/hom/.m2/repository/org/testfx/testfx-junit5/4.0.15-alpha/testfx-junit5-4.0.15-alpha.jar:/home/hom/.m2/repository/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar:/home/hom/.m2/repository/org/testfx/testfx-junit/4.0.15-alpha/testfx-junit-4.0.15-alpha.jar:/home/hom/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/hom/.m2/repository/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha.jar:/home/hom/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/hom/.m2/repository/org/testfx/openjfx-monocle/jdk-12.0.1+2/openjfx-monocle-jdk-12.0.1+2.jar:/home/hom/.m2/repository/org/assertj/assertj-core/3.18.1/assertj-core-3.18.1.jar:/home/hom/.m2/repository/org/mockito/mockito-core/3.5.13/mockito-core-3.5.13.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy/1.10.15/byte-buddy-1.10.15.jar:/home/hom/.m2/repository/net/bytebuddy/byte-buddy-agent/1.10.15/byte-buddy-agent-1.10.15.jar:/home/hom/.m2/repository/org/objenesis/objenesis/3.1/objenesis-3.1.jar:/home/hom/.m2/repository/org/mockito/mockito-junit-jupiter/3.5.13/mockito-junit-jupiter-3.5.13.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar:/home/hom/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-commons/1.7.0/junit-platform-commons-1.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.7.0/junit-jupiter-params-5.7.0.jar:/home/hom/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-engine/1.7.0/junit-platform-engine-1.7.0.jar:/usr/lib/jvm/jdk-11.0.10+9/lib/jfxrt.jar:/home/hom/.m2/repository/org/apache/maven/surefire/surefire-junit-platform/2.22.2/surefire-junit-platform-2.22.2.jar:/home/hom/.m2/repository/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="11.0.10+9"/>
+    <property name="user.name" value="hom"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="5.8.0-55-generic"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="AdoptOpenJDK"/>
+    <property name="maven.ext.class.path" value="/usr/local/netbeans-12.4/java/maven-nblib/netbeans-eventspy.jar:/usr/local/netbeans-12.4/java/maven-nblib/netbeans-eventspy.jar"/>
+    <property name="localRepository" value="/home/hom/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/AdoptOpenJDK/openjdk-support/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="11.0.10"/>
+    <property name="user.dir" value="/home/hom/sebi/prc2/trunk/11_web/topics/code/fxsceneswitcher"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="AdoptOpenJDK"/>
+    <property name="java.vm.version" value="11.0.10+9"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="55.0"/>
+  </properties>
+  <testcase name="tSwitch" classname="nl.fontys.sebivenlo.switcher.SwitcherTest" time="4.089"/>
+  <testcase name="tSwitchCombo" classname="nl.fontys.sebivenlo.switcher.SwitcherTest" time="1.054"/>
+</testsuite>

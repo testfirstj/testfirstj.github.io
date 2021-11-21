@@ -1,0 +1,106 @@
+:sectnums!:
+
+=== Exercise CSV to Objects
+
+//=== Stream explained with paper, pen and LEGO.
+
+In the video we explain streams and the next exercise, design or idea wise. The coding is left as an exercise.
+
+
+video::mhVO5YSj1Jg[youtube, title=Stream explained with paper, pen and LEGO., width=848, height=480]
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>CSV to Objects</summary>
+++++
+
+In this task you will write a small utility class that will help you
+to test things and is also useful to load data from files and e.g. put them in the application
+or mock data source. The use case of this utility class is to read data from files and turn
+them into real (Java) objects.
+
+
+The class is a `CSVObjectStream` and has three constructors and two
+methods, `stream(...)` and `asList(...)`.
+
+Of course, you start with tests.
+To do that, you will find a `students.csv` file in the NetBeans-IDE project.
+
+The test should:
+
+* Create a `CSVObjectStream`
+** Create a `Path` to `"students.csv"` using the Paths (https://docs.oracle.com/javase/8/docs/api/java/nio/file/Paths.html[java.nio.file.Path]) utility class in the same package.
+** Optionally provide the seperator
+** Optionally provide a `Predicate<String> lineFilter` that filters 
+ out lines from the csv source based on the predicate
+ e.g. the header line
+* Both `stream` and `asList` methods take two parameters: +
+. A function  `Function<? super String[], ? extends T> creator` that transforms an array of strings into an object of type `T`. +
+For the constructor call use `Factories::createStudent` as
+ creator. This is a method reference. See lambda theory if you forgot what that means.
+. A `Predicate<? super String[]>` called `rowFilter` that ensures that the array is fit for purpose. +
+  Example: the first string in the array of strings contains only digits and is the student number. +
+  The `asList` method uses the `stream` method, and collects the stream into a list.
+
+
+The testing part should do the following:
+
+* Collect the resulting stream in a list and assert that
+** The list is not null.
+** The list is not empty.
+** The list has 50 elements.
+** The list contains a student with the name `"Olympia Oliphant"` at index three. +
+   Use the assert that extracting method with a fieldname as parameter. See the https://assertj.github.io/doc/[assertJ API and doc] for examples.
+* In all the asserts, use a message and make sure you put the arguments to
+ the `assertThat` method chained in the proper order.
+
+
+You can use it as is shown in the listing below
+
+*Show that it works* +
+To show the use of this class, create a csv file, or take it from an
+earlier project, and define a type, say student with studentnumber, name, birthdata,
+ and gender.
+
+To top the demonstration off, add a filter function that accepts a list
+of students, which streams said list and filters out students  by some
+rule, e.g. by gender and or age.
+
+
+A Helper class called `Factories` might be useful in your demo.
+Factories in our solution has two methods, one to create a student
+from an array of String, as is required by the `CSVObjectStream` class
+and one method to turn object back into csv records. We call the last
+one `studentAsCSVLine`. For the remaining few details look at the
+class diagram below.
+
+You may want to keep this project and reuse it in other exercises.
+
+Note that the `Student` test class is a static inner class in the factories, which is
+only available in the test source tree.
+
+To complete the exercise, add a separate Main file that
+demonstrates the working of your module.
+
+
+.Using the csvobject utility class.
+[source,java]
+----
+CSVObjectStream<Student> os
+            = new CSVObjectStream<Student>(Paths.get( "students.csv" ) );
+
+        os.stream( Factories::createStudent,
+                    r -> r[ 0 ].matches( "\\d+" ) )
+            .forEach( System.out::println );
+
+----
+
+.class diagram csvobjectstream
+image::csvobjectclasses.svg[]
+
+link:{exercises}/csvobjectstream/index.html[javadoc of csvobjectstream generated from the solution ^]
+
+++++
+</details></div><!--end cvsobjects -->
+++++
+
+:sectnums:

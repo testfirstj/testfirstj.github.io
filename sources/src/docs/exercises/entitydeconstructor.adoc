@@ -1,0 +1,223 @@
+=== Generating code using Templates
+
+In the Java versions before Java 16, generating source code could be a bit tedious,
+because in Java a String can't contain line breaks, that is a line cannot be multiple lines lone with only one set of quotes.
+The Java 14+ text block feature solves that, and is final in Java 16, but we will deal with it here anyway.
+
+If you know what your code looks like, your can put it in a file, maybe even starting
+by copying from an existing java class. The template below is created that way and has our advised code style.
+
+
+.Assume your template text looks like
+[source]
+----
+package %1$s;
+
+import deconstructorregistry.Deconstructor;
+/**
+ * This is generated code. Do not edit, your changes will be lost.
+ */
+public class %2$sDeconstructor {
+
+    /**
+     * The purpose of self registration is not being able to
+     * create new instances, other then by the class loader.
+     */
+    private %2$sDeconstructor() {
+    }
+
+    static {
+        Mapper.register( %2$s.class, new %2$sDeconstructor() );
+    }
+
+    /**
+     * Deconstruct an entity into an array.
+     * @param %2$s the victim
+     */
+    @Override
+    public Object[] deconstruct(  %2$s %3$s ) {
+       return new Object[]{
+            %4$s
+       };
+    }
+}
+----
+
+In the template you see special 'tokens' like `%2ss`, which means: use the second parameter, and interpret as string.
+In this case the template specifies 4 parameters:
+
+. is the package name,
+. is the entity type name,
+. is the parameter name of the deconstructor method
+. is the the place where the list of getters should land.
+
+.Reading the template from a file and put it in a String constant.
+[source,java]
+----
+    private static String templateText( String templateName ) {
+        String text = "";
+        Class clz = Constants.class;
+
+        try ( InputStream in = clz.getResourceAsStream( templateName ) ) {
+            text = new String( in.readAllBytes​() );
+        } catch ( IOException ex ) {
+            Logger.getLogger( Constants.class.getName() )
+                    .log( Level.SEVERE, ex.getMessage() );
+        }
+        return text;
+    }
+    public static String CODE_TEMPLATE = templateText(
+            "CodeTemplate-java.txt" );
+----
+
+.Use the template with the positional parameters.
+[source,java]
+----
+    String classText = String.format( CODE_TEMPLATE,
+            GENERATED_PACKAGE, // <1>
+            typeName, // <2>
+            paramName, // <3>
+            getters( entityType ) // <4>
+    );
+----
+
+<1> Parameters to
+<2> the
+<3> template
+<4> as explained above.
+
+
+:sectnums!:
+
+=== Entity Deconstructor Generator
+
+[.lead]
+Some of the operations you want to do on entities do not belong to the responsibility of
+the entity. As an example: providing various external representations, such as
+a list of entities as a csv (comma separated value) file. It is not the entities responsibility to format its
+information in every possible format. Often the toString() method is not really fit for business but mainly meant for debugging.
+You use an external class to achieve a specific format. The EntityDeconstructor is such a helper for
+the simplest cases, such a simple csv. Writing such helper class can be largely automated, taking most of the
+boilerplate coding away from the easily bored but 😎 programmer.
+
+
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Entity Deconstructor</summary>
+++++
+
+[big]*This exercise has two parts, the generator and the registry, so the generator generates code that fits the registry exercise*
+
+To ease the handling of handling _entities_ in a business application, a deconstructor method is a _nice to have_.
+
+A *deconstructor* takes an [blue]#entity# and returns an array of [blue]##Object##s containing all fields of the entity.
+
+This allows things such as getting the data to create a csv representation without having to do that inside the entity class.
+In the last exercises in this part you will use even more information, so you can create things such as json format, yaml,
+or fill a prepared statement when you want to put entities into a database using jdbc (which we will do next week).
+
+.example usage
+[source,java]
+----
+  for( Object fieldValue: deconstruct( student )) {
+     // do something with the field value
+  }
+----
+
+This deconstructor is not automatically provided by the IDE, and it takes a bit of wrestling with the editor.
+Why not _generate_ a deconstructor from the information that is in the class-object of the entity?
+
+A deconstructor would have the following API, with the Student as example:
+
+.Given a student entity:
+[source,java]
+----
+class Student{
+    private final Integer snummer;
+    private final String lastname;
+    //...
+    private final Boolean active;
+    // rest left out
+
+    // methods left out
+}
+----
+
+.the [blue]#StudentDeconstructor# could look like this (abbreviated).
+[source,java]
+----
+public class StudentDeconstructor {
+
+  public static Object[] deconstruct( Student s ) {
+    return new Object[]{
+        s.getSnummer(),
+        s.getLastname(),
+       // some left out for brevity
+       s.getActive()
+    };
+  }
+}
+----
+
+The generated deconstructor is specialized for the Student class, and it is really fast.
+
+In this exercise you will create the deconstructor java code given the entity class name on the command line.
+
+[source]
+----
+    generateDeconstructor sampleentities.Student > path/to/StudentDeconstructor.java
+----
+
+*The fine print*
+
+* The generated code must be a valid class, and be acceptable by the java compiler.
+* The parameter on the command line is the fully qualified entity name such as `sampleentities.Student`.
+** Use Class.forName(String) to try to load the class.
+* The package declaration should be the same as that of the entity.
+* The entity classes should be available in binary form so we can reflect on them.
+* The name of the Deconstructor type should be the name of the entity type with `"Deconstructor"` appended. E.g. [green]#StudentDeconstructor#.
+* The type and signature of the deconstructor method should be `public static Object[] deconstructor( EntityType )`,
+  like  `public static Object[] deconstructor( Student )`.
+* The field values should be obtained using the getter for the field. Assume *'get'* as prefix for all methods
+* The getter should be constructed according to the convention, `get+<fieldname with first letter capitalized>`. E.g the getter for field `firstname` is get**F**irstname.
+* The values obtained by the getters should be placed in the order of field declaration of the entity type.
+* The generated code should be fit for human consumption, with reasonable indentation so that eye-ball inspection of the generated code is meaningful.
+
+In the project you will find a pre-made set of tests in which you have to add some test data and
+details of the tests.
+
+In the tests:
+
+* Remove all _unneeded_footnote:[the white space is there to improve redability, but is the first that can be discarded, which is what a compiler does as one of the first steps]
+ white space. This can be done easily with: +
+  [blue]`stream().map (line -> line.trim()).filter(l -> !l.isEpmty())`.
+  This trick has been packed in a method called cleanCode that takes the whole generated text, cleans it and returns it as a list of Strings.
+* Test each aspect with a separate test data line. Use the `Student` class, which is given in the `sampleentities` package.
+
+
+// generator needs entities on class path!.
+.Windows run script to run the entitydeconstructor from the command line. Called run.cmd
+[source,cmd]
+----
+@echo off
+rem @author David Greven - https://github.com/grevend
+set jar=target/entitydeconstructor-2.0-SNAPSHOT.jar
+if not exist %jar% cls & echo Maven... & call mvn package
+echo.
+java -jar %jar% %*
+----
+
+.bash script to do the same as the above. Will work in git-bash too.
+[source,shell]
+----
+#!/bin/bash
+jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if [ ! -e ${jar} ]; then mvn package; fi
+java -jar ${jar} "$@"
+----
+
+++++
+</details></div><!--end Entity Deconstructor -->
+++++
+
+:sectnums:

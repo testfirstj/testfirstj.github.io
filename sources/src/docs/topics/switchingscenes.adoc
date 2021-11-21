@@ -1,0 +1,141 @@
+== Testing Scene Switching
+
+It may look like a black art, but isn't. Again it is cooking with water.
+It gets a bit harder when you want (and we insist) to throw a bit of testing into the mix.
+What may trouble the waters a bit is that testing is typically blatantly ignored by the examples,
+including the ones created by your IDE. Let us fix that.
+
+=== Use case: application with multiple "scenes".
+
+In many applications you want to be able to change from one fx scene, typically a form of sorts, to another one.
+You can do that relatively easy, by following the examples generated.
+Testing the switching is never considered in the examples, so we must repair that.
+
+Because we want to work test driven, we start with the test.
+
+[TIP]
+====
+We are not switching the _Scene_ but actually the *root* of the Scene. But SceneSwitching says more about the purpose,
+not how it is done. So much for naming.
+====
+
+.Make Robby check a box and switch the scene.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/test/java/nl/fontys/sebivenlo/switcher/SwitcherTest.java[lines=42..67]
+----
+
+<1> Do a "business" operation.
+<2> Select button and
+<3> press it to make scene switching work.
+<4> Give the human a break, so that he/she can convince (her|him) self.
+
+
+For UI test, and for FX test in particular, you need some setup.
+
+.Boring setup to make it work on a 'headless' test server.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/test/java/nl/fontys/sebivenlo/switcher/SwitcherTest.java[lines=25..34]
+----
+
+.The required start method for an fx test
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/test/java/nl/fontys/sebivenlo/switcher/SwitcherTest.java[lines=42..47]
+----
+
+<1> Note that the start method actually gets the complete switcher app.
+
+To make this work not only for a trivial demo, we threw in a factory pattern, the odd Lambda, and a few maps for good measure.
+
+.First the controller. The secondary and tertiary are the same but in blue or pink.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/PrimaryController.java[lines=14..25]
+----
+
+.Never program to an implemenation if there is an interface.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/RootSwitcher.java[lines=8..24]
+----
+
+So far quite simple, but note that we gave the root an `fx:id` in the fxml file and have the fxml-loader inject that as a field in the controller.
+https://github.com/homberghp/fxuiscraper[FXUIScrapper] will thank you for that.
+
+Now let us have a look at the switcher, which is no more than a modified version of the java fxml demo app.
+
+.Class declaration.
+[source,java]
+----
+public class Switcher extends Application implements RootSwitcher {
+  // details left out
+}
+----
+
+.Fields
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/Switcher.java[lines=22..31]
+----
+
+<1> A cache, so loading is done once.
+<2> The start scene/root, actually the name of the fxml file sans extension.
+<3> The factories (plural) that help the loader construct the proper controller and pass the parameters. Here you would typically also
+  insert the business logic. Of course the RootSwitcher could be in another class, but for the simple example this will do.
+
+
+[TIP]
+====
+Proper OO design uses normal methods, not [red]`static`. Notice how we dropped static from all but one (main) method and field.
+====
+
+.Start method, short and sweet.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/Switcher.java[lines=33..38]
+----
+
+.Set root. As simple as it gets.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/Switcher.java[lines=40..46]
+----
+
+.LoadFxml is actually the 'cache-manager'.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/Switcher.java[lines=48..50]
+----
+
+.Method to actually load the resource.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/Switcher.java[lines=52..63]
+----
+
+Note how we ignore the `clz` class object in the lambda. We know what we want to provide by the key into the map.
+
+=== Switching scenes using comboboxes
+
+Sometimes you want to switch scenes with something else than simple buttons.
+Here is how you do it using ComboBoxes.
+
+.Testing selecting a different scene using a combobox.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/test/java/nl/fontys/sebivenlo/switcher/SwitcherTest.java[lines=69..81]
+----
+
+.And of course the action in the controller that triggers the scene switch.
+[source,java]
+----
+include::{topics}/code/fxsceneswitcher/src/main/java/nl/fontys/sebivenlo/switcher/PrimaryController.java[lines=39..45]
+----
+
+
+
+link:{topics}/code/fxsceneswitcher.zip[full source] of this stuff.
+
+'''

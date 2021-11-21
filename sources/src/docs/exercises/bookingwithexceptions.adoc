@@ -1,0 +1,17 @@
+== Booking System with exceptions
+
+Your task is to write a (very) simplified version of a booking system. In fact, it can be written
+as a single class, which should:
+
+* return a list of booked hours,
+* not allow a particular hour to be double-booked,
+* deal in a sensible manner with illegal values (provided as input parameters).
+
+On the constraints side (to make the task more appropriate for practicing TDD), the system:
+
+* has only one resource that can be booked (e.g. a classroom, a lawn mower, a restaurant table,  or anything else that makes sense to you),
+* has no notion of days, or to put it differently,
+* should only permit booking of regular whole clock-hours (e.g. it should not allow a booking from 4:30 pm. to 5:30 pm.)
+
+To keep the exercise simple, the system is not required to remember any additional information concerning the reservation (who
+booked it, when etc.).

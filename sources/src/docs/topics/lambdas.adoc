@@ -1,0 +1,275 @@
+[#_lambdas]
+
+
+== Interfaces
+Interfaces were introduced in https://materiaalit.github.io/2013-oo-programming/part2/week-8/[Week 8] of the MOOC in PRC1. Interfaces are a set of requirements that specify _how_ a class should look like. So it can say "I want all classes that implement the interface `Readable` to contain the method `read()`.", but it won't say how the `read()` method is implemented.
+
+.Example interface:
+[source,java]
+----
+interface Calculator {
+    int add(int a, int b);
+    int subtract(int a, int b);
+}
+----
+The interface specifies how the calculator should look like. It contains two methods that a calculator class should contain. As you can see, the methods are empty. The _implementation_ of the method will only be written in the class that implements the interface. That way, each calculator can have a different implementation, but they all adhere to the same method structure. Also note that there are no fields in this interface. Interfaces can't have instance fields.
+
+.Calculator class that implements the interface
+[source,java]
+----
+public class MyCalculator implements Calculator {
+
+    public int add(int a, int b){
+      return a+b;
+    }
+
+    public int subtract(int a, int b){
+      return a-b;
+    }
+}
+----
+
+The class `implements` the `Calculator` interface and implements the methods that
+the interface had specified. Now that you had a small refresher of what interfaces
+are, let's move on to the _functional interface_.
+
+== Functional Interfaces
+
+A functional interface is an interface that has exactly *one* (1) *abstract* method. That's it. Other methods are
+allowed but the must NOT be _abstract_. In older documentation functional interfaces were known by another name: S.A.M.-interface or SAM for short which stood for Single Abstract Method. It is a less posh name, but hey nicknames are sometimes more descriptive, aren't they?
+
+
+[TIP]
+====
+An abstract or imaginary or virtual method is a method that has NO implementation. Just the method definition,
+as in signature + return type and the optional throws clause in case checked exceptions are being thrown or forwarded.
+====
+
+.example functional interface:
+[source,java]
+----
+interface Calculator {
+    int calculate(int a, int b);
+}
+----
+
+This interface says that whenever a class implements the `Calculator` interface,
+ the class should contain the method `calculate`. These interfaces are called functional
+ interfaces because essentially, they define a single function. No matter how you
+ implement calculator, the interface is only concerned that whoever is `Calculator`, must be able to `calculate`.
+
+There are numerous functional interfaces built in. Some already existed before lambdas were introduced, but that is
+a happy coincidence. Here is a functional interface that is often used:
+
+.Comparator, popular long before lambdas.
+[source,java]
+----
+@FunctionalInterface
+public interface Comparator<T> {
+  int compare​(T o1, T o2);
+}
+----
+
+This interface is called `Comparator` and has only the `compare` method inside.
+The `T` stands for `type`. Basically it says that the compare function compares
+two objects of the same type. For example, two Strings, two Integers, two Doubles, two Students.
+
+Here is the Comparator with an implementing class:
+[source,java]
+----
+public class NumberComparator implements Comparator<Integer> {
+  public static void main(String[] args) {
+      Integer[] intarray = {24, 56, 32, 97, 84, 11};
+      Arrays.sort(intarray,new NumberComparator());
+      System.out.println(Arrays.asList(intarray));
+  }
+
+  @Override
+  public int compare(Integer num1, Integer num2) {
+      return num1 - num2;
+  }
+}
+----
+When `num2` is greater than `num1`, the method returns a negative number and vice versa.
+ When the numbers are equal, the method returns zero.
+ Don't worry about the diamond operator `<T>` yet, we will cover this one in a later
+ week. The `int compare(T o1, T o2)` method takes two objects of the same type.
+ Since both of our objects are Integers, our `NumberComparator` works.
+
+The method `compare` is called multiple times. When we write `Arrays.sort()`, the `compare`
+method is called as often as it needs to be until the array is sorted. When you print out the list,
+the output is `[11, 24, 32, 56, 84, 97]` - a sorted Array.
+As it turns out, we can write this comparing as a lambda expression as well.
+
+[NOTE]
+====
+For the simple example above, the subtraction is used, but this only works reliably when the numbers are either of same sign, like both positive or the subtraction does not result in an overflow,
+or rather an integer wrap around. To always be on the safe side and avoid these considerations use `Integer.compare(int,int)` or `Long.compare(int,int)`, which takes care of these issues for you.
+====
+
+== Lambda expressions
+Lambda expressions are a great way of implementing functional interfaces. Lambda expressions are sometimes called _anonymous methods_ because they are methods that don't have a name. The syntax for a lambda expression is:
+
+.shape
+[source,java]
+----
+(parameters) -> {expression}
+----
+
+For example, you could write
+.This method:
+[source,java]
+----
+  int addOne(int x) {
+     return x + 1;
+  }
+----
+
+.As a lambda expression:
+[source,java]
+----
+(int x) -> x + 1;
+----
+
+Lambda expressions can have multiple lines, just like a normal method would have.
+
+.Multi line lambda is also valid:
+[source,java]
+----
+(int x) -> {
+  if (x == 0) return x + 1;
+  else return 0;
+}
+----
+
+So you have seen what the lambda expression looks like. But there is a catch. You can't just write `int number = (int x) -> {return x+1}`. Seems logical doesn't it? You want to save the result of the lambda expression in the variable `number`. But the compiler will flag this with a compilation error: `incompatible types: int is not a functional interface.` What does it mean? Well the compiler considers the left hand something of type integer, whereas the right hand side is of some functional interface type, like the expression on said right hand side. So the type declarations on left and right hand of the `=` do not match.
+
+.This will work but would defeat the whole purpose of Lambda Expressions
+[source,java]
+----
+package lambdaplayground;
+import java.util.function.IntUnaryOperator;
+public class Example1 {
+    public static void main(String[] args) {
+        int number = ((IntUnaryOperator) (int x) -> x + 1).applyAsInt(1); // <1>
+        System.out.println("number = " + number);
+    }
+}
+----
+
+<1> You would and should never write something like this. There is no benefit only confusion.
+ Not the compiler but the poor reader.
+
+Lambda Expressions are meant to pass short snippets of code to some other method or function,
+so you can add a small code ingredient to the mix, like in the comparator in sorting. When you pass a comparator to a sort method,
+the later will know what the order of things should be.
+
+// It means that lambda expressions can only be used to implement functional interfaces:
+// interfaces with one abstract method. As soon as your interface has two methods, the lambda won't be allowed.
+
+Functional interfaces are the Java way to inform the compiler on the input and output of the lambda expression. To make that work without too much performance penalty when compiling, only one abstract method is allowed per functional interface, because the interface instance itself will be of the type of that lambda, and having more than one defined shape (abstract method) would only lead to hard to resolve ambiguities.
+
+Here is a complete working example you can copy+paste and play around with:
+
+.complete lambda example
+[source,java]
+----
+public class Main {
+    public static void main(String[] args) {
+    AddOne lambdaAddOne = (int x) -> {return x + 1;}; // <1>
+    }
+
+    interface AddOne {
+        int apply(int x);
+    }
+}
+----
+
+<1> The lambda expression is in complete form, But since the type is also given, the compiler will also understand
+`AddOne lambdaOne = x -> x+1;`, which is both less to write and in this case also easier to read, which is just as important.
+
+You have a `Main` class with the usual `main` method. Inside the class, you have a functional interface `AddOne`.
+ It's functional because it has only one method, `int apply(int x)`.
+ In the `main` method, we declare the `lambdaAddOne` variable, which is of type `AddOne`, our functional interface.
+ Then we add our lambda expression in the format we have just learned above. Try adding another method to your functional interface `AddOne` and see what happens.
+
+
+=== Lambda expression working example
+Here is another example of a lambda expression in use. Let's assume we have the class `Person`. It looks like this:
+
+.Person class
+[source,java]
+----
+public class Person {
+
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+----
+
+A `Person` can have a `name` and an `age`, and we have getter methods for those. Let's look at our `Main` class with our `main` method.
+
+.Create two persons here
+[source,java]
+----
+public static void main(String[] args) {
+    Person p1 = new Person("Anna", 27);
+    Person p2 = new Person("Dave", 33);
+
+    ArrayList<Person> personList = new ArrayList();
+    personList.add(p1);
+    personList.add(p2);
+  }
+----
+
+So far, so simple. We have Anna and Dave now, in a List. What if we want to compare Anna and Dave? We would have written a class that implements the `Comparator<T>` interface.
+
+.Let's look at our class:
+[source,java]
+----
+public class AgeComparator implements Comparator<Person>{
+
+    @Override
+    public int compare(Person o1, Person o2) {
+        return o1.getAge() - o2.getAge(); // <1>
+    }
+}
+----
+
+<1> Subtracting ages is Okay here, because negative ages are not allowed.
+
+Our class compares two `Person` objects and subtracts their ages to get the difference.
+
+.In our main method, we write:
+[source,java]
+----
+Collections.sort(personList, new AgeComparator());
+----
+
+We use the `Collections.sort()` function and pass our `personList` and our own `AgeComparator`, so that the Collection knows how to compare the ages.
+
+Do you know how you could turn the code into a lambda expression?
+Try it yourself before checking the answer below:
+
+.Solution
+[%collapsible]
+====
+[source,java]
+----
+Collections.sort(personList, (o1, o2) -> o1.getAge() - o2.getAge());
+----
+====
+'''

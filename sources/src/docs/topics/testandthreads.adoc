@@ -1,0 +1,51 @@
+=== Test and Threads
+
+Sometime you have to test the cooperation of two 'programs'.
+
+In week 9 you will be programming a simple file transport protocol
+using a client and a server. To test the cooperation, you need to have the server running while using the client.
+For that, you can use the fact that server and client can run in the same JVM, but on different *threads*.
+
+To do that in a test class you could do start the server before all tests in a test class are execute.
+For good measure, shut the server down after all tests have executed.
+
+The examples below are from the sebiftp exercise in week 9.
+
+.start server used by all tests
+[source,java]
+----
+static SebiFtpServer server;
+
+@BeforeAll
+
+public static void startServer() throws IOException {
+
+    server = new SebiFtpServer( new String[]{Integer.toString(16016)} );
+    new Thread( () -> {
+        try {
+            server.start();
+        } catch ( IOException ex ) {
+            Logger.getLogger( TransferTest.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+
+    } ).start();
+}
+
+----
+
+.test both via the client
+[source,java]
+----
+// some test code here
+SebiFtpClient.main( new String[]{ absolutePath, localFile } );
+// some asserts here.
+----
+
+.shut the server down
+[source,java]
+----
+@AfterAll
+static void stopServer() throws IOException{
+    server.stop();
+}
+----

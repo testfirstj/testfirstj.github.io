@@ -8,6 +8,7 @@
     <packaging>jar</packaging>
     <name>asciidoctor test first</name>
     <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <build>
@@ -42,7 +43,7 @@
                                 <toc>right</toc>
                                 <icons>font</icons>
                                 <linkcss>true</linkcss>
-                                <copycss>true</copycss>
+                                <!-- copycss>true</copycss --> 
                                 <stylesdir>css</stylesdir>
                                 
                                 

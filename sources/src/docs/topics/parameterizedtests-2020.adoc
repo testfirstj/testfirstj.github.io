@@ -1,0 +1,147 @@
+== Parameterized tests
+
+image::waste.jpg[role="related thumb right", width=480,title="Do not become a ctrl+c, ctrl+v junky. That only produces junk."]
+You will often see that test methods look a lot like each other. As an example:
+In the fraction exercise, in most test methods you have two inputs and on or two results,
+then an operation is done followed by some assertion, often of the same kind.
+This quickly leads to the habit of _copy and waste_ programming. Many errors are introduced this way: You copy the original,
+tweak the copy a bit and you are done. Then you forget one required tweak, because they are easy to miss, but you do not notice it until too late.
+
+[WARNING]
+====
+Avoid _copy and waste_ at almost all times. It is not a good programming style. If you see it in your code, refactor it to
+remove the copies and in the end have less of it. Worse: When the original has a flaw, you are just multiplying the
+number of flaws in your code. This observation applies to test code just as well. +
+*CODE THAT IS NOT THERE CAN'T BE WRONG*.
+====
+
+=== Parameterized test, Junit 5 style
+
+Below you see an example on how you can condense the `toString()` tests of fraction from 5 very similar test methods into 5 strings containing the test data
+and 1 (say one) test method.
+
+.Complete fraction test class with parameterized test, using an in-code csv source
+[source,java]
+----
+package fraction;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
+
+public class FractionCSVSourceTest {
+
+    @ParameterizedTest
+  @CsvSource(
+             {
+               //"message,      expected,     n,   d", //<1>
+               "two thirds,      '(2/3)',     2,   3", //<2>
+               "whole number,    '2',         2,   1",
+               "one third,       '(1/3)',    -3,  -9",
+               "minus two fifths, '(-2/5)',  12, -30",
+               "-one + two fifths, '-1(2/5)', 35, -25"
+            } )
+    void fractionOps( ArgumentsAccessor args ) {
+        String message = args.getString( 0 ); // <3>
+        String expected = args.getString( 1 );
+        int n = args.getInteger( 2 ); //<4>
+        int d = args.getInteger( 3 );
+        Fraction f = new Fraction( n, d );
+        assertThat( f.toString() )
+                .as( message )
+                .isEqualTo( expected );
+    }
+}
+----
+
+<1> Adding a comment is always a good idea. You may also want your values aligned for improved readability.
+<2> Parameters are separated by commas, which maybe in the test values. You can demarcate Strings with single quotes inside the csv record string.
+  If you need another separator instead of comma, you can specify that too,
+  see https://junit.org/junit5/docs/current/api/org.junit.jupiter.params/org/junit/jupiter/params/provider/CsvSource.html[CsvSource API ^].
+<3> Getting the parameters from the csv records or lines is a bit reminiscent to using a `Scanner` object.
+<4> Same here, pick up integer values. Same goes for other numeric types.
+
+
+For more details see https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[Junit 5 parameterized tests ^].
+
+=== Lookup lambda in a map.
+
+Lambdas are special. The have no name and not a very useful toString, which you cannot even overwrite.
+But you can do the reverse: translate a string into a lambda, by using a map. You can then use simple names (strings),
+that can be put in a csv record. You could, if you wanted, even use the lambda expression i String form as a key.
+
+[source,java]
+----
+   Map.of("(a,b)->a+b", (a,b)->a+b)
+----
+
+Note that this does not really help readability and might be a bit brittle is you are not consistent in your usage of white space.
+
+.Map of string to lambda
+[source,java]
+----
+    final Map<String, BiFunction<Fraction, Fraction, Fraction>> ops = // <1>
+      Map.of(
+              "times", ( f1, f2 ) -> f1.times( f2 ),
+              "plus", ( f1, f2 ) -> f1.plus( f2 ),
+              "flip", ( f1, f2 ) -> f1.flip(), // <2>
+              "minus", ( f1, f2 ) -> f1.minus( f2 ),
+              "divideBy", ( f1, f2 ) -> f1.divideBy( f2 )
+      );
+----
+
+<1> Not that we use a https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/BiFunction.html[BiFunction<T,U,R>],
+with *T*, *U* and *R* all of the same type: Fraction. This is legal.
+<2> f2 is not used in the right hand side of the arrow. This is legal too.
+
+.Using lambda names in test data
+[source,java]
+----
+    @CsvSource(
+             {
+                "'one half times one third is 1 sixth', 'times', '(1/6)',1,2,1,3", // <1>
+                "'one thirds plus two thirds is 1'    , 'plus',      '1',1,3,2,3",
+                "'flip',                                'flip',      '3',1,3,1,3", // <2>
+                "'one half minus two thirds is',       'minus', '(-1/6)',1,2,2,3"
+            } )
+----
+
+<1> The operation name is the second value in the csv record, here *times*. Note that you can quote strings, but that is not required.
+<2> In the flip operation, the second fraction is ignored, so any legal value is allowed. Here we use the same values for both fractions.
+
+
+
+.Test method using the test data
+[source,java]
+----
+void fractionOps( ArgumentsAccessor args ) {
+        // read test values
+        String message = args.getString( 0 );
+        String opName = args.getString( 1 );
+        String expected = args.getString( 2 );
+        int a = args.getInteger( 3 ); // <1>
+        int b = args.getInteger( 4 );
+        int c = args.getInteger( 5 );
+        int d = args.getInteger( 6 );
+        Fraction f1 = frac( a, b ); // <2>
+        Fraction f2 = frac( c, d );
+        System.out.println( "message = " + message );
+
+        BiFunction<Fraction, Fraction, Fraction> op = ops.get( opName ); // <3>
+        Fraction result = op.apply( f1, f2 ); // <4>
+        assertThat( result.toString() )
+                .as( message )
+                .isEqualTo( expected );
+    }
+----
+
+<1> The fraction parameters a,b,c, and d are captured from the csvrecord. This makes the test method a tad longer, but also more understandable.
+<2> The fraction instances are created from a,b,c, and d.
+<3> The operation (op) is looked up in the map
+<4> Apply the operation, or rather the function and capture the result.
+
+You can apply the same trick of looking up with enums too, even easier, because the enum itself can translate from String to value,
+as long as the spelling is exact.
+
+Study the examples above, they might give you inspiration with the exercises coming up and will score you points during the exam.

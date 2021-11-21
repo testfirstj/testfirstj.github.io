@@ -1,0 +1,63 @@
+== Date Time Quirks
+
+[WARNING]
+====
+Because the way calendars, hours in a day etc is invented by humans, not nature,
+data and time calculation has quite some quirks.
+====
+
+This also has had effect on the way a Date Time API works.
+
+* Humans invented daylight saving time. The 🌞 or nature do not care, but it makes
+ days between dates a guessing game. Same with leap years. That is why a `java.time.Period` does
+ not return the number of days between to dates, but instead the number of years, months and days.
+ Say if your Period has a text presentation (by toString()) of *P6Y3M12D* it means that it will return 12 when you call `getDays()`,
+ and not something like `6*365+6*30+12`.
+* To measure the number of days between two dates you should use `long ChronoUnit.DAYS.between(LocalDate startInclusive , LocalDate endExclusive)`
+  which produces the correct number of days between to dates. And that computation is more complex than the simple formula in the previous bullet suggest.
+* Finding that in the API is a bit tricky, because the method mentioned is defined in the interface TemporalUnit that is implemented
+  by the `ChronoUnit enum`.
+
+.Correct computation of number of days between two dates
+[source,java]
+----
+  long daysBetweenEasterAndPentecost = ChronoUnit.Days.between( easterSunday, pentecost ); //<1>
+  assertThat(daysBetweenEasterAndPentecost).isEqualTo( 7 * 7 );
+----
+
+<1> Pentecost is the holiday known as Pinksteren in Dutch , Pfingsten in German, Rusalii in Romanian, Петдесетница in Bulgarian etc.
+ It stems from old Greek. So now you know.
+
+=== Special data computations
+
+Sometimes you need to compute a date relative to the end of a month. Hypothetical: last Monday of April
+starts May holiday.
+
+.Start of may vacation is last monday of april.
+[source,java]
+----
+    // assume easterSunday is a field.
+    LocalDate startOfMayVacation() {
+        TemporalAdjuster lastMondayInApril = TemporalAdjusters.lastInMonth( DayOfWeek.MONDAY );
+        LocalDate firstOfApril = of( easterSunday.getYear(), Month.APRIL, 1 );
+        Temporal adjustInto = lastMondayInApril.adjustInto( firstOfApril );
+        // cast fits, because this temporal (interface) instance is a localdate.
+        return (LocalDate) adjustInto ;
+    }
+----
+
+.Same as the above in one long statement. Which is more readable. And understandable?
+[source,java]
+----
+    LocalDate startOfMayVacation() {
+        return (LocalDate) TemporalAdjusters.lastInMonth( DayOfWeek.MONDAY ) // <1>
+            .adjustInto( of( easterSunday.getYear(), Month.APRIL, 1 ) ); // <2>
+    }
+----
+
+<1> Get adjuster (and cast)
+<2> apply adjuster on date, returning new Temporal.
+
+Remember to use your IDE well. Completion will give some hints.
+
+'''

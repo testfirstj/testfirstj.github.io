@@ -1,0 +1,20 @@
+== JSon Syntax
+
+
+Json, or **J**ava**s**cript **O**bject **N**otation is a simple 'language'.
+
+The basic structure is very much like a set of key value pairs.
+
+.RailRoad diagram for object. Click on the image to see the complete syntax definition for Json.
+image::object-railroad.png[link="../images/json-railroad-diagram.xhtml"]
+
+The syntax diagram has been created with the nice website https://bottlecaps.de/rr/ui[bottlecaps railroad diagrams ^].
+
+The notation that you have to enter is Extended Backus-Naur form or https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form[EBNF ^].
+Backus-Naur is named after John Backus and Peter Naur.
+
+.ebnf that created the syntax diagram for Json
+[source,bnf]
+----
+include::../images/json-grammar.ebnf[]
+----

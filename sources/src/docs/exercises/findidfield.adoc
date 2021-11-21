@@ -1,0 +1,56 @@
+// TODO: Not complete.
+*Find the ID field and id field extractor*
+
+Suppose you have a bunch of entity classes for which you want to create something like
+a DAO. That DAO would be greatly helped if you could reflect over the entity class
+and find the name of the id field and its getter.
+
+
+.Mapper usage in client code
+[source,java]
+----
+ // register a mapper for student entities. Do it once after app start.
+ mapperRegistery.add(Student.class, new EntityMapper<Student>(Student.class));
+
+  .
+  .
+ // Create a fresh dao whenever you need one, like getting student jan from storage.
+    DAO<Student,Integer> sdaon = daoFactory.createDao(Student.class);
+    Integer snummer = 122345;
+    Student jan = sdao.get(snummer);
+----
+
+.Mapper usage in the DAO.
+[source,java]
+----
+
+   EntityMapper<E,K> mapper = mapperRegistry.get( entityType );
+
+   String sql ="select * from "
+   DAO<Student,Integer> sdaon = daoFactory.createDao(Student.class);
+
+   Integer snummer = 122345;
+   Student jan = sdao.get(snummer);
+----
+
+Note that the implementation can use  a class, that saves the found information,
+so that reflection does not have to take place on every access, which would make things really slow.
+
+
+Your task is to implement the EntityMapper the following methods.
+
+[source,java]
+----
+   /**
+    * Function to extract the primary key or ID field from the entity.
+    * The returned function will be used as.
+    */
+   Function<E,K> keyextractor(); // <1>
+
+    /**
+     * Get the name of the id field.
+     */
+   String idName();  // <2>
+----
+
+<1> This method may return a method reference.

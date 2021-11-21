@@ -1,0 +1,119 @@
+== Using SceneBuilder
+
+
+When using https://gluonhq.com/products/scene-builder/#download[SceneBuilder] the idea is that you design the scene using SceneBuilder, which effectively
+is a what you see is what you get FXML editor. The JavaFx, more specifically the FXML part
+builds the graphical components or even the complete UI from such FXML files.
+
+You can have multiple FXML files per application, much like you can have many scenes in a move or stage play.
+
+
+There are various demos on Scenebuilder on youtube.
+
+video::ij0HwRAlCmo[youtube, title=Creating a first App in Scene Builder,width=848, height=480]
+
+video::knbw1MvMfBA[youtube, title=JavaFX Tutorial for Beginners 5 - Installing SceneBuilder and Integrating it into Netbeans IDE, width=848, height=480]
+
+.Creating or updating the java controller from the FXML file.
+image:MakeController.png[role="right thumb related"]
+One of the most valuable tips from one of those videos is the fact that you can start with
+scenebuilder and define your graphical components and methods in SceneBuilder and hence in the
+fxml file and that then NetBeans IDE can _generate_ or *update* the controller for you.
+Working in this way can help you avoid typing or (different) spelling errors.
+
+=== Defining Widgets using FXML
+
+You can use FXML to define whole scenes for your application, but also to make your own *specialized components*.
+You can then layout them as you want and *import* them into SceneBuilder, where they behave like any other widget already available.
+This allows you to extend the available choices, and make special widgets that can play nicely with something like a game or a planning application.
+
+When you want to define your own component, you have to make a few changes to the FXML file and have the component class
+load the FXML by itself.
+
+.Typical FXML file for an application.
+[source,xml]
+----
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="564.0" prefWidth="535.0" stylesheets="@stylesheet.css"
+  >
+</AnchorPane>
+----
+
+.With your own component, you have to define a `fx:root`. Example from FXTriangulator exercise.
+[source,xml]
+----
+<fx:root type="javafx.scene.Group" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <Circle fx:id="redCircle" centerX="10.0" centerY="10.0" fill="RED" radius="5.0" />
+    <Circle fx:id="greenCircle" centerX="400.0" centerY="10.0" fill="GREEN" radius="5.0" />
+    <Circle fx:id="blueCircle" centerX="10.0" centerY="400.0" fill="BLUE" radius="5.0" />
+    <Circle fx:id="centerCircle" fill="GREY" radius="5.0" />
+   <Line id="redLine" fx:id="redLine" endX="10.0" endY="400.0" startX="400.5" startY="9.5" stroke="RED" />
+   <Line id="greenLine" fx:id="greenLine" endX="10.0" endY="400.0" startX="10.0" startY="10.0" stroke="GREEN" />
+   <Line id="blueLine" fx:id="blueLine" endX="10.0" endY="10.0" startX="400.0" startY="10.0" stroke="BLUE" />
+   <Label fx:id="redLabel" text="a" />
+   <Label fx:id="greenLabel" text="b" />
+   <Label fx:id="blueLabel" text="c" />
+   <Label fx:id="areaLabel" text="" />
+</fx:root>
+----
+
+From the FXML file you can infer that the widget (in this case) is a specialized https://openjfx.cn/javadoc/16/javafx.graphics/javafx/scene/Group.html[java.fx.Group].
+It can be any type that is a subclass of https://openjfx.cn/javadoc/16/javafx.graphics/javafx/scene/Parent.html[Parent] (including Parent),
+if you want the widget to have sub-components.
+
+Then in the Java file that is both controller and the subclass of the component you want to specialize, Group in the example.
+
+.Class header of specialized widget.
+[source,java]
+----
+public class Triangulator extends Group implements Initializable {
+
+    @FXML
+    Circle redCircle;
+    @FXML
+    Circle blueCircle;
+    @FXML
+    Circle greenCircle;
+
+
+// stuff left out
+    Triangulator( BindingBusiness bb ) {
+        this.bb = bb;
+        FXMLLoader fxmlLoader =
+           new FXMLLoader( getClass().getResource( "triangulator.fxml" ) ); //<1>
+
+        connectLoader( fxmlLoader ); //<2>
+
+        try {
+            fxmlLoader.load();
+        } catch ( IOException exception ) {
+            throw new RuntimeException( exception );
+        }
+    }
+
+    final void connectLoader( FXMLLoader fxmlLoader ) { // <3>
+        fxmlLoader.setRoot( this );
+        fxmlLoader.setController( this );
+    }
+
+// more stuff left out
+}
+----
+
+<1> Load the widgets fxml definitions. This will insert all @FXML  annotated  fields
+and would attach the actions to the @FXML annotated methods.
+<2> Connect [blue]*this* to the loaded FXML document.
+<3> Use a final or private method to set the root and controller of the loaded object to this, to
+   avoid the warning of exposing this in the constructor.
+
+In the example widget we have three dots connected with lines. The dots are draggable, while the lines stay connected.
+The lengths can be computed using Bindings and are thus automatically updated, and are shown next to the lines.
+
+We will use such a widget in the next example.
+
+.Library settings hidden behind a cog-wheel.
+image:SceneBuilderLibraryCog.png[role="thumb left related"]
+Importing into scenebuilder is then done using the tiny cog next to the search text-field labeled Library. When you choose *Jar/FXML Manager*, you can add
+widget libraries like you would with maven or point at a library on you machine.
+
+.Library Manager
+image::SceenBuilderLibraryManager.png[]

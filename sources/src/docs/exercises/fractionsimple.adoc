@@ -1,0 +1,119 @@
+
+*Fraction exercise*
+
+In this exercise, you are writing a _Fraction_ class test-driven, meaning you write the tests first.
+The mathematical properties of fractions are at the end of this exercise, if you need to look them up.
+The source code is in English, using the common names *fraction*, *numerator* and *denominator*. +
+The mathematical representation typically is:
+  latexmath:[\frac{\text{numerator}}{\text{denominator}}], example: latexmath:[\frac{1}{2}].
+
+*Fraction Constructor*
+
+. *Write a test* that calls the fraction  constructor with two distinct ints, say 4 and 5,
+ and then invokes the getters `int getNumerator()` (should produce 4) and `int getDenominator()` (should produce 5)
+ to assure that the fraction instance is properly constructed.
+.  *Implement* the constructor of Fraction with parameters `n` and `d` for
+  numerator and denominator respectively. In the constructor, save the parameters in the _fields_ numerator and denominator.
+. *Run* the tests. If they are still red, improve your code to make them green.
+// refactor is not the correct term here, Refactor means reorganize your code with the same outcome.
+
+Ensure that the resulting Fraction is
+    normalised. Fractions like latexmath:[\frac{2}{4}] should  automatically be
+    transformed into latexmath:[\frac{1}{2}].
+By dividing numerator latexmath:[a] and denominator
+    latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] you produce a
+    fraction with the same mathematical value, called a _normalised fraction_.
+
+[TIP]
+====
+A fraction  is normalized when the denominator is non-negative
+and the greatest common divisor of numerator and denominator is 1. If the fraction is negative, the numerator carries the sign.
+====
+
+*Test, then implement toString* +
+  Implement the method `toString()`. As example for the
+  expected output of `toString())` for the fraction
+  latexmath:[f=\frac{3}{4}] is `(3/4)`. +
+
+// [TIP]
+// ====
+// If you use the `Object.equals()` somewhere in your business code or in this case in your tests,
+// you must overwrite that method in your class. When you do you typically also have to overwrite the `hashCode()` method.
+// Doing so will allow you to use the class as a key in a hash map and simple object equals comparisons such
+// `new Fraction(1,4).equals(new Fraction(5,20))`.
+// ====
+//
+// *Test, then implement equals and hashCode*
+//  Write a tets that asserts that two fractions, say (1/2) and (2/4) are equal and have the same hashCode and
+//  that (1/2) and (1/3) have not. This allows you to use equals in  further tests.
+//
+
+*Test, then implement times* +
+  Implement the method `Fraction.times( int otherN, int otherD )`
+  to multiply `this` fraction with numerator `otherN` and
+  denominator `otherD` of another fraction. The result is a new
+  `Fraction`-object. +
+
+To multiply two fractions latexmath:[\frac{a}{b}] and latexmath:[\frac{c}{d}] consider the
+property  latexmath:[\frac{a}{b}\times\frac{c}{d} = \frac{a\times{}c}{b\times{}d}]
+Example:  latexmath:[\frac{1}{2}\times\frac{3}{4}=\frac{1\times{}3}{2\times{4}}=\frac{3}{8}].
+
+* *Plus*   Implement the helper method
+  `Fraction.plus( int otherN, int otherD )`
+  to create a `new` fraction that is the sum of `this` fraction and `another` fraction with numerator otherN
+  and denominator otherD. The result is a new
+  `Fraction`-object. Formula:
+  latexmath:[\frac{a}{b}+\frac{c}{d} = \frac{a\times{d}+c\times{b}}{b\times{d}}]
+* *Minus, divideBy.*
+  Test and implement minus and divideBy operation.
+  You should re-use the work you did in times and plus, as in
+  invoke the provided helper methods by adapting the parameters, such
+  as changing sign or swapping them.
+
+That's it, you're done!
+
+*The properties of fractions, for reference*
+
+The mathematical properties of fractions in a typical Java
+  implementation.
+
+Let latexmath:[f_1] be a fraction with numerator latexmath:[a]
+and denominator latexmath:[b] thus:
+latexmath:[f_1=\frac{a}{b}].
+And
+latexmath:[f_2] a fraction with numerator latexmath:[c] and denominator
+ latexmath:[d], thus latexmath:[f_2=\frac{c}{d}].
+
+*Greatest Common Divisor*
+
+The function latexmath:[\gcd(p,q)] is called Greatest Common Divisor. With
+  parameters latexmath:[p] and latexmath:[q] it produces integer value latexmath:[g], which is the
+  greatest integer value that divides both latexmath:[p] and latexmath:[q] evenly (divide
+  with zero remainder).
+
+* *Normalisation*  By applying _idempodence_, dividing numerator latexmath:[a] and denominator
+  latexmath:[b] before construction of a fraction by latexmath:[g = gcd(a,b)] produces a
+  fraction of same value, called a _normalised fraction_.
+  With latexmath:[g =gcd(a,b)]
+  latexmath:[f_1 = \frac{a}{b} = \frac{a/g}{b/g}]
+* *Negation*  The negative of a fraction is the same as a fraction with
+  the numerator negated.
+  latexmath:[ -f_1 = -\frac{a}{b} = \frac{-a}{b} ]
+* *Move sign to numerator*
+  When at construction time of a fraction the denominator is
+  negative, negate both numerator and denominator.
+  latexmath:[ f_1=\frac{a}{-b} = \frac{-a}{b}] +
+* *inverse*  The inverse of a fraction is the same as the swapping places of
+  numerator and denominator. Note that multiplying a fraction with its
+  inverse is latexmath:[1], by applying the rules _idempodence_ and _unity_.
+  latexmath:[\frac{1}{f_1} = \frac{1}{(\frac{a}{b})} = \frac{b}{a}] +
+* *Addition*   Add two fractions.
+  latexmath:[f_1+f_2 = \frac{a}{b}+\frac{c}{d}=\frac{a\times d + c\times b}{b\times{}d}] +
+* *Subtraction*  Subtraction of two fractions latexmath:[f_1] and latexmath:[f_2] is the *same as addition*
+of latexmath:[f_1] and the *negation* of latexmath:[f_2].
+  latexmath:[f_1-f_2 = \frac{a}{b}-\frac{c}{d}=\frac{a}{b}+\frac{-c}{d}] +
+* *Multiplication*  latexmath:[ f_1\times{}f_2 = \frac{a}{b}\times\frac{c}{d}=\frac{a\times{}c}{b\times{}d}] +
+* *Division*
+  Dividing fraction latexmath:[f_1] by latexmath:[f_2] is the *same as multiplication* latexmath:[f_1]
+  with the *inverse* of latexmath:[f_2]. +
+  latexmath:[ f_1/f_2 = \frac{a}{b}/\frac{ c }{ d }=\frac{a}{b}\times \frac{ d }{ c }  ]

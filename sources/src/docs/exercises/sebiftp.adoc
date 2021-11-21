@@ -1,0 +1,80 @@
+*Simple File Transport Server*
+
+In this exercise you will implement a simple File Transfer Protocol
+(SFTP).
+
+Note that the official internet ftp standard is more involved and uses
+a more complex command and transport structure.
+
+[WARNING,role="red"]
+====
+This exercise is about learning the ropes with network programming.  Do not use the server part
+to transfer files across the internet, because it provides no security whatsoever.
+====
+
+Use Sockets to create a client and a server implementing a very simple file transfer protocol.
+The protocol is able to send any kind of file, so you cannot assume
+any kind of line structure in the file.
+
+Name the startup script sebiftp and use the package and class
+structure as given in the project.
+
+In the kind of application you will have a separate server and client
+program.
+For each of these, you can create a simple shell scrip (Linux, OSX) or
+batch file to run your program. You may have to adopt the cmd file to get it
+working on your windows installation.
+
+The user interface is a simple command line interface:
+`sebiftp GET server:port/path_to_remote_file local_file}`
+to get a file. There should also be a QUIT command to stop the
+connection without a file transfer.
+
+Using a tcp connection there are typically two scenarios possible.
+
+* Either a conversation between client and server OR
+* Use the connection for just one response in the form of the content of the file to be
+  transferred and then close that connection.
+
+In the first case the server responds to client requests, both request and response are line based.
+
+A mix of these scenarios is possible, but quite quickly you will be
+needing some kind of protocol design, which is beyond the purpose of
+this exercise. For one thing: there is no simple way to tell the
+client that the stream of bytes is complete because the whole file is
+transferred, other than telling it the size beforehand.
+
+The scenario below describes the success scenario.
+
+. Write a server class that `accept()`s connections on a
+  predefined TCP-port. Use port 16016 as the port value.
+. The client class connects to the server on the predefined socket.
+. On return from the accept call, the server has a connection
+  (socket) to a client and hands that to a new connection handler.
+. The handler reads lines sent by client and seperates it into
+  command and parameter (the file path).
+  It tries to open the file from the file system and get the
+  outputstream from the socket and starts sending the bytes to the
+  client.
+. The client on its part opens a local file,
+  and writes all received bytes to the file.
+. On end-of-file at the server side, the connection handler
+  closes the outputstream and thereby also the wrapped socket.
+. When the client receives -1 as the read byte count from the
+  inputstream it knows that the socket is closed and may assume the
+  file is complete and closes that one too, and then closes its own
+  socket and exists.
+. When the client starts up a connection, but does not want to
+  transfer a file, it can send a quit command, which will let the
+  connection handler on the server simply close the socket and return
+  from its run method.
+
+The way a file transfer command could work is depicted in the sequence
+diagram below:
+
+In the given maven project you find a helper class.
+Use that package name of the helper class for your own client and
+server and name the server class SebiFtpServer and the client class
+SebiFtpClient to be constistent with the names in the shell files.
+
+image::sequencediagram2.svg[File trasfer between server and client]

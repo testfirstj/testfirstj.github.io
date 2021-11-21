@@ -1,0 +1,62 @@
+=== Comparator as lambda.
+
+If you study the https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html[Java doc for the Comparator interface], you will see there is only one
+`abstract` method.footnote:[equals(Object other) does not count, it is already defined in Object]
+This makes this interface a candidate for a functional interface, and indeed it is.
+
+[NOTE]
+====
+A functional interface is an interface that has only one abstract method in it. Some of them you already know. For example, the interfaces Runnable or ActionListener are functional interfaces.
+====
+
+In this exercise, you will write a series of Comparators, each handling a different comparable aspect.
+
+Use the following class as the element you test with.
+
+.Cabbage class (visibility modifiers left out for brevity).
+[source,java]
+----
+
+enum Odour{
+  NONE(0),THRESHOLD(1), WEAK(2),DISTINCT(3),STRONG(4),VERY_STRONG(5),INTOLERABLE(6);
+}
+
+class Cabbage {
+  String name;
+  int weight; // in grams
+  double volume; // in litres
+  Odour stinkyNess; // odour in
+  ... // constructor and fields left out as an exercise.
+
+  String getName()...
+
+  double getWeight()...
+
+}
+----
+
+Use the following template to create your comparators, written as lambda expressions:
+
+.comparator template
+[source,java]
+----
+Comparator<Cabbage> weightComparator = (c1,c2) -> ....
+----
+
+
+Test and implement comparators for name, weight, volume and stinkyNess.
+
+Use the following test data:
+
+.cabbages
+[source,java]
+----
+Cabbage sprout = new Cabbage("Brussel Sprouts", 10, 0.2,  STRONG);
+Cabbage cauliflower = new Cabbage("Cauliflower", 1000, 1.5,  DISTINCT);
+Cabbage kale = new Cabbage("Kale", 500, 0.700,  WEAK);
+Cabbage white = new Cabbage("White Cabbage", 1200,1.2, DISTINCT);
+Cabbage cabbage = new Cabbage("Cabbage", 600,0.480, STRONG);
+Cabbage savoy = new Cabbage("Savoy Cabbage", 800, 1.8, VERY_STRONG);
+----
+
+https://en.wikipedia.org/wiki/Odor#Measuring_techniques[Wikipedia on things that smell].

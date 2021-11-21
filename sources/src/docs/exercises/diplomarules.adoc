@@ -1,0 +1,54 @@
+== Diploma Rules
+
+The following requirements are given for a diploma rule system.
+
+The system is called *Progress*.
+
+* The system contains a collection of student-Objects.
+** Each *Student* object has a name and student number and other attributes such as birth date and gender that may define the actual student.
+* The study program is organized in courses.
+** Each *Course* object has a name, a version and a description. Name and version number make the course object unique.
+* A student's study result of a course is expressed as a grade.
+* A grade is awarded after taking an exam for the course.
+** A grade is between 1 and 10 inclusive.
+** A grade is rounded down to the nearest first decimal.
+** A passing grade is a value >= 5.5.
+** A failing grade is a value < 5.5.
+** The minimum grade is awarded when the student was present at an exam.
+** Any higher grade depends on the correct completion of the assignments of the exam.
+* Each exam can be taken multiple times, on different dates.
+** Providing an exam produces an exam object that identifies course and date of examination.
+** A student can take at most two exams of the same course per academic year.
+** The grade awarded to the student for a course is the *max* of all grades for said course in all exams taken for that course,
+* A Curriculum is a collection of courses.
+** The courses may have a specific order in a Curriculum, like semester number.
+* A Diploma is awarded for a curriculum when all courses of a curriculum are passed.
+** An extra award, *cum laude* is awarded when no grade is less than 7.0 and the average grade of all courses is no less than 8.0.
+
+
+===  Design.
+
+* The student object must be able to serve as a key in maps. Make the student number final and base the equals and hash method only on the student number.
+* Progress contains a map with student object as key and per student a list of exam results.
+* Progress contains a map entry as soon as the student is enrolled with `LocalDate enroll(Student)`.
+** The value returned is the current date and is also remembered.
+* Progress contains a map of courses with course as key and list of exam instances as value.
+* Progress has a method `LocalDate startAcademicYear(LocalDate forDate)`
+* Progress has a method `LocalDate endAcademicYear(LocalDate forDate)`
+* Progress contains a method to allow a student to an exam `boolean admittable(Exam, Student)`. +
+  This method return true when the student is enrolled and never took the exam. +
+  This method returns true when the student is enrolled and has taken this exam no more then once in the current academic year.+
+  This method return false otherwise.
+* Progress contains a method `Optional<Diploma> award(Student, Curriculum)` that +
+** return an empty `Optional` when the student is not (yet) eligible of a diploma of named Curriculum, e.g. because not all courses in the curriculum passed.
+** return a non-empty Optional containing a diploma for the student for the curriculum stating all courses and their awarded grades and exam date for that grade.
+*** The diploma should contain the text cum laude when the student's results  meet the criteria for cum laude.
+
+Implement the student class.
+Write a test to ensure that changing name or gender has no effect on hashcode or equals.
+
+Implement the course class.
+
+Implement the exam class.
+
+Implement Progress.

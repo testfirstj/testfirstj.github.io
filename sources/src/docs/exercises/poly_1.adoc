@@ -1,0 +1,14 @@
+
+*Polymorphism*
+
+Assume the following class Hierarchy:
+
+[source,java]
+.class extending and implementing.
+----
+class B extends A implements I,J {
+//..
+}
+----
+
+After the statement `B b = new B();`, will the expression  `b instanceof J` yield `true`?

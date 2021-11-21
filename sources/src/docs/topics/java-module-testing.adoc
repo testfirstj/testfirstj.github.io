@@ -1,0 +1,153 @@
+== Java Modules and Testing
+
+.Encapsulation gone wrong: So much for shining security armor.
+image:shiningArmor-cropped.png[role="thumb left", 400, title="So much for shining security armor"] Project Jigsaw,
+now known as the **J**ava **P**latform **M**odule **S**ystem solves problems
+that lingered in the Java ecosystem since its inception. The standard encapsulation or visibility model
+with protection or visibility modes `private`, `package private (default)` provide too
+little defense against (ab)use of non-public API's. That plus the fact that reflection is very powerful.
+A java security manager can put up some defense against reflection abuse, but enabling this kind of security is optional.footnote:[It was enforced in the now deprecated web applets]
+This made many internal details of the JDK free game. Much like a knight in shiny armor is defenseless against a can opener.
+
+'''
+
+[TIP]
+====
+The java platform module system (JPMS) promotes loose coupling.
+====
+
+This is all fine and good, but testing, in particular Unit testing relies on access to the 'private' parts
+of a class and package, in particular the package private parts.
+
+[TIP]
+====
+API or **A**pplication **P**rogramming **I**nterface is defined as the publicly visible
+parts of classes. In Java those are *public* and *protected* members (methods and fields).
+Members that are neither public or protected should not be considered part of the API.
+
+Actually, API in this case should be spelled APPI for **A**pplication **P**ublic **P**rogramming **I**nterface, but we all know
+bad habits die slowly.
+
+A smaller API has also a smaller attack surface for real security intrusions. This is another major reason for improved encapsulation of the
+stuff in the JDK.
+
+To minimize coupling, it is also wise to keep the API minimal, but without impairing the usefulness of the
+API. Often an API can be enhanced with some convenience features that combine parts in the already public part. This does NOT enlarge exposed parts.
+See for instance the methods in
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html[java.nio.file.Files].
+====
+
+=== Black box vs White Box
+
+In testing, one distinguishes between so called *black* box and *white* box tests.
+
+*Black box* in this respect means that you cannot see the internals, but only those parts defined in the API.
+This is the way that a client package will use the API. Black box testing is easily supported by the module system, because the test classes behave as ordinary
+clients. +
+*White box* would better be called transparent box, but the name _white box_ stuck. In white box tests you *DO* want access to the (package) private parts
+of your business code. This is a bit handicapped by the way the JPMS allows access.
+
+=== Standard Source code organization.
+
+
+//image::sourcetree-modular.png[title='default source tree ']
+
+.source tree of genericdao
+[source,sh]
+----
+src
+├── main
+│   └── java
+│       └── genericdao
+│           ├── dao
+│           ├── memory
+│           └── pgdao
+└── test
+    └── java
+        ├── entities
+        ├── genericdao
+        │   ├── dao
+        │   ├── memory
+        │   └── pgdao
+        └── usertypes
+----
+
+We are using maven, in which the unit test plugin is called *surefire*, the integration test plugin (which we
+  did not use up to this point yet) is called *failsafe*.
+
+The standard way source code is organized is by means of separate directories for
+the 'business' code and the test code in two separate directory trees inside the same project. +
+This practice, which prevents test code to land in the final application or library jar file is useful, so we will keep it as it is.
+
+However, JPMS does not allow so called _split packages_. Surefire addresses this problem by telling
+the JVM to _patch_ the module we are testing with the classes defined in the test source tree.
+It is as if the test classes are put in the business source tree. +
+This allows the test classes access to the package private parts of the classes, the way it worked in before JPMS.
+
+.Module definition of sebi dao.
+[source,java]
+----
+module nl.fontys.sebidao {
+    exports nl.fontys.sebivenlo.dao;
+    exports nl.fontys.sebivenlo.dao.memory;
+    exports nl.fontys.sebivenlo.dao.pg;
+    requires java.logging;
+    requires java.naming;
+    requires java.sql;
+    requires org.postgresql.jdbc;
+}
+----
+
+// .The dependency graph of sebidao
+// image::sebidao-summary.svg[]
+
+The module definition above exports three packages and declares itself
+dependent on 3 modules from Java API and one postgresql module.
+
+Unit tests, and in particular the testing libraries such as AssertJ, and Mockito
+use reflection to do their work. The simplest example is JUnit itself, which uses reflection to read the annotations
+in the class file. So does Mockito. AssertJ uses reflection to get to fields (for deepEquals) and methods. Reflection is a tool very sharp indeed, to
+get to the guts of the **S**ystem **U**nder **T**est. Of these Test libraries JUnit and AssertJ have module definitions already. Mockito and postgresql do not have that
+at the time of writing this document (April 2020).
+
+The quickest way to allow the testing tools access is to fully OPEN the packages of the *SUT* to world.
+Because this happens during testing, surefire is instructed to tell the jvm (java), that runs the test, to
+open those packages to the world. The snippet from the maven pom file that realizes that is given below. You can copy
+and adapt it for your own purposes.
+
+.sebipom project with surefire.opens property to open op required packages for testing. Requires sebipom >= 3.0.2
+[source,xml]
+----
+  <properties>
+    <surefire.opens> <!--1-->
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <!--2-->
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/usertypes=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
+    </surefire.opens>
+    <!--3-->
+  </properties>
+----
+
+<1> We are adding a property for the surefire plugin which is picked up by sebipom.
+<2> In particular the arguments that are passed to the JVM that runs the tests,
+  which appends *--add-opens* commands for all packages that require unit tests.
+<3> Other properties are left out for brevity.
+
+[TIP]
+The above requires sebipom version 3.0.2 or higher as parent for your project. Also works
+if the parent of your modular maven project uses sebipom as parent.
+
+Of particular importance, and project specific are the [blue]`--add-opens` commands, which you must adapt to your own project's
+pom file with your own module and package names.
+
+.opens sets module and package
+image::opens.svg[width=600]
+
+
+*Opens* is the most powerful way of exporting a package. It allows full access (as in `exports`) plus reflection.
+We could try to make more specific export lines such as *--add-export*, but although more precise, that will not help very much, because the
+access enabling lines will only take effect during the (surefire) unit tests. +
+If you have _failsafe_ integration tests, you will have to do
+the same for the _failsafe_ plugin, although failsafe tests should stick to black box testing, where such can opener style configuration should not be required.

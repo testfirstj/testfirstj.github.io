@@ -1,0 +1,78 @@
+
+:sectnums!:
+
+=== Exercise simple stream
+
+++++
+<div class='ex'><details open class='ex'><summary class='ex'>Simple Stream</summary>
+++++
+
+Make sure you use at least NetBeans IDE version 12.2, which has nice stream support.
+
+In this exercise you work with the simplestream project.
+
+Starting with streams can be a bit confusing. You will have the best experience if you let NetBeans IDE and the compiler do some of the thinking for you.
+And then throw in some tricks.
+
+You can consider a pipeline to have two ends: the _start_, which is the method that typically is called `stream()`,
+ and the _end_, which is your terminal operation.
+Often you can begin coding by adding the terminal operation immediately and insert
+ any intermediate operation between the start and this terminal operation of the stream.
+
+.count all students.
+[source,java]
+----
+  int studentcount = students.stream()
+  .count();
+----
+
+There will be some example code in the simplestream project in your repository.
+
+We have the following facts on the students.
+
+There are 50 students in total.
+The number of male students is 16.
+The youngest student is Shirleen Simpson, student number 3134539.
+The **F**emale students whose first name starts with an 'A' are
+Arlinda, Ariel, Aida, Annette, and Anitra.
+
+Since you are experimenting with streams, do not bother to write business methods.
+There are four test methods in total, which you need to implement. Inside such method,
+write the stream code and the assertJ assertions. The javadoc above the tests give some extra hints.
+
+Write tests for operations to compute from the given data set:
+
+* The total number of students.
+* The number of male students.
+* The youngest student. The stream method to use returns `Optional<Student>`. Think of the proper terminal operation.
+* The list of **F**emale students whose name start with 'A'. Use Collectors.toList() to collect the matching students. +
+  You can either combine two predicates with the proper logical method _or_ concatenate the strings, before you do the test.
+
+[NOTE.extra, caption="EXTRA CHALLENGE"]
+====
+* The list of student than do *not* have an _a_ or _A_ in their name. +
+  Try with concatenating first and last name and also with an _or_ in one predicate, using separate method names.
+* The list of students that match a certain criterium, expressed as a `Predicate<Student>`. +
+  Construct the predicate and invoke the method with this predicate as parameter.  Be imaginative with the functionality.
+====
+
+.example predicate
+[source,java]
+----
+    Predicate<Student> redHaired s -> s.getHairColor() == HairColor.RED;
+----
+
+In all cases use streams and lambdas.
+
+[NOTE.extra, caption="EXTRA CHALLENGE"]
+====
+(1) Add a field to the Student class holding a Map of study-topics to grade: `Map<String,Double>`. +
+(2) Stream the students and flatMap the students to a stream of grades and compute the overall average of the grades. +
+(3) Stream the students and flatMap to Map.Entry<String,Double> and collect into a Map of study-topics to average grade. +
+====
+
+++++
+</details></div><!--end simplestream -->
+++++
+
+:sectnums:

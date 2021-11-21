@@ -1,0 +1,85 @@
+== Squeezing the last coverage out
+
+The example code below is given as an illustration to squeeze the last bit of coverage out
+of your code in case your code catches exceptions that never occur in a normal situation, but you have
+to deal with them anyway, because the exceptions are *checked* exceptions, and you do not have the option to pass them on in a throws clause,
+because some code up in the call stack does not accept that. We ran into this situation while developing the templating engine.
+
+[TIP]
+====
+In normal production code squeezing the last drop of coverage out of your test code is rarely worth the effort.
+In cases where your project manager or architect insists on high coverage, here is how to deal with
+such request. Don't make a habit out of it, because it adds little business value.
+====
+
+You have some code that uses a resource-method that throws an exception.
+The way to go about to cover the catch block too is to *mock* the resource for that test case and let the mock throw the to be caught exception.
+
+.to cover code
+[source,java]
+----
+   void flush( char c ) {
+        if ( c == '\0' ) {
+            return;
+        }
+        try {
+            out.append( c );
+        } catch ( IOException ex ) { // <1>
+            Logger.getLogger( Engine.class.getName() )
+            .log( Level.SEVERE, null,   ex ); // <2>
+        }
+    }
+----
+
+<1> In normal cases this catch block is not reached.
+<2> Typically an IDE generated logiing statement inside a catch block. This also generates a stack-trace, +
+  which you may not always want.
+
+If you want to avoid the stack-trace in particular cases, you should replace the `null` with a message (a String)
+and remove the ex. You can of course get the message form the exceptions with `ex.getMessage()`.
+
+
+.test that covers the catch block
+[source,java]
+----
+    @Test
+    public void tFlush() throws IOException {
+        Appendable out = mock( Appendable.class );        // <1>
+        Logger engineLogger =
+              Logger.getLogger( Engine.class.getName() ); // <2>
+        Handler handler = mock( Handler.class );
+        engineLogger.addHandler( handler );               // <3>
+        Mockito.doThrow( new IOException( "test" ) )
+             .when( out )
+             .append( 'o' );                              // <4>
+
+        Engine engine = new Engine( Map.of() )
+             .readingString( "Hello world" )
+             .writing( out );
+        engine.run();                                     // <5>
+
+        verify( handler, atLeast( 1 ) ).publish( any() ); // <6>
+    }
+----
+
+<1> Mock the output resource that should throw the exception
+<2> Get the a logger, making sure you get the right one for the class whose log you want to inspect and
+<3> give it a mock handler as proof that a logging statement on the logger occurred.
+<4> Make the output mock throw an exception on a typical output, the character 'o' in this test.
+<5> Run the SUT
+<6> Make it a real test by ensuring that logging occurred. Since the publish method is the abstract method to implement, that
+  is the candidate method to verify in a custom handler.
+
+The code above is from the template engine, an exercise in week 9.
+Using a few variants of this code _covers it all_.
+
+[TIP]
+====
+There are cases, where you have to deal with a checked exception because it is checked, but the code
+is called in a situation where the exception can never occur. Mark that situation clearly in your code, and
+accept that you can't reach the catch block. Add a comment to the maintainer so he or she will not wonder why this code
+is not covered in the coverage report. If you add the comment in the code, that comment will be visible in e.g. a jacoco coverage report.
+====
+
+
+'''

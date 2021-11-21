@@ -1,0 +1,29 @@
+=== Generate test data
+
+In this exercise you will be generating test data for a university app.
+
+Create a program that generates random object of a particular kind of entity.
+An example would be a student entity
+with student number last name and first name, date of birth, gender, cohort, email and  student class.
+The students should be generated as a collection with a command line parameter specifying how many unique students you want.
+Unique means unique in name, first name, gender and birthdate, so we can tell then apart.
+
+The student number starts at 1 and should be incremented on each generated student. Th given student class already ensures that.
+It is no problem if you loose a number, but it is when you generate duplicate student numbers. Remember that this is typically the primary key.
+
+You start with three initial files, one containing  boys-names, one with girls names, and one with last names.
+Use these to generate random names. The combination of gender and names should obvious.
+
+Make your data generator optionally output json instead of cvs data and optionally pretty print the json. +
+To this end, have it interpret the command line parameters (`args` in `public static void main(String[] args)`).
+
+* If an argument is numeric, interpret that as the required amount of student objects.
+* If an argument is '-j', produce json instead of csv records
+* If an argument is '-p' produce pretty printed json. -p implies -j.
+
+You will find a maven project in your repository,
+
+The method names in the test class should give enough hint on the methods purpose. +
+If not, there will be some java doc.
+
+Decode an existing json document to a student object, Student taking multiple subjects

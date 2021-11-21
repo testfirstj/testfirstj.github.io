@@ -1,0 +1,149 @@
+== Service class Self registration.
+
+Some services provided by classes are greatly helped if the
+using class does not have to instantiate a class, but can simple look it up.
+
+Looking up an entity instead of creating your own can also help performance, because
+an next lookup can return the same object, so the expense of the first instantiation
+is paid only for the first instance. This can make an expensive construct still usable, once
+the instances are used often enough. This trades startup cost for flexibility and less
+repetitive programmer's (you) work.
+
+This looking up is done in something called a registry.
+// To be able to find such a registry, a registry itself is often implemented as a Singleton
+
+How cool would it be that a service like a Deconstructor could register itself, by supplying
+the key (the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
+look up the deconstructor
+
+[source,java]
+----
+  void useEntity( E e ) {
+
+    for (Object f : Deconstructor.forType( e.getClass() ) ) {
+      // use fields.
+    }
+  }
+----
+
+To make this work, we need to do a bit of designing, a class diagram will help.
+//Sometime you need to load a class _by hand_, to make it available for use or inspection.
+
+.A subclass registering it self in a superclass.
+image::selfregister.svg[]
+
+
+The self registration works by the fact that the class loader initializes the class,
+which include executing the static blocks in the code.
+
+The registry can now be implemented as follows:
+
+.Loading a class that then self registers.
+[source,java]
+----
+public abstract class Deconstructor<E> {
+
+    private static final ConcurrentMap<Class<?>, Deconstructor<?>> register
+         = new ConcurrentHashMap<>();
+
+    public static <E> Deconstructor<E> forType( Class<E> et ) {
+        if ( !register.containsKey( et ) ) {
+            loadDeconstructorClass( et );
+        }
+        return (Deconstructor<E>) register.get( et );
+    }
+
+    private static <E> void loadDeconstructorClass( Class<E> forEntity ) {
+        String deconstructorName = forEntity.getName() + "Deconstructor";
+        try {
+            Class.forName( deconstructorName, true, forEntity.getClassLoader() );
+        } catch ( ClassNotFoundException ex ) {
+            Logger.getLogger( Deconstructor.class.getName() ).log( Level.SEVERE,
+                    ex.getMessage() );
+        }
+    }
+
+    protected static void register( Class<?> et, Deconstructor<?> dec ) {
+        register.put( et, dec );
+    }
+
+    /**
+     * Method to be implemented by (potentially generated) leaf deconstructors.
+     *
+     * @param entity to deconstruct
+     * @return field values in array
+     */
+    public abstract Object[] deconstruct( E entity );
+}
+----
+
+.Self registration in a subclass
+[source,java]
+----
+class StudentDeconstructor extends Deconstructor<Student> {
+
+  private StudentDeconstructor(){
+    // do what is needed to make this a valid objects
+    // or leave empty to suppress a default constructor.
+  }
+
+  /**
+   * Static block to self register.
+   */
+  static {
+    Registry.register( Student.class, new StudentDeconstructir() );
+  }
+
+  // other details left out
+}
+----
+
+Note that the self registering class does not have to be public, so you can keep
+it nicely tucked away as a package private Deconstructor, which can be kept in sync
+with the entities it supports in the same package.
+
+[TIP]
+====
+Whenever you modify any of the types that are processed by say a Deconstructor,
+regenerate the Deconstructors for those types in that package.
+====
+
+:sectnums!:
+
+=== Self Registering Deconstructor.
+
+[.lead]
+The problem with the Deconstructor of the previous exercise is that the user class
+must know the entity and the Deconstructor, to find a matching pair. +
+Finding the entity type is easy, just ask the (non-null) entity for its type by using [blue]`Class<?> entity.getClass()`. +
+Finding the Deconstructor is not as easy, certainly for a utility class that wants to turn any list of any kind of entity
+into a csv file. +
+The idea is then to use the entity to lookup the matching Deconstructor. This will loosen
+up the coupling between classes and its users.
+
+++++
+<div class='ex'><details open class='ex'><summary>Self-registering Deconstructor</summary>
+++++
+
+In this project you can use some of the code of the previous exercise, with a few tweaks.
+
+Enhance the generated Deconstructor in the previous exercise to make it self registering.
+To do that make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.
+
+* Make the generated Deconstructor extend the Deconstructor<E>, where E is the entityType of the requested Deconstronstructor. +
+  E.g. [blue]`StudentDeconstructor extends Deconstructor<Student>`.
+** This make the generated Deconstructor a link:week04.html#_design_for_extension_and_reusing_generics_tests[leaf class].
+* Make the constructor or the generated Deconstructor [blue]`private`.
+* Add the self registering static block.
+* The deconstruct method can be the same as that from the previous exercise.
+* and lastly, make the deconstruct method non-static, because you cannot overwrite static methods,
+but need a normal method in the leaf class.
+
+While developing, use the new generator to generate a few deconstuctors,
+and see if the deconstructors work, by enabling the DeconstructorTest in the sampleentities test package.
+
+++++
+</details></div><!--end Self-registering deconstructor -->
+++++
+
+:sectnums:

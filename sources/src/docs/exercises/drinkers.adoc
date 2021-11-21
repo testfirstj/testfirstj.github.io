@@ -1,0 +1,51 @@
+*Drinkers A.K.A. Bad Bar Dreams*
+
+The drinkers project template is in your repository.
+
+This is an exercise about enums, exceptions and generics.
+It is about drinks, quantities and things being thrown and how to keep
+all this generic.
+
+The problem here is not how to serve a drink, but how to convince the compiler
+that feeding the proper drink to the right consumer is allowed, without too much of casting.
+So for instance when you have a BeerDrinker, that the instance's would accept a beer.
+
+
+*Implement the enum class BeerQuantity* +
+Implement the enum class `BeerQuantity` according its javadoc.
+
+*Implement testGetBeer() and getBeer()*
+The bartender (Bart) is a cautious guy: he checks the beer stock every time
+before he draws a serving. If the stock does not suffice he throws
+an `AlmostOutOfBeerException` in the method `getBeer(...)`.
+
+Write the `testGetBeer()` method in the `BarTenderTest` class. Afterwards,
+change the implementation of the `getBeer()` method in the BarTender class
+to let the test pass.
+
+*Big Business Bartender*
+
+[{extra}]
+NOTE: *Challenging exercise:*
+Booze is a recurring topic here.
+
+.drinkers peacefully in a class diagram
+image::drinkers.svg[]
+
+Note that the diagram above is not a real class diagram, but
+something the BarTender understands.
+
+The BigBusinessBartender is a special Bartender that serves several types
+of drinks and serves guests (a list of Drinkers) by the busloads. The
+`BigBusinessBartenderTest` class is given, as well as the
+`serveByTheBusLoad(...)` method implementation in class BigBusinessBartender.
+
+Implement the consumer methods below:
+
+* Implement `serveBeer( drinker )`
+
+* Implement `serveLemonade( drinker )`
+
+* Implement `serveWhisky( drinker )`
+
+'''
