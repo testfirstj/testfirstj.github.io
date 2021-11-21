@@ -29,7 +29,6 @@ In the exercise below we applied the annotation +
 ++++
 
 
-
 // Working through this project gave me some new insights and made me realize that
 // there is much sense in demonstrating things to students.
 
