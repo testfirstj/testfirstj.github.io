@@ -10,16 +10,16 @@
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <build>
-        <defaultGoal>compile</defaultGoal>
+        <defaultGoal>generate-resources</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>2.2.1</version>
                 <dependencies>
-                    <dependency> 
+                    <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj</artifactId>
                         <version>2.5.2</version>
@@ -28,25 +28,25 @@
                 <executions>
                     <execution>
                         <id>convert-to-html</id>
-                        <phase>generate-resources</phase> 
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
-                            <!--<outputDirectory>${project.build.directory}/html</outputDirectory>--> 
+                            <!--<outputDirectory>${project.build.directory}/html</outputDirectory>-->
                             <backend>html5</backend>
-                            <outputDirectory>../docs</outputDirectory> 
-                            <attributes> 
+                            <outputDirectory>../docs</outputDirectory>
+                            <attributes>
                                 <source-highlighter>coderay</source-highlighter>
                                 <imagesdir>./images</imagesdir>
-                                
+
                                 <toc>right</toc>
                                 <icons>font</icons>
                                 <linkcss>true</linkcss>
-                                <copycss>true</copycss> 
+                                <copycss>true</copycss>
                                 <stylesdir>css</stylesdir>
-                                
-                                
+
+
                             </attributes>
                         </configuration>
                     </execution>
