@@ -78,3 +78,7 @@ The ubiquitous question is always: Where do I start?
 The answer is surprisingly simple: at the requirements of class, method or whatever you want to develop. And always start at the simple end.
 So if a requirement says that a fresh Stack is empty, that means you can write a test that asserts that a `new` instance of your class reports that it is
 empty when the `isEmpty()` is called.
+
+
+'''
+The sources of this website are hosted at https://github.com/testfirstj/testfirstj.github.io[]
