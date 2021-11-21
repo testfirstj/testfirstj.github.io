@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W3 Testable and Mockito</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W3 Testable and Mockito</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_faking_as_a_testing_technique">1. Faking as a testing technique.</a>
+<ul class="sectlevel2">
+<li><a href="#_stay_cool_have_a_mockito">1.1. Stay cool, have a Mockito.</a></li>
+<li><a href="#_to_mock_or_to_configure">1.2. To Mock or To Configure</a>
+<ul class="sectlevel3">
+<li><a href="#_input_stubbing_with_a_realclass">1.2.1. Input stubbing with a real,class.</a></li>
+<li><a href="#_output_mocking_with_a_real_classes">1.2.2. Output mocking with a real classes</a></li>
+</ul>
+</li>
+<li><a href="#_exercise_my_first_mock">Exercise My First Mock</a></li>
+</ul>
+</li>
+<li><a href="#_design_for_test_ability">2. Design for Test-ability</a>
+<ul class="sectlevel2">
+<li><a href="#_business_class_fit_for_testing">2.1. Business class fit for testing.</a></li>
+<li><a href="#_exercise_testable_design">Exercise Testable Design</a></li>
+</ul>
+</li>
+<li><a href="#_exercises_in_this_part">Exercises in this part</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong class="big">When you can&#8217;t or won&#8217;t make it, Fake it.</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_faking_as_a_testing_technique"><a class="anchor" href="#_faking_as_a_testing_technique"></a><a class="link" href="#_faking_as_a_testing_technique">1. Faking as a testing technique.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s revisit the movie making metaphor. We know that almost everything in that industry
+is fake, or maybe more politely <em>make-belief</em>. In that it only needs to look convincing without being the real thing.
+So for instance, when someone needs to be hit hard in the face, it will not really be done and to make sure nothing untoward happens to
+the expensive actors, they may be replaced by <em>stunt</em> men and women, so the punch will never land on the pretty face.</p>
+</div>
+<div class="paragraph">
+<p>In our industry we have other reasons to <em>not</em> use the real thing.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is not available (yet).</p>
+</li>
+<li>
+<p>It is expensive (as in slow) to use and we want our tests to be quick.</p>
+</li>
+<li>
+<p>We want to test behavior under circumstances that are rare, and difficult to achieve with the real thing.</p>
+</li>
+<li>
+<p>It is inconvenient to use.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>What we do is replace the Dependent On Components by so called <strong class="blue">mocks</strong>.<br>
+<strong>In all cases</strong>, the System Under Test, the class we are testing <strong>is always used as is</strong>. So we have no stunt doubles for our protagonist.
+When testing, we want it to take all the punches, because we want to make sure it can handle them.</p>
+</div>
+<div class="admonitionblock caution red">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A very common mistake made when using mocking as a testing technique, is <strong class="red">faking the protagonist or SUT</strong>.
+This is <strong class="red">very wrong</strong>. What you are testing in that case is the mock, not the class you hope to test. <strong class="red">None</strong> of the code of the SUT will be used in such tests.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock right thumb">
+<div class="content">
+<img src="./images/fitness.jpg" alt="fitness" width="360">
+</div>
+<div class="title">Figure 1. Never imagined coding as a work out.</div>
+</div>
+<div class="paragraph">
+<p>Suppose you have an application in which one of the required effects is
+that a business class prints something to a printer. Turning this into a test will
+give you a hard time, because you have to run between your desk an printer, but hey,
+it will improve your fitness.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>.</p>
+</div>
+<div class="paragraph">
+<p>To verify that the system under test (<strong>SUT</strong>) does indeed use the printer, make that fact <em>observable</em>,
+so that you can verify that the printer call has been made.
+You can use a trick common to many informatics problems and is available to you too: <strong>add a level of indirection</strong>,
+or do not give the actual printer to the business class but <em>instead</em> something that the business code
+thinks it is a printer and replace that with whatever suits you for the test.</p>
+</div>
+<div class="paragraph">
+<p><span class="image right,thumb"><img src="./images/annoyed-32.png" alt="annoyed 32"></span>
+<strong>'Nice'</strong> you say, <strong class="red">now I have two problems'</strong>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>change the application and</p>
+</li>
+<li>
+<p>create a printer just for my tests.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_stay_cool_have_a_mockito"><a class="anchor" href="#_stay_cool_have_a_mockito"></a><a class="link" href="#_stay_cool_have_a_mockito">1.1. Stay cool, have a Mockito.</a></h3>
+<div class="imageblock left thumb">
+<div class="content">
+<img src="./images/mockito-drink.jpg" alt="mockito drink">
+</div>
+<div class="title">Figure 2. it gets better.</div>
+</div>
+<div class="paragraph">
+<p>You are not the first developer in this situation, so someone has automated the creation of 'fake' objects or mocks for us:<br>
+<a href="https://site.mockito.org/" target="_blank" rel="noopener">Mockito </a> is a framework that can create various objects that are useful for testing.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mock</strong> is an object that behave like a (alternate) implementation of a class or interface. This is akin to an actor (or actress) or stunt-double that
+behaves exactly like you tell it to. A mock also saves any method call that you do on it.<br>
+<strong>Stub</strong> just holds data that you provide and are presented to the SUT.<br>
+  Both mock and stub are stand-ins for dependent on components (DOC) or collaborators for the SUT.<br>
+There is also a<br>
+<strong>Spy</strong> which is in fact a wrapper around an actual implementation, that allows you to observe what goes in (method call+ parameters) and comes
+out of (return values) of the real object while it is used by the SUT. You can make the spy only spy on certain method calls, and leave the rest unchanged.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/mockstubsspies.svg" alt="mockstubsspies">
+</div>
+<div class="title">Figure 3. Class diagram explaining mocks, stubs and spies</div>
+</div>
+<div class="paragraph">
+<p>Lets see what this looks like in code.</p>
+</div>
+<div class="listingblock">
+<div class="title">The printer interface.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">Printer</span> {
+
+    <span class="type">void</span> println( <span class="predefined-type">String</span> print );
+
+    <span class="comment">/**
+     * Make it deal with objects too.
+     * @param o to print.
+     */</span>
+    <span class="keyword">default</span> <span class="type">void</span> println( <span class="predefined-type">Object</span> o ) {
+        printLn( o.toString() );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now over to the test class, which creates a mocked printer and hands it to the <strong>Business</strong> class.</p>
+</div>
+<div class="listingblock">
+<div class="title">Business test class.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> doesItPrint() {
+        Printer pr = mock( Printer.class );  <i class="conum" data-value="1"></i><b>(1)</b>
+
+        Business b = <span class="keyword">new</span> Business( pr );     <i class="conum" data-value="2"></i><b>(2)</b>
+
+        b.work();                                 <i class="conum" data-value="3"></i><b>(3)</b>
+
+        verify( pr ).println( anyString() ); <i class="conum" data-value="4"></i><b>(4)</b>
+
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create the mocked printer.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Create a Business object passing it the printer.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Make the business class work.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>ask the mocked printer if it was used.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This is of course a simple test and the only thing that it verifies is that the <code>printer.printLn(String)</code> has been used.</p>
+</div>
+<div class="listingblock">
+<div class="title">Verify that what is printed is okay.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Mock</span>
+    Printer printer; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    Business business;
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> setup() {
+        business = <span class="keyword">new</span> Business( printer );  <i class="conum" data-value="2"></i><b>(2)</b>
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> doesItPrintBusiness() {
+        ArgumentCaptor&lt;<span class="predefined-type">String</span>&gt; lineCaptor = ArgumentCaptor.forClass( <span class="predefined-type">String</span>.class ); <i class="conum" data-value="3"></i><b>(3)</b>
+
+        business.work( <span class="string"><span class="delimiter">&quot;</span><span class="content">Linda</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="4"></i><b>(4)</b>
+
+        verify( printer ).println( lineCaptor.capture() ); <i class="conum" data-value="5"></i><b>(5)</b>
+        assertThat( lineCaptor.getAllValues() ).contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Linda</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="6"></i><b>(6)</b>
+        fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">test does It print ended. You know what to do.</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Setup mock as field</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>and business in a setup method, so tests can avoid repeating this,<br>
+again passing the printer object via the business constructor.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Prepare a mockito helper object to capture the data passed to the printer.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Make business do it&#8217;s thing.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Verify that <code>printer.println(&#8230;&#8203;)</code> is called. The captor object is used to
+collect all that has been received by the printer&#8217;s <code>printLn</code> method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>And the expected data is passed to the printer, so a real printer would
+print it. The method <code>lineCaptor.getAllValues()</code> produces a List of the captured things, strings in this case.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Mockito is well documented with lots of examples in its <a href="https://javadoc.io/static/org.mockito/mockito-core/3.2.4/org/mockito/Mockito.html">java doc</a>.
+When you look to the test dependencies of your Maven project in NetBeans-IDE, right-click on the
+mockito dependency, then download the javadoc, you can enjoy that while you are developing.
+During a performance assessment the Javadoc should have been pre-loaded so is available in the same way.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_to_mock_or_to_configure"><a class="anchor" href="#_to_mock_or_to_configure"></a><a class="link" href="#_to_mock_or_to_configure">1.2. To Mock or To Configure</a></h3>
+<div class="paragraph">
+<p>Sometimes the class that you want to pass as a mock to the business code has a <strong class="big">big</strong> interface, with
+many methods, and you do not want to restrict the business code to just a few trained methods. That would
+constrain the methods the business class could use, and that serves no real purpose. In such cases it
+may be better to provide a differently configured <strong class="blue">real class</strong>.</p>
+</div>
+<div class="sect3">
+<h4 id="_input_stubbing_with_a_realclass"><a class="anchor" href="#_input_stubbing_with_a_realclass"></a><a class="link" href="#_input_stubbing_with_a_realclass">1.2.1. Input stubbing with a real,class.</a></h4>
+<div class="paragraph">
+<p>An object that contains preconfigured data is called a <strong>Stub</strong>.<br>
+As an example: Assume you business class
+uses a Scanner as it&#8217;s input. Scanner has 50-odd methods, which you certainly do not want to train <em>all</em> when mocking.</p>
+</div>
+<div class="paragraph">
+<p>But since you will pass a special Scanner to the business class anyway, the better way is to use a Scanner configured with one of
+it&#8217;s constructors.
+In this case use <code>new Scanner( String s )</code>, in which the string <code>s</code> contains exactly the input you want to use in your test. The string
+can contain newlines, so that it appears as if the user entered multiple lines. This allows you to test a program with a dialog.
+Something along the line of  <code>new Scanner("12\n13\n");</code>, that is 12 newline 13.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_output_mocking_with_a_real_classes"><a class="anchor" href="#_output_mocking_with_a_real_classes"></a><a class="link" href="#_output_mocking_with_a_real_classes">1.2.2. Output mocking with a real classes</a></h4>
+<div class="paragraph">
+<p>For the output side something similar is in effect. The most common way of outputting something
+is to use System.out to print or otherwise output the results of the program. But <code class="blue">System.out</code> is
+just a <code class="blue">PrintStream</code>, which also has a lot of convenience methods with a total of 33 methods and 10 constructors.
+You do not want to restrict the use of any of its methods in the business class.</p>
+</div>
+<div class="paragraph">
+<p>The trick her is to use one of the constructors to given PrintStream something to 'print on', which you can inspect afterwards.
+Usage: The business class has a constructor.<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> or setter to take a PrintStream and always uses that to print to, if
+it needs to print anyway.</p>
+</div>
+<div class="listingblock">
+<div class="title">Usage is business code</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">PrintingBusiness</span>
+      <span class="directive">final</span> <span class="predefined-type">PrintStream</span> out; <i class="conum" data-value="1"></i><b>(1)</b>
+
+      PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
+          <span class="local-variable">this</span>.out=<span class="predefined-type">System</span>.out;
+      }
+
+      PrintingBusiness( <span class="predefined-type">PrintStream</span> ps ) { <i class="conum" data-value="3"></i><b>(3)</b>
+          <span class="local-variable">this</span>.out=ps;
+      }
+
+      <span class="type">void</span> businessMethod(){
+          out.format( <span class="string"><span class="delimiter">&quot;</span><span class="content">%s at %d</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="integer">957</span> ); <i class="conum" data-value="4"></i><b>(4)</b>
+      }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>final to have a constructor set it</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Default constructor uses System.out to print to</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Redirect output to other output, for test or 'printing' in a GUI.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>All facilities of PrintStream are available, including formatted printing.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Use in tests</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> tformattedPrint() {
+        ConsoleOutput cout = <span class="keyword">new</span> ConsoleOutput();
+        <span class="predefined-type">PrintStream</span> out = cout.asPrintStream();
+
+        out.format( <span class="string"><span class="delimiter">&quot;</span><span class="content">%s at %d</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="integer">957</span> );
+
+        assertThat( cout.toString() ).contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">at</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Opleg kaas</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">957</span><span class="delimiter">&quot;</span></span> );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By implementing the AppendAndClear interface you can print to anything, for instance
+by using a StringBuilder as intermediate and then transfer the output to a GUI element in JavaFX or Swing.</p>
+</div>
+<div class="listingblock">
+<div class="title">Definition of AppendAndClear interface.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@FunctionalInterface</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">AppendAndClear</span> {
+
+    <span class="comment">/**
+     * Append a string to this AppendAndClear.
+     *
+     * @param toAppend text to add.
+     */</span>
+    <span class="type">void</span> appendText( <span class="predefined-type">String</span> toAppend );
+
+    <span class="comment">/**
+     * Clear the output. Optional operation.
+     */</span>
+    <span class="keyword">default</span> <span class="type">void</span> clear() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Implementation of ConsoleOutput</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">consoleoutput</span>;
+
+<span class="keyword">import</span> <span class="include">java.io.ByteArrayOutputStream</span>;
+<span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="keyword">import</span> <span class="include">java.io.OutputStream</span>;
+<span class="keyword">import</span> <span class="include">java.io.PrintStream</span>;
+<span class="keyword">import</span> <span class="include">java.nio.charset.Charset</span>;
+<span class="keyword">import</span> <span class="include">java.nio.charset.StandardCharsets</span>;
+
+<span class="comment">/**
+ * Test helper, to be able to redirect a PrintStream to any writable.
+ *
+ * Use case: write to string or StringBuilder for test or e.g. javafx
+ * TextInputControl for UI. Implement AppendAndClear (which can be done as a
+ * lambda) and you're set.
+ *
+ * @author Pieter van den Hombergh {@code &lt;p.vandenhombergh@fontys.nl&gt;}
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ConsoleOutput</span> <span class="directive">extends</span> <span class="predefined-type">OutputStream</span> {
+
+    <span class="directive">protected</span> <span class="directive">final</span> <span class="predefined-type">ByteArrayOutputStream</span> baos = <span class="keyword">new</span> <span class="predefined-type">ByteArrayOutputStream</span>();
+    <span class="directive">final</span> AppendAndClear aac;
+
+    <span class="comment">/**
+     * Create a Console output copying data to given AppendAndClear.
+     *
+     * @param ta append and clear to copy all written text to.
+     */</span>
+    <span class="directive">public</span> ConsoleOutput( AppendAndClear ta ) {
+        <span class="local-variable">this</span>.aac = ta;
+    }
+
+    <span class="comment">/**
+     * Without appendable.
+     */</span>
+    <span class="directive">public</span> ConsoleOutput() {
+        <span class="local-variable">this</span>( <span class="predefined-constant">null</span> );
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> write( <span class="type">int</span> b ) <span class="directive">throws</span> <span class="exception">IOException</span> {
+        <span class="keyword">if</span> ( aac != <span class="predefined-constant">null</span> ) {
+            <span class="predefined-type">String</span> s = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + ( (<span class="type">char</span>) b );
+            aac.appendText( s );
+        }
+        baos.write( (<span class="type">byte</span>) b );
+    }
+
+    <span class="comment">/**
+     * Clear and discard output.
+     */</span>
+    <span class="directive">public</span> <span class="type">void</span> clear() {
+        <span class="keyword">if</span> ( aac != <span class="predefined-constant">null</span> ) {
+            aac.clear();
+        }
+        baos.reset();
+    }
+
+    <span class="comment">/**
+     * Get the accumulated string since start or clear.
+     *
+     * @return the string
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">String</span>( baos.toByteArray(), StandardCharsets.UTF_8 );
+    }
+
+    <span class="comment">/**
+     * Factory method to get this ConsoleOutput as PrintStream.
+     *
+     * @return the print stream.
+     */</span>
+    <span class="directive">public</span> <span class="predefined-type">PrintStream</span> asPrintStream() {
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">PrintStream</span>( <span class="local-variable">this</span>, <span class="predefined-constant">true</span>, <span class="predefined-type">Charset</span>.defaultCharset() );
+    }
+} <span class="comment">// eof ConsoleOutput</span></code></pre>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">You can redirect standard output and standard error this way</div>
+<div class="paragraph">
+<p>You can modify standard output, a.k.a. <code class="blue">System.out</code> so that it writes to somewhere else,
+for instance to something like the console output above. <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#setOut(java.io.PrintStream)"><code>System.setOut(PrintStream)</code></a>
+can be used for standrad output. This is also the trick that the PRC1 MOOC used to test output by the first programs.
+Important is that it can also be applied to  <strong class="blue">static</strong>
+method such as the well known <code>public static void main(String[])</code> that can&#8217;t be used with Dependency Inversion as we do here.</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Real class configuration, if applicable, beats mocking. So if there is an existing class, first study it&#8217;s API, before you
+consider mocking it. Using the <strong class="big">Real Thing</strong> may be the better choice <strong class="green">AND</strong> less work.<br>
+Along that line: It is seldom useful to mock an <em>entity</em> class, like a <code>Student</code> or <code>Product</code>, because the mock will have no benefit
+over the real thing, since the entity is just a data carrier with no logic. The typical shape of an entity is a constructor,
+a few getters and some other generated boilerplate code, such as <code>toString()</code>, <code>equals(Object)</code> and <code>hashCode()</code>.
+Java 14+ records will be a good substitute for such classes.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_my_first_mock"><a class="anchor" href="#_exercise_my_first_mock"></a><a class="link" href="#_exercise_my_first_mock">Exercise My First Mock</a></h3>
+<div class="paragraph">
+<p><em class="big blue">DOC Rhymes with mock</em></p>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>My First Mock</summary>
+<div class="paragraph">
+<p>In this exercise, you will use your first mocks. To mock something is essentially to <em>fake</em> something. Mocking, or
+faking classes is a common way of testing code. For example if you test code that writes
+something to a database, you want to make sure that the writing of data works correctly.
+But setting up a database and connecting to it introduces LOTS of ways the code could fail,
+rendering your test meaningless. To circumvent this problem, you <em>mock</em> the database.
+You create a dummy object and say "this is my pretend database". In this exercise, you will mock something else: a <code>Printer</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check out our <em>myfirstmock</em> project.
+We have a <code>Printer</code> interface with the methods <code>void Println(String print)</code> and <code>int countCharactersPrinted();</code>.
+The first method does the actual printing, the second method returns the count of the characters printed.<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>Looking at the <em>Business.java</em> class, we see the code that makes use of the Printer interface. There is a <code>void work(String input)</code>
+ method, which should print the input given to the method. Interesting is the <code>double computePrintingCost(double price)</code> method.
+ With this method, the business class computers the cost of a print by multiplying the price with the number of characters printed.</p>
+</div>
+<div class="paragraph">
+<p>As usual, we start with the <strong>Test</strong> class. Straight away, we see two fields in this test class: <code>printer</code> and <code>business</code>.
+The <strong>business</strong> is the <strong>System Under Test</strong>, also called a <strong>SUT</strong>. It&#8217;s the code that we want to test, i.e. the one we want to make sure is working.
+The business class however can&#8217;t do its work without implementing some form of printer.
+It <strong>depends</strong> on the printer. The <strong>printer</strong> is therefore the <strong>depended-on component</strong>, also called the <strong>DOC</strong>.</p>
+</div>
+<div class="paragraph">
+<p>When testing, we <strong>mock the DOC</strong> and we <strong>verify that the SUT is working</strong>. The <strong>DOC</strong> will not be fully implemented- it will
+only be mocked, i.e. faked! We can see that the printer is mocked thanks to the annotation <code>@Mock</code>.
+The business class won&#8217;t be mocked, because we want to test it- you can&#8217;t test a fake object!
+But before you can test a class that uses a mocked object, we first need to <strong>train</strong> it.
+For example, if you mock a calculator, you don&#8217;t implement the <code>add(int a, int b)</code> method.
+Instead, you train it to return <code>2</code> when the input is <code>1</code> + <code>1</code>. Check the pseudo-code below to see how to train mocked objects.</p>
+</div>
+<div class="listingblock">
+<div class="title">To help you, here is a series of commands that will be handy:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   when(mockedObject.methodOfObject()).thenReturn(something); <i class="conum" data-value="1"></i><b>(1)</b>
+   verify(someObject).methodOfObject();                       <i class="conum" data-value="2"></i><b>(2)</b>
+   assertThat(someCalculatedStuffFromBusinessObject)
+       .isEqualTo(someValue); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>here we train the mocked object</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>verifies that the method of the mocked object was called</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here we use our usual assert statement when we test the BUSINESS object (SUT), not the DOC!</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now to the exercise: write the three test methods provided and the implementation that it tests, TDD style.
+Start with the top test and work your way down. <code>doesItPrint()</code> only needs a verify, <code>calculatePrintingCosts</code>
+needs training, verification and assertion. The third test method, <code>doesPrinterGetCorrectArgument()</code>,
+is more complex. It makes use of the <code>ArgumentCaptor</code>. It basically is a catcher that captures (or catches)
+arguments that are passed to methods. In our example, our argument is a string, therefore we have a stringCaptor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">ArgumentCaptor&lt;<span class="predefined-type">String</span>&gt; stringCaptor = ArgumentCaptor.forClass( <span class="predefined-type">String</span>.class );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In your <code>verify</code> statement, you should pass the stringCaptor&#8217;s <code>capture</code> method. It allows the captor to catch
+the String that is sent to the business class to print. Then you assert that the stringCaptor&#8217;s values contain
+the String you are looking for. As usual, type the dot <code>.</code> after <code>stringCaptor</code> and see what options are available.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use this <strong>myfirstmock</strong> project, <em>after submitting the solution</em>, to experiment with mocking.
+Experimenting is a first class activity for students!
+</td>
+</tr>
+</table>
+</div>
+</details></div> <!-- end myfirstmock -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_for_test_ability"><a class="anchor" href="#_design_for_test_ability"></a><a class="link" href="#_design_for_test_ability">2. Design for Test-ability</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Also known as dependency injection made simple.</p>
+</div>
+<div class="paragraph">
+<p><strong class="big">A very important <span class="green">non functional</span> requirement of good software is <em class="green">Test-ability</em>.<br>
+Test-ability can be achieved or improved by decoupling the class you are developing (the SUT) from it&#8217;s environment, such that you have
+full control over that environment in your test and can exactly control and observe what goes in or out of the SUT.</strong></p>
+</div>
+<div class="paragraph">
+<p>One first easy setup is to use <strong class="blue">package private</strong> visibility more often. It is actually the <em>default</em> in java, and with reason.
+When you then put your unit test in the same package (but it its own source tree), you can have the test class look at
+or use the package private members of the class in its <em>assertion</em> or verification very easily.
+Most of unit testing is <a href="https://en.wikipedia.org/wiki/White-box_testing">white box testing</a> anyway, which almost always includes inspecting private members.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For <strong>business</strong> code, organize your packages according to the collaborations the classes will have. In particular do <strong class="red">NOT</strong> organize classes according to type or kind,
+like collections with collections and exceptions with exceptions. To express it as a metaphor: If you always keep your screws, seats, and backrests in separate
+boxes, they will never build chairs. You need to put them together, to make them cooperate.<br>
+For a <strong>library</strong> code, other aspects such as find-ability may take precedence over tight packages. But when you study the java libraries
+your will see classes in packages that are package private, to help the public types in the package to do their bidding.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Test-ability is also improved by using the design rule <strong class="green">program against interfaces, not concrete classes</strong>.<br>
+If you do that in your design, you can very easily make specialized implementations of those interface methods that you need in your test, to provide
+those specific values or reactions that you need in your test, without having to jump through a lot of hoops to get the test set up.<br>
+This easy setup is where <strong class="green">Mockito</strong> comes in.</p>
+</div>
+<div class="paragraph">
+<p>It is <span class="red">not</span> the business' business to worry about:<br>
+<span class="icon"><i class="fa fa-times fa-fw red"></i></span> <span class="line-through">persistence</span><br>
+<span class="icon"><i class="fa fa-times fa-fw red"></i></span> <span class="line-through">where service come from or who implements them.</span></p>
+</div>
+<div class="paragraph">
+<p>By <em>injecting</em> or otherwise providing the business with the services it <em>needs</em> makes
+the business code testable without making it dependent or even know the actual implementing classes. And that is really all that counts. The business code
+makes the application valuable, the rest is either plumbing or already available code.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>.</p>
+</div>
+<div class="admonitionblock warning red">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<strong class="red">Never</strong> let the business code <em>create</em> its own persistence or or service object. You would
+<strong class="big red">loose control</strong> over what flows between service and business class,
+and makes it <em class="red">unobservable</em>, which is bad from the testing standpoint.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Instead hand the service or resource to the business, or give it some provider of a resource.</p>
+</div>
+<div class="sect2">
+<h3 id="_business_class_fit_for_testing"><a class="anchor" href="#_business_class_fit_for_testing"></a><a class="link" href="#_business_class_fit_for_testing">2.1. Business class fit for testing.</a></h3>
+<div class="paragraph">
+<p>Let us look at an example as a class diagram.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/testable-business.gif" alt="testable business">
+</div>
+<div class="title">Figure 4. Giving the business what it really needs make the business testable</div>
+</div>
+<div class="paragraph">
+<p>For readers that like to watch still pictures:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/businessarch.svg" alt="businessarch">
+</div>
+<div class="title">Figure 5. business class in the application</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/businesstest.svg" alt="businesstest">
+</div>
+<div class="title">Figure 6. business class in the test lab</div>
+</div>
+<div class="paragraph">
+<p>In the picture above you see a class diagram which shows a detail in which a business class
+'lives' in an environment that is designed to make sure the business class sticks to its business:</p>
+</div>
+<div class="paragraph">
+<p><span class="icon"><i class="fa fa-check fa-fw green"></i></span> Dealing with business entities such as customers and products.<br>
+<span class="icon"><i class="fa fa-check fa-fw green"></i></span> Uses services to do the business' bidding, such as saving stuff to a database,
+  provided as a service to the business class.<br>
+<span class="icon"><i class="fa fa-check fa-fw green"></i></span> And the business code <strong class="red">NOT</strong> responsible for <em class="blue">how</em> to show things in a UI.</p>
+</div>
+<div class="paragraph">
+<p>In the above example we provide a <span class="blue">factory</span> or <span class="blue">provider</span> of the services that the business code requires.</p>
+</div>
+<div class="paragraph">
+<p>The business class appears in two worlds:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A <em class="blue">business</em> world, the <strong class="blue">Application</strong>. This is the actual use and role in the whole application.
+In that world there is a so called Assembler, that stitches the parts of the application together and sets it on its way. Typically this Assembler
+role is what the <strong>main</strong> class in a project does. Find the parts, put them together, and put them to work.</p>
+</li>
+<li>
+<p>In the <strong class="red">Test</strong> world, call it the laboratory or <em>business</em>.<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> school, where the business class is trained and tested.
+Here the test class does the assembling with a dash of Mockito to get good grips on what goes into and out of the business class.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Before the business class can used in real life, it has to be trained and tested. Feels a bit like a student right?</p>
+</div>
+<div class="paragraph">
+<p>You should note the arrows in the diagram. They provide direction and make it the diagram a <a href="https://en.wikipedia.org/wiki/Directed_graph">directed graph</a>,
+and lets a <em>dependent</em> point to a <em>depends-on</em>, like
+the <strong>BusinessClass</strong> depends on a <strong>Service</strong>, which is an <em>abstract</em> class or better still, an <em>interface</em>.
+Also note that the service does not point to, or is dependent on the business, which is good, because it makes the service reusable in other contexts.<br>
+The service implementing classes are dependent on the Service definition which is shown with the inheritance arrow, pointing from sub to super type.
+In the example you could think of the service being a <a href="https://en.wikipedia.org/wiki/Data_access_object">Data Access Object</a> or <strong class="blue">DAO</strong>
+and the <strong>ServiceImpl</strong> a specific <strong>DAO</strong>, like <code>DAO&lt;Product&gt;</code>, or <code>DAO&lt;Customer&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>In the business school, there is a test class, that creates instances of the business class and hands it implementations of the services the business
+needs, but does that by giving it a specialized service factory that produces <em class="green">mock</em>
+service implementations. The business class is <strong class="green">NOT</strong> aware of that.
+It uses the service in the way it is programmed, which allows the test class to verify that that programming is correct.
+The test class is in complete control and can also give the business class situations
+that are extensions to the normal <em class="green">happy</em> path to ensure that those situations are also handled properly. If that sounds like an
+exam setting at school, you would be right.</p>
+</div>
+<div class="paragraph">
+<p>You can tell these worlds in the class diagrams apart by the fact that one has a pink <strong>BusinessTest</strong> class with test methods.</p>
+</div>
+<div class="paragraph">
+<p>In the 'normal' non-testing <strong class="blue">Application world</strong>, the design has taken some provisions to make sure the business class can work in both worlds.
+To provide the business class with a <em>factory</em> from which it can obtain Service implementations, a so called <strong>Assembler</strong> is added. This <strong class="cyan">Assembler</strong>,
+in the figure at the top of the application class diagram, typically creates or instantiates the business class and provides it with all it needs,
+in this case an implementation of a <strong>ServiceFactory</strong>.
+Note that the assembler in this case also creates the UI part. In desktop applications this is what the <strong>Main</strong> class of the application typically is for.</p>
+</div>
+<div class="paragraph">
+<p>This approach of <em>providing</em> an instance of some class implementing an interface or
+realizing an abstract class to a business class that needs it is called <strong>dependency injection</strong>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://martinfowler.com/articles/injection.html"><strong>Dependency injection</strong></a> <em>is providing the services
+required by some class by means of constructor parameters, setters or otherwise,
+to avoid that the dependencies of the class are created by that class itself.</em></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The code in your tests also serve as a kind of <strong class="blue">documentation</strong>, at least for
+the maintainer of the test and code. This implies that any mock that you configure
+should match the test scenario, no more no less.<br>
+That&#8217;s why Mockito <strong class="red">complains</strong> when you mock something or train a method, but do <strong class="red">not</strong> use it in the test.</p>
+</div>
+<div class="listingblock">
+<div class="title">example Mockito Warning</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">Unnecessary stubbings detected.
+Clean &amp; maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+1. -&gt; at ps.CashRegisterTest.isProductLookedUpAndDisplayed(CashRegisterTest.java:71)
+Please remove unnecessary stubbings or use 'lenient' strictness.
+More info: javadoc for UnnecessaryStubbingException class.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When a mock is not used, and unverified, Mockito warns you about the fact. It might be an oversight on the side of the
+test or indeed a smell of a flaw in the business code. So take the Mockito warning <span class="big green">seriously</span>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_testable_design"><a class="anchor" href="#_exercise_testable_design"></a><a class="link" href="#_exercise_testable_design">Exercise Testable Design</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Perishable Products</summary>
+<div class="paragraph">
+<p>Build part of a cash register system used in sales of products that
+might be perishable.</p>
+</div>
+<div class="paragraph">
+<div class="title">Class diagram</div>
+<p><span class="image"><img src="./images/perishablesales.svg" alt="perishablesales"></span></p>
+</div>
+<div class="paragraph">
+<p>In the design we left out the GUI-controller, which would normally invoke the <code>correctSalesPrice(bb: LocalDate)</code>,
+the <code>submit()</code>, and the <code>print()</code> methods on the cash register business component.</p>
+</div>
+<div class="paragraph">
+<p>Perishable products are products with a limited shelf life. Think of fresh products
+such as milk, meat, vegetables, fruit, or anything that has a best before date.</p>
+</div>
+<div class="paragraph">
+<p>Assume that all products are labeled with a bar-code which identifies the product and that a perishable product
+has a best before date or similar.</p>
+</div>
+<div class="paragraph">
+<p>The cashier normally scans the product and that product is marked sold and optionally appears on the cash receipt.</p>
+</div>
+<div class="paragraph">
+<p>A perishable product undergoes the same procedure, but in case the best before date is less than 2 days, the product should also
+be marked sold, but the the sales price should be 35% off. 0 days left 65% off, less than or equal 0 days left 100% off, no longer on sale but
+product will be donated to a food bank.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-right valign-top"><p class="tableblock">days left</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">percent off</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">remaining price in %</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-right valign-top"><p class="tableblock">&gt;= 2</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-right valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">35</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">65</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-right valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">65</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">35</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-right valign-top"><p class="tableblock">&lt; 0</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">100</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The cash register uses the following service API</p>
+</div>
+<div class="listingblock">
+<div class="title">Sales API</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   Product lookupProduct(<span class="type">int</span> barcode);
+   <span class="type">int</span> salesPrice(<span class="type">int</span> barcode, LocalDate bestBefore);
+   <span class="predefined-type">String</span> sold(SalesRecord sale);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As extra info: the <code>SalesService.sold</code> produces a string which is supposed to appear on the
+cash receipt and should therefore be printed using the Printer interface. Printing of all data is postponed until the cashier can ask: <em>Do you want a receipt?</em>
+The sold items should be ordered on the receipt as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Perishable products should come first, non-perishables second.</p>
+</li>
+<li>
+<p>The sold items should be printed in scan order.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If an item has been scanned multiple times, it should not be added to the list, but instead the count for the item should increase.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>CashRegister</code> is given a clock and a <code>SalesService</code> at construction time. In dependency injection parlance this is called constructor injection for obvious reasons.<br>
+The clock is to be used to determine the actual date, the sales service to register to look up products and perform the sales registration.
+Both SalesService and Printer should be mocked for the purpose of testing.</p>
+</div>
+<div class="paragraph">
+<p>Actual payment has been left out of this exercise.</p>
+</div>
+<div class="paragraph">
+<p><strong>Abbreviated Use Case Normal sale</strong></p>
+</div>
+<div class="paragraph">
+<p>As a cashier I want to scan a product, compute a sales record and submit the sales record when I scan the next product.
+This can keep me in a continuous flow of scanning products. Beep, Beep, Beep&#8230;&#8203;.</p>
+</div>
+<div class="paragraph">
+<p><strong>Abbreviated Use Case sale of Perishable Product</strong></p>
+</div>
+<div class="paragraph">
+<p>As a cashier I want to scan a perishable product and select the best before date that I can read on the label.
+When the product is perishable, I expect a calendar to be shown, in which I can select the best before date of the actual product.
+I have two alternatives:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When I select a best before date on the presented calendar, the cash register should correct the price if applicable.</p>
+</li>
+<li>
+<p>When I select submit, the best before date is not considered.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When the operator did not select a best before date before she scans the next product, then the register should beep with a low tone and wait for me to comply.<br>
+This can be realised by having the cashregister throw an exception.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After either alternative the cash register should construct a sales record and submit it to the Sales Service.
+Then the cash register is ready for the next scan, or complete.</p>
+</div>
+<div class="paragraph">
+<p>The low beep will be implemented by the Gui. To get this done throw an <strong class="blue">UnKnownBestBeforException</strong>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>In case of non-perishables, the <code>accept(int)</code> method can immediately use the sales service <code>sold(SalesRecord)</code> method.</p>
+</li>
+<li>
+<p>In case of perishables, the cashregister operator must be show a calendar, and has two options, either</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>accept the standard price by pressing the button that invokes the <code>submit()</code> method of the register, <strong class="green">OR</strong></p>
+</li>
+<li>
+<p>select a date from the calendar, so that the price correction can be computed by invoking <code>correctSalesPrice(LocalDate)</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Either of these methods should then use the <code>sold(SalesRecord)</code> in which the SalesRecord should have the correct price.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Abbriviated Use Case Print receipt</strong></p>
+</div>
+<div class="paragraph">
+<p>As a cashier I will ask the customer if he or she wants a receipt. If the answer is yes, I select print and the printer should print a receipt
+as specified above.</p>
+</div>
+<div class="paragraph">
+<p><strong>Your Tasks</strong><br>
+Design your tests. You are supposed to use Mockito to mock the SalesService and Printer.
+Complete the class diagram with the things needed for testing and submit too. The updated class diagram is
+part of the exercise.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Product</code> and <code>SalesRecord</code> classes are given, complete with tests.
+There are no implementations for <code>SalesServiceImpl</code> and <code>Printer</code> yet, nor should they be created. <strong class="blue">Mock</strong> these services.</p>
+</div>
+<div class="paragraph">
+<p>The mocked printer should be used to test that the information is printed in the specified order. In the implementation
+of the your CashRegister you can use a structure like a map of maps to organize the inputs.
+Choosing the proper map implementation is the trick here. Get inspired
+by the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html">lava.util.Map API</a>.</p>
+</div>
+<div class="paragraph">
+<p>Test driven develop the Cash Register class.</p>
+</div>
+<div class="paragraph">
+<p>It is sufficient to throw an exception when the perishable&#8217;s best before date is not selected. Beeping in a low tone can be done in a later version.</p>
+</div>
+<div class="admonitionblock tip white">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Hints</strong> in designing your tests:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>First sell one product, to verify that printing contains all the relevant info for the product, quantity and price.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>printReceipt and ask the mock what it received and inspect (verify, assert) that.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Then sell two of the same products (two scans, same barcode), non-perishable, to see if the count and price are correct. Same assertions, different values.</p>
+</li>
+<li>
+<p>Then scan more products and ensure that the cash receipt contains the information as per requirement.</p>
+</li>
+<li>
+<p>same approach with testing if the sales service is used properly. Here you do not need to keep the order.</p>
+</li>
+<li>
+<p>The test method <strong class="blue">priceReductionNearBestBefore</strong> should probably be a <strong class="blue">@Parameterized</strong> test with a <strong class="blue">@CsvSource</strong>,
+in which you specify different best before days left.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You might also use a map to lookup products in a map, like "banana" will give you the defined banana product.
+Revisit <a href="week02.html#_lookup_in_a_map">part 02</a> on parameterized test where
+ such usage is shown.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><span class="green">In this exercise you do not have to distinguish between different best before dates in the sales records for perishable.
+Assume that the tests only use one of each product type. This relevant business requirement might be included in a future version, that includes refactoring.</span></p>
+</div>
+</details></div> <!-- end perishables sales -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_exercise_my_first_mock">Exercise My First Mock</a></p>
+</li>
+<li>
+<p><a href="#_exercise_testable_design">Exercise Testable Design</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. (source picture "https://www.menshealth.com/nl/fitness/")
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. best
+</div>
+<div class="footnote" id="_footnotedef_3">
+<a href="#_footnoteref_3">3</a>. Maybe page count or ink usage should be used, this is just an example
+</div>
+<div class="footnote" id="_footnotedef_4">
+<a href="#_footnoteref_4">4</a>. And hopefully tested
+</div>
+<div class="footnote" id="_footnotedef_5">
+<a href="#_footnoteref_5">5</a>. pun intended
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

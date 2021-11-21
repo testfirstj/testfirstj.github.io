@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W8 Java FX Bindings, Jigsaw (JPMS)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W8 Java FX Bindings, Jigsaw (JPMS)</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_java_platform_module_system">1. Java Platform Module System.</a>
+<ul class="sectlevel2">
+<li><a href="#_changes_in_visibility">1.1. Changes in visibility</a></li>
+</ul>
+</li>
+<li><a href="#_java_modules_and_testing">2. Java Modules and Testing</a>
+<ul class="sectlevel2">
+<li><a href="#_black_box_vs_white_box">2.1. Black box vs White Box</a></li>
+<li><a href="#_standard_source_code_organization">2.2. Standard Source code organization.</a></li>
+</ul>
+</li>
+<li><a href="#_java_fx_bindings">3. Java FX Bindings</a>
+<ul class="sectlevel2">
+<li><a href="#_binding_apis">3.1. Binding APIs</a></li>
+<li><a href="#_unbinding_doublebinding_dependencies">3.2. Unbinding DoubleBinding dependencies</a></li>
+<li><a href="#_caching_bindings">3.3. Caching bindings</a></li>
+</ul>
+</li>
+<li><a href="#_using_scenebuilder">4. Using SceneBuilder</a>
+<ul class="sectlevel2">
+<li><a href="#_defining_widgets_using_fxml">4.1. Defining Widgets using FXML</a></li>
+</ul>
+</li>
+<li><a href="#_fx_triangulation">FX Triangulation</a>
+<ul class="sectlevel2">
+<li><a href="#_use_of_the_triangulator_in_the_surveyor_app">Use of the Triangulator in the Surveyor App.</a></li>
+</ul>
+</li>
+<li><a href="#_testing_scene_switching">5. Testing Scene Switching</a>
+<ul class="sectlevel2">
+<li><a href="#_use_case_application_with_multiple_scenes">5.1. Use case: application with multiple "scenes".</a></li>
+<li><a href="#_switching_scenes_using_comboboxes">5.2. Switching scenes using comboboxes</a></li>
+</ul>
+</li>
+<li><a href="#_reading">6. Reading</a></li>
+<li><a href="#_more_links">7. More Links.</a>
+<ul class="sectlevel2">
+<li><a href="#_on_jpms">7.1. On JPMS</a></li>
+<li><a href="#_on_javafx">7.2. On JavaFX</a></li>
+</ul>
+</li>
+<li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph lead">
+<p>In this week we will look into the Java Platform Module System.
+This is the way for modern java applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_platform_module_system"><a class="anchor" href="#_java_platform_module_system"></a><a class="link" href="#_java_platform_module_system">1. Java Platform Module System.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Platform Module System has been introduced with Java 9 and had a long development history at
+the point of introduction. For the Java developers at Oracle and others involved in the OpenJDK project it
+was considered a necessary step to make Java fit for the future and make it possible to shed some old
+nasty problems. In the development of Java there have been only a few <strong>major</strong> release, although each release of
+Java introduces new features that are supposed to play nice with what is already available. This is called forward
+and backward compatibility, so old programs keep working but can be maintained by using new features.</p>
+</div>
+<div class="paragraph">
+<p>The important major releases were:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java 1. Duh.</p>
+</li>
+<li>
+<p>Java 1.2 introducing the collection framework.</p>
+</li>
+<li>
+<p>Java 5 introduces Generics and the first version of the concurrency framework. It also changed the naming scheme. Internally it still is Java 1.5.</p>
+</li>
+<li>
+<p>Java 8 introduced a functional style of programming using Functional interfaces and lambda expressions</p>
+</li>
+<li>
+<p>Java 9 introduced the Java Platform Module System, and the project under which it came into being was called <strong>JigSaw</strong>.<br>
+ That last name points to the idea of taking the JDK and run-time library apart and recompose it using a better partitioning,
+actually applying separation of concerns in a big way. The project has been a multi year undertaking.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The changes provide the following advantages for the Java platform developers (from <a href="https://openjdk.java.net/projects/jigsaw">project jigsaw</a>)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Make it easier for developers to construct and maintain libraries and large applications;</p>
+</li>
+<li>
+<p>Improve the security and maintainability of Java SE Platform Implementations in general, and the JDK in particular;</p>
+</li>
+<li>
+<p>Enable improved application performance; and</p>
+</li>
+<li>
+<p>Enable the Java SE Platform, and the JDK, to scale down for use in small computing devices and dense cloud deployments.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As always with Java, the intent is that the new Java release (9) should be able to work very much the same as the earlier versions, and it does, without
+problems. If you use the JVM and JDK in <strong class="blue">classpath</strong> mode, it works very much like older versions. You define the jar files you need for you app and off you go.</p>
+</div>
+<div class="paragraph">
+<p>Although the intent always has been to make the transition as smooth as possible, when you want to use the module system to the fullest,
+it has some consequences.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Not everything in the JDK can be used in the same way as before, more protection is taking place as are checks.</p>
+</li>
+<li>
+<p>A module is <strong>closed</strong> by default and must explicitly export <span class="blue">package</span>s, if they are needed from outside the module.</p>
+</li>
+<li>
+<p>The classes in a module can&#8217;t be reflected on by default. If that is needed, the package must be made <span class="blue">open</span>ed for reflection.</p>
+</li>
+<li>
+<p>At the moment of writing these restrictions can be modified with startup flags of the JVM. Later Java releases may change the default settings,
+from rather permissive in Java 9 to more restricted in later releases. As an example, some settings became more strict with
+Java 16 and <a href="https://openjdk.java.net/jeps/396">JEP 396 Strongly Encapsulate JDK Internals by Default</a>.</p>
+</li>
+</ul>
+</div>
+<div class="videoblock">
+<div class="title">Keynote session by Mark Reinhold 2015 introducing JigSaw</div>
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/l1s7R85GF1A?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/module-graph.png" alt="module graph">
+</div>
+<div class="title">Figure 1. Java SE module graph</div>
+</div>
+<div class="paragraph">
+<p>Having a modular project or a non-modular project depends on the presence of a small file with a well defined name in a specific place.</p>
+</div>
+<div class="paragraph">
+<p>The module-info.java file should reside in the root folder of the java sources (which makes the defaul package). The name of the file
+is not a valid java type name and that is on purpose. The resulting class file contains the module declarations
+which specifies what a module <strong>needs</strong> (<em>reads</em> in JPMS terms) and what it provides (exports).</p>
+</div>
+<div class="paragraph">
+<p>The keywords specific to the module declaration are</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><span class="blue">exports</span> What the module provides. Use with one package per line.</p>
+</li>
+<li>
+<p><span class="blue">module</span> starts the declaration</p>
+</li>
+<li>
+<p><span class="blue">open</span> if before the module, opens the whole module for reflection.
+For instance for a module that defines all entities of a multi-module application.</p>
+</li>
+<li>
+<p><span class="blue">opens</span> allows reflection of a package. Use with one per package per line.</p>
+</li>
+<li>
+<p><span class="blue">provides</span> To indicate that a module implements some interface with one or more implementations.</p>
+</li>
+<li>
+<p><span class="blue">requires</span> Indicates what the module itself needs or <strong>reads</strong>. One package per line.</p>
+</li>
+<li>
+<p><span class="blue">transitive</span> Used with requires to indicate that there is a requirement that is then made readable to the users of this module as well.</p>
+</li>
+<li>
+<p><span class="blue">to</span> Used to restrict either exports or opens to specific other module(s).</p>
+</li>
+<li>
+<p><span class="blue">uses</span> To indicate that a module uses a service <span class="blue">provide</span>d by another module.</p>
+</li>
+<li>
+<p><span class="blue">with</span> Used with provides to indicate which implementation(s) are available for the
+provided interface implementation. See the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">Service Loader API</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As a rule, the module <span class="blue">java.base</span> is 'required' by default, the same a <span class="blue">java.lang</span> is available or imported by default, considering packages to import.</p>
+</div>
+<div class="paragraph">
+<p>A few examples.</p>
+</div>
+<div class="listingblock">
+<div class="title">Generic Mapper</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module  nl.fontys.sebivenlo.genericmapper {
+    requires java.logging;
+    requires nl.fontys.sebivenlo.sebiannotations;
+    exports genericmapper;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Generic DAO</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module nl.fontys.sebivenlo.genericdao {
+    requires nl.fontys.sebivenlo.genericmapper;
+    requires java.logging;
+    requires java.sql;
+    requires java.naming;
+    requires org.postgresql.jdbc;
+    requires nl.fontys.sebivenlo.sebiannotations;
+    exports genericdao.dao;
+    exports genericdao.memory;
+    exports genericdao.pgdao;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">FXTriangulate</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module fxtriangulate {
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires javafx.fxml;
+    requires java.base;
+    exports fxtriangulate ;
+    opens fxtriangulate to javafx.fxml;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">The FXTriangulate client, Surveyor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module surveyor {
+    requires java.logging;
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires javafx.fxml;
+    requires fxtriangulate;
+    exports surveyor;
+    opens surveyor to javafx.fxml;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">ALDA sorting srevices</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module sortingserviceapi {
+    exports sortingservice; <i class="conum" data-value="1"></i><b>(1)</b>
+}
+<span class="comment">// and</span>
+open module asortingservice {
+    requires java.logging;
+    requires sortingserviceapi;
+    uses sortingservice.SortingServiceFactory; <i class="conum" data-value="2"></i><b>(2)</b>
+    provides sortingservice.SortingServiceFactory with asortingservice.SortingServices; <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>defines sortingservice.SortingServiceFactory in package sortingservice</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>uses and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>provides Sorting Services presumably in tests.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JPMS explicitely forbids:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Split packages, that is using the same package name in different modules with different content.</p>
+</li>
+<li>
+<p>Cyclic dependencies as in A requires B requires A.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The dependencies are validated at the startup of the JVM, when you start Java.
+If any of the requirements is not met, the JVM refuses to start. This has the benefit
+that it is immediately obvious what is missing, instead of having a runtime error, when a class can&#8217;t be found, because
+the module has not been specified in the path, as is the case with the classpath mode.</p>
+</div>
+<div class="paragraph">
+<p>The split package has been a bit of an issue for testing, because in a modern project, (business) source and tests are separated into
+separate source trees, often with the same package structure, which looks a bit like split packages. The build tools (e.g. maven) understand
+this and can organise the files such that the JVM accepts it anyway.</p>
+</div>
+<div class="sect2">
+<h3 id="_changes_in_visibility"><a class="anchor" href="#_changes_in_visibility"></a><a class="link" href="#_changes_in_visibility">1.1. Changes in visibility</a></h3>
+<div class="paragraph">
+<p>Java has always had the visibility modifiers <span class="blue">public</span>, <span class="blue">protected</span>, <span class="blue">default</span>, and <span class="blue">private</span>, in descending order of access.
+This is still effective with the same rules <em>within</em> a module. However the module boundaries add an extra line of visibility defense.
+A public element from module A is only visible to elements in module B if the public elements is part of an exported package.
+As far as reflection goes. An element in module A is accessible via reflection only if the package of the element is open (with the <span class="blue">opens</span> keyword)
+either globally or explicitly to module B ( e.g. <code>module A { exports aPackage to B;}</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_modules_and_testing"><a class="anchor" href="#_java_modules_and_testing"></a><a class="link" href="#_java_modules_and_testing">2. Java Modules and Testing</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">Encapsulation gone wrong: So much for shining security armor.</div>
+<p><span class="image thumb left"><img src="./images/shiningArmor-cropped.png" alt="shiningArmor cropped" width="400" title="So much for shining security armor"></span> Project Jigsaw,
+now known as the <strong>J</strong>ava <strong>P</strong>latform <strong>M</strong>odule <strong>S</strong>ystem solves problems
+that lingered in the Java ecosystem since its inception. The standard encapsulation or visibility model
+with protection or visibility modes <code>private</code>, <code>package private (default)</code> provide too
+little defense against (ab)use of non-public API&#8217;s. That plus the fact that reflection is very powerful.
+A java security manager can put up some defense against reflection abuse, but enabling this kind of security is optional.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
+This made many internal details of the JDK free game. Much like a knight in shiny armor is defenseless against a can opener.</p>
+</div>
+<hr>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The java platform module system (JPMS) promotes loose coupling.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This is all fine and good, but testing, in particular Unit testing relies on access to the 'private' parts
+of a class and package, in particular the package private parts.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>API or <strong>A</strong>pplication <strong>P</strong>rogramming <strong>I</strong>nterface is defined as the publicly visible
+parts of classes. In Java those are <strong>public</strong> and <strong>protected</strong> members (methods and fields).
+Members that are neither public or protected should not be considered part of the API.</p>
+</div>
+<div class="paragraph">
+<p>Actually, API in this case should be spelled APPI for <strong>A</strong>pplication <strong>P</strong>ublic <strong>P</strong>rogramming <strong>I</strong>nterface, but we all know
+bad habits die slowly.</p>
+</div>
+<div class="paragraph">
+<p>A smaller API has also a smaller attack surface for real security intrusions. This is another major reason for improved encapsulation of the
+stuff in the JDK.</p>
+</div>
+<div class="paragraph">
+<p>To minimize coupling, it is also wise to keep the API minimal, but without impairing the usefulness of the
+API. Often an API can be enhanced with some convenience features that combine parts in the already public part. This does NOT enlarge exposed parts.
+See for instance the methods in
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html">java.nio.file.Files</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_black_box_vs_white_box"><a class="anchor" href="#_black_box_vs_white_box"></a><a class="link" href="#_black_box_vs_white_box">2.1. Black box vs White Box</a></h3>
+<div class="paragraph">
+<p>In testing, one distinguishes between so called <strong>black</strong> box and <strong>white</strong> box tests.</p>
+</div>
+<div class="paragraph">
+<p><strong>Black box</strong> in this respect means that you cannot see the internals, but only those parts defined in the API.
+This is the way that a client package will use the API. Black box testing is easily supported by the module system, because the test classes behave as ordinary
+clients.<br>
+<strong>White box</strong> would better be called transparent box, but the name <em>white box</em> stuck. In white box tests you <strong>DO</strong> want access to the (package) private parts
+of your business code. This is a bit handicapped by the way the JPMS allows access.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_standard_source_code_organization"><a class="anchor" href="#_standard_source_code_organization"></a><a class="link" href="#_standard_source_code_organization">2.2. Standard Source code organization.</a></h3>
+<div class="listingblock">
+<div class="title">source tree of genericdao</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">src
+├── main
+│   └── java
+│       └── genericdao
+│           ├── dao
+│           ├── memory
+│           └── pgdao
+└── test
+    └── java
+        ├── entities
+        ├── genericdao
+        │   ├── dao
+        │   ├── memory
+        │   └── pgdao
+        └── usertypes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We are using maven, in which the unit test plugin is called <strong>surefire</strong>, the integration test plugin (which we
+  did not use up to this point yet) is called <strong>failsafe</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The standard way source code is organized is by means of separate directories for
+the 'business' code and the test code in two separate directory trees inside the same project.<br>
+This practice, which prevents test code to land in the final application or library jar file is useful, so we will keep it as it is.</p>
+</div>
+<div class="paragraph">
+<p>However, JPMS does not allow so called <em>split packages</em>. Surefire addresses this problem by telling
+the JVM to <em>patch</em> the module we are testing with the classes defined in the test source tree.
+It is as if the test classes are put in the business source tree.<br>
+This allows the test classes access to the package private parts of the classes, the way it worked in before JPMS.</p>
+</div>
+<div class="listingblock">
+<div class="title">Module definition of sebi dao.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">module nl.fontys.sebidao {
+    exports nl.fontys.sebivenlo.dao;
+    exports nl.fontys.sebivenlo.dao.memory;
+    exports nl.fontys.sebivenlo.dao.pg;
+    requires java.logging;
+    requires java.naming;
+    requires java.sql;
+    requires org.postgresql.jdbc;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The module definition above exports three packages and declares itself
+dependent on 3 modules from Java API and one postgresql module.</p>
+</div>
+<div class="paragraph">
+<p>Unit tests, and in particular the testing libraries such as AssertJ, and Mockito
+use reflection to do their work. The simplest example is JUnit itself, which uses reflection to read the annotations
+in the class file. So does Mockito. AssertJ uses reflection to get to fields (for deepEquals) and methods. Reflection is a tool very sharp indeed, to
+get to the guts of the <strong>S</strong>ystem <strong>U</strong>nder <strong>T</strong>est. Of these Test libraries JUnit and AssertJ have module definitions already. Mockito and postgresql do not have that
+at the time of writing this document (April 2020).</p>
+</div>
+<div class="paragraph">
+<p>The quickest way to allow the testing tools access is to fully OPEN the packages of the <strong>SUT</strong> to world.
+Because this happens during testing, surefire is instructed to tell the jvm (java), that runs the test, to
+open those packages to the world. The snippet from the maven pom file that realizes that is given below. You can copy
+and adapt it for your own purposes.</p>
+</div>
+<div class="listingblock">
+<div class="title">sebipom project with surefire.opens property to open op required packages for testing. Requires sebipom &gt;= 3.0.2</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">  <span class="tag">&lt;properties&gt;</span>
+    <span class="tag">&lt;surefire.opens&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <i class="conum" data-value="2"></i><b>(2)</b>
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/usertypes=ALL-UNNAMED
+        --add-opens nl.fontys.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
+    <span class="tag">&lt;/surefire.opens&gt;</span>
+    <i class="conum" data-value="3"></i><b>(3)</b>
+  <span class="tag">&lt;/properties&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We are adding a property for the surefire plugin which is picked up by sebipom.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In particular the arguments that are passed to the JVM that runs the tests,
+which appends <strong>--add-opens</strong> commands for all packages that require unit tests.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Other properties are left out for brevity.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The above requires sebipom version 3.0.2 or higher as parent for your project. Also works
+if the parent of your modular maven project uses sebipom as parent.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Of particular importance, and project specific are the <code class="blue">--add-opens</code> commands, which you must adapt to your own project&#8217;s
+pom file with your own module and package names.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/opens.svg" alt="opens" width="600">
+</div>
+<div class="title">Figure 2. opens sets module and package</div>
+</div>
+<div class="paragraph">
+<p><strong>Opens</strong> is the most powerful way of exporting a package. It allows full access (as in <code>exports</code>) plus reflection.
+We could try to make more specific export lines such as <strong>--add-export</strong>, but although more precise, that will not help very much, because the
+access enabling lines will only take effect during the (surefire) unit tests.<br>
+If you have <em>failsafe</em> integration tests, you will have to do
+the same for the <em>failsafe</em> plugin, although failsafe tests should stick to black box testing, where such can opener style configuration should not be required.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_fx_bindings"><a class="anchor" href="#_java_fx_bindings"></a><a class="link" href="#_java_fx_bindings">3. Java FX Bindings</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The graphic style of JavaFX is already quite nice. The architecture
+of JavaFX applied the lessons learned from the earlier Java framework AWT and Swing.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<a href="https://en.wikipedia.org/wiki/Swing_(Java)">Swing</a> and <a href="https://en.wikipedia.org/wiki/Abstract_Window_Toolkit">AWT</a> are the Java GUI
+frameworks with which NetBeans IDE and Intelij is built.
+That proves that these framworks are still in use in the industry.<br>
+There is another Java GUI framework word mentioning, which is <a href="https://www.eclipse.org/swt/">SWT</a>, developed by IBM under the Eclipse flag.
+You may be familiar with the style if you have used for instance <a href="https://dbeaver.io/">DBeaver</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>One of the other important innovations are the JavaFX bindings.
+They provide an elegant way to distribute dynamic information throughout a
+GUI application, and help separating business and GUI code.</p>
+</div>
+<div class="paragraph">
+<p>The concept of bindings relies on the <a href="https://en.wikipedia.org/wiki/Observer_pattern">Observer Pattern</a>,
+which says that a change producing instance can inform an interested party about a change that happenend.</p>
+</div>
+<div class="paragraph">
+<p>The classic observer pattern informs all of its <strong>Observers</strong>, or <strong>Listeners</strong> immediately of and change.
+The JavaFX approach is to relax a bit and take the Lazy approach.
+Being lazy is good, because avoiding work that is (not yet) needed is a way to reduce work and
+in the end speed up an application.</p>
+</div>
+<div class="paragraph">
+<div class="title">tubmling dominos. source stkinfo.com</div>
+<p><span class="image thumb left related"><img src="./images/dominos2.gif" alt="dominos2"></span>
+The idea is to only invalidate a value when a change happens, and only start the computation when some one
+actually needs the result, for instance the GUI layer that needs to do a redraw.<br>
+Since Observables can be chained, changing one value may trigger a whole avalanche of computations.
+In JavaFx, it is still an avalanche, but of <strong class="green">invalidations</strong>, and <em class="green">no</em> computations. The computation is only done
+when some one needs the result.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>JavaFX defines so called Properties in the <code>javafx.beans</code> package and its sub-packages <code>javafx.beans.properties</code> and <code>javafx.beans.bindings</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://docs.oracle.com/javafx/2/binding/jfxpub-binding.htm">Oracle tutorial</a> by Scott Hommel sheds some light on the matter.</p>
+</div>
+<div class="paragraph">
+<p>The Bindings and Properties packages provide several ways to create bindings, including expressions of various types,
+with specialized properties for <span class="blue">int</span>, <span class="blue">long</span>, and <span class="blue">double</span> as the most important
+specializations.</p>
+</div>
+<div class="sect2">
+<h3 id="_binding_apis"><a class="anchor" href="#_binding_apis"></a><a class="link" href="#_binding_apis">3.1. Binding APIs</a></h3>
+<div class="listingblock">
+<div class="title">In all examples we use two IntegerProperties.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    IntegerProperty num1 = <span class="keyword">new</span> SimpleIntegerProperty( <span class="integer">1</span> );
+    IntegerProperty num2 = <span class="keyword">new</span> SimpleIntegerProperty( <span class="integer">2</span> );</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Bindings using Fluent API, from Oracle Tutorial</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    NumberBinding sum = num1.add( num2 ); <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="predefined-type">System</span>.out.println( sum.getValue() );
+    num1.set(<span class="integer">2</span>);                          <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="type">int</span> result= sum.getValue();           <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">System</span>.out.println( result );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Creates the binding but does NOT compute anything</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Set the value, and invalidates the value, so observers must recalculate.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The get is the observer&#8217;s action that actually triggers the actual computation.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Bindings class</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    NumberBinding sum = Bindings.add(num1,num2); <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="predefined-type">System</span>.out.println(sum.getValue());
+    num1.setValue(<span class="integer">2</span>);                            <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="type">int</span> result= sum.getValue();                  <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">System</span>.err.println( result );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Creates the binding but does NOT compute anything</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Set the value, and invalidates the value, so observers must recalculate.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The get is the observer&#8217;s action that actually triggers the actual computation.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Low level API</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    IntegerBinding sum( IntegerProperty n1, IntegerProperty n2 ) {
+        <span class="keyword">return</span> <span class="keyword">new</span> IntegerBinding() {      <i class="conum" data-value="1"></i><b>(1)</b>
+
+            {                              <i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="local-variable">super</span>.bind( n1, n2 );
+            }
+
+            <span class="annotation">@Override</span>
+            <span class="directive">protected</span> <span class="type">int</span> computeValue() { <i class="conum" data-value="3"></i><b>(3)</b>
+                <span class="keyword">return</span> n1.get()+n2.get();
+            }
+        };
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Anonymous inner class with <code>IntegerBinding</code> as <span class="blue">super</span> class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Anonymous 'constructor' that tells the binding what its dependencies are.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The computation, which can be arbitrarily complex, and is only executed if
+some one ask the super for get(), which will then invoke <code>computeValue()</code>. Note the use of protected, so
+this method is only callable from within the hierarchy between the IntegerBinding and its anonymous sub class.
+computeValue is the only abstract method in <span class="blue">abstract class</span> <strong>IntegerBinding</strong>.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Quite often, and certainly when dealing with a GUI, you need to translate the values of a binding into
+its String representation. In this case <span class="red">toString()</span> does <strong class="big red">NOT</strong> cut it.<br>
+What you need is a <a href="https://openjfx.cn/javadoc/16/javafx.base/javafx/beans/binding/StringBinding.html">StringBinding</a> that is created
+from the Binding you want to show as text. That is what <span class="blue">public StringBinding asString()</span> in the Binding framework is for.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unbinding_doublebinding_dependencies"><a class="anchor" href="#_unbinding_doublebinding_dependencies"></a><a class="link" href="#_unbinding_doublebinding_dependencies">3.2. Unbinding DoubleBinding dependencies</a></h3>
+<div class="paragraph">
+<p>There are use cases where you have to unbind bindings. One such use case is the exercise FXTriangulate.
+The DoubleBinding abstract class implements <span class="blue">javafx.beans.binding.Binding</span>, which states in its doc that the <code>getDepencies()</code> method should not be used
+in production code. We therefor will us a simpler approach.</p>
+</div>
+<div class="paragraph">
+<p>Since the <code class="blue">protected# bind(&#8230;&#8203;)</code> and <code class="blue">protected unbind()</code> methods both take a <em>varargs</em> argument, which is an array in disguise,
+the only thing you can do is to remember all bound bindings and
+when you have to unbind one, unbind all and then rebind the remaining.
+This appears the most reliable method.</p>
+</div>
+<div class="paragraph">
+<p>The binding and unbinding is necessary to make the binding listen to its dependencies.</p>
+</div>
+<div class="listingblock">
+<div class="title">The code for that looks like this.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ModifyableDoubleBinding</span> <span class="directive">extends</span> DoubleBinding {
+
+    <span class="predefined-type">Set</span>&lt;ObservableDoubleValue&gt; values = <span class="keyword">new</span> <span class="predefined-type">HashSet</span>&lt;&gt;();
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">double</span> computeValue() {
+        <span class="type">double</span> result = values.stream()
+                .mapToDouble( ObservableDoubleValue::get ).sum();
+        <span class="keyword">return</span> result;
+    }
+
+    <span class="type">void</span> add( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) ); <i class="conum" data-value="1"></i><b>(1)</b>
+        values.add( v );
+        bind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+        invalidate();
+    }
+
+    <span class="type">void</span> remove( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+        values.remove( v );
+        bind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+        invalidate();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>Collection.toArray(IntFunction&lt;T[]&gt; generator)</code> is a method introduced in Java 11.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_caching_bindings"><a class="anchor" href="#_caching_bindings"></a><a class="link" href="#_caching_bindings">3.3. Caching bindings</a></h3>
+<div class="paragraph">
+<p>Creating bindings is powerful but can still lead to a performance bottleneck. If you create bindings willy-nilly, it might very well
+be that the same computation is done at several places and in a GUI screen redraw at almost the same time (or at least the reason) too.</p>
+</div>
+<div class="paragraph">
+<p>To mitigate that problem, it can be wise to cache a binding once it&#8217;s created, and serve out the same binding on each subsequent call.
+A binding can have many <strong>Listeners</strong>, and it will dutifully inform all of them with either an invalidation call or change event.
+The Bindings themselves cache the value of the (last) computation and serve that out until it is 'discarded' on an invalidate call.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The secret sauce in many speed optimizations is avoiding work. Thereby you avoid burning CPU cycles.
+And burning them is useless when nobody really needs the result (yet). Being lazy is good, but
+it needs some extra work from the programmer.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Naive approach using computeIfAbsent.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    DoubleBinding lengthBinding( <span class="predefined-type">Line</span> aLine ) { <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> lengthBindings
+            .computeIfAbsent( aLine,
+                l -&gt; lengthBinding(
+                      l.startXProperty(),
+                      l.startYProperty(),
+                      l.endXProperty(),
+                      l.endYProperty()
+                )
+            );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We use the line object as key in the map</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A naive approach to caching is to inspect a value for <span class="blue">null</span> and then instantiate one value when it is.
+In this case, because both the creation of the cache entries and the retrieval of the vale take place on the event thread, this naive approach works.</p>
+</div>
+<div class="paragraph">
+<p>If you want that thread safe, you could use the same map as above with a <em>surrogate</em> key, like a simple object named <code>Object AREA_KEY = new Object();</code>.
+You then can rely on the thread-safety properties of
+ a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentMap.html">ConcurrentMap</a>
+ instead of using a 'normal' hash map.</p>
+</div>
+<div class="listingblock">
+<div class="title">Caching a single value.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="comment">/**
+    * Cache for area binding.
+    */</span>
+   <span class="directive">private</span> DoubleBinding areaBinding = <span class="predefined-constant">null</span>;
+
+   <span class="comment">/**
+    * Create a binding to compute the area with a triangle determined by side
+    * lengths a, b and c. This method consults the cache and has the value computed
+    *
+    * @return the area binding
+    */</span>
+   <span class="directive">final</span> DoubleBinding areaBinding() {
+       <span class="keyword">if</span> ( areaBinding == <span class="predefined-constant">null</span> ) {
+           areaBinding = areaBinding( distanceBinding( redCircle, greenCircle ), <i class="conum" data-value="1"></i><b>(1)</b>
+                   distanceBinding( greenCircle, blueCircle ),
+                   distanceBinding( blueCircle, redCircle ) );
+       }
+       <span class="keyword">return</span> areaBinding;
+   }
+   <span class="comment">// method that creates the binding is left as an exercise</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Compute the binding if not yet available.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The approach of inspecting a value for null and then instantiating a new object when null is NOT threadsafe.
+The approach works in this case, because it all happens on the event thread, on the same thread, so there will
+be no interfering threads.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_scenebuilder"><a class="anchor" href="#_using_scenebuilder"></a><a class="link" href="#_using_scenebuilder">4. Using SceneBuilder</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using <a href="https://gluonhq.com/products/scene-builder/#download">SceneBuilder</a> the idea is that you design the scene using SceneBuilder, which effectively
+is a what you see is what you get FXML editor. The JavaFx, more specifically the FXML part
+builds the graphical components or even the complete UI from such FXML files.</p>
+</div>
+<div class="paragraph">
+<p>You can have multiple FXML files per application, much like you can have many scenes in a move or stage play.</p>
+</div>
+<div class="paragraph">
+<p>There are various demos on Scenebuilder on youtube.</p>
+</div>
+<div class="videoblock">
+<div class="title">Creating a first App in Scene Builder</div>
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/ij0HwRAlCmo?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="videoblock">
+<div class="title">JavaFX Tutorial for Beginners 5 - Installing SceneBuilder and Integrating it into Netbeans IDE</div>
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/knbw1MvMfBA?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Creating or updating the java controller from the FXML file.</div>
+<p><span class="image right thumb related"><img src="./images/MakeController.png" alt="MakeController"></span>
+One of the most valuable tips from one of those videos is the fact that you can start with
+scenebuilder and define your graphical components and methods in SceneBuilder and hence in the
+fxml file and that then NetBeans IDE can <em>generate</em> or <strong>update</strong> the controller for you.
+Working in this way can help you avoid typing or (different) spelling errors.</p>
+</div>
+<div class="sect2">
+<h3 id="_defining_widgets_using_fxml"><a class="anchor" href="#_defining_widgets_using_fxml"></a><a class="link" href="#_defining_widgets_using_fxml">4.1. Defining Widgets using FXML</a></h3>
+<div class="paragraph">
+<p>You can use FXML to define whole scenes for your application, but also to make your own <strong>specialized components</strong>.
+You can then layout them as you want and <strong>import</strong> them into SceneBuilder, where they behave like any other widget already available.
+This allows you to extend the available choices, and make special widgets that can play nicely with something like a game or a planning application.</p>
+</div>
+<div class="paragraph">
+<p>When you want to define your own component, you have to make a few changes to the FXML file and have the component class
+load the FXML by itself.</p>
+</div>
+<div class="listingblock">
+<div class="title">Typical FXML file for an application.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;AnchorPane</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AnchorPane</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">root</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">prefHeight</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">564.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">prefWidth</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">535.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stylesheets</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@stylesheet.css</span><span class="delimiter">&quot;</span></span>
+  <span class="tag">&gt;</span>
+<span class="tag">&lt;/AnchorPane&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">With your own component, you have to define a <code>fx:root</code>. Example from FXTriangulator exercise.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;fx:root</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">javafx.scene.Group</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://javafx.com/javafx/16</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:fx</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://javafx.com/fxml/1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREEN</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">BLUE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">centerCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREY</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">9.5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREEN</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">BLUE</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">areaLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/fx:root&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From the FXML file you can infer that the widget (in this case) is a specialized <a href="https://openjfx.cn/javadoc/16/javafx.graphics/javafx/scene/Group.html">java.fx.Group</a>.
+It can be any type that is a subclass of <a href="https://openjfx.cn/javadoc/16/javafx.graphics/javafx/scene/Parent.html">Parent</a> (including Parent),
+if you want the widget to have sub-components.</p>
+</div>
+<div class="paragraph">
+<p>Then in the Java file that is both controller and the subclass of the component you want to specialize, Group in the example.</p>
+</div>
+<div class="listingblock">
+<div class="title">Class header of specialized widget.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Triangulator</span> <span class="directive">extends</span> <span class="predefined-type">Group</span> <span class="directive">implements</span> Initializable {
+
+    <span class="annotation">@FXML</span>
+    Circle redCircle;
+    <span class="annotation">@FXML</span>
+    Circle blueCircle;
+    <span class="annotation">@FXML</span>
+    Circle greenCircle;
+
+
+<span class="comment">// stuff left out</span>
+    Triangulator( BindingBusiness bb ) {
+        <span class="local-variable">this</span>.bb = bb;
+        FXMLLoader fxmlLoader =
+           <span class="keyword">new</span> FXMLLoader( getClass().getResource( <span class="string"><span class="delimiter">&quot;</span><span class="content">triangulator.fxml</span><span class="delimiter">&quot;</span></span> ) ); <i class="conum" data-value="1"></i><b>(1)</b>
+
+        connectLoader( fxmlLoader ); <i class="conum" data-value="2"></i><b>(2)</b>
+
+        <span class="keyword">try</span> {
+            fxmlLoader.load();
+        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> exception ) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>( exception );
+        }
+    }
+
+    <span class="directive">final</span> <span class="type">void</span> connectLoader( FXMLLoader fxmlLoader ) { <i class="conum" data-value="3"></i><b>(3)</b>
+        fxmlLoader.setRoot( <span class="local-variable">this</span> );
+        fxmlLoader.setController( <span class="local-variable">this</span> );
+    }
+
+<span class="comment">// more stuff left out</span>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Load the widgets fxml definitions. This will insert all @FXML  annotated  fields
+and would attach the actions to the @FXML annotated methods.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Connect <strong class="blue">this</strong> to the loaded FXML document.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Use a final or private method to set the root and controller of the loaded object to this, to
+avoid the warning of exposing this in the constructor.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the example widget we have three dots connected with lines. The dots are draggable, while the lines stay connected.
+The lengths can be computed using Bindings and are thus automatically updated, and are shown next to the lines.</p>
+</div>
+<div class="paragraph">
+<p>We will use such a widget in the next example.</p>
+</div>
+<div class="paragraph">
+<div class="title">Library settings hidden behind a cog-wheel.</div>
+<p><span class="image thumb left related"><img src="./images/SceneBuilderLibraryCog.png" alt="SceneBuilderLibraryCog"></span>
+Importing into scenebuilder is then done using the tiny cog next to the search text-field labeled Library. When you choose <strong>Jar/FXML Manager</strong>, you can add
+widget libraries like you would with maven or point at a library on you machine.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/SceenBuilderLibraryManager.png" alt="SceenBuilderLibraryManager">
+</div>
+<div class="title">Figure 3. Library Manager</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fx_triangulation"><a class="anchor" href="#_fx_triangulation"></a><a class="link" href="#_fx_triangulation">FX Triangulation</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The widget you will create is to do <a href="https://en.wikipedia.org/wiki/Polygon_triangulation">Polygon triangulation</a>.
+It is an activity done by surveyor teams.</p>
+</div>
+<div class="paragraph">
+<p>In the first part we will create a custom <a href="https://en.wikipedia.org/wiki/Graphical_widget">widget</a>
+with its own controller and <a href="https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/Node.html">Java FX Node</a>,
+in this particular case a <a href="https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/Group.html">Group</a></p>
+</div>
+<div class="paragraph">
+<p>You will complete a GUI component or Widget that will be used in the SurveyorApp in the second part.</p>
+</div>
+<div class="paragraph">
+<p>The advantages of developing a widget is a separate project are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Potential reuse.</p>
+</li>
+<li>
+<p>Separation of concerns.</p>
+</li>
+<li>
+<p>Example of work separation. That what has been unit tested and coverage tested\
+can be put as a separate task for a developer.</p>
+</li>
+<li>
+<p>Didactic: show the use and impact of JPMS</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/triangle-bindings.svg" alt="triangle bindings">
+</div>
+<div class="title">Figure 4. Conventions in the triangulator.</div>
+</div>
+<div class="paragraph">
+<p><strong>Roles of the bindings</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The corners of the triangle are represented as circles.</p>
+</li>
+<li>
+<p><strong>Length of leg</strong> The leg of a triangle is used to determine the distance between the corners.<br>
+when they coincide with the legs of a polygon, they measure the length of that leg.</p>
+</li>
+<li>
+<p><strong>Midpoint</strong> of the lines are used in the GUI to position the attached length- and
+name labels of the triangle edges.</p>
+</li>
+<li>
+<p><strong>Center point or center of gravity of the triangle</strong>. Used to place the area label of the triangle.</p>
+</li>
+<li>
+<p><strong>Active lines</strong> To be able to measure the sum of lengths of the edges, some, but not all edges of the triangle are relevant.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_use_of_the_triangulator_in_the_surveyor_app"><a class="anchor" href="#_use_of_the_triangulator_in_the_surveyor_app"></a><a class="link" href="#_use_of_the_triangulator_in_the_surveyor_app">Use of the Triangulator in the Surveyor App.</a></h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/surveyor-in-use.png" alt="surveyor in use">
+</div>
+<div class="title">Figure 5. Surveyor App UI</div>
+</div>
+<div class="paragraph">
+<p>The Triangulator is a component that is used in the Surveyor App.
+You will find the app in your repository too, as an example to play with, but has no tests nor
+required business code for you to complete. See is as a code example of JPMS modular use and how a self created widget
+can be integrated in another project.</p>
+</div>
+<div class="paragraph">
+<p>The requirements are more or less given by the (picture) of the UI and:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be able to manipulate both the points of the triangle by dragging them with a mouse,
+and set the individual coordinates of the points in text fields.</p>
+</li>
+<li>
+<p>The UI should show the area measured by the triangulator in a separate label.</p>
+</li>
+<li>
+<p>Same for the lengths of the lines.</p>
+</li>
+<li>
+<p>Since not all lines participate in the measurement of the border of a polygon, it should be able
+to specify which lines participate in the border length for a certain measurement.</p>
+</li>
+<li>
+<p>It should be able to summarize as in sum up the results of the measurements, so as to determine both the <strong>total border length</strong> and the <strong>total area</strong> of a <em>polygon</em>.</p>
+</li>
+<li>
+<p>The polygon must be visible and loadable in some way.</p>
+</li>
+</ul>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>FX Triangulation</summary>
+<div class="imageblock">
+<div class="content">
+<img src="./images/fxtriangulator-cd.svg" alt="fxtriangulator cd">
+</div>
+<div class="title">Figure 6. Class diagram Triangulatort Widget</div>
+</div>
+<div class="paragraph">
+<p>You will use JavaFX bindings to show the changing values of side lengths and area
+of a triangle. This is a tool that might be of use for surveyors. It uses the
+same mathematical computations to compute the enclosed area of a triangle.</p>
+</div>
+<div class="paragraph">
+<p>A triangle is determined by three points, A, B, C.
+The sides are called a,b, and c, where <em>a</em> is opposite point <strong>A</strong> etc.
+<span class="red">A</span>, <span class="red">a</span>, <span class="green">B</span>, <span class="green">b</span>, <span class="blue">C</span>, and <span class="blue">c</span>, have the colours <span class="red">red</span>, <span class="green">green</span>, and <span class="blue">blue</span>.</p>
+</div>
+<div class="paragraph">
+<p>The length of a side is determined by the formula of Pythagoras.
+\( l= \sqrt{(x_2-x_1)\times(x2-x1)+(y_2-y_1)\times(y_2-y_1)} \)</p>
+</div>
+<div class="paragraph">
+<p>Let \(A_x,A_y\) be the coordinates for point \(A\), similar for \(B\) and \(C\).</p>
+</div>
+<div class="paragraph">
+<p>The length  \(a\) of the side opposite \(A\):
+\( a= \sqrt{(C_x-B_x)\times(C_x-B_x)+(C_y-B_y)\times(C_y-B_y)}\).</p>
+</div>
+<div class="paragraph">
+<p>With this we can also compute side lengths \(b\) and \(c\).</p>
+</div>
+<div class="paragraph">
+<p>With lengths a, b, and c  the area of a triangle can be determined with <a href="https://en.wikipedia.org/wiki/Heron%27s_formula">Heron&#8217;s formula</a>.</p>
+</div>
+<div class="paragraph">
+<p>Let \(s = \frac{a+b+c}{2}\)</p>
+</div>
+<div class="paragraph">
+<p>Then the area of the triangle is  \(\text{Area}= \sqrt{s\times(s-a)\times(s-b)\times(s-c)}\).</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../exercises/fxtriangulate/apidocs/index.html">javadoc</a> of the application
+and the <a href="../exercises/fxtriangulate/testapidocs/index.html">test javadoc</a> are available by following the links.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/triangulate.png" alt="triangulate">
+</div>
+<div class="title">Figure 7. screenshot of app</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the diagram you have three lines, red, green and blue, and three circles, also red, green and blue.</p>
+</li>
+<li>
+<p>In all cases the circle is opposite the line of the same color.</p>
+</li>
+<li>
+<p>The lines connect the circles of the <em>other</em> colors.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The triangulator supports the concept of <strong>active lines</strong>. An active line participates in the binding to find the total length of the
+circumference. When using the triangulator to survey an polygon shaped area, not all legs of the triangle should be used. The only exception
+is when the polygon to survey is itself a triangle.
+If a triangle leg  coincides with one of the sides of the polygon, it can be used to measure the length of that side,
+but only once for each coincidence, to prevent double count.</p>
+</div>
+<div class="paragraph">
+<p>You can find the test descriptions and the methods to be tested in the source code.<br>
+Look for the todo&#8217;s with <span class="keyseq"><kbd>CTRL</kbd>+<kbd>6</kbd></span> in NetBeans IDE.</p>
+</div>
+<div class="paragraph">
+<p>If you want to run the triangulator as a separate app,
+you may have to include a property in the <span class="blue">pom.xml</span> file that states
+what the main class is.</p>
+</div>
+<div class="listingblock">
+<div class="title">Set the main class in the properties section</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">   <span class="tag">&lt;properties&gt;</span>
+   ...
+    <span class="tag">&lt;exec.mainClass&gt;</span>fxtriangulate.App<span class="tag">&lt;/exec.mainClass&gt;</span>
+   ...
+   <span class="tag">&lt;/properties&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To start it from the command line you can use a script that creates a jpms image and runs the jvm from there.</p>
+</div>
+<div class="listingblock">
+<div class="title">Linux and Mac script</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
+
+if [ ! -f target/fxtriangulate/bin/java ]; then
+    mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink <i class="conum" data-value="1"></i><b>(1)</b>
+fi
+
+## run the java version in the fxtriangulate image.
+target/fxtriangulate/bin/java -m fxtriangulate/fxtriangulate.App <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Build an java image.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Run the app from the image directory.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Windows version (untested)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bat">@echo off
+set java=target/fxtriangulate/bin/java
+if not exist %java% call mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink
+echo.
+target/fxtriangulate/bin/java -m fxtriangulate/fxtriangulate.App</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If one of the givens tests. in particular GUITests.tLength fails on your machine, it may have to do
+with the locale of your machine. In week 10 we provide a <a href="week10.html#_number_formats">solution for that exact problem</a>.
+We have put it there because it belongs to the topics of that week.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div><!--end fxtriangulation.adoc -->
+<div class="paragraph">
+<p>When running the scripts in the above example, the file <strong class="black">target/fxtriangulate.zip</strong> contains a complete image for the application.
+You should be able to deploy it on another machine with the same architecture. Because the image brings along its own java virtual machine and
+libraries, you do not have to have java installed on the target machine.
+This way of deployment is very similar to what you see in app stores on mobile devices. The app brings along its complete set of
+required dependencies and resources. The advantages are easy deployment. The disadvantage is big images, which take up a lot of space.
+But that appears to be a minor problem nowadays. And since the image created by jlink contains only the required parts of the JDK and
+not all of it, there is a gain in using <strong class="blue">jlink</strong> as a path to deployment.</p>
+</div>
+<div class="paragraph">
+<p>The trimming down of the image is one of the features made possible by the Java Platform Module System.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/netbeansaction-fx.png" alt="netbeansaction fx">
+</div>
+<div class="title">Figure 8. You can run the triangulator from netbeans (green play button at the top) with the following settings:</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_scene_switching"><a class="anchor" href="#_testing_scene_switching"></a><a class="link" href="#_testing_scene_switching">5. Testing Scene Switching</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It may look like a black art, but isn&#8217;t. Again it is cooking with water.
+It gets a bit harder when you want (and we insist) to throw a bit of testing into the mix.
+What may trouble the waters a bit is that testing is typically blatantly ignored by the examples,
+including the ones created by your IDE. Let us fix that.</p>
+</div>
+<div class="sect2">
+<h3 id="_use_case_application_with_multiple_scenes"><a class="anchor" href="#_use_case_application_with_multiple_scenes"></a><a class="link" href="#_use_case_application_with_multiple_scenes">5.1. Use case: application with multiple "scenes".</a></h3>
+<div class="paragraph">
+<p>In many applications you want to be able to change from one fx scene, typically a form of sorts, to another one.
+You can do that relatively easy, by following the examples generated.
+Testing the switching is never considered in the examples, so we must repair that.</p>
+</div>
+<div class="paragraph">
+<p>Because we want to work test driven, we start with the test.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>We are not switching the <em>Scene</em> but actually the <strong>root</strong> of the Scene. But SceneSwitching says more about the purpose,
+not how it is done. So much for naming.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Make Robby check a box and switch the scene.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Start</span>
+    <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
+        app = <span class="keyword">new</span> Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
+        app.start( stage );
+        <span class="local-variable">this</span>.stage = stage;
+    }
+
+<span class="comment">//    @Disabled(&quot;think TDD&quot;)</span>
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> tSwitch() {
+        Parent root = stage.getScene().getRoot();
+        printChildren( root );
+        app.setRoot( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span> );
+        FxRobot rob = <span class="keyword">new</span> FxRobot();
+        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#cb1</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="predefined-type">Button</span> b = (<span class="predefined-type">Button</span>) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#secondaryButton</span><span class="delimiter">&quot;</span></span> ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
+        rob.clickOn( b ); <i class="conum" data-value="3"></i><b>(3)</b>
+        pause( <span class="integer">1000</span> );  <i class="conum" data-value="4"></i><b>(4)</b>
+        b = (<span class="predefined-type">Button</span>) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#tertiaryButton</span><span class="delimiter">&quot;</span></span> ).query();
+        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#cb1</span><span class="delimiter">&quot;</span></span> );
+        rob.clickOn( b );
+        pause( <span class="integer">1000</span> );
+        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span> );
+
+<span class="comment">//        fail( &quot;method method reached end. You know what to do.&quot; );</span>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Do a "business" operation.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Select button and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>press it to make scene switching work.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Give the human a break, so that he/she can convince (her|him) self.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For UI test, and for FX test in particular, you need some setup.</p>
+</div>
+<div class="listingblock">
+<div class="title">Boring setup to make it work on a 'headless' test server.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> {
+        <span class="keyword">if</span> ( <span class="predefined-type">Boolean</span>.getBoolean( <span class="string"><span class="delimiter">&quot;</span><span class="content">SERVER</span><span class="delimiter">&quot;</span></span> ) ) {
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">java.awt.headless</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">testfx.robot</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">glass</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">testfx.headless</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">prism.order</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sw</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">prism.text</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">t2k</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">glass.platform</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Monocle</span><span class="delimiter">&quot;</span></span> );
+            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">monocle.platform</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Headless</span><span class="delimiter">&quot;</span></span> );
+        }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">The required start method for an fx test</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Start</span>
+    <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
+        app = <span class="keyword">new</span> Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
+        app.start( stage );
+        <span class="local-variable">this</span>.stage = stage;
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Note that the start method actually gets the complete switcher app.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To make this work not only for a trivial demo, we threw in a factory pattern, the odd Lambda, and a few maps for good measure.</p>
+</div>
+<div class="listingblock">
+<div class="title">First the controller. The secondary and tertiary are the same but in blue or pink.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PrimaryController</span> <span class="directive">implements</span> Initializable, FXUIScraper {
+
+    <span class="directive">final</span> RootSwitcher switcher;
+
+    <span class="annotation">@FXML</span>
+    Parent primary; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="annotation">@FXML</span>
+    CheckBox cb1;
+
+    <span class="annotation">@FXML</span>
+    <span class="predefined-type">Button</span> primaryButton;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Never program to an implemenation if there is an interface.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">RootSwitcher</span> {
+
+    <span class="comment">/**
+     * Set the root of the scene on the primary stage to the named scene
+     *
+     * @param sceneName to use
+     * @return the previous sceneName
+     */</span>
+    <span class="predefined-type">String</span> setRoot( <span class="predefined-type">String</span> sceneName );
+
+    <span class="comment">/**
+     * Get the FXML controller for a named scene.
+     * @param sceneName
+     * @return 
+     */</span>
+    <span class="predefined-type">Object</span> getControllerForScene( <span class="predefined-type">String</span> sceneName );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So far quite simple, but note that we gave the root an <code>fx:id</code> in the fxml file and have the fxml-loader inject that as a field in the controller.
+<a href="https://github.com/homberghp/fxuiscraper">FXUIScrapper</a> will thank you for that.</p>
+</div>
+<div class="paragraph">
+<p>Now let us have a look at the switcher, which is no more than a modified version of the java fxml demo app.</p>
+</div>
+<div class="listingblock">
+<div class="title">Class declaration.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Switcher</span> <span class="directive">extends</span> Application <span class="directive">implements</span> RootSwitcher {
+  <span class="comment">// details left out</span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Fields</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> Scene scene;
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, Parent&gt; sceneParents = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;(); <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="directive">private</span> <span class="predefined-type">String</span> currentRoot = <span class="string"><span class="delimiter">&quot;</span><span class="content">primary</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Callback</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, <span class="predefined-type">Object</span>&gt;&gt; controllerFactories <i class="conum" data-value="3"></i><b>(3)</b>
+            = <span class="predefined-type">Map</span>.ofEntries(
+                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">primary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> PrimaryController( <span class="local-variable">this</span> ) ),
+                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> SecondaryController( <span class="local-variable">this</span> ) ),
+                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> TertiaryController( <span class="local-variable">this</span> ) )
+            );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A cache, so loading is done once.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The start scene/root, actually the name of the fxml file sans extension.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The factories (plural) that help the loader construct the proper controller and pass the parameters. Here you would typically also
+insert the business logic. Of course the RootSwitcher could be in another class, but for the simple example this will do.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Proper OO design uses normal methods, not <code class="red">static</code>. Notice how we dropped static from all but one (main) method and field.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Start method, short and sweet.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
+        scene = <span class="keyword">new</span> Scene( loadFXML( currentRoot ), <span class="integer">640</span>, <span class="integer">480</span> );
+        stage.setScene( scene );
+        stage.show();
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Set root. As simple as it gets.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> setRoot( <span class="predefined-type">String</span> fxml ) {
+        <span class="predefined-type">String</span> prevRoot = currentRoot;
+        currentRoot = fxml;
+        scene.setRoot( loadFXML( currentRoot ) );
+        <span class="keyword">return</span> prevRoot;
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">LoadFxml is actually the 'cache-manager'.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> Parent loadFXML( <span class="predefined-type">String</span> fxml ) {
+        <span class="keyword">return</span> sceneParents.computeIfAbsent( fxml, <span class="local-variable">this</span>::loadFXMLResource );
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Method to actually load the resource.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> Parent loadFXMLResource( <span class="directive">final</span> <span class="predefined-type">String</span> forScene ) {
+        Parent result = <span class="predefined-constant">null</span>;
+        <span class="keyword">try</span> {
+            FXMLLoader fxmlLoader = <span class="keyword">new</span> FXMLLoader( Switcher.class.getResource( forScene + <span class="string"><span class="delimiter">&quot;</span><span class="content">.fxml</span><span class="delimiter">&quot;</span></span> ) );
+            <span class="predefined-type">Callback</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, <span class="predefined-type">Object</span>&gt; factory = controllerFactories.get( forScene );
+            fxmlLoader.setControllerFactory( factory );
+            result = fxmlLoader.load();
+        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) {
+            <span class="predefined-type">Logger</span>.getLogger( Switcher.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, ex.getMessage() );
+        }
+        <span class="keyword">return</span> result;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note how we ignore the <code>clz</code> class object in the lambda. We know what we want to provide by the key into the map.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switching_scenes_using_comboboxes"><a class="anchor" href="#_switching_scenes_using_comboboxes"></a><a class="link" href="#_switching_scenes_using_comboboxes">5.2. Switching scenes using comboboxes</a></h3>
+<div class="paragraph">
+<p>Sometimes you want to switch scenes with something else than simple buttons.
+Here is how you do it using ComboBoxes.</p>
+</div>
+<div class="listingblock">
+<div class="title">Testing selecting a different scene using a combobox.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">//@Disabled(&quot;think TDD&quot;)</span>
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> tSwitchCombo() {
+        FxRobot rob = <span class="keyword">new</span> FxRobot();
+        <span class="directive">final</span> ComboBox b = (ComboBox) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#combo</span><span class="delimiter">&quot;</span></span> ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
+        rob.interact( () -&gt; {
+            b.getSelectionModel().select( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span> ); <span class="comment">//tertiary</span>
+        } );
+        pause( <span class="integer">500</span> );
+        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#primaryButton</span><span class="delimiter">&quot;</span></span> );
+        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span> );
+<span class="comment">//        fail( &quot;method tSwitchCombo reached end. You know what to do.&quot; );</span>
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">And of course the action in the controller that triggers the scene switch.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@FXML</span>
+    <span class="type">void</span> switchToSecondary() <span class="directive">throws</span> <span class="exception">IOException</span> {
+        <span class="predefined-type">String</span> value = combo.getValue();
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">value = </span><span class="delimiter">&quot;</span></span> + value );
+        reset();
+        switcher.setRoot( value );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="../topics/code/fxsceneswitcher.zip">full source</a> of this stuff.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">6. Reading</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Horstmann Core Java, Ed 11, Vol II, Ch 9, Bonus Chapter Volume I on JavaFX</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_links"><a class="anchor" href="#_more_links"></a><a class="link" href="#_more_links">7. More Links.</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_on_jpms"><a class="anchor" href="#_on_jpms"></a><a class="link" href="#_on_jpms">7.1. On JPMS</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.oracle.com/corporate/features/understanding-java-9-modules.html">Understanding Java 9 Modules</a></p>
+</li>
+<li>
+<p><a href="http://tutorials.jenkov.com/java/modules.html">Jakob Jenkov on Java Modules</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_on_javafx"><a class="anchor" href="#_on_javafx"></a><a class="link" href="#_on_javafx">7.2. On JavaFX</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjfx.io/">openjfx landing page</a> and <a href="https://fxdocs.github.io/docs/html5/">fxdocs</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/javafx/2/get_started/jfxpub-get_started.htm">JavaFX at Oracle</a></p>
+</li>
+<li>
+<p>An excellent site at <a href="http://tutorials.jenkov.com/javafx/index.html">Jakob Jenkov&#8217;s JavaFX Tutorials</a></p>
+</li>
+<li>
+<p><a href="https://dlsc.com/javafx-openjfx-11-interview-series/">Dirk Lemmerman&#8217;s blog on JavaFx</a> is an treasure trove on advanced JafaFX usage.</p>
+</li>
+<li>
+<p>Both <a href="https://www.youtube.com/user/jjenkov">Jakob</a> and <a href="https://www.youtube.com/channel/UCFyRQ_euxxPDwlqyhff-x0Q">Dirk</a> have a presence on youtube too.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part.</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_fx_triangulation">FX Triangulation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. It was enforced in the now deprecated web applets
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 11:02:41 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

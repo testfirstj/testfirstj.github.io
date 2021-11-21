@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W5 λ &amp; Streams</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W5 λ &amp; Streams</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_functional_interface_rationale">1. Functional Interface rationale.</a>
+<ul class="sectlevel2">
+<li><a href="#_s_h_a_p_e_of_java_util_functions">1.1. <code>&lt;S.H.A.P.E.&gt;</code> of java.util.functions.</a></li>
+</ul>
+</li>
+<li><a href="#_where_is_tostring">2. Where is toString?</a>
+<ul class="sectlevel2">
+<li><a href="#_method_references">2.1. Method References</a></li>
+</ul>
+</li>
+<li><a href="#_streams_sql_like_operations_expressed_in_java_8">3. Streams, SQL like operations expressed in Java 8</a>
+<ul class="sectlevel2">
+<li><a href="#_sql_like_functions">3.1. SQL like functions</a></li>
+<li><a href="#_exercise_simple_stream">Exercise simple stream</a></li>
+<li><a href="#_exercise_csv_to_objects">Exercise CSV to Objects</a></li>
+<li><a href="#_exercise_lambdalibrary">Exercise LambdaLibrary</a></li>
+</ul>
+</li>
+<li><a href="#_testing_lambda_expressions_needed_to_implement_an_api_interface">4. Testing Lambda expressions needed to implement an API interface.</a>
+<ul class="sectlevel2">
+<li><a href="#_exercise_minmaxcollector">Exercise MinMaxCollector</a></li>
+</ul>
+</li>
+<li><a href="#_collection_enhancements_and_general_tips">5. Collection Enhancements and general tips</a>
+<ul class="sectlevel2">
+<li><a href="#_improved_map_in_java_8">5.1. Improved Map in Java 8</a></li>
+<li><a href="#_use_specialized_collections">5.2. Use specialized collections</a></li>
+<li><a href="#_bitset">5.3. BitSet</a></li>
+</ul>
+</li>
+<li><a href="#_optional_demystified">6. Optional demystified</a></li>
+<li><a href="#_exercises_in_this_part">Exercises in this part</a></li>
+<li><a href="#_reading">Reading</a></li>
+<li><a href="#_slides">Slides</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph lead">
+<p>We will start with a short recap and some refinements on λ-expressions,
+followed by application in streams.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_functional_interface_rationale"><a class="anchor" href="#_functional_interface_rationale"></a><a class="link" href="#_functional_interface_rationale">1. Functional Interface rationale.</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Java: backwards  compatible: do not break existing code with new features.</p>
+</li>
+<li>
+<p>Way forward: enhancements to the collection framework.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extending interfaces without breaking implementations</p>
+<div class="ulist">
+<ul>
+<li>
+<p>add default functions</p>
+</li>
+<li>
+<p>add static helper functions</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example: compare java 7 and java 8 <code>Comparator</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Java 7 version has <strong>two</strong> <em>abstract</em> methods, which were the only kind in Java before 8.</p>
+</li>
+<li>
+<p>The Java 8 version has <strong>one</strong> <em>abstract</em> method, making it into a functional interface,<br>
+<strong>7</strong> <code>default</code> methods and<br>
+<strong>8</strong> <code>static</code> methods whose functionality is now <em>available</em> to every class implementing Comparator.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Have a look yourselves: <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Comparator.html" target="_blank" rel="noopener">Java 7 Comparator </a>
+and <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html" target="_blank" rel="noopener">Java 8 Comparator </a></p>
+</div>
+<div class="paragraph">
+<p>The concept of functional interfaces or <strong>single abstract method</strong> is the secret ingredient to let the compiler guess the
+appropriate <em>shape</em> of the function that matches a lambda expression.</p>
+</div>
+<div class="sect2">
+<h3 id="_s_h_a_p_e_of_java_util_functions"><a class="anchor" href="#_s_h_a_p_e_of_java_util_functions"></a><a class="link" href="#_s_h_a_p_e_of_java_util_functions">1.1. <code>&lt;S.H.A.P.E.&gt;</code> of java.util.functions.</a></h3>
+<div class="paragraph">
+<p>The <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/package-summary.html">java.util.functions</a> package,
+which was introduced in Java 8, contains only functional interfaces and nothing else.
+The package contains the most common <strong>shapes</strong> of functions that may occur in lambda expressions.
+You can see that all reference type functional interfaces heavily rely on generics. The use of the proper generics definition
+is essential for functional interfaces to function properly.</p>
+</div>
+<div class="paragraph">
+<p>We will use the notation <code>&lt;input type&gt; &#8594; &lt;result type&gt;</code> for the <strong>shape</strong> of a Functional interface.
+  Note that the shape is determined by the one (abstract) method
+  of the functional interface. The style used in java.util.function is somewhat mnemonic
+  in choosing the generic type parameters in the type interface type definition.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Functional Interface is your handle to the shape of the allowed lambda expressions, <em>input</em>, <em>output</em> and optional <em>throws</em>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>T as only parameter, either a input or output  e.g.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Consumer&lt;T&gt;</code>:  shape <code>&lt;T&gt; &#8594; {}</code> black hole? Eats Ts.</p>
+</li>
+<li>
+<p><code>Supplier&lt;T&gt;</code> : shape <code>() &#8594; &lt;T&gt;</code> , source of Ts.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>Function&lt;T,R&gt;</code>: shape <code>&lt;T&gt; &#8594; &lt;R&gt;</code> also known as mapping function, from one type to another.</p>
+</li>
+<li>
+<p><code>BiFunction&lt;T,U,R&gt;</code>: shape <code>&lt;T,U&gt; &#8594; &lt;R&gt;</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are also a few specialized interfaces that deal with the primitive types <code>int</code>, <code>long</code> and <code>double</code>.
+ Their rationale is performance and memory footprint, in short: efficiency. Dealing with
+ e.g. arrays of primitive types is much more efficient than using the associated wrapper types, <code>int</code> vs <code>Integer</code>.
+ You save the object allocation memory-wise and the dereferencing and unwrapping execution time-wise.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ToDoubleBiFunction&lt;T,U&gt;</code>: shape <code>&lt;T,U&gt; &#8594; double</code> producing a double from two arguments.</p>
+</li>
+<li>
+<p><code>LongConsumer</code>: shape <code>long &#8594;()</code> munges longs to make them disappear. :-)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/package-summary.html">package</a> documentation makes an interesting read.</p>
+</div>
+<div class="paragraph">
+<p>Exceptions in Lambda expressions need special consideration. In particular checked
+exceptions actually counteract the conciseness of lambda expression.
+In those cases, where the lambda expression or reference method throws an exception,
+that exceptions is commonly <em>wrapped</em> in an unchecked exception, e.g. UncheckedIOException to wrap an IOException.
+UncheckedIOException has been introduced in Java 8 for just that purpose.</p>
+</div>
+<div class="paragraph">
+<p>You can also roll your own.<br>
+If you need to declare a functional interface that potentially throws an exception, the following is a way to do that:</p>
+</div>
+<div class="listingblock">
+<div class="title">throwing functional interface</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">ThrowingBiFunction</span>&lt;T,U, R,&lt;X <span class="directive">extends</span> <span class="predefined-type">Throwable</span>&gt;&gt; {
+    R apply(T t, U u) <span class="directive">throws</span> X;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Shape wise it looks like <code class="blue">&lt;T,U&gt; &#8594; R | X</code> pronounced as from T and U to either, R the result,  <em>or</em> X, the thrown exception.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_where_is_tostring"><a class="anchor" href="#_where_is_tostring"></a><a class="link" href="#_where_is_tostring">2. Where is toString?</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You might miss <code>toString()</code> on lambda expressions, and you would be right: Lambda expressions lack a useful toString. What you get
+by calling toString() on a lambda expression is something rather useless, concocted by the JVM.</p>
+</div>
+<div class="listingblock">
+<div class="title">toString() is useless with lambda expressions</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="predefined-type">Comparator</span>&lt;Student&gt; gradeComp = (a,b) -&gt; <span class="predefined-type">Double</span>.compare(a.getGrade(),b.getGrade());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you invoke toString() in say jshell, you get.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">jshell&gt; class Student{ double grade; double getGrade(){return grade;}}
+|  created class Student
+
+jshell&gt; Comparator&lt;Student&gt; gradeComp = (a,b) -&gt; Double.compare(a.getGrade(),b.getGrade());
+gradeComp ==&gt; $Lambda$16/0x00000008000b3040@1e88b3c
+
+jshell&gt; gradeComp
+jshell&gt; gradeComp.toString()
+$3 ==&gt; &quot;$Lambda$16/0x00000008000b3040@1e88b3c&quot;</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_method_references"><a class="anchor" href="#_method_references"></a><a class="link" href="#_method_references">2.1. Method References</a></h3>
+<div class="paragraph">
+<p>Since the shape of a functional interface has everything a method definition has, bar its name, it should
+be no surprise that this can be used to advantage. Everywhere where a functional interface is allowed you can also provide a
+so called Method  reference. Quite often, but not always this can be a shorthand and thereby improving readability.</p>
+</div>
+<div class="paragraph">
+<p>Method references have two parts, separated by two colons: <code class="blue">::</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The left hand side of the <code class="blue">::</code> defines the <strong>method context</strong>, either instance of class (for method references to static methods)</p>
+</li>
+<li>
+<p>The right hand side is the <strong>method name</strong>. The compiler will do the matching in case of overloaded methods,
+but sometimes it may give up and will let you know by using the word <strong>ambiguous</strong> in its complaint.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are four kinds of references:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Source <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">Orace tuturial</a>.</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to static method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainingClass::staticMethodName</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to an instance method of a particular object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containingObject::instanceMethodName</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to an instance method of an arbitrary object of a particular type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainingType::methodName</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a constructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ClassName::new</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a method of this instance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">this::instanceMethodName</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You are not allowed to leave out the left hand side nor the <code class="blue">::</code>, not even if the reference context is <code>this</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_streams_sql_like_operations_expressed_in_java_8"><a class="anchor" href="#_streams_sql_like_operations_expressed_in_java_8"></a><a class="link" href="#_streams_sql_like_operations_expressed_in_java_8">3. Streams, SQL like operations expressed in Java 8</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here too, the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html">package documentation</a> is an interesting read.</p>
+</div>
+<div class="paragraph">
+<p>A stream can be considered a conveyor belt on which objects experience operations.
+The belt starts at a source (for instance a Supplier) and can on or more <em>intermediate</em> operations and end with a Terminal operation.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/streamops.png" alt="streamops">
+</div>
+</div>
+<div class="paragraph">
+<p>from <a href="https://technology.amis.nl/2013/10/05/java-8-collection-enhancements-leveraging-lambda-expressions-or-how-java-emulates-sql/" target="_blank" rel="noopener">Lucas Jellema of amis</a> blogs</p>
+</div>
+<div class="paragraph">
+<p>Here your see a physical stream and a collect operation.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Flexible-Conveyor.jpg" alt="Conveyor and collecting">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sql_like_functions"><a class="anchor" href="#_sql_like_functions"></a><a class="link" href="#_sql_like_functions">3.1. SQL like functions</a></h3>
+<div class="listingblock">
+<div class="title">assume you want to know the sum of the wages for women.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">select</span> <span class="predefined">sum</span>(salary)
+<span class="keyword">from</span>   people
+<span class="keyword">where</span>  gender = <span class="string"><span class="delimiter">'</span><span class="content">FEMALE</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">same in Java, get the sum of payments to women.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>    <span class="type">int</span> womensPay =
+        people.stream()                                         <i class="conum" data-value="1"></i><b>(1)</b>
+            .filter(p -&gt; p.getGender() == Person.Gender.FEMALE) <i class="conum" data-value="2"></i><b>(2)</b>
+            .mapToInt(p -&gt; p.getSalary())                       <i class="conum" data-value="3"></i><b>(3)</b>
+            .sum();                                             <i class="conum" data-value="4"></i><b>(4)</b>
+</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>use people collection as source and start stream</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>where &#8230;&#8203; where gender = female</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>mapping is often retrieving the value of a member, get salary, note that it is a Map ToIntFunction&lt;Person&gt; specialised function</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>aggregation, like <code>sum()</code> here is a terminal operation</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">variant using a method reference.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>    <span class="type">int</span> womensPay =
+        people.stream()
+            .filter(p -&gt; p.getGender() == Person.Gender.FEMALE)
+            .mapToInt( Person::getSalary )                      <i class="conum" data-value="1"></i><b>(1)</b>
+            .sum();</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This alternative uses a <strong>method reference</strong>, which can be substituted for a lambda expression when their shapes match.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_simple_stream"><a class="anchor" href="#_exercise_simple_stream"></a><a class="link" href="#_exercise_simple_stream">Exercise simple stream</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Simple Stream</summary>
+<div class="paragraph">
+<p>Make sure you use at least NetBeans IDE version 12.2, which has nice stream support.</p>
+</div>
+<div class="paragraph">
+<p>In this exercise you work with the simplestream project.</p>
+</div>
+<div class="paragraph">
+<p>Starting with streams can be a bit confusing. You will have the best experience if you let NetBeans IDE and the compiler do some of the thinking for you.
+And then throw in some tricks.</p>
+</div>
+<div class="paragraph">
+<p>You can consider a pipeline to have two ends: the <em>start</em>, which is the method that typically is called <code>stream()</code>,
+ and the <em>end</em>, which is your terminal operation.
+Often you can begin coding by adding the terminal operation immediately and insert
+ any intermediate operation between the start and this terminal operation of the stream.</p>
+</div>
+<div class="listingblock">
+<div class="title">count all students.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">int</span> studentcount = students.stream()
+  .count();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There will be some example code in the simplestream project in your repository.</p>
+</div>
+<div class="paragraph">
+<p>We have the following facts on the students.</p>
+</div>
+<div class="paragraph">
+<p>There are 50 students in total.
+The number of male students is 16.
+The youngest student is Shirleen Simpson, student number 3134539.
+The <strong>F</strong>emale students whose first name starts with an 'A' are
+Arlinda, Ariel, Aida, Annette, and Anitra.</p>
+</div>
+<div class="paragraph">
+<p>Since you are experimenting with streams, do not bother to write business methods.
+There are four test methods in total, which you need to implement. Inside such method,
+write the stream code and the assertJ assertions. The javadoc above the tests give some extra hints.</p>
+</div>
+<div class="paragraph">
+<p>Write tests for operations to compute from the given data set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The total number of students.</p>
+</li>
+<li>
+<p>The number of male students.</p>
+</li>
+<li>
+<p>The youngest student. The stream method to use returns <code>Optional&lt;Student&gt;</code>. Think of the proper terminal operation.</p>
+</li>
+<li>
+<p>The list of <strong>F</strong>emale students whose name start with 'A'. Use Collectors.toList() to collect the matching students.<br>
+You can either combine two predicates with the proper logical method <em>or</em> concatenate the strings, before you do the test.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note extra">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="EXTRA CHALLENGE"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>The list of student than do <strong>not</strong> have an <em>a</em> or <em>A</em> in their name.<br>
+Try with concatenating first and last name and also with an <em>or</em> in one predicate, using separate method names.</p>
+</li>
+<li>
+<p>The list of students that match a certain criterium, expressed as a <code>Predicate&lt;Student&gt;</code>.<br>
+Construct the predicate and invoke the method with this predicate as parameter.  Be imaginative with the functionality.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">example predicate</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">Predicate</span>&lt;Student&gt; redHaired s -&gt; s.getHairColor() == HairColor.RED;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In all cases use streams and lambdas.</p>
+</div>
+<div class="admonitionblock note extra">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="EXTRA CHALLENGE"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>(1) Add a field to the Student class holding a Map of study-topics to grade: <code>Map&lt;String,Double&gt;</code>.<br>
+(2) Stream the students and flatMap the students to a stream of grades and compute the overall average of the grades.<br>
+(3) Stream the students and flatMap to Map.Entry&lt;String,Double&gt; and collect into a Map of study-topics to average grade.<br></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div><!--end simplestream -->
+</div>
+<div class="sect2">
+<h3 id="_exercise_csv_to_objects"><a class="anchor" href="#_exercise_csv_to_objects"></a><a class="link" href="#_exercise_csv_to_objects">Exercise CSV to Objects</a></h3>
+<div class="paragraph">
+<p>In the video we explain streams and the next exercise, design or idea wise. The coding is left as an exercise.</p>
+</div>
+<div class="videoblock">
+<div class="title">Stream explained with paper</div>
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/mhVO5YSj1Jg?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>CSV to Objects</summary>
+<div class="paragraph">
+<p>In this task you will write a small utility class that will help you
+to test things and is also useful to load data from files and e.g. put them in the application
+or mock data source. The use case of this utility class is to read data from files and turn
+them into real (Java) objects.</p>
+</div>
+<div class="paragraph">
+<p>The class is a <code>CSVObjectStream</code> and has three constructors and two
+methods, <code>stream(&#8230;&#8203;)</code> and <code>asList(&#8230;&#8203;)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Of course, you start with tests.
+To do that, you will find a <code>students.csv</code> file in the NetBeans-IDE project.</p>
+</div>
+<div class="paragraph">
+<p>The test should:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a <code>CSVObjectStream</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a <code>Path</code> to <code>"students.csv"</code> using the Paths (<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Paths.html">java.nio.file.Path</a>) utility class in the same package.</p>
+</li>
+<li>
+<p>Optionally provide the seperator</p>
+</li>
+<li>
+<p>Optionally provide a <code>Predicate&lt;String&gt; lineFilter</code> that filters
+out lines from the csv source based on the predicate
+e.g. the header line</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Both <code>stream</code> and <code>asList</code> methods take two parameters:<br></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A function  <code>Function&lt;? super String[], ? extends T&gt; creator</code> that transforms an array of strings into an object of type <code>T</code>.<br>
+For the constructor call use <code>Factories::createStudent</code> as
+ creator. This is a method reference. See lambda theory if you forgot what that means.</p>
+</li>
+<li>
+<p>A <code>Predicate&lt;? super String[]&gt;</code> called <code>rowFilter</code> that ensures that the array is fit for purpose.<br>
+Example: the first string in the array of strings contains only digits and is the student number.<br>
+The <code>asList</code> method uses the <code>stream</code> method, and collects the stream into a list.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The testing part should do the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Collect the resulting stream in a list and assert that</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The list is not null.</p>
+</li>
+<li>
+<p>The list is not empty.</p>
+</li>
+<li>
+<p>The list has 50 elements.</p>
+</li>
+<li>
+<p>The list contains a student with the name <code>"Olympia Oliphant"</code> at index three.<br>
+Use the assert that extracting method with a fieldname as parameter. See the <a href="https://assertj.github.io/doc/">assertJ API and doc</a> for examples.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In all the asserts, use a message and make sure you put the arguments to
+the <code>assertThat</code> method chained in the proper order.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use it as is shown in the listing below</p>
+</div>
+<div class="paragraph">
+<p><strong>Show that it works</strong><br>
+To show the use of this class, create a csv file, or take it from an
+earlier project, and define a type, say student with studentnumber, name, birthdata,
+ and gender.</p>
+</div>
+<div class="paragraph">
+<p>To top the demonstration off, add a filter function that accepts a list
+of students, which streams said list and filters out students  by some
+rule, e.g. by gender and or age.</p>
+</div>
+<div class="paragraph">
+<p>A Helper class called <code>Factories</code> might be useful in your demo.
+Factories in our solution has two methods, one to create a student
+from an array of String, as is required by the <code>CSVObjectStream</code> class
+and one method to turn object back into csv records. We call the last
+one <code>studentAsCSVLine</code>. For the remaining few details look at the
+class diagram below.</p>
+</div>
+<div class="paragraph">
+<p>You may want to keep this project and reuse it in other exercises.</p>
+</div>
+<div class="paragraph">
+<p>Note that the <code>Student</code> test class is a static inner class in the factories, which is
+only available in the test source tree.</p>
+</div>
+<div class="paragraph">
+<p>To complete the exercise, add a separate Main file that
+demonstrates the working of your module.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using the csvobject utility class.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">CSVObjectStream&lt;Student&gt; os
+            = <span class="keyword">new</span> CSVObjectStream&lt;Student&gt;(Paths.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">students.csv</span><span class="delimiter">&quot;</span></span> ) );
+
+        os.stream( Factories::createStudent,
+                    r -&gt; r[ <span class="integer">0</span> ].matches( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d+</span><span class="delimiter">&quot;</span></span> ) )
+            .forEach( <span class="predefined-type">System</span>.out::println );</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/csvobjectclasses.svg" alt="csvobjectclasses">
+</div>
+<div class="title">Figure 1. class diagram csvobjectstream</div>
+</div>
+<div class="paragraph">
+<p><a href="../exercises/csvobjectstream/index.html" target="_blank" rel="noopener">javadoc of csvobjectstream generated from the solution </a></p>
+</div>
+</details></div><!--end cvsobjects -->
+</div>
+<div class="sect2">
+<h3 id="_exercise_lambdalibrary"><a class="anchor" href="#_exercise_lambdalibrary"></a><a class="link" href="#_exercise_lambdalibrary">Exercise LambdaLibrary</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Lambda Library</summary>
+<div class="paragraph">
+<p>Within this assignment you will get more familiar with the syntax of lambda expressions, as well as how to apply them.
+You will use the <strong>streams</strong> to get some work with collections done in a smart way.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Note: to run the FX application, don&#8217;t click "run" in Netbeans. Assuming you are using a sebipom based project, then
+<a href="../2020/tips.html#_sebipom_and_java_fx" target="_blank" rel="noopener">first enable the fx profile </a>, then right click the project and either</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>select 'Run maven' and select exec <em>or</em></p>
+</li>
+<li>
+<p>in the Navigator, right-click the 'javafx run' entry and select 'execute goal'.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock related thumb left">
+<div class="content">
+<img src="./images/lambdalibrary.png" alt="Screenshot of what the Lambda Library FX application looks like" height="^">
+</div>
+<div class="title">Figure 2. The FX application works out of the box and you should not touch any of the FX parts. You will only work on the library itself.</div>
+</div>
+<div class="paragraph">
+<p>Your task is to implement the business logic for a library. This library
+      provides some methods to get access to the books and to retrieve several views
+      on that books. A simple swing-GUI which displays the books of the library is given.
+      You can use that to see parts of your implementation in action.</p>
+</div>
+<div class="paragraph">
+<p>As usually, you will find an NetBeans project for this assignment inserted in you subversion repository.
+Note that the project will run, but not all functionality is implemented, yet. Proceed in the following
+      steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start working on this assignment by studying the Javadoc which is given.
+Take especially care of the class <code>LibraryModel</code> since this will form the requirements you will have to implement.</p>
+</li>
+<li>
+<p>Implement one of the test cases in the test class <code>LibraryModelTest</code>.
+A good starting point is the <code>testGetBooks()</code> method.</p>
+</li>
+<li>
+<p>Implement the method for which you wrote the test(s) in the previous step.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>It may need more tests if a method has more aspects to fulfill. Each aspect could have a different test.<br>
+It is quite common to have more test methods per business method.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Repeat the steps 2 and 3 until all functionality is implemented.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Note that this task has a dependence on the previous task cvsobjects, to read a csv file
+as book objects.</p>
+</div>
+<div class="paragraph">
+<p>Additional information on lambda expressions and the java 8 features can be
+    found at the following locations:</p>
+</div>
+<div class="paragraph">
+<p><a href="../apidocs/lambdalibrary/index.html">javadoc of the application</a>.
+This provides the requirements of all the methods to be tested and implemented. You can derive your test data from the `library.csv} file.</p>
+</div>
+<div class="paragraph">
+<p><strong>Update</strong> The provided test class has two methods called book(int) and books(int &#8230;&#8203;), where the parameter is called id or ids. This could lead
+to confusion, when you interpret that as the id of the book in the csv file. It is not that number but simply the index in the List of books, so starts
+at 0, not 1.</p>
+</div>
+<div class="listingblock">
+<div class="title">Windows run script</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+rem @author David Greven - https://github.com/grevend
+mvn -P fx javafx:run</code></pre>
+</div>
+</div>
+</details></div><!--end lambdalibrary -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_lambda_expressions_needed_to_implement_an_api_interface"><a class="anchor" href="#_testing_lambda_expressions_needed_to_implement_an_api_interface"></a><a class="link" href="#_testing_lambda_expressions_needed_to_implement_an_api_interface">4. Testing Lambda expressions needed to implement an API interface.</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_exercise_minmaxcollector"><a class="anchor" href="#_exercise_minmaxcollector"></a><a class="link" href="#_exercise_minmaxcollector">Exercise MinMaxCollector</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>MinMaxCollector</summary>
+<div class="paragraph">
+<p>The java Stream class provides multiple reduce operations, such as <code>findFirst()</code>, <code>findAny()</code>, <code>sum()</code>, <code>min()</code>, <code>max()</code>, and <code>average()</code> (for number values).
+In case you want to have the extreme values of a collection, and try to do that with a streaming operation,
+you need both <span class="blue">min</span> and <span class="blue">max</span>. Streaming the collection twice would be a sub-optimal solution,
+because when streaming the collection once, both the minimum and maximum value have been seen,
+and it would be smarter to catch both in one go.</p>
+</div>
+<div class="paragraph">
+<p>You can solve this problem using the reduce method
+<code class="blue">&lt;U&gt; U	reduce​(U identity, BiFunction&lt;U,​? super T,​U&gt; accumulator, BinaryOperator&lt;U&gt; combiner)</code>, but that
+requires you to come up with three parts, identity (simple) accumulator and combiner every time you need min and max.
+From the programmers perspective, streaming <strong>twice</strong> will then become attractive, because it is minimal programming. Or the programmer
+might fall back to old-skool for-loops (or even use <code>forEach(&#8230;&#8203;)</code>), which will do the trick but is not the way to use streams.<br>
+And simple for-loops can&#8217;t be parallelized.</p>
+</div>
+<div class="paragraph">
+<p>In this exercise you will be implementing the <code class="blue">Collector&lt;T,A,R&gt;</code> interface, such that the resulting class can add functionality to already existing classes.
+Special with this interface is that is returns <strong class="blue">functions</strong>, implemented as lambda expressions that do the required work, which
+are the used to to build the required <strong class="blue">Collector</strong> object.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong class="big">If</strong> the stream is simply a stream of numbers such as a stream of int, long, or double, do not bother to create this class.
+Instead use <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#summarizingDouble(java.util.function.ToDoubleFunction)" target="_blank" rel="noopener">summarizingDouble </a>
+and its siblings defined in <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html" target="_blank" rel="noopener">Collectors </a>.
+You should always first look for an available solution in some library or in the JDK, and adapt your problem a bit to minimize the amount of new code your write. See Horstmann Vol II chapter 1.<br>
+Unless it is an exercise.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When developing this exercise, I learned the hard way that theory and practice do not always meet head-on. In this case, I hoped
+that using a parallel stream would improve the performance gain, and it does, but not as spectacular as hoped.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. test with 20,000,000 elements. Times in nano seconds</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mode</th>
+<th class="tableblock halign-left valign-top">i7 4 core 2012</th>
+<th class="tableblock halign-left valign-top">AMD Ryzen 9 3900X 12-Core Processor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">standard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">699,012,000 ns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">423,917,000 ns</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min-max time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">579,755,000 ns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">423,917,000 ns</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">standard parallel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">211,857,000 ns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">104,720,000 ns</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min-max parallel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">177,224,000 ns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">76,433,000 ns</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Standard is <code>stream(&#8230;&#8203;).min()</code> followed  by <code>stream().max();</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Simple API, that can be used in the following way:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="predefined-type">List</span>&lt;Student&gt; students=...;
+
+   Optional&lt;MinMax&lt;Student&gt;&gt; extremesByAge =
+       student.stream()
+               .collect( minmax ( comparing(Student::getDob ) ) ); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The resulting Optional will contain a MinMax with two students, the min and max aged student. Explain why the youngest is at position max.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You will implement your own reducer, which actually is also a kind of collector, because it will produce a <code>MinMax</code> Pair.
+The class is called <span class="blue">MinMaxCollector</span>, which has an static inner class <span class="blue">MinMax</span>.</p>
+</div>
+<div class="paragraph">
+<p>To be able to determine min and max, you must construct the MinMaxCollector with a <code>Comparator&lt;T&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>The design is already done, it is part of the stream API and is captured in the
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collector.html">Collector</a> interface, which prescribes the following
+methods: (from the API doc).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Supplier&lt;A&gt;	supplier()</code>	 A function that creates and returns a new mutable result container.<br>
+In your solution this simply returns a new MinMax with e.g. <code>() &#8594; new MinMax(comparator)</code></p>
+</li>
+<li>
+<p><code>BiConsumer&lt;A,​T&gt;	accumulator()</code>	A function that folds a value into a mutable result container.<br>
+A will be our MinMax, T the next element, so that the lambda shape will be <code>(a, t) &#8594; a.accept( t )</code>.</p>
+</li>
+<li>
+<p><code>Set&lt;Collector.Characteristics&gt;	characteristics()</code>	Returns a Set of Collector.Characteristics indicating the characteristics of this Collector.<br>
+This tells the stream framework what the characteristics of our collector component. Simply return <code>Set.of( UNORDERED, CONCURRENT )</code>, meaning that your
+solution can be used concurrently, as in with many threads in parallel. We will test that it can.</p>
+</li>
+<li>
+<p><code>BinaryOperator&lt;A&gt;  combiner()</code>. A BiOperator takes two elements of the same time and combines
+them into a third element of the same time. The same as '+' combines two ints into a third int. In our case it will combine two MinMax objects into one.
+You can use one of the two to <code>accept()</code> the minimum and maximum of the other, so that the first will then contain min and max of both.</p>
+</li>
+<li>
+<p><code>Function&lt;A,​R&gt;	finisher()</code>	Perform the final transformation from the intermediate accumulation type A to the final result type R.<br>
+This turns the result into an <code>Optional</code> if the stream produced data (one element is sufficient, will be min and max at the same time).
+If no element was in the stream, an empty <code>Optional</code> has to be returned.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/minmaxcollector.svg" alt="minmaxcollector">
+</div>
+<div class="title">Figure 3. class diagram</div>
+</div>
+<div class="paragraph">
+<p>The class diagram shows all members of the two classes involved, the MinMaxCollector and the inner MinMax class.</p>
+</div>
+<div class="paragraph">
+<p><strong>TDD</strong></p>
+</div>
+<div class="paragraph">
+<p>Since we implement an interface, the IDE will want to implement all methods in one fell swoop. That is okay,
+because it will make implementations that will for certain fail the test, and that is good because it will have the <strong class="red">red</strong> we need at the start.</p>
+</div>
+<div class="paragraph">
+<p>We will start the tests in the same package as the collector, allowing access to the package private members and constructor,
+such as that of the MinMax inner class and its package private methods.</p>
+</div>
+<div class="paragraph">
+<p>We also want an inner class <code>MinMax</code>, which will carry the result and will also play the role of accumulating object.
+Because in unit testing it is always smart to start from the bottom up, we will start at MinMax.
+Since we do not want to tie the MinMax inner class to the MinMaxAccumulator, we make it a <span class="blue">static</span> inner class.
+To make that work properly, you should choose a different generic type token for the inner and outer class. If the outer uses <code>&lt;T&gt;</code> then the inner could used <code>&lt;E&gt;</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Since there is no real test to assert the effects of the constructor, we just implement it. The test will follow.<br>
+The minmax object should have three fields, E min, E max and a Comparator&lt;E&gt; to determine who is who of the former.</p>
+</li>
+<li>
+<p><strong>TEST</strong> There are getters for min and max. Implement them and assert (test) that they both return null on a fresh minmax object.<br></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The MinMax class has one <code class="blue">accept</code> method which it inherits by being a <code>Consumer&lt;E&gt;</code>. On each invocation of accept a MinMax object will consider
+if the newly accepted e is a better candidate for either min or max.</p>
+</div>
+<div class="paragraph">
+<p><strong>The following 3 tests can be combined into a parameterized test. Use the <a href="week02.html#_split_it_yourselves">split trick</a> from part 1</strong>
+The test data for the tests can look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+   <span class="annotation">@CsvSource</span>(value={
+       <span class="comment">// input, min, max</span>
+       <span class="string"><span class="delimiter">&quot;</span><span class="content">P,P,P</span><span class="delimiter">&quot;</span></span>,
+       <span class="string"><span class="delimiter">&quot;</span><span class="content">A|B,A,B</span><span class="delimiter">&quot;</span></span>,
+       <span class="string"><span class="delimiter">&quot;</span><span class="content">B|C|A,A,C</span><span class="delimiter">&quot;</span></span>,
+
+   })</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p><strong>TEST</strong> The <code>accept(E)</code> should feed the min max with elements. To test, create a <code>MinMax&lt;String&gt;</code> with a <code>Comparator&lt;String&gt;</code>: <code>(a,b)&#8594; a.compareTo(b)</code>.<br>
+Feed it one String and ensure that both min and max are no longer <code>null</code>, and have the same value as the accepted string.</p>
+</li>
+<li>
+<p><strong>TEST</strong> Add a String distinct of the other and test that it lands at the proper spot, min or max.</p>
+</li>
+<li>
+<p>Add a third distinct string.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>An aspect that you cannot really test for, but can help performance a bit is to return immediately after
+you assigned both min and max on the first accept (when either was still null). Note that if you do well you only need to check one field, not both.</p>
+</div>
+<div class="paragraph">
+<p><strong>You are done with the inner class.</strong></p>
+</div>
+<div class="paragraph">
+<p>Let us go to the outer class MinMaxCollector.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>TEST</strong> that <code>supplier()</code> returns an MinMax object with the proper comparator.<br>
+then implement.</p>
+</li>
+<li>
+<p><strong>TEST</strong> that the characteristics return the correct set: <code>UNORDERED</code> and <code>CONCURRENT</code>. Then implement.</p>
+</li>
+<li>
+<p><strong>TEST</strong> that the combiner method works. Give it two MinMax-es <em>one</em> with <code>A,C</code> as strings, one with <code>B,D</code> as strings. The result of the
+lambda should return a <code>MinMax(A,D)</code> that you should test for proper content. Then implement.</p>
+</li>
+<li>
+<p><strong>TEST</strong> that finisher returns an empty optional when min or max (either test will do) is null, and a optional containing the minmax otherwise. Then implement.</p>
+</li>
+<li>
+<p><strong>TEST</strong> that accumulator accepts a MinMax object and a new T, such that if T is less than min, it will replace min and if it is greater that max, it will replace that.<br>
+start with a MinMax that already accepted one value, between min and max. Here too, you can use a tabular test. Just invoke the <code>accumulator()</code> method and do the testrecipes with
+the returned object.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The collector is now complete.</p>
+</div>
+<div class="paragraph">
+<p><strong>Integration test from different package, client.</strong></p>
+</div>
+<div class="paragraph">
+<p>Create a test in a different package, so you are sure that you will only use the public API (public and protected members of public types).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>TEST</strong> Use the collector as reduction step at the end of a stream with some unique strings. Assert that the result is as expected.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>There is a demonstration program in the client package,  ready for use, that demonstrates the use of the collector.</p>
+</div>
+</details></div> <!-- end minmax collector -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_collection_enhancements_and_general_tips"><a class="anchor" href="#_collection_enhancements_and_general_tips"></a><a class="link" href="#_collection_enhancements_and_general_tips">5. Collection Enhancements and general tips</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It never hurts to browse through an API once in a while.
+You might get new ideas or find a cool feature.</p>
+</div>
+<div class="sect2">
+<h3 id="_improved_map_in_java_8"><a class="anchor" href="#_improved_map_in_java_8"></a><a class="link" href="#_improved_map_in_java_8">5.1. Improved Map in Java 8</a></h3>
+<div class="paragraph">
+<p>I personally find the java.util.Map quit interesting because it got a number of very cool features in
+Java 7 and 8 that are really very helpful if you want to implement things like <strong>caches</strong>.
+If you are into caching and expect many entries, consider a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/WeakHashMap.html">WeakHashMap</a>,
+that also helps to solve the problem of keeping the cache small and auto-evacuate when entries are no longer used.</p>
+</div>
+<div class="paragraph">
+<p>In order of appearance in the api doc:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#compute(K,java.util.function.BiFunction)">compute</a> Attempts to compute a mapping for the specified key and its current mapped value (or null if there is no current mapping).</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#computeIfAbsent(K,java.util.function.Function)">computeIfAbsent</a> If the specified key is not already associated with a value (or is mapped to null), attempts to compute its value using the given mapping function and enters it into this map unless null.</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#computeIfPresent(K,java.util.function.BiFunction)">computeIfPresent</a> If the value for the specified key is present and non-null, attempts to compute a new mapping given the key and its current mapped value.</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#getOrDefault(java.lang.Object,V)">getOrDefault</a> Returns the value to which the specified key is mapped, or defaultValue if this map contains no mapping for the key.</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#putIfAbsent(K,V)">putIfAbsent</a> If the specified key is not already associated with a value (or is mapped to null) associates it with the given value and returns null, else returns the current value.
+and of course</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#forEach(java.util.function.BiConsumer)">forEach</a> Performs the given action for each entry in this map until all entries have been processed or the action throws an exception.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">which allows you to quickly look at the contents of a map with a one-liner</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    map.forEach((k, v) -&gt; <span class="predefined-type">System</span>.out.println(k + <span class="string"><span class="delimiter">&quot;</span><span class="content">=</span><span class="delimiter">&quot;</span></span> + v));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fun thing is that all these methods are default methods, so they apply to all classes that implement the java.util.Map interface, including the ones you roll yourselves,
+might you feel the inclination. To implement a special map that has specific extra properties, you only need to extend <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/AbstractMap.html">AbstractMap</a>
+which needs the implementation of one or two methods only, depending if you want an unmodifiable of modifiable one.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_specialized_collections"><a class="anchor" href="#_use_specialized_collections"></a><a class="link" href="#_use_specialized_collections">5.2. Use specialized collections</a></h3>
+<div class="paragraph">
+<p>Java provides some specialized collections that can improve performance quite a while still adhering to the general contract.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EnumSet and EnumMap use the fact that the values of an enum are consecutive, and that each value is associated with its ordinal value, which is an int.
+In many case the number of values is overseable, making a EnumSet efficiently implementable using the techniques used in a BitSet.
+The EnumMap can simply use an array or references as backing store. The enum value then maps a value if and only if the array contains a reference at the
+ordinal index of the array. These are one of the fastest maps in Java.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bitset"><a class="anchor" href="#_bitset"></a><a class="link" href="#_bitset">5.3. BitSet</a></h3>
+<div class="paragraph">
+<p>Sometimes you want to quickly check the membership of an element to some set. If the
+set is an oversee-able number of int or int like values, such as characters, a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/BitSet.html">BitSet</a> might be useful.
+It uses longs or arrays of longs as backing store, dependent on the number of values that can be in the set.
+This means that a bitset with 64 possible values takes only <em>one</em> long to hold all relevant information.
+It has many set operations.</p>
+</div>
+<div class="paragraph">
+<p>For instance you could use a bitset to classify characters in a special way (if not already done in the general Character API).</p>
+</div>
+<div class="listingblock">
+<div class="title">Vowels</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">BitSet</span> vowels = <span class="keyword">new</span> <span class="predefined-type">BitSet</span>(<span class="integer">128</span>);
+
+    <span class="directive">static</span> { <span class="comment">// done when the class is loaded.</span>
+        <span class="keyword">for</span> ( <span class="type">char</span> c : <span class="string"><span class="delimiter">&quot;</span><span class="content">aeiouAEIOU</span><span class="delimiter">&quot;</span></span>.toCharArray() ) {
+           vowels.set(c);
+        }
+    }
+
+    <span class="type">boolean</span> isVowel(<span class="type">char</span> c) {
+       <span class="keyword">return</span> vowels.get(z);
+    }
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span>... args){
+       <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">z is vowel: </span><span class="delimiter">&quot;</span></span>+isVowel(<span class="string"><span class="delimiter">'</span><span class="content">z</span><span class="delimiter">'</span></span>));
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optional_demystified"><a class="anchor" href="#_optional_demystified"></a><a class="link" href="#_optional_demystified">6. Optional demystified</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many terminal stream operations return an <code class="blue">Optional</code>. Rationale: the required element
+may not be present, or the Stream is empty to start with. Or the filter throws everything out.</p>
+</div>
+<div class="paragraph">
+<p>Optional is an interesting concept all by itself.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An Optional can be considered as a very short stream of at most one element.</p>
+</li>
+<li>
+<p>You can apply a map operation to an Optional, which transforms the <strong>content</strong> of the optional (if any) and
+produces an optional containing the result of the mapping.</p>
+</li>
+<li>
+<p>You  can even stream() the optional, which allows you to apply all operation that a stream provides (since 9).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All this can be used in an algorithm, in which you want to chain a bunch of methods, each of which
+requiring that the parameter is non-null.</p>
+</div>
+<div class="listingblock">
+<div class="title">Traditional returning null</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  SomeType result;
+  <span class="type">var</span> a = m1();
+  <span class="type">var</span> b=<span class="predefined-constant">null</span>;
+  <span class="type">var</span> c=<span class="predefined-constant">null</span>;
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != a ) {
+    b = m2( a );
+  }
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != b ) {
+    c = m3( b );
+  }
+
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != c ) {
+    result = m4( c );
+  }
+  <span class="keyword">return</span> result;
+  <span class="comment">// do something with result</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using Optional. Returning Optional&lt;SomeType&gt;</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  Optional&lt;SomeType&gt; result
+     = m1ReturningOptional() <i class="conum" data-value="1"></i><b>(1)</b>
+      .map( a-&gt; m2( a ) )
+      .map( b-&gt; m3( b ) )
+      .map( c-&gt; m4( c ) );
+  <span class="keyword">return</span> result;
+  <span class="comment">// do something with Optional result</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The chain starts with a method returning an optional. The remaining methods <code>m2(&#8230;&#8203;)</code>, <code>m3(&#8230;&#8203;)</code>, and <code>m4(&#8230;&#8203;)</code> are unchanged.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the last example, an <code class="blue">Optional&lt;SomeType&gt;</code> is returned, that can either be unwrapped of passed on as such for further processing.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>TL;DR:</strong> If you apply map as a chained operation to an <code class="blue">Optional</code>, the function supplied as
+ parameter to the <code>map(..)</code> method is applied to the _content _of the optional and returns the result in another Optional.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_exercise_simple_stream">Simple Stream</a></p>
+</li>
+<li>
+<p><a href="#_exercise_csv_to_objects">Csv to objects</a></p>
+</li>
+<li>
+<p><a href="#_exercise_lambdalibrary">Lambda Library</a></p>
+</li>
+<li>
+<p><a href="#_exercise_minmaxcollector">MinMax Collector</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">Reading</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Horstmann Core Java, Ed 11, Vol I CH 6.2 Lambda Expressions</p>
+</li>
+<li>
+<p>Horstmann Core Java, Ed 11, Vol I CH 9 Collections</p>
+</li>
+<li>
+<p>Horstmann Core Java, Ed 11, Vol II CH 1 Streams</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_slides"><a class="anchor" href="#_slides"></a><a class="link" href="#_slides">Slides</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../pdf/050_lambda_sheets_en.pdf" target="_blank" rel="noopener">Lambda Recap</a>.</p>
+</li>
+<li>
+<p><a href="../pdf/060_streams_sheets_en.pdf" target="_blank" rel="noopener">Java Streams</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

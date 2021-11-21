@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>Test Driven with Java</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>Test Driven with Java</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_top">1. Module description</a></li>
+<li><a href="#_study_materials">2. Study materials</a></li>
+<li><a href="#_topics_2021">3. Topics 2021</a></li>
+<li><a href="#_way_of_working_during_practical_hours">4. Way of Working during practical hours.</a></li>
+<li><a href="#_ms_teams_channels">5. MS Teams channel(s)</a></li>
+<li><a href="#_automatic_correction_of_practical_exercises">6. Automatic correction of practical exercises.</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_top"><a class="anchor" href="#_top"></a><a class="link" href="#_top">1. Module description</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Module description <a href="../pdf/md_prc2_2021.pdf" target="_blank" rel="noopener">Programming Concepts 2 </a></p>
+</li>
+<li>
+<p>Previous Year <a href="../index2020.html">PRC2 2020 web page</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This site contains the up-to-date course material, exercises and announcements about PRC2
+(Programming Concepts 2: the Test Driven Way), starting in February 2021.</p>
+</div>
+<div class="paragraph">
+<p>Responsible Teachers for 2021: PRC2: Martijn Bonajo, Frank van Gennip, <strong>Richard van den Ham</strong>, and Pieter van den Hombergh with editorial help from Linda Urselmans.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_study_materials"><a class="anchor" href="#_study_materials"></a><a class="link" href="#_study_materials">2. Study materials</a></h2>
+<div class="sectionbody">
+<div class="imageblock related thumb left">
+<div class="content">
+<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167199/"><img src="./images/corejava-1-11ed.jpg" alt="Core Java Volume I Fundamentals"></a>
+</div>
+</div>
+<div class="imageblock related thumb right">
+<div class="content">
+<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167175/"><img src="./images/corejava-2-11ed.jpg" alt="Core Java Volume II Advanced Features"></a>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the Java basics and advanced features we are using Cay Horstmann&#8217;s fine books from the core Java series.
+They are on the book-list from September.</p>
+</li>
+<li>
+<p>The exercises will be published via a personal svn repository on fontysvenlo.org.<br>
+You can find to which group you belong through <a href="https://peerweb.fontysvenlo.org/" target="_blank" rel="noopener">peerweb </a></p>
+</li>
+<li>
+<p>The Junit version is <a href="https://junit.org/junit5/docs/current/user-guide/">Junit 5</a>.</p>
+</li>
+<li>
+<p>"Using frameworks for testing" will start with using <a href="https://assertj.github.io/doc/">AssertJ</a>,
+which is a modern and up to date Open Source testing framework. The documentation is of excellent quality and fun to read.</p>
+</li>
+<li>
+<p><a href="http://horstmann.com/corejava/corejava_11ed-bonuschapter13-javafx.pdf" target="_blank" rel="noopener">JavaFX bonus chapter </a> to Core Java Volume I</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Read the corresponding Horstmann book chapters and do the tutorials before you come to class. This will make
+the lessons more effective for you, because the questions that you might have
+from studying could be answered immediately.<br>
+Studying is not glancing over some (web) pages, but experimenting with the compiler, IDE and other
+tools, to see if you can use the presented ideas and apply it in your own code.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_topics_2021"><a class="anchor" href="#_topics_2021"></a><a class="link" href="#_topics_2021">3. Topics 2021</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the topics table below, <strong>Vol I</strong> is <em>Core Java Volume I, Fundamentals</em> and <strong>Vol II</strong> is <em>Core Java Volume II, Advanced Features</em>
+both by Cay S. Horstmann and both in the eleventh edition.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 0.3984%;">
+<col style="width: 39.8406%;">
+<col style="width: 19.9203%;">
+<col style="width: 39.8407%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Week</th>
+<th class="tableblock halign-left valign-top">Topic</th>
+<th class="tableblock halign-left valign-top">Book</th>
+<th class="tableblock halign-left valign-top">Exercises</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="Mon 2021-02-08">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test Driven, Unit Testing basics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FirstContact, Phone book, Mini BAr, Simple List.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Mon 2021-02-22">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameterized Tests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I 5.6 enum classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fraction, Flawless Password, Enum Calculator</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Mon 2021-03-01">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Design for testability, Mockito</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Perishable products, CandyVendingMachine as study object.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Mon 2021-03-08">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I Ch 8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generic Box, Shape Filter, Ranges in 3 parts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Mon 2021-03-15">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lambda and Streams</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I Ch 6.2, Vol II Ch 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Simple Stream, Csv Objects, Lambda Library MinMaxCollector</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Mon 2021-03-12">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reflection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I Ch 5.7,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generater sql table from entity, Mapper using MethodHandles. Generate JSON from entity using mapper.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Mon 2021-03-22">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database access using JDBC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol II Ch 5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data base access using generic methods and the mapper from wk 6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Mon 2021-03-29">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaFX and Java Modules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I bonus Ch (pdf), Vol II Ch 9</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Mon 2021-04-19">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Statemachine, regex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vol I, chp 5.7,Vol II Ch 5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GumballMachine, GradeCapture (regex), templating engine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Mon 2021-04-26">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date/Time API and Internationalization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Mon 2021-05-10">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exceptions, Assertions and logging, File(I/O)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Mon 2021-05-17">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Programmers responsibility: Security</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week13.html" title="Mon 2021-06-07">13</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not used, buffer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock caution red">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><span class="big">You should start with the exercises in the week they are listed in and hand them in
+by committing your work to your <a href="https://peerweb.fontysvenlo.org/igrouprepos.php">personal subversion repository</a>.<br>
+<strong class="green">Best</strong> is to do that before next week&#8217;s lesson, so you even if you were not able to
+even when trying, you will at least have some questions.</span></p>
+</div>
+<div class="paragraph">
+<p><strong class="big red">We will use a strict deadline policy for the assignments.</strong><br>
+<strong class="bigger green">You will rewarded <mark>bonus points</mark> if you deliver in time.<br>
+The hand in deadline is two lesson weeks after the publication date.</strong></p>
+</div>
+<div class="paragraph">
+<p><strong class="bigger red">Completion of all the exercises grant admission to the performance assessment!</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_way_of_working_during_practical_hours"><a class="anchor" href="#_way_of_working_during_practical_hours"></a><a class="link" href="#_way_of_working_during_practical_hours">4. Way of Working during practical hours.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="./images/tdd.png" alt="tdd"></span> The way of working with the practical assignments is as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each student has a personal subversion repository</p>
+</li>
+<li>
+<p>The teachers will add the starter project for the assignment in due time<br>
+to all student repositories, which are then available for checkout by the students</p>
+</li>
+<li>
+<p>The students will work on the assignment and work TDD style.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Write a test for a requirement (typically a method),<br>
+see it showing failure (<strong class="red">RED</strong>),</p>
+</li>
+<li>
+<p>then implement the method to turn the test <strong class="green">GREEN</strong>.</p>
+</li>
+<li>
+<p>If <strong class="green">GREEN</strong>, svn-commit both test-class AND implementing class.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If the assignment is complete (all requirements covered with tests, all tests green and code coverage at an appropriate level )
+ask any of the teachers or student assistants to run the teachers test on your code.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The teachers will not explicitly test your tests, only your implementation code, but will provide you with the test report.</p>
+</li>
+<li>
+<p>They will run <strong>your</strong> tests, to see if your test report is in agreement with the teachers tests.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This procedure is similar to the one followed during the <a href="2019/assessmentcorrectionrules.html">performance assessment</a> at the end of the semester.
+The difference is that we will review not only the implementation, but will start with reviewing the tests.
+If there is no valid test, the implementation of the method will not be considered.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ms_teams_channels"><a class="anchor" href="#_ms_teams_channels"></a><a class="link" href="#_ms_teams_channels">5. MS Teams channel(s)</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For questions and answers thus documenting them and also discussions and explanations,
+sharing information, links and other things between students and lecturers, feel free to use the MS-Teams PRC2 channel:
+<a href="https://join.slack.com/t/fontysvenlo-ict/shared_invite/enQtNTU2Nzg5OTk3OTIyLTc2OWQ4Yzk0OWNjZjVmNzY5ZTgwNmFkNTc3OGIwZDIzODQzZThiNjJkY2RhODNhNTQ4ZmQ4NDhiMmNmMmE3MWU">Slack invitation link</a>.</p>
+</div>
+<div class="paragraph">
+<p>Please use the channel <strong>#prc2class</strong>. We will use this channel to ask and and answer questions during and after class.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Please note that the content of this channel will appear on youtube because we are recording the lectures. So use proper language.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You are only allowed to use a <strong>student.fontys.nl</strong> email address. Using slack is optional, but if the students share their knowledge there,
+this can be a helpful source and learning environment.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_automatic_correction_of_practical_exercises"><a class="anchor" href="#_automatic_correction_of_practical_exercises"></a><a class="link" href="#_automatic_correction_of_practical_exercises">6. Automatic correction of practical exercises.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In PRC1 you have become acquainted with automatic tests. In PRC2 you will not only write the implementation, but also the tests.
+These test need testing too.</p>
+</div>
+<div class="paragraph">
+<p>The approach follow is having not only a correct implementation, but also some broken implementations to test your tests.</p>
+</div>
+<div class="paragraph">
+<p>The exact details are spelled out in  <a href="https://prc2.fontysvenlo.org/2021/assessmentcorrectionrules.html">the rules for the performance assessment</a>.</p>
+</div>
+<div class="paragraph">
+<p>In short you provide your own test code and implementation, we provide an implementation, our own tests and some broken implementations to make your
+tests have a nice red blush.</p>
+</div>
+<div class="paragraph">
+<p>The ubiquitous question is always: Where do I start?</p>
+</div>
+<div class="paragraph">
+<p>The answer is surprisingly simple: at the requirements of class, method or whatever you want to develop. And always start at the simple end.
+So if a requirement says that a fresh Stack is empty, that means you can write a test that asserts that a <code>new</code> instance of your class reports that it is
+empty when the <code>isEmpty()</code> is called.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-15 15:05:12 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

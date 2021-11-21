@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W11 Exceptions, Assertions and logging, File(I/O)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W11 Exceptions, Assertions and logging, File(I/O)</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_logging">1. Logging</a>
+<ul class="sectlevel2">
+<li><a href="#_replace_soutv_by_using_a_log_macro">1.1. Replace soutv by using a log macro.</a></li>
+<li><a href="#_configure_logging">1.2. Configure logging</a></li>
+</ul>
+</li>
+<li><a href="#_squeezing_the_last_coverage_out">2. Squeezing the last coverage out</a></li>
+<li><a href="#_bulk_validator">Bulk validator</a></li>
+<li><a href="#_reading">3. Reading</a></li>
+<li><a href="#_slides">4. Slides</a></li>
+<li><a href="#_exercises_in_this_part">Exercises in this part</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Logging can be a very powerful instrument to squeeze very much or very precise information from
+a running application. It can be configured without modifying the source code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logging"><a class="anchor" href="#_logging"></a><a class="link" href="#_logging">1. Logging</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use logging instead of system.out.print</p>
+</div>
+<div class="listingblock">
+<div class="title">Using a supplier suppresses the genartion of the log when the log level is not active.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+    <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger( Main.class.getName() ); <i class="conum" data-value="1"></i><b>(1)</b>
+    logger.log( <span class="predefined-type">Level</span>.FINE, <i class="conum" data-value="2"></i><b>(2)</b>
+       ()-&gt; <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello %1$s args length= %2$d </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>,args.length) <i class="conum" data-value="3"></i><b>(3)</b>
+    );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a specific logger for this class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This log statement only doe 'work' when the log level is set to FINE or higher (FINER, FINEST)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>This lambda has the shape of a supplier and is only evaluated or computed when the logging level is active.</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_replace_soutv_by_using_a_log_macro"><a class="anchor" href="#_replace_soutv_by_using_a_log_macro"></a><a class="link" href="#_replace_soutv_by_using_a_log_macro">1.1. Replace soutv by using a log macro.</a></h3>
+<div class="paragraph">
+<p>When you use a supplier to supply the message that is logged, when logging is active, logging can become cheap.
+To make this work, you might want to teach your IDE to help a bit here, by adding a keyboard macro that adds
+logging instead of simple System.out.println(&#8230;&#8203;).</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>logv</code> definition for NetBeans IDE</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">logger.fine( ()-&gt;<span class="string"><span class="delimiter">&quot;</span><span class="content">${EXP instanceof=</span><span class="delimiter">&quot;</span></span>&lt;any&gt;<span class="string"><span class="delimiter">&quot;</span><span class="content"> default=</span><span class="delimiter">&quot;</span></span>exp<span class="string"><span class="delimiter">&quot;</span><span class="content">} = </span><span class="delimiter">&quot;</span></span> + <span class="error">$</span>{EXP});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now logging becomes simpler than ever.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>First create a logger with the already define macro <code class="black">logr</code> <kbd>tab</kbd> and then</p>
+</li>
+<li>
+<p>inside the methods use <strong class="black">logv</strong> <kbd>tab</kbd> instead of <em>soutv</em> where ever you would like to output stuff for debugging.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In your logging.properties file add the proper level for you class or as global and you can turn the logging on or off when ever you need to.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configure_logging"><a class="anchor" href="#_configure_logging"></a><a class="link" href="#_configure_logging">1.2. Configure logging</a></h3>
+<div class="paragraph">
+<p>When you copy the file logging.properties from its default location <code class="green">$JAVA_HOME/conf/logging.properties</code> to your projects
+directory, preferably under a <code>conf</code> directory, you can modify and adapt that file to make logging effective in a very precise way,
+by specifying what level you want for what class.</p>
+</div>
+<div class="listingblock">
+<div class="title">conf/loggin.g.properties file excerpt. Set logging to fine from one program.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">#.properties
+handlers= java.util.logging.ConsoleHandler
+.level=FINE <i class="conum" data-value="1"></i><b>(1)</b>
+java.util.logging.ConsoleHandler.level=FINE
+logdem.LogDem.level=FINE <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>specify global level</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>specify for one class
+Then in the java startup (for instance in a run script or in one of the IDE settings), make sure this java property specifies the file.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For NetBeans add <code class="blue">-Djava.util.logging.config.file=conf/logging.properties</code> to the java run actions.</p>
+</div>
+<div class="paragraph">
+<p>Say the class that needs debugging is called <code>logging.Main</code>.  Then in the logging properties file (see above) add
+ <code>logging.Main.level = FINE</code>, and make sure that you start the JVM with the proper login properties file.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can also set the parameter in the 'run-configuration' of your project.
+Add the appropriate option there, e.g. -Djava.util.logging.config.file=conf/logging.properties</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/run-logging.png" alt="run logging">
+</div>
+<div class="title">Figure 1. point to project specific log file.</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_squeezing_the_last_coverage_out"><a class="anchor" href="#_squeezing_the_last_coverage_out"></a><a class="link" href="#_squeezing_the_last_coverage_out">2. Squeezing the last coverage out</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The example code below is given as an illustration to squeeze the last bit of coverage out
+of your code in case your code catches exceptions that never occur in a normal situation, but you have
+to deal with them anyway, because the exceptions are <strong>checked</strong> exceptions, and you do not have the option to pass them on in a throws clause,
+because some code up in the call stack does not accept that. We ran into this situation while developing the templating engine.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In normal production code squeezing the last drop of coverage out of your test code is rarely worth the effort.
+In cases where your project manager or architect insists on high coverage, here is how to deal with
+such request. Don&#8217;t make a habit out of it, because it adds little business value.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You have some code that uses a resource-method that throws an exception.
+The way to go about to cover the catch block too is to <strong>mock</strong> the resource for that test case and let the mock throw the to be caught exception.</p>
+</div>
+<div class="listingblock">
+<div class="title">to cover code</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="type">void</span> flush( <span class="type">char</span> c ) {
+        <span class="keyword">if</span> ( c == <span class="string"><span class="delimiter">'</span><span class="content">\0</span><span class="delimiter">'</span></span> ) {
+            <span class="keyword">return</span>;
+        }
+        <span class="keyword">try</span> {
+            out.append( c );
+        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) { <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="predefined-type">Logger</span>.getLogger( Engine.class.getName() )
+            .log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>,   ex ); <i class="conum" data-value="2"></i><b>(2)</b>
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In normal cases this catch block is not reached.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Typically an IDE generated logiing statement inside a catch block. This also generates a stack-trace,<br>
+which you may not always want.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you want to avoid the stack-trace in particular cases, you should replace the <code>null</code> with a message (a String)
+and remove the ex. You can of course get the message form the exceptions with <code>ex.getMessage()</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">test that covers the catch block</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> tFlush() <span class="directive">throws</span> <span class="exception">IOException</span> {
+        <span class="predefined-type">Appendable</span> out = mock( <span class="predefined-type">Appendable</span>.class );        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="predefined-type">Logger</span> engineLogger =
+              <span class="predefined-type">Logger</span>.getLogger( Engine.class.getName() ); <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="predefined-type">Handler</span> handler = mock( <span class="predefined-type">Handler</span>.class );
+        engineLogger.addHandler( handler );               <i class="conum" data-value="3"></i><b>(3)</b>
+        Mockito.doThrow( <span class="keyword">new</span> <span class="exception">IOException</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> ) )
+             .when( out )
+             .append( <span class="string"><span class="delimiter">'</span><span class="content">o</span><span class="delimiter">'</span></span> );                              <i class="conum" data-value="4"></i><b>(4)</b>
+
+        Engine engine = <span class="keyword">new</span> Engine( <span class="predefined-type">Map</span>.of() )
+             .readingString( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello world</span><span class="delimiter">&quot;</span></span> )
+             .writing( out );
+        engine.run();                                     <i class="conum" data-value="5"></i><b>(5)</b>
+
+        verify( handler, atLeast( <span class="integer">1</span> ) ).publish( any() ); <i class="conum" data-value="6"></i><b>(6)</b>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Mock the output resource that should throw the exception</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the a logger, making sure you get the right one for the class whose log you want to inspect and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>give it a mock handler as proof that a logging statement on the logger occurred.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Make the output mock throw an exception on a typical output, the character 'o' in this test.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Run the SUT</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Make it a real test by ensuring that logging occurred. Since the publish method is the abstract method to implement, that
+is the candidate method to verify in a custom handler.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The code above is from the template engine, an exercise in week 9.
+Using a few variants of this code <em>covers it all</em>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>There are cases, where you have to deal with a checked exception because it is checked, but the code
+is called in a situation where the exception can never occur. Mark that situation clearly in your code, and
+accept that you can&#8217;t reach the catch block. Add a comment to the maintainer so he or she will not wonder why this code
+is not covered in the coverage report. If you add the comment in the code, that comment will be visible in e.g. a jacoco coverage report.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bulk_validator"><a class="anchor" href="#_bulk_validator"></a><a class="link" href="#_bulk_validator">Bulk validator</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quite often when dealing with user input, validation has to be done.
+This validation is often repetitious work for the programmer.
+How about validating all inputs of a form in one go, and at the same time apply necessary conversions.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>bulkvalidator</strong> project is exactly fit for this purpose.
+It takes all inputs as a map, validates <em>and</em> converts (e.g. parses to <code>Integer</code>, <code>double</code>, <code>long</code>, <code>LocalDate</code> etc.)
+and returns them as result.</p>
+</div>
+<div class="paragraph">
+<p>While checking the validity of the values in the input map, it checks for correctness.
+In the inner loop, it catches and collects the exceptions that can occur when a validation fails.</p>
+</div>
+<div class="listingblock">
+<div class="title">Usage of the collecting validator: (Derived from the test code)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">BusinessLogic</span> {
+
+  <span class="directive">static</span> BulkValidator bv = <span class="keyword">new</span> BulkValidator().addValidations( <i class="conum" data-value="1"></i><b>(1)</b>
+      <span class="predefined-type">Map</span>.of( <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.id</span><span class="delimiter">&quot;</span></span>, ( <span class="predefined-type">String</span> s ) -&gt; <span class="predefined-type">Integer</span>.valueOf( s ),
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.someInt</span><span class="delimiter">&quot;</span></span>,
+            validateWith( <span class="predefined-type">Integer</span>::valueOf,
+                  BusinessException::<span class="keyword">new</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid integer</span><span class="delimiter">&quot;</span></span> ),
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.dob</span><span class="delimiter">&quot;</span></span>, LocalDate::parse,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.postcode</span><span class="delimiter">&quot;</span></span>, BusinessLogic::validatePC
+      )
+  );
+
+  <span class="type">void</span> submit( <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">String</span>&gt; inputs ) <span class="directive">throws</span> BulkException { <i class="conum" data-value="2"></i><b>(2)</b>
+      <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Object</span>&gt; validInputs=bv.validate( inputs );
+      process( validInputs );  <i class="conum" data-value="3"></i><b>(3)</b>
+  }
+
+  <span class="directive">private</span> <span class="type">void</span> process(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Object</span>&gt; validInputs) {  <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="comment">// use inputs. With a mapper and some</span>
+    customer = <span class="keyword">new</span> Customer( validInputs.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> ), validInputs.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">dob</span><span class="delimiter">&quot;</span></span> ));
+    <span class="comment">// do something with customer.</span>
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Give the validator validation rules. You typically do that only once per client class, like the customer controller.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This method will fail with an exception if validation fails.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Validate, but notice that when an error occurs, the submit method stops with a <code class="blue">BulkException</code>, which is passed to the caller, typically
+ a GUI class in a JavaFX app.<br>
+If the validation runs without issues, process the result, which are now valid key-value pairs.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Do the normal processing on the now known to be correct values.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Bulk validation can be used in any form based UI, where you collect the data from the UI Controller.
+In a JavaFX based project that would be a JavaFX controller, such as a CustomerController.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example use in JavaFX GUI, FX controller side</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">// injected logic</span>
+    <span class="directive">final</span> BusinessLogic bl;
+
+    FXUIScraper scraper = () -&gt; root; <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="annotation">@FXML</span>
+    <span class="directive">private</span> <span class="type">void</span> submit( <span class="predefined-type">ActionEvent</span> event ) { <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; keyValues = scraper.getKeyValues( x -&gt; <span class="predefined-constant">true</span> );
+        <span class="keyword">try</span> {
+            bl.submit( keyValues );
+        } <span class="keyword">catch</span> ( BulkException bex ) { <i class="conum" data-value="3"></i><b>(3)</b>
+            displayerrors( bex );
+        }
+    }
+
+    <span class="comment">/**
+     * The exception passed in contains a map with name of the failing controls
+     * and the exception thrown.
+     * @param bex exception information
+     */</span>
+    <span class="type">void</span> displayerrors( BulkException bex ) {
+        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Throwable</span>&gt; causes = bex.getCauses();
+        <span class="comment">// do something smart with the map, like asking for cause of problem</span>
+        <span class="comment">// maybe get internionalized message</span>
+        <span class="comment">// maybe change style or toiltip of the control.</span>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><a href="https://javabits.fontysvenlo.org/fxuiscraper/apidocs/nl.homberghp.fxuiscraper/nl/homberghp/fxuiscraper/package-summary.html">FXUIScraper</a> is a small library that can be used as companion to the BulkValidator.
+It is a dependency in the BulkValidator project and there is testcode too. The project is hosted at <a href="https://github.com/homberghp/fxuiscraper">homberghp/fxuiscraper</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The GUI code submits to the business logic, whatever it found when scraping.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>When the business code refuses with an exception, update the UI with the error info.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In all cases it is the business code that does the validation, and the UI that does the input collecting and display.
+Proper separation of concerns.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If compilation does not work because maven can&#8217;t find a dependency, you may have to change the dependency on genericmapper to version 3.0.2.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>Bulk Validation</summary>
+<div class="paragraph">
+<p>The work in the BulkValidator project should be obvious. Complete the test and
+implementation code.</p>
+</div>
+<div class="paragraph">
+<p>The hardest part is in the tests.
+Let the IDE guide you. AssertJ is very powerful but as with all haystacks, it is sometimes hard to find
+what you want. For instance after you type<br></p>
+</div>
+<div class="paragraph">
+<p><code class="blue">assertThatThrownBy(code).isExactlyInstanceOf( BulkException.class )</code>.<br>
+and  then force completion, you see a whole slew of completions. The ones named <code class="blue">extractingXXX</code> open new possibilities.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/extracting-completions.png" alt="extracting completions">
+</div>
+<div class="title">Figure 2. completions after <code>assertThatThrownBy(&#8230;&#8203;)</code></div>
+</div>
+<div class="paragraph">
+<p>This should be sufficient to complete the puzzle.</p>
+</div>
+<div class="paragraph">
+<p>Also ensure that the validator logs with level info and that the log messages contain the correct 'words'.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong class="big">Present</strong><br>
+In your personal repository you will find two projects, the <strong class="black">BuldValidator</strong> which is
+<span class="blue">this</span> exercise and a GUI example project, <code class="blue">bulkexample</code>, that shows how
+this BulkValidator is supposed to be used an can be combined with the <code class="blue">fxuiscraper</code>.</p>
+</div>
+<div class="paragraph">
+<p>There is <strong class="big green">NO</strong> work in the bulkexample project, it only serves as an example.
+ It might have relevance for project 2. Enjoy.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div><!--end Bulk Validation -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">3. Reading</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Horstmann Core Java, Ed 11, Vol I, Ch 7</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_slides"><a class="anchor" href="#_slides"></a><a class="link" href="#_slides">4. Slides</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../pdf/020_exceptions_sheets_en.pdf" target="_blank" rel="noopener">Exceptions on exceptions </a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_bulk_validator">Bulk Validator</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

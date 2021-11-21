@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W12 Security</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W12 Security</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_security">1. Security</a>
+<ul class="sectlevel2">
+<li><a href="#_java_security">1.1. Java (security)</a>
+<ul class="sectlevel3">
+<li><a href="#_class_loader">1.1.1. Class loader</a></li>
+<li><a href="#_byte_code_verifier">1.1.2. Byte code verifier</a></li>
+<li><a href="#_permissions">1.1.3. Permissions</a></li>
+</ul>
+</li>
+<li><a href="#_web_application">1.2. Web application</a>
+<ul class="sectlevel3">
+<li><a href="#_sql_injection">1.2.1. SQL injection</a></li>
+<li><a href="#_database_management">1.2.2. Database management</a></li>
+<li><a href="#_password_management">1.2.3. Password management</a></li>
+<li><a href="#_transport_layer_security">1.2.4. Transport layer security</a></li>
+<li><a href="#_error_handling">1.2.5. Error handling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security"><a class="anchor" href="#_security"></a><a class="link" href="#_security">1. Security</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Security is an important aspect of programming.
+By applying security principles while programming we can prevent bugs and exploits.
+These exploits could lead to data leakage, (distributed) denial of service (DDOS) or even remote code execution.</p>
+</div>
+<div class="paragraph">
+<p>We will look back at subjects that were discussed in previous weeks and
+see common security mistakes and how we can prevent them.</p>
+</div>
+<div class="sect2">
+<h3 id="_java_security"><a class="anchor" href="#_java_security"></a><a class="link" href="#_java_security">1.1. Java (security)</a></h3>
+<div class="paragraph">
+<p>Lets first have a closer look at how Java works and what
+mechanisms it has in place to help the developer prevent bugs
+(that could potentially lead to security exploits).</p>
+</div>
+<div class="paragraph">
+<p>These chapters are based on chapter 10 of Core Java, Volume II&#8212;&#8203;Advanced Features.</p>
+</div>
+<div class="sect3">
+<h4 id="_class_loader"><a class="anchor" href="#_class_loader"></a><a class="link" href="#_class_loader">1.1.1. Class loader</a></h4>
+<div class="paragraph">
+<p>The Java compiler (javac) converts the source code into code for
+the Java Virtual Machine (JVM). This virtual machine code is
+stored in <code>.class</code> files. Each class file contains the definition
+and implementation for one class or interface.</p>
+</div>
+<div class="paragraph">
+<p>The virtual machine loads these classes using the class loader.
+There are three different class loaders:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bootstrap class loader</strong>: loads classes from a couple of base modules and some internal JDK modules</p>
+</li>
+<li>
+<p><strong>Platform class loader</strong>: loads all classes of the Java platform not loaded by the bootstrap class loader</p>
+</li>
+<li>
+<p><strong>System (or Application)</strong>: loads classes from the module path
+and the class path</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Sow how does the JVM load a class:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>First it checks if the class is already loaded</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If it is already loaded it will use the loaded class</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>If not loaded the JVM requests the class loader to load the class</p>
+</li>
+<li>
+<p>The System class delegates the loading of the class to the
+Platform class loader</p>
+</li>
+<li>
+<p>The Platform class loader delegates the loading of the class to
+the Bootstrap class loader</p>
+</li>
+<li>
+<p>The Bootstrap class loader searches if the class is available in the Bootstrap JMOD files</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If available then it will load the class</p>
+</li>
+<li>
+<p>Else it delegates loading back to the Platform class loader</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The Platform class loader searches if the class is available in the Platform JMOD files</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If available then it will load the class</p>
+</li>
+<li>
+<p>Else it delegates loading back to System class loader</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The System class loader searches if the class is available on
+the class path or module path</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If available then it will load the class</p>
+</li>
+<li>
+<p>Else it will throw a ClassNotFoundException</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These different class loaders can be seen in action in the following
+code snippet.</p>
+</div>
+<div class="listingblock">
+<div class="title">Different class loaders</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.sql.SQLInput</span>;
+<span class="keyword">import</span> <span class="include">java.util.List</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        <span class="predefined-type">System</span>.out.println(<span class="predefined-type">List</span>.class.getClassLoader());
+        <span class="predefined-type">System</span>.out.println(<span class="predefined-type">SQLInput</span>.class.getClassLoader());
+        <span class="predefined-type">System</span>.out.println(Main.class.getClassLoader());
+    }
+}
+
+<span class="comment">// Output</span>
+<span class="comment">//</span>
+<span class="comment">// null</span>
+<span class="comment">// jdk.internal.loader.ClassLoaders$PlatformClassLoader@3cd1a2f1</span>
+<span class="comment">// jdk.internal.loader.ClassLoaders$AppClassLoader@55054057</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong class="red">Security</strong></p>
+</div>
+<div class="paragraph">
+<p>There a different types of class loaders, one of which is the
+<code>URLClassloader</code>, this one can, as the name suggests, load classes
+from an URL. Lets have a look at an example, first create the
+class we want to load</p>
+</div>
+<div class="listingblock">
+<div class="title">Printer</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Printer</span>{
+        <span class="directive">public</span> Printer(){
+                <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello there from the internet</span><span class="delimiter">&quot;</span></span>);
+        }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now compile the class and start a simple server that can serve
+the compiled class file.</p>
+</div>
+<div class="listingblock">
+<div class="title">Compile and serve class file on localhost</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">javac Printer.java
+python3 -m http.server 8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can load the class from the server.</p>
+</div>
+<div class="listingblock">
+<div class="title">URLClassLoader</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        <span class="keyword">try</span> {
+            <span class="predefined-type">URLClassLoader</span> loader = <span class="keyword">new</span> <span class="predefined-type">URLClassLoader</span>(<span class="keyword">new</span> <span class="predefined-type">URL</span><span class="type">[]</span> { <span class="keyword">new</span> <span class="predefined-type">URL</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/</span><span class="delimiter">&quot;</span></span>) });
+            <span class="predefined-type">Class</span> c = loader.loadClass (<span class="string"><span class="delimiter">&quot;</span><span class="content">Printer</span><span class="delimiter">&quot;</span></span>);
+            <span class="predefined-type">Object</span> o = c.getDeclaredConstructor().newInstance();
+        } <span class="keyword">catch</span> (<span class="exception">Exception</span> ex) {
+            <span class="predefined-type">Logger</span>.getLogger(Main.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+        }
+    }
+}
+<span class="comment">// Output</span>
+<span class="comment">//</span>
+<span class="comment">// Hello there from the internet</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This of course means that whatever class we load can do everything on the file system e.g. read files, make requests.</p>
+</div>
+<div class="paragraph">
+<p>Loading files via HTTP is of course not safe as the identity of
+the server cannot be established. Same goes for HTTPS if the
+application doesn&#8217;t verify the certificate (which is not unheard of).</p>
+</div>
+<div class="paragraph">
+<p>For a real life example of a class loader exploit have a look at
+<a href="https://knowledgebase.progress.com/articles/Article/How-to-prevent-Java-RMI-class-loader-exploit-with-AdminServer" class="bare">https://knowledgebase.progress.com/articles/Article/How-to-prevent-Java-RMI-class-loader-exploit-with-AdminServer</a>,
+where it was possible for unauthenticated users to load arbitrary
+classes via an exposed Java Remote Method Method Invocation (RMI)
+ service.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_byte_code_verifier"><a class="anchor" href="#_byte_code_verifier"></a><a class="link" href="#_byte_code_verifier">1.1.2. Byte code verifier</a></h4>
+<div class="paragraph">
+<p>So now we know how the JVM loads class files. But what are these
+files and how does the JVM interpret them?</p>
+</div>
+<div class="paragraph">
+<p>Java source code is first compiled to an intermediate
+representation called Java bytecode.
+This bytecode can then be interpreted by the Java Virtual Machine (JVM). The specification of the Java bytecode and the JVM can be found <a href="https://docs.oracle.com/javase/specs/index.html">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>This way developers only have to write and compile the Java code  once and they can run it on all platforms that
+have a JVM implementation available.</p>
+</div>
+<div class="paragraph">
+<p>Lets have a look at how the Java compiler compiles a source
+file (Verifier.java) to byte code (Verifier.class).</p>
+</div>
+<div class="listingblock">
+<div class="title">Verifier.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">verifier</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Verifier</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">1 + 2 = </span><span class="delimiter">&quot;</span></span> + calc());
+    }
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">int</span> calc(){
+        <span class="type">int</span> x = <span class="integer">1</span>;
+        <span class="type">int</span> y = <span class="integer">2</span>;
+        <span class="type">int</span> result = x + y;
+        <span class="keyword">return</span> result;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">We can use the following command to get the bytecode in mnemonic form:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">javap -c verifier.Verifier</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Bytecode of the calc method</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>public static int calc();
+    Code:
+       0: iconst_1  // 0x04: Push int constant 1 onto operant stack
+       1: istore_0  // 0x3B: Store int into 1st local variable
+       2: iconst_2  // 0x05: Push int constant 2nd onto operant stack
+       3: istore_1  // 0x3C: Store int into second local variable
+       4: iload_0   // 0x1A: Load int from 1st local variable
+       5: iload_1   // 0x1B: Load int from 2nd local variable
+       6: iadd      // 0x60: Add int
+       7: istore_2  // 0x3D: Store int in 3rd local variable
+       8: iload_2   // 0x1C: Load int from 3rd local variable
+       9: ireturn   // 0xAC: Return int from method</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before the bytecode is loaded by the class loader it is first verified. You might ask yourself why does the class file needs
+to be verified before it&#8217;s loaded. As we have seen in the previous
+chapter class files can be loaded from anywhere and there is no
+guarantee that the class file is not corrupted.</p>
+</div>
+<div class="paragraph">
+<p>The class loader verifies the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Variables are initialized before use</p>
+</li>
+<li>
+<p>Method calls match the types of object references</p>
+</li>
+<li>
+<p>Rules for accessing private data and method are not violated</p>
+</li>
+<li>
+<p>Local variable accesses fall within runtime stack</p>
+</li>
+<li>
+<p>The runtime stack does not overflow</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>So what happens if we try to load a class that doesn&#8217;t pass any of
+these checks? Lets change the <code>Verifier.class</code> file using a
+<a href="https://en.wikipedia.org/wiki/Hex_editor">hex editor</a>.</p>
+</div>
+<div id="img-sunset" class="imageblock">
+<div class="content">
+<img src="./images/verifier_hex.png" alt="Verifier.class open inside hex editor">
+</div>
+<div class="title"><code>Verifier.class</code> open in hex editor, <code>calc</code> function highlighted</div>
+</div>
+<div class="paragraph">
+<p>Lets change <code>3C</code> to <code>3B</code>, thus not initializing variable <code>y</code>. If we now try to run the program we get the following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Error: Unable to initialize main class verifier.Verifier
+Caused by: java.lang.VerifyError: Bad local variable type</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_permissions"><a class="anchor" href="#_permissions"></a><a class="link" href="#_permissions">1.1.3. Permissions</a></h4>
+<div class="paragraph">
+<p>Another security mechanism that the JVM has is the security manager.
+The security manager controls whether a specific operation is permitted
+or not.</p>
+</div>
+<div class="paragraph">
+<p>Operations checked by the security manager include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating a new class loader</p>
+</li>
+<li>
+<p>Exiting the virtual machine</p>
+</li>
+<li>
+<p>Accessing a file</p>
+</li>
+<li>
+<p>Opening a socket</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a complete look of default permissions that are available have
+a look at the
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/Permission.html">javadoc</a>.</p>
+</div>
+<div class="paragraph">
+<p>By default Java runs without a security manager installed. This means
+that by default all operations are permitted.</p>
+</div>
+<div class="paragraph">
+<p>You can set a Security Manager with the following code</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">System</span>.setSecurityManager(<span class="keyword">new</span> <span class="predefined-type">SecurityManager</span>());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However without specifying permissions somewhere the Security Manager is quite
+useless. To fix this we can specify security policies in a so called security
+policy file. There are a couple of ways to let the Security Manager know about
+the policy file(s).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>java.policy</code> file in the Java platform&#8217;s home directory</p>
+</li>
+<li>
+<p>The <code>.java.policy</code> file in the user&#8217;s home directory</p>
+</li>
+<li>
+<p>By setting the <code>java.security.policy</code> property<br>
+<code>System.setProperty("java.security.policy", "&lt;path_to_policy&gt;/security.policy");</code></p>
+</li>
+<li>
+<p>By starting the JVM with the <code>java.security.policy</code> argument<br>
+<code>java -Djava.security.policy==&lt;path_to_policy&gt;/security.policy Application</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The policy file contains a sequence of grant entries, where each entry has
+the following form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>grant codesource
+{
+    permission1;
+    permission2;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example if we want our application to be able to read and write a file
+called <code>test.txt</code> in the user&#8217;s home directory and be able to read all
+the files in the log directory, we could do that as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>grant
+{
+    permission java.io.FilePermission &quot;${user.home}/test.txt&quot;, &quot;read, write&quot;;
+    permission java.io.FilePermission &quot;${user.home}/logs/*&quot;, &quot;read&quot;;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now if the application tries to open a different file, the security
+manager will trow a exception</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java.security.AccessControlException: access denied (&quot;java.io.FilePermission&quot; &quot;&lt;path_to_file&gt;/test2.txt&quot; &quot;read&quot;)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_application"><a class="anchor" href="#_web_application"></a><a class="link" href="#_web_application">1.2. Web application</a></h3>
+<div class="paragraph">
+<p>During PRC1, PRC2, PRJ1 and PRJ2 we have seen a lot of concepts
+that apply to all kinds of different programming languages.
+To show some common security pitfalls we have developed a simple,
+but <strong class="red">insecure</strong> web application.</p>
+</div>
+<div class="paragraph">
+<p>The web application is build in Java and is using <a href="https://javalin.io/">Javalin</a> to set-up a simple web framework.</p>
+</div>
+<div class='ex'><details class='ex'><summary class='ex'>Structure of the application</summary>
+<div class="listingblock">
+<div class="title">The main application</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">App</span> {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        Javalin app = Javalin.create(config -&gt; {
+            <span class="comment">// Add static files (images, html, css, javascript)</span>
+            config.addStaticFiles(<span class="string"><span class="delimiter">&quot;</span><span class="content">public</span><span class="delimiter">&quot;</span></span>);
+        });
+        <span class="comment">// Start at port 8080</span>
+        app.start(<span class="integer">8080</span>);
+
+        <span class="comment">// Use database helper from PRC2 to get a datasource</span>
+        <span class="directive">final</span> <span class="type">var</span> db = DBHelper.getDataSource(<span class="string"><span class="delimiter">&quot;</span><span class="content">jdbc.pg</span><span class="delimiter">&quot;</span></span>);
+
+        app.post(<span class="string"><span class="delimiter">&quot;</span><span class="content">/login</span><span class="delimiter">&quot;</span></span>, ctx -&gt; {
+            <span class="comment">// Convert JSON data to Login (username, password)</span>
+            <span class="type">var</span> data = ctx.bodyAsClass(Login.class);
+
+            <span class="comment">// Get a database connection</span>
+            <span class="type">var</span> connection = db.getConnection();
+            <span class="comment">// Create a statement</span>
+            <span class="type">var</span> statement = connection.createStatement();
+
+            <span class="comment">// Build query to check if the username exists with the given password</span>
+            <span class="type">var</span> query = <span class="string"><span class="delimiter">&quot;</span><span class="content">select username from users where username = '</span><span class="delimiter">&quot;</span></span>
+            + data.getUsername() + <span class="string"><span class="delimiter">&quot;</span><span class="content">' and password = '</span><span class="delimiter">&quot;</span></span> + data.getPassword() + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span>;
+
+            <span class="keyword">try</span>{
+                <span class="comment">// Execute the query</span>
+                <span class="type">var</span> rs = statement.executeQuery(query);
+                <span class="comment">// Check if user with password exists</span>
+                <span class="keyword">if</span>(rs.next()){
+                    ctx.status(<span class="integer">200</span>);
+                    <span class="comment">// Return the username</span>
+                    ctx.json(rs.getString(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>));
+                }<span class="keyword">else</span>{
+                    <span class="comment">// User doesn't exist, return error message</span>
+                    ctx.status(<span class="integer">401</span>);
+                    ctx.result(<span class="string"><span class="delimiter">&quot;</span><span class="content">The combination of username/password is not known.</span><span class="delimiter">&quot;</span></span>);
+                }
+            }<span class="keyword">catch</span>(PSQLException ex){
+                <span class="comment">// Somethin went wrong with the query</span>
+                ctx.status(<span class="integer">500</span>);
+                ctx.result(ex.getMessage());
+            }
+        });
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Structure of the users table</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> prc2.users(
+    id SERIAL <span class="directive">PRIMARY</span> <span class="type">KEY</span>,
+    username <span class="predefined-type">TEXT</span>,
+    password <span class="predefined-type">TEXT</span>
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure to populate the table if you want to follow the examples.
+For the example we will be using the user <code>testuser</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">index.html with a login form</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute-name">lang</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">en</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute-name">charset</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">utf-8</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">viewport</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">content</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">width=device-width, initial-scale=1, shrink-to-fit=no</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Login<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">css/style.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">container</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;form</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">method</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">POST</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-title</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                    Login
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Username<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Password<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row errors hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-actions</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">btn full-width</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Login<span class="tag">&lt;/button&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+
+<span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">js/form.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">form.js Retrieve form data and send it as JSON</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="js">const loginForm = document.querySelector(<span class="string"><span class="delimiter">&quot;</span><span class="content">form#login</span><span class="delimiter">&quot;</span></span>);
+const errors = document.querySelector(<span class="string"><span class="delimiter">&quot;</span><span class="content">.errors</span><span class="delimiter">&quot;</span></span>);
+
+const submit = (event) =&gt; {
+    <span class="comment">// Stop the event</span>
+    event.preventDefault();
+
+    <span class="comment">// Retrieve the values</span>
+    const form = <span class="keyword">new</span> FormData(event.target);
+
+    <span class="comment">// Create new object from form entries</span>
+    const data = Object.fromEntries(form.entries());
+
+    login(data);
+}
+
+const setup = () =&gt; {
+    <span class="comment">// Check that login form exists</span>
+    <span class="keyword">if</span>(!loginForm){
+        console.error(<span class="string"><span class="delimiter">&quot;</span><span class="content">Login form not found</span><span class="delimiter">&quot;</span></span>);
+        <span class="keyword">return</span>;
+    }
+    <span class="comment">// Add form submit handler</span>
+    loginForm.addEventListener(<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span>, submit);
+};
+
+const showErrors = (error) =&gt; {
+    <span class="keyword">if</span>(!errors){
+        <span class="keyword">return</span>;
+    }
+    errors.innerHTML = error.message;
+    errors.classList.remove(<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span>);
+};
+
+const removeErrors = () =&gt; {
+    <span class="keyword">if</span>(!errors){
+        <span class="keyword">return</span>;
+    }
+    errors.innerHTML = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+    errors.classList.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span>)
+}
+
+const login = async (data) =&gt; {
+    <span class="comment">// Clean up old errors</span>
+    removeErrors();
+
+    <span class="keyword">try</span>{
+        const message = await loginFetch(data);
+        window.alert(<span class="error">`</span>Welcome back <span class="predefined">$</span>{message}<span class="error">`</span>);
+    }<span class="keyword">catch</span>(error){
+        showErrors(error);
+    }
+}
+
+const loginFetch = async (data) =&gt; {
+    const response =  await fetch(<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span>, {
+        <span class="key">method</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">POST</span><span class="delimiter">&quot;</span></span>,
+        <span class="key">headers</span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">Content-Type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">application/json</span><span class="delimiter">&quot;</span></span> },
+        <span class="key">body</span>: JSON.stringify(data)
+    });
+    <span class="keyword">if</span>(!response.ok){
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(await response.text());
+    }
+    <span class="keyword">return</span> await response.json();
+}
+
+setup();</code></pre>
+</div>
+</div>
+</details></div>
+<div class="sect3">
+<h4 id="_sql_injection"><a class="anchor" href="#_sql_injection"></a><a class="link" href="#_sql_injection">1.2.1. SQL injection</a></h4>
+<div class="paragraph">
+<p>In the images below we can see the normal usage of the web app.
+On the left we have successful login and on the right a unsuccessful.</p>
+</div>
+<div class="openblock clearfix">
+<div class="title">Login page normal usage</div>
+<div class="content">
+<div class="imageblock left">
+<div class="content">
+<img src="./images/security_successful_login.png" alt="Successful login" width="400"">
+</div>
+<div class="title">Figure 1. Successful login for user <code>testuser</code></div>
+</div>
+<div class="imageblock right">
+<div class="content">
+<img src="./images/security_unsuccessful_login.png" alt="Unsuccessful login" width="400">
+</div>
+<div class="title">Figure 2. Unsuccessful login</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We can check if this form is susceptible for SQL injection by adding different
+quotes and other characters that are used inside SQL.
+For example input a single quote <code>'</code> anywhere in the username
+or password field. We get an error back telling us that the string
+is unterminated</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Unterminated string literal started at position 72 in SQL select username from users where username = 'testuser'' and password = ''. Expected char</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the useful error message, we will get back to this in the
+section error handling.</p>
+</div>
+<div class="paragraph">
+<p>For now lets focus on the unterminated string, this means that
+there is a SQL injection possibility.</p>
+</div>
+<div class="paragraph">
+<p>So lets try to login as <code>testuser</code> without knowing the password.
+We can do this by entering the username <code>testuser</code> and for the password
+we need to enter something that is always <code>true</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> or </span><span class="delimiter">'</span></span><span class="integer">1</span><span class="string"><span class="delimiter">'</span><span class="content"> = </span><span class="delimiter">'</span></span><span class="integer">1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can login as any user as long as we know the username.
+But how can we retrieve the password for a given user?
+We can use a  <code>UNION</code> SQL statement to retrieve data and union it with
+the selected username.
+Using the following query we retrieve the password for <code>testuser</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> UNION SELECT password FROM users WHERE username=</span><span class="delimiter">'</span></span>testuser</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can even retrieve a combination of users and their given
+passwords with the following query:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> UNION SELECT CONCAT(username, </span><span class="delimiter">'</span></span> : <span class="string"><span class="delimiter">'</span><span class="content">, password) FROM users OFFSET 1 -- --</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CONCAT: Concatenate the username and password</p>
+</li>
+<li>
+<p>OFFSET: By changing the offset we can enumerate the complete users table</p>
+</li>
+<li>
+<p>&#8201;&#8212;&#8201;--: SQL comment used to drop the rest of the query</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the database is not correctly configured we can even enumerate the complete
+database and retrieve data from other databases/schemas/tables.</p>
+</div>
+<div class="paragraph">
+<p>For example if the current database and schema would contain a table <code>secrets</code>
+that has one column named <code>secret</code> we could retrieve the secrets as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> union select table_schema from information_schema.tables where table_name = </span><span class="delimiter">'</span></span>users<span class="string"><span class="delimiter">'</span><span class="content">-- --  <i class="conum" data-value="1"></i><b>(1)</b>
+</span><span class="delimiter">'</span></span> <span class="keyword">union</span> <span class="class">select</span> table_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string"><span class="delimiter">'</span><span class="content">public</span><span class="delimiter">'</span></span><span class="comment">-- --   </span><i class="conum" data-value="2"></i><b>(2)</b>
+<span class="string"><span class="delimiter">'</span><span class="content"> union select column_name from information_schema.columns where table_name=</span><span class="delimiter">'</span></span>secrets<span class="string"><span class="delimiter">'</span><span class="content">-- --  <i class="conum" data-value="3"></i><b>(3)</b>
+</span><span class="delimiter">'</span></span> <span class="keyword">union</span> <span class="class">select</span> secret <span class="keyword">from</span> secrets<span class="comment">-- --                                                     </span><i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Get the schema for the current table &#8594; return <code>public</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get all the tables for the current schema &#8594; shows that a table named <code>secrets</code> exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Get all the columns for table <code>secrets</code> &#8594; returns <code>secret</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Get the secret</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_database_management"><a class="anchor" href="#_database_management"></a><a class="link" href="#_database_management">1.2.2. Database management</a></h4>
+<div class="paragraph">
+<p>The reason that the in the previous section we were able to retrieve
+the secret was because the application logs in under the user <code>postgres</code>.
+This <code>postgres</code> user is a <code>superuser</code>, which means it can do <strong class="red">everything</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The application for now only needs <strong class="blue">read</strong> access to the <code>users</code> table, so lets
+create a new user and only give it the <code>select</code> right on the table <code>users</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> ROLE app LOGIN;          <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="class">GRANT</span> <span class="class">SELECT</span> <span class="keyword">ON</span> users <span class="keyword">TO</span> app;   <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a <code>role</code> (user) called <code>app</code> and give it login rights</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Give the <code>role</code> app <code>select</code> rights on the <code>user</code> table</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If we now try to run a SQL injection using the <code>secrets</code> table again
+we are met with the following error message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>ERROR: permission denied for table secrets</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And if we try to to find out what other tables there are in the
+<code>public</code> schema, we will only find the <code>users</code> table.</p>
+</div>
+<div class="paragraph">
+<p>We added access control at a <code>table</code> level, however it is also
+possible to this on different levels.
+You can grant permissions on a database level, schema level, table
+level, and column level using the
+<a href="https://www.postgresql.org/docs/current/sql-grant.html">grant</a> permission.<br>
+It&#8217;s even possible to add access control on a row level using
+<a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">policies</a>.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s also possible to create a <code>group role</code> such that a user can belong
+to a group and inherit all the rights of that group.</p>
+</div>
+<div class="paragraph">
+<p>This is of course only a step in the right direction, there are more steps
+that can be taken to harden your database (depending on your needs):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Disable login (only local over unix socket)</p>
+</li>
+<li>
+<p>Only login in from localhost or specific IP</p>
+</li>
+<li>
+<p>Login using certificates instead of password</p>
+</li>
+<li>
+<p>Enable logging</p>
+</li>
+<li>
+<p>Enable TLS</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_password_management"><a class="anchor" href="#_password_management"></a><a class="link" href="#_password_management">1.2.3. Password management</a></h4>
+<div class="paragraph">
+<p>While doing the SQL injection attacks we were able to retrieve the passwords
+in plain text. This is of course a complete no-go in term of security.</p>
+</div>
+<div class="paragraph">
+<p>So how to do password management the right way?</p>
+</div>
+<div class="paragraph">
+<p>The best way is to not store a password at all. This might sound a bit
+weird, but you probably use or at least have seen the <code>login in with</code>
+(Google, Apple, Github, etc.) buttons on websites.
+This way of loggin in uses the <a href="https://oauth.net/2/">OAUTH</a> (2.0) protocol.
+Using this protocol the client will retrieve an access token from
+the Authorization server that can then be used on the Resource server.
+So the application will never receive the user&#8217;s password.</p>
+</div>
+<div class="paragraph">
+<p>If you can&#8217;t or don&#8217;t want to provide OAUTH 2.0 login functionality,
+it&#8217;s best to not roll your own implementation for storing passwords
+(nor for authentication/authorization). So if possible use the
+functionality of the framework you are using. If you are not using a
+framework or the framework doesn&#8217;t offer this functionality, see if there
+is a reputable library that can do the work for you.</p>
+</div>
+<div class="paragraph">
+<p>Finally if you have to store your password manually, make sure to
+use current best practices.</p>
+</div>
+<div class="paragraph">
+<p>First of all the password should be hashed using a cryptographic
+hash function. A cryptographic hash function has the following
+properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>One way: it&#8217;s not possible to compute the original text from the hash</p>
+</li>
+<li>
+<p>Deterministic: the same text will always produce the same hash</p>
+</li>
+<li>
+<p>Diffusion: changin just one bit, should change the hash significantly</p>
+</li>
+<li>
+<p>Collision resistance: It&#8217;s not feasible to find two passwords that
+both have the same hash</p>
+</li>
+<li>
+<p>Fast: the hashing algorithm should be fast</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at the sha256 hash of a text and what happens if we
+slightly change the text (adding a '.' at the end).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Text:   This is a test string to hash
+Sha256: f70b476ff948472f8e4e52793a5a2779e636c20dd5336d3a8a4455374318db35
+Text:   This is a test string to hash.
+Sha256: 862a9e0d0890a7a28e27c558c80820a0db36eea02e51e2dee8094deade308319</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However just storing the hash in the database instead of the
+password is still not safe. This is because of the <code>deterministic</code> property of hashing.
+An attacker
+can pre-compute a large table of hashes for common passwords and easily
+check if the hashed password matches a known hash from the table.</p>
+</div>
+<div class="paragraph">
+<p>To combat this a <code>salt</code> is used. A salt is a large random, non-secret
+that can be stored with the password hash. The salt is added to the
+hashing process to produce unique hashes even if users have the same or a
+common password.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Hash with salt example</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Password</th>
+<th class="tableblock halign-left valign-top">Salt</th>
+<th class="tableblock halign-left valign-top">String to be hashed</th>
+<th class="tableblock halign-left valign-top">Sha256 hash</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DWEFAVLJQFEOHSZG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secretDWEFAVLJQFEOHSZG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7ddc02be0b03aef77cc7298083aabc2417fac820263ecfc0f799876fc04c7d30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OJYKWXMKWYXNTTUW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secretOJYKWXMKWYXNTTUW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">f8da88f1240307b1441bcdfe0ba1c9d9bc0c6113dbfaa8fc869f3a6f42b5dba7</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The last problem comes from the <code>fast</code> property of normal hashes.
+You want to make it hard for an attacker to bruteforce retrieved hashes.
+To do this you intentionally make the hashing algorithm slower, especially
+you make it slower to do on GPUs as these are used in the bruteforce process.</p>
+</div>
+<div class="paragraph">
+<p>This leaves us with a couple of recommended hashing algorithms:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>bcrypt</p>
+</li>
+<li>
+<p>algon2(id)</p>
+</li>
+<li>
+<p>scrypt</p>
+</li>
+<li>
+<p>PBKDF2</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_transport_layer_security"><a class="anchor" href="#_transport_layer_security"></a><a class="link" href="#_transport_layer_security">1.2.4. Transport layer security</a></h4>
+<div class="paragraph">
+<p>When you start the web applicatio by default it will run over
+HTTP. Running a website (or other service) over HTTP has two
+major problems.</p>
+</div>
+<div class="paragraph">
+<p>The first problem is that the traffic between the client and
+the server is <strong class="red">not</strong> encrypted. In theory everyone can see all
+the traffic between you and the server.</p>
+</div>
+<div class="paragraph">
+<p>We will use <a href="https://www.wireshark.org/">Wireshark</a> to show how we can see traffic
+to and from our application.</p>
+</div>
+<div class="paragraph">
+<p>First start the web application, it will be available on
+<code>localhost:8080</code> by default. (You can also start another server
+e.g. <code>python3 -m http.server 8080</code>).<br>
+Secondly start wireshark and select the right interface to capture
+traffic on.</p>
+</div>
+<div class="paragraph">
+<p>If you are on linux or Mac you can use the <code>loopback</code>
+interface to capture traffic on localhost.<br>
+Otherwise capture traffic on your main interface. Find out the
+local ip address of your device: <code>ipconfig</code>. And now use another
+device to connect to the server, e.g. if you local ip address
+is <code>10.0.0.1</code>, then enter <code>10.0.0.1:8080</code> in the browser.</p>
+</div>
+<div class="paragraph">
+<p>You should now be able to see traffic from and to the server
+in Wireshark. When you try to login you should see a <code>POST</code>
+request to <code>/login</code>, see the image below.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/wireshark_request.png" alt="Wireshark showing the request">
+</div>
+</div>
+<div class="paragraph">
+<p>Right click the request &gt; Follow &gt; TCP Stream will show the complete
+TCP stream (request and answer) as shown below. You can clearly
+see the username and password in the request.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/wireshark_tcp_stream.png" alt="Wireshark tcp stream">
+</div>
+</div>
+<div class="paragraph">
+<p>The second major problem with running a service over HTTP is
+that there is no way to verify that the server is who it claims
+to be. Nor that the traffic from the server is actually (unmodified)
+traffic from the server.<br>
+If connected to a public WIFI the owner of the WIFI can change
+the messages to and from the server to anything they like
+and there is no way of knowing.
+Not just on public WIFI but also on trusted networks are
+there ways to do a Man-in-the-middle (MITM) attack and
+intercept and change HTTP traffic.</p>
+</div>
+<div class="paragraph">
+<p>The solution to both these problems if to use HTTPS.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Certificate: by using HTTPS the server provides a certificate
+that is signed by and Certificate Authority (CA) to prove that
+the server is who it claims to be.</p>
+</li>
+<li>
+<p>Encryption: the server certificate is used to generate a
+session key, which is used to encrypt all traffic to and from
+the server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Nowadays it is really easy and <strong class="green">free</strong> to get a certificate
+for a public facing server by using
+<a href="https://letsencrypt.org/">Let&#8217;s encrypt</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/lets_encrypt.png" alt="Let&#8217;s encrypt on PRC2 website">
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s even possible to create your own <code>CA</code> to sign certificates
+on your local network. You can do this by using
+tools such as <code>openssl</code>, the Java <code>keytool</code> or use a tool such as <code>mkcert</code> that
+streamlines the process for you.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/https_localhost.png" alt="Self-signed certificate on localhost">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_error_handling"><a class="anchor" href="#_error_handling"></a><a class="link" href="#_error_handling">1.2.5. Error handling</a></h4>
+<div class="paragraph">
+<p>Showing errors in the front-end can be very helpful,
+especially during development.<br>
+However these errors also pose a security risk as it
+can help attackers better understand the system.</p>
+</div>
+<div class="paragraph">
+<p>In our vulnerable web application we have already seen
+a very big security risk where the SQL exception
+gets displayed on the front-end, thereby given attackers
+access to the complete query that gets executed.</p>
+</div>
+<div class="paragraph">
+<p>But error handling can also be a bit more subtle.
+In the following example the web application will
+return a <code>Username not found</code> when the account does
+not exist and a <code>Wrong password.</code> when it does exist,
+but a wrong password is entered. From a user perspective
+this is of course very nice, you know that you either
+entered the wrong username or the wrong password.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">if</span>(username == <span class="predefined-constant">null</span>){
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Username not found.</span><span class="delimiter">&quot;</span></span>
+}<span class="keyword">else</span> <span class="keyword">if</span>(password == <span class="predefined-constant">null</span>){
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Wrong password.</span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However an attacker can use this functionality to check
+which usernames exist, by means of the returned error
+message. They may try to find an <code>admin</code> account and try
+to guess/brute-force the password for that account.</p>
+</div>
+<div class="paragraph">
+<p>To combat such an attack it is better to return a less
+descriptive error message, such as <code>Username or password incorrect</code>.
+This way an attacker can not tell if the username exists
+or that the password is wrong.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

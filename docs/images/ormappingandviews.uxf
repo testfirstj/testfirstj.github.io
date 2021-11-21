@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>150</x>
+      <y>20</y>
+      <w>240</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>template=*table:person_t*
+Person
+--
+*- personid : opaque*
+- name: String
+- dob: LocalDate
+- secrets: private
+--
+getters, constructor
+bg=yellow
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>220</y>
+      <w>200</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Tutor
+--
+- employeeid: Integer
+/- other details/
+--
+constructor and getters
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>210</y>
+      <w>390</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>template=*table:students_v*
+Student
+--
+- student id
+/- other details/
+--
+constructor and getters
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>90</x>
+      <y>150</y>
+      <w>190</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;170.0;40.0;10.0;40.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>250</x>
+      <y>150</y>
+      <w>200</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0;180.0;40.0;180.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>360</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+personid
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>360</y>
+      <w>70</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+name</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>210</x>
+      <y>360</y>
+      <w>40</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+dob</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>250</x>
+      <y>360</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=center
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>430</y>
+      <w>320</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+personid
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>430</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+employeeid
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>250</x>
+      <y>430</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+teacher details
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>500</y>
+      <w>320</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+personid
+bg=cyan</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>230</x>
+      <y>610</y>
+      <w>80</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+studentid</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>310</x>
+      <y>610</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+student details ...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>100</x>
+      <y>380</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>50</x>
+      <y>380</y>
+      <w>60</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30.0;10.0;30.0;40.0;10.0;40.0;10.0;90.0;40.0;90.0;40.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>610</y>
+      <w>400</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+VIEW students_v: 
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>360</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TABLE persons
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>410</x>
+      <y>430</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TABLE teachers
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>410</x>
+      <y>500</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>*TABLE students_t*
+bg=cyan</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>610</y>
+      <w>70</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+opaque
+fg=yellow
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>190</x>
+      <y>610</y>
+      <w>280</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+dob</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>360</y>
+      <w>320</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>500</y>
+      <w>80</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+studentid
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>500</y>
+      <w>170</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+student details ...
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>630</x>
+      <y>610</y>
+      <w>260</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+*students_t natural join persons_t*
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>480</x>
+      <y>20</y>
+      <w>350</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>The person table has an 
+*opaque id*
+meaning, nobody
+needs to know the ID.
+
+Typically generated by 
+the database, like with SERIAL or
+*GENERATED ALWAYS AS IDENTITY*
+*you can leave opaque id out of the view*
+/The app does not need it and can't leak it/
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>20</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>150</x>
+      <y>320</y>
+      <w>780</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-&gt;&gt;&gt;
+^ either way v</panel_attributes>
+    <additional_attributes>10.0;20.0;760.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>540</x>
+      <y>360</y>
+      <w>190</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;50.0;110.0;110.0;110.0;170.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>500</y>
+      <w>120</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0;100.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>370</x>
+      <y>550</y>
+      <w>200</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>bg=green
+Exposed to application
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>570</y>
+      <w>210</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;40.0;190.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>600</x>
+      <y>360</y>
+      <w>300</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>CREATE OR REPLACE 
+VIEW students_v AS
+  SELECT name, dob, studentid, ...
+  FROM studens NATURAL JOIN persons
+bg=#aaffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>610</y>
+      <w>330</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>halign=left
+name
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>490</x>
+      <y>570</y>
+      <w>100</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>80.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>330</y>
+      <w>30</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>lt=.
+lw=3
+fg=red</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;320.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>130</x>
+      <y>330</y>
+      <w>30</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>lt=.
+lw=3
+fg=red</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;320.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>320</y>
+      <w>70</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>*red tape*
+lw=0
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

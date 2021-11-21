@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W2 Parameterized Tests</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W2 Parameterized Tests</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_parameterized_tests">1. Parameterized tests</a>
+<ul class="sectlevel2">
+<li><a href="#_parameterized_test_junit_5_style">1.1. Parameterized test, Junit 5 style</a></li>
+<li><a href="#_exercise_fraction_part_1">Exercise Fraction part 1.</a></li>
+<li><a href="#_lookup_in_a_map">1.2. Lookup in a map.</a></li>
+<li><a href="#_exercise_fraction_part_2">Exercise Fraction part 2.</a></li>
+<li><a href="#_test_data_from_a_file">1.3. Test data from a file</a></li>
+<li><a href="#_repeated_use_of_same_data">1.4. Repeated use of same data.</a></li>
+<li><a href="#_testing_compare_results">1.5. Testing compare results.</a></li>
+<li><a href="#_test_data_using_argumentsprovider">1.6. Test Data Using ArgumentsProvider</a></li>
+<li><a href="#_split_it_yourselves">1.7. Split it yourselves</a></li>
+<li><a href="#_using_a_method_as_a_source_for_the_test_data">1.8. Using a method as a Source for the test Data</a></li>
+</ul>
+</li>
+<li><a href="#_test_recipe_i_test_equals_and_hashcode">2. Test Recipe I, Test Equals and hashCode</a>
+<ul class="sectlevel2">
+<li><a href="#_exercise_fraction_part_3">Exercise Fraction part 3.</a></li>
+<li><a href="#_exercise_flawless_password">Exercise Flawless Password</a></li>
+<li><a href="#_exercise_enum_calculator">Exercise Enum Calculator</a></li>
+</ul>
+</li>
+<li><a href="#_exercises_in_this_part">Exercises in this part</a></li>
+<li><a href="#_links">Links</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parameterized_tests"><a class="anchor" href="#_parameterized_tests"></a><a class="link" href="#_parameterized_tests">1. Parameterized tests</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="big">You will often see that test methods look a lot like each other. As an example:
+In the fraction exercise, in most test methods you have two inputs and one or two results,
+then an operation is done followed by some assertion, often of the same kind.
+This quickly leads to the habit of <em>copy and waste</em> programming. Many errors are introduced this way: You copy the original,
+tweak the copy a bit and you are done. Then you forget one required tweak, because they are easy to miss, but you do not notice it until too late.</span></p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="imageblock related thumb right">
+<div class="content">
+<img src="./images/waste.jpg" alt="waste" width="480">
+</div>
+<div class="title">Figure 1. Do not become a ctrl+c, ctrl+v junky. That only produces junk.</div>
+</div>
+<div class="paragraph">
+<p>Avoid <em class="big">copy and waste</em> at almost all times. It is <strong class="big red">NOT</strong> a good programming style. If you see it in your code, refactor it to
+remove the copies, but instead make calls to one version of it. This will make you have <em>less</em> code overall. Coding excellence is never measured
+in number of code lines, but in quality of the code. Think of gems. They are precious because they are rare.</p>
+</div>
+<div class="paragraph">
+<p>The <em>copy and waste</em> problem can even become worse: When the original has a flaw, you are just multiplying the
+number of flaws in your code. This observation applies to test code just as well.<br></p>
+</div>
+<div class="paragraph">
+<p><strong>CODE THAT ISN&#8217;T WRITTEN CAN&#8217;T BE WRONG</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_parameterized_test_junit_5_style"><a class="anchor" href="#_parameterized_test_junit_5_style"></a><a class="link" href="#_parameterized_test_junit_5_style">1.1. Parameterized test, Junit 5 style</a></h3>
+<div class="paragraph">
+<p>Below you see an example on how you can condense the <code>toString()</code> tests of fraction from 5 very similar test methods into 5 strings containing the test data
+and 1 (say one) test method.<br>
+Paraphrasing a saying: <em class="green big">Killing many bugs with one test</em>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Complete fraction test class with parameterized test, using an in-code csv source</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">fraction</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.params.ParameterizedTest</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.params.aggregator.ArgumentsAccessor</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.params.provider.CsvSource</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">FractionCSVSourceTest</span> {
+
+    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvSource</span>( {
+           <span class="comment">//&quot;message,          expected,     n,   d&quot;, </span><i class="conum" data-value="1"></i><b>(1)</b>
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">'two thirds',        '(2/3)',     2,   3</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="2"></i><b>(2)</b>
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">'whole number,           '2',     2,   1</span><span class="delimiter">&quot;</span></span>,
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">'one third',         '(1/3)',    -3,  -9</span><span class="delimiter">&quot;</span></span>,
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">'minus two fifths',  '(-2/5)',   12, -30</span><span class="delimiter">&quot;</span></span>,
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">'one + two fifths', '(-1-(2/5))',   35, -25</span><span class="delimiter">&quot;</span></span>
+    } )
+    <span class="type">void</span> fractionOps( <span class="predefined-type">String</span> message, <span class="predefined-type">String</span> expectedString,
+            <span class="type">int</span> numerator, <span class="type">int</span> denominator ) { <i class="conum" data-value="3"></i><b>(3)</b>
+
+        Fraction f = <span class="keyword">new</span> Fraction( numerator, denominator );
+        assertThat( f.toString() )
+                .as( message )
+                .isEqualTo( expectedString );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Adding a comment is always a good idea. You may also want your values aligned for improved readability.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Parameters are separated by commas, which maybe in the test values. In that case you can demarcate Strings with single quotes inside the csv record string.
+If you need another separator instead of comma, you can specify that too,
+see <a href="https://junit.org/junit5/docs/current/api/org.junit.jupiter.params/org/junit/jupiter/params/provider/CsvSource.html" target="_blank" rel="noopener">CsvSource API </a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The parameters are passed in as the type(s) provided by the test method&#8217;s signature. The Junit-5 framework will (try to) parse the csv record elements accordingly.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more details see <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests" target="_blank" rel="noopener">Junit 5 parameterized tests </a>.</p>
+</div>
+<div class="paragraph">
+<p>The CsvSource version of parameterized test is the simplest to use and easily understood.
+ It keeps data and the test together, nicely near to each other, so it make it easy to read the
+ tests and data in one glance.
+ They typically fit easily on a screen. Remember the importance of readability of code. That too applies to test code.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>We want to make sure that the assignment project is acceptable by the compiler.
+We create the project ourselves first, making sure it works and then strip our solution. All TDD of course.</p>
+</div>
+<div class="paragraph">
+<p>To make that work, we sometime have to <em class="gray">comment out</em> code in the test or in the business part of the code,
+because that code is not yet ready (because the student did not write it yet).
+In such cases we comment out using two slashes, which both best and easiest.<br>
+If you want to un-comment such part, select the lines and press <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>/</kbd></span> pronounced <em>control slash</em>.+
+For Mac fans, its different, of course. <span class="keyseq"><kbd>&#8984;</kbd>+<kbd>/</kbd></span> pronounce <em>Command slash</em>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_exercise_fraction_part_1"><a class="anchor" href="#_exercise_fraction_part_1"></a><a class="link" href="#_exercise_fraction_part_1">Exercise Fraction part 1.</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 1, Constructor and normalisation</summary>
+<div class="paragraph">
+<p>This is a 3 part exercise.</p>
+</div>
+<div class="paragraph">
+<p>In this exercise, you are writing a <em>Fraction</em> class test-driven, meaning you write the tests first.
+The mathematical properties of fractions are at the end of this exercise, if you need to look them up.
+The source code is in English, using the common names <strong>fraction</strong>, <strong>numerator</strong> and <strong>denominator</strong>.<br>
+The mathematical representation typically is:
+  \(\frac{\text{numerator}}{\text{denominator}}\), example: \(\frac{1}{2}\).</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In this exercise the tests are predefined, to direct you towards using Parameterized tests.
+Some the test values are given, some other have to enabled by un-commenting the test value lines.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Fraction Constructor</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Write a test</strong> that calls the fraction  constructor with two distinct ints, say 4 and 5,
+and then invokes the getters <code>int getNumerator()</code> (should produce 4) and <code>int getDenominator()</code> (should produce 5)
+to assure that the fraction instance is properly constructed.<br>
+Use a ParameterizedTest with cvs source and have the csv records have 5 columns, a message, int a and int b to form fraction \(\frac{a}{b}\),
+ the expected numerator, and the expected denominator.
+ Use <a href="week01.html#_soft_assertions">soft assertions</a> to test both getters in one test.
+ Add at least the sample values, but be prepared to add more rows.</p>
+</li>
+<li>
+<p><strong>Implement</strong> the constructor of Fraction with parameters <code>n</code> and <code>d</code> for
+numerator and denominator respectively. In the constructor, save the parameters in the <em>fields</em> <code>numerator</code> and <code>denominator</code>, the only two fields.
+Make sure the fields are <span class="blue">final</span>. <em>Inside</em> the constructor you are allowed to use <em>local variables</em>.</p>
+</li>
+<li>
+<p><strong>Run</strong> the tests. If they are still red, improve your code to make them green.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">softly example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Test getters for numerator and denominator.
+     * Use SoftAssertions.assertSoftly to always test both getters
+     * even if the first assert fails.
+     * @param a num in frac
+     * @param b denom in frac
+     * @param num expected
+     * @param denom expected
+     */</span>
+    <span class="comment">//@Disabled(&quot;Think TDD&quot;)</span>
+    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvSource</span>( {
+      <span class="comment">// message, a,b, num, denom</span>
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">half,1,2,1,2</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">one third,2,6,1,3</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">minus one half,9,-18,-1,2</span><span class="delimiter">&quot;</span></span>,
+    } )
+    <span class="type">void</span> testGetters( <span class="predefined-type">String</span> message, <span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> num, <span class="type">int</span> denom ) {
+        Fraction f = <span class="keyword">new</span> Fraction( a, b );
+        SoftAssertions.assertSoftly( softly -&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+            softly.assertThat( f.getNumerator() )
+                .as( message + <span class="string"><span class="delimiter">&quot;</span><span class="content"> numerator</span><span class="delimiter">&quot;</span></span> ) <span class="comment">// to tell fails apart</span>
+                .isEqualTo( num );
+            softly.assertThat( f.getDenominator() )
+                .as( message + <span class="string"><span class="delimiter">&quot;</span><span class="content"> denominator</span><span class="delimiter">&quot;</span></span> )
+                .isEqualTo( denom );
+        } ); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="comment">//        fail( &quot;method testGetters reached end. You know what to do.&quot; );</span>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start sequence of soft assertions. Notice the use of the <code>softly</code> object.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>End of seqiencs of assertions. This reports all found failing assertions.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ensure that the resulting Fraction is
+    normalised. Fractions like \(\frac{2}{4}\) should result in \(\frac{1}{2}\).<br>
+By dividing numerator \(a\) and denominator
+    \(b\) before construction of a fraction by \(g = gcd(a,b)\) you produce a
+    fraction with the same mathematical value, called a <em>normalised fraction</em>.
+Normalisation should take place in the constructor.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>A fraction  is normalized when the denominator is non-negative
+and the greatest common divisor of numerator and denominator is 1.</p>
+</li>
+<li>
+<p>Thereby the minimum value of the denominator of a normalized fraction is +1.</p>
+</li>
+<li>
+<p>If the fraction is negative, the numerator carries the sign.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Write test for ToString</strong> Create a fraction from the inputs of the CsvSource and check that it is equal to the expected string.</p>
+</li>
+<li>
+<p><strong>Implement</strong> Create a toString() method, by modifying the IDE generated on such that it outputs like this:<br>
+<code>(1/2)</code> for \(\frac{1}{2}\), <code>(-1/3)</code> \(\frac{-1}{3}\), and (-3-(1/6)) for \(-1-\frac{1}{6}\) which is equal to \(\frac{-7}{6}\).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong class="big blue">You are at 1/3 of the fraction exercise.</strong></p>
+</div>
+<div style='background-color:#eee; padding:1em'>
+<hr>
+<div class="paragraph">
+<p><strong class="big">The properties of fractions, for reference</strong></p>
+</div>
+<div class="paragraph">
+<p>The mathematical properties of fractions in a typical Java implementation.</p>
+</div>
+<div class="paragraph">
+<p>Let \(f_1\) be a fraction with numerator \(a\)
+and denominator \(b\) thus:
+\(f_1=\frac{a}{b}\).
+And
+\(f_2\) a fraction with numerator \(c\) and denominator
+ \(d\), thus \(f_2=\frac{c}{d}\).</p>
+</div>
+<div class="paragraph">
+<p><strong>Greatest Common Divisor</strong></p>
+</div>
+<div class="paragraph">
+<p>The function \(\gcd(p,q)\) is called Greatest Common Divisor. With
+  parameters \(p\) and \(q\) it produces integer value \(g\), which is the
+  greatest integer value that divides both \(p\) and \(q\) evenly (divide
+  with zero remainder). Method is given below.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Normalisation</strong>  By applying <em>idempodence</em>, dividing numerator \(a\) and denominator
+\(b\) before construction of a fraction by \(g = gcd(a,b)\) produces a
+fraction of same value, called a <em>normalised fraction</em>.
+With \(g =gcd(a,b)\)
+\(f_1 = \frac{a}{b} = \frac{a/g}{b/g}\)</p>
+</li>
+<li>
+<p><strong>Negation</strong>  The negative of a fraction is the same as a fraction with
+the numerator negated.
+\( -f_1 = -\frac{a}{b} = \frac{-a}{b} \)</p>
+</li>
+<li>
+<p><strong>Move sign to numerator</strong>
+When at construction time of a fraction the denominator is
+negative, negate both numerator and denominator.
+\( f_1=\frac{a}{-b} = \frac{-a}{b}\)<br></p>
+</li>
+<li>
+<p><strong>inverse</strong>  The inverse of a fraction is the same as the swapping places of
+numerator and denominator. Note that multiplying a fraction with its
+inverse is \(1\), by applying the rules <em>idempodence</em> and <em>unity</em>.
+\(\frac{1}{f_1} = \frac{1}{(\frac{a}{b})} = \frac{b}{a}\)<br></p>
+</li>
+<li>
+<p><strong>Addition</strong>   Add two fractions.
+\(f_1+f_2 = \frac{a}{b}+\frac{c}{d}=\frac{a\times d + c\times b}{b\times{}d}\)<br></p>
+</li>
+<li>
+<p><strong>Subtraction</strong>  Subtraction of two fractions \(f_1\) and \(f_2\) is the <strong>same as addition</strong>
+of \(f_1\) and the <strong>negation</strong> of \(f_2\).
+  \(f_1-f_2 = \frac{a}{b}-\frac{c}{d}=\frac{a}{b}+\frac{-c}{d}\)<br></p>
+</li>
+<li>
+<p><strong>Multiplication</strong>  \( f_1\times{}f_2 = \frac{a}{b}\times\frac{c}{d}=\frac{a\times{}c}{b\times{}d}\)<br></p>
+</li>
+<li>
+<p><strong>Division</strong>
+Dividing fraction \(f_1\) by \(f_2\) is the <strong>same as multiplication</strong> \(f_1\)
+with the <strong>inverse</strong> of \(f_2\).<br>
+\( f_1/f_2 = \frac{a}{b}/\frac{ c }{ d }=\frac{a}{b}\times \frac{ d }{ c }  \)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">gcd (already in project)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Compute Greatest Common Divisor. Used to normalize fractions.
+     *
+     * @param a first number
+     * @param b second number, gt 0
+     * @return greatest common divisor.
+     */</span>
+    <span class="directive">static</span> <span class="type">int</span> gcd( <span class="type">int</span> a, <span class="type">int</span> b ) {
+        <span class="comment">// make sure params to computation are positive.</span>
+        <span class="keyword">if</span> ( a &lt; <span class="integer">0</span> ) {
+            a = -a;
+        }
+        <span class="keyword">if</span> ( b &lt; <span class="integer">0</span> ) {
+            b = -b;
+        }
+        <span class="keyword">while</span> ( b != <span class="integer">0</span> ) {
+            <span class="type">int</span> t = b;
+            b = a % b;
+            a = t;
+        }
+        <span class="keyword">return</span> a;
+    }</code></pre>
+</div>
+</div>
+</div></details></div><!--end fraction-part1 -->
+</div>
+<div class="sect2">
+<h3 id="_lookup_in_a_map"><a class="anchor" href="#_lookup_in_a_map"></a><a class="link" href="#_lookup_in_a_map">1.2. Lookup in a map.</a></h3>
+<div class="paragraph">
+<p>Sometimes there is no easy way to get from a string to some object, or even class.
+Examples are that you want to test for the correct <strong>type</strong> or <strong>exception</strong>, or supply a method name, but you cannot put that into a string without doing complex
+things like reflection which we may only do in later parts of the course. The trick is to use a <code>Map</code> that maps a string to the object of choice.</p>
+</div>
+<div class="paragraph">
+<p>The lookup trick might also be applicable when you want to have short values in your test data table, like a message number which is mapped
+to the actual longer expected message, or even a message that is a format string and can be used in <code>Assertion.as( formatString, Object&#8230;&#8203; args)</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">map from short string to test (Person) object.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="directive">static</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, Person&gt; emap = <span class="predefined-type">Map</span>.of(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">piet</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Piet</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Puk</span><span class="delimiter">&quot;</span></span>, LocalDate.of(<span class="integer">1955</span>-<span class="octal">03</span>-<span class="integer">18</span>),<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>),
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">piet2</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Piet</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Puk</span><span class="delimiter">&quot;</span></span>, LocalDate.of(<span class="integer">1955</span>-<span class="octal">03</span>-<span class="integer">18</span>),<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>), <span class="comment">// for equals test.</span>
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">rembrandt</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Rembrandt</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">van Rijn</span><span class="delimiter">&quot;</span></span>, LocalDate.of(<span class="integer">1606</span>,<span class="integer">7</span>,<span class="integer">15</span>),<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>),
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">saskia</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Saskia</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">van Uylenburgh</span><span class="delimiter">&quot;</span></span>, LocalDate.of(<span class="integer">1612</span>,<span class="integer">8</span>,<span class="integer">11</span>),<span class="string"><span class="delimiter">&quot;</span><span class="content">F</span><span class="delimiter">&quot;</span></span>),
+    );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is particularly applicable to lambda expressions.<br>
+Lambdas are special. They have no name and not a very useful toString, and you can&#8217;t overwrite them either.<br>
+But you can do the reverse: translate a string into a lambda, by using a map. You can then use simple names (strings),
+that can be put in a csv record. You could, if you wanted, even use the lambda expression in String form as a key.</p>
+</div>
+<div class="listingblock">
+<div class="title">Lambda as string/key and as value in a map.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="predefined-type">Map</span>.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">(a,b)-&gt;a+b</span><span class="delimiter">&quot;</span></span>, (a,b)-&gt;a+b );</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Map of string to lambda</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, BiFunction&lt;Fraction, Fraction, Fraction&gt;&gt; ops = <i class="conum" data-value="1"></i><b>(1)</b>
+      <span class="predefined-type">Map</span>.of(
+              <span class="string"><span class="delimiter">&quot;</span><span class="content">times</span><span class="delimiter">&quot;</span></span>, ( f1, f2 ) -&gt; f1.times( f2 ),
+              <span class="string"><span class="delimiter">&quot;</span><span class="content">plus</span><span class="delimiter">&quot;</span></span>, ( f1, f2 ) -&gt; f1.plus( f2 ),
+              <span class="string"><span class="delimiter">&quot;</span><span class="content">flip</span><span class="delimiter">&quot;</span></span>, ( f1, f2 ) -&gt; f1.flip(), <i class="conum" data-value="2"></i><b>(2)</b>
+              <span class="string"><span class="delimiter">&quot;</span><span class="content">minus</span><span class="delimiter">&quot;</span></span>, ( f1, f2 ) -&gt; f1.minus( f2 ),
+              <span class="string"><span class="delimiter">&quot;</span><span class="content">divideBy</span><span class="delimiter">&quot;</span></span>, ( f1, f2 ) -&gt; f1.divideBy( f2 )
+      );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Note that we use a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/BiFunction.html">BiFunction&lt;T,U,R&gt;</a>,
+with <strong>T</strong>, <strong>U</strong>, and <strong>R</strong> all of the same type: Fraction. This is legal.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>f2 is not used in the right hand side of the arrow. This is legal too.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Using lambda names in test data</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvSource</span>(
+             {
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">'one half times one third is 1 sixth', 'times', '(1/6)',1,2,1,3</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">'one thirds plus two thirds is 1'    , 'plus',      '1',1,3,2,3</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">'flip'                               , 'flip',      '3',1,3,1,3</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">'one half minus two thirds is'       , 'minus', '(-1/6)',1,2,2,3</span><span class="delimiter">&quot;</span></span>
+            } )</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The operation name is the second value in the csv record, here <strong>times</strong>. Note that you can quote strings, but that is not required.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In the flip operation, the second fraction is ignored, so any legal value is allowed. Here we use the same values for both fractions.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Test method using the test data (Annotations left out, they are above).</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="type">void</span> fractionOps( <span class="predefined-type">String</span> message, <span class="predefined-type">String</span> opName, <span class="predefined-type">String</span> expected,
+                  <span class="type">int</span> a,<span class="type">int</span> b, <span class="type">int</span> c, <span class="type">int</span> d ) { <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="comment">// Arrange: read test values</span>
+        Fraction f1 = frac( a, b ); <i class="conum" data-value="2"></i><b>(2)</b>
+        Fraction f2 = frac( c, d );
+        BiFunction&lt;Fraction, Fraction, Fraction&gt; op = ops.get( opName ); <i class="conum" data-value="3"></i><b>(3)</b>
+
+        <span class="comment">// Act</span>
+        Fraction result = op.apply( f1, f2 ); <i class="conum" data-value="4"></i><b>(4)</b>
+
+        <span class="comment">// Assert(That) left out as exercise.</span>
+        <span class="comment">// Use assertThat on the fraction object result</span>
+        <span class="comment">//   and check if it has the correct string value.</span>
+        <span class="comment">// Use the message in the as(...) method.</span>
+
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The fraction parameters a,b,c, and d are captured from the csvrecord. This makes the parameter list a<br>
+tad longer, but also more understandable. JUnit 5 csvsource uses the annotation and the signature of the test method and can deal
+with most common types such as primitive, String and LocalDate (preferably in ISO-8601 format such as '2012-01-14' for the day of writing this).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The fraction instances are created from a, b, c, and d.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The operation (op) is looked up in the map.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Apply the operation, or rather the function and capture the result.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can apply the same trick of looking up with enums too, even easier, because the enum itself can translate from String to value,
+as long as the spelling is exact.</p>
+</div>
+<div class="paragraph">
+<p>Study the examples above, they might give you inspiration with the exercises coming up and will score you points during the exam.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_fraction_part_2"><a class="anchor" href="#_exercise_fraction_part_2"></a><a class="link" href="#_exercise_fraction_part_2">Exercise Fraction part 2.</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 2, Operations</summary>
+<div class="paragraph">
+<p>Add the important operations to the Fraction class: times, plus, divideBy and minus.</p>
+</div>
+<div class="paragraph">
+<p>To multiply two fractions \(\frac{a}{b}\) and \(\frac{c}{d}\) consider the
+property  \(\frac{a}{b}\times\frac{c}{d} = \frac{a\times{}c}{b\times{}d}\)
+Example:  \(\frac{1}{2}\times\frac{3}{4}=\frac{1\times{}3}{2\times{4}}=\frac{3}{8}\).</p>
+</div>
+<div class="paragraph">
+<p>The methods below can all be tested with one ParameterizedTest and a lookup table, as explained
+in the previous paragraphs.</p>
+</div>
+<div class="paragraph">
+<p>Start by implementing the test, and add test data as in the example, but keep the
+test records commented out until you are about to implement the helper and operation methods.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>times helper</strong><br>
+Implement the helper method <code>Fraction times( int otherN, int otherD )</code>
+to multiply <code>this</code> fraction with numerator <code>otherN</code> and
+denominator <code>otherD</code> of another fraction. The result is a new
+<code>Fraction</code>-object.<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>times Fraction</strong> Test and implement the method <code>Fraction times(Fraction other)</code>. Re-use (not copy) the helper function.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Plus helper</strong> Test and implement the helper method. It should produce a normalized fraction from the two int values.
+<code>Fraction plus( int otherN, int otherD )</code>
+to create a <code>new</code> fraction that is the sum of <code>this</code> fraction and <code>another</code> fraction with numerator otherN
+and denominator otherD. The result is a new
+<code>Fraction</code>-object. Formula:
+\(\frac{a}{b}+\frac{c}{d} = \frac{a\times{d}+c\times{b}}{b\times{d}}\)</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>plus Fraction</strong> now test and implement the method Fraction plus(Fraction other). Re-use the helper function.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Minus, divideBy.</strong>
+Test and implement minus and divideBy operation.
+You should re-use the work you did in times and plus, as in
+invoke the provided helper methods by adapting the parameters, such
+as changing sign or swapping them.</p>
+</li>
+<li>
+<p><strong>Unary operators</strong> such as change sign: <code>Fraction negate()</code> and <code>Fraction flip()</code> that puts it <em>upside down</em>.
+A more common name for flip would be <strong>inverse</strong>, however flip landed in the exercise.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong class="big blue">And that is 2/3 of the fraction exercise!</strong></p>
+</div>
+</details></div><!--end fraction-part2 -->
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of the moment of writing (Januari 2021, Junit 5.7), the parameterized test <strong class="red">can&#8217;t</strong> deal with varargs parameters, that is a varying
+list of parameters, with the triple dot notation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_data_from_a_file"><a class="anchor" href="#_test_data_from_a_file"></a><a class="link" href="#_test_data_from_a_file">1.3. Test data from a file</a></h3>
+<div class="paragraph">
+<p>Sometimes the amount of data you have in your test data-set is so big that it does not comfortable fit inside a <code>@CsvSoure</code> annotation.
+You specify an external file as data source with to achieve the same, the annotation now is <code>@CsvFileSource</code>, which takes files as argument.</p>
+</div>
+<div class="paragraph">
+<p>The file, as you might have guessed, can be a csv file, which can be edited quite comfortably with a <a href="http://plugins.netbeans.org/plugin/48312/nb-csv-editor">NetBeans plugin</a>
+or with the help of a spreadsheet program like Libreoffice calc or Microsoft excel.</p>
+</div>
+<div class="paragraph">
+<p>Suppose you need to develop an input validator that has many test cases. Putting the inputs in a file along with other information relevant
+to your validator.</p>
+</div>
+<div class="listingblock">
+<div class="title">csvfile source</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@ParameterizedTest</span>
+  <span class="annotation">@CsvFileSource</span>( resources = { <span class="string"><span class="delimiter">&quot;</span><span class="content">testdata.csv</span><span class="delimiter">&quot;</span></span> } )
+  <span class="type">void</span> testRegex( <span class="predefined-type">String</span> message, <span class="predefined-type">String</span> input, <span class="type">boolean</span> matches, <span class="type">int</span> groupCount ){
+    <span class="comment">// your code here</span>
+  }</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>At the time of writing JUnit wants the csv file for CsvFileSource to be<br>
+in the <code>{project-directory}src/test/resources</code> folder or a child folder thereof.
+To be able to do that, you <strong>first</strong> need to create a new folder.<br>
+A pro would simply open the terminal in the project directory and do mkdir -p src/test/resources,
+but if you rather push mouse, then in netbeans you can also do New&#8594;Other&#8594;Folder, which allows you to select folder name (resources) and parent folder (src/test). Take your pick.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_repeated_use_of_same_data"><a class="anchor" href="#_repeated_use_of_same_data"></a><a class="link" href="#_repeated_use_of_same_data">1.4. Repeated use of same data.</a></h3>
+<div class="paragraph">
+<p>In some cases, multiple tests need the same data. In the case of a CsvSourceFile, that is easily covered: Simple copy the annotations to all places where you need
+them. This is an <em>acceptable form</em> of copy and waste, because the annotations all point to one source of truth, the CSV file.</p>
+</div>
+<div class="paragraph">
+<p>Sometimes you would like to keep or even generate the test data inside the test class.
+Do not take the simple and naive route to simply copy-and-waste the (largish) cvssource data,
+but instead stick to the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">D.R.Y. rule</a>.</p>
+</div>
+<div class="paragraph">
+<p>One problem is that a method in Java can return only one result, either object or primitive type. Luckily
+an array is also an object in Java.</p>
+</div>
+<div class="paragraph">
+<p>There are two solutions to this issue.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create special test data objects of a special test data class, either inside your or outside your test class
+easy to make a test data class to carry the test data. In this case make a data providing method and use the method name in the <code>@MethodSource</code> annotation.
+The test method should understand the test data object.</p>
+</li>
+<li>
+<p>Use the JUnit5 provided <code>ArgumentsProvider</code>. This warps an array of objects into one object, so that all can be returned as one (array) value in a stream.<br>
+This saves the implementation of a (simple) test data class.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>We will use the later approach, simply because it is less work on the programmer, either you or me.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_testing_compare_results"><a class="anchor" href="#_testing_compare_results"></a><a class="link" href="#_testing_compare_results">1.5. Testing compare results.</a></h3>
+<div class="paragraph">
+<p>You may already know, but <strong class="red big">do not insist</strong> that a comparator (or the <code>compareTo()</code> method)
+should return 1, 0 or -1, because that is <strong class="red">not</strong> how it is specified.
+The value should be greater, equal, or less than zero (0).<br>
+To test that, use <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#signum(int)" target="_blank" rel="noopener">Integer.signum() </a>
+ to extract the sign of the actual value and assert that this is equal to the expected value.</p>
+</div>
+<div class="listingblock">
+<div class="title">CompareTo examples</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@ParameterizedTest</span>
+  <span class="annotation">@CsvSource</span>({
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">'HELLO', 'world' , -1</span><span class="delimiter">&quot;</span></span>,<span class="comment">// h before w</span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">'piet' , 'Piet'  ,  0</span><span class="delimiter">&quot;</span></span>, <span class="comment">// equal ignoring case</span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">'henk' , 'ab'    ,  1</span><span class="delimiter">&quot;</span></span> <span class="comment">// h after a</span>
+    })
+  <span class="type">void</span> compareIngnoreCase( <span class="predefined-type">String</span> a, <span class="predefined-type">String</span> b, <span class="type">int</span> signum ){
+
+        assertThat( <span class="predefined-type">Integer</span>.signum( a.compareToIgnoreCase<span class="error">​</span>(b) ) ) <i class="conum" data-value="1"></i><b>(1)</b>
+            .as ( a + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and </span><span class="delimiter">&quot;</span></span> + b )
+            .isEqualTo( signum );
+
+  }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>compareToXXX</code> call wrapped in <code class="blue">Integer.signum(&#8230;&#8203;)</code>.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_data_using_argumentsprovider"><a class="anchor" href="#_test_data_using_argumentsprovider"></a><a class="link" href="#_test_data_using_argumentsprovider">1.6. Test Data Using ArgumentsProvider</a></h3>
+<div class="paragraph">
+<p>Using an arguments provider has the advantage of very brief code. You only have to
+<strong class="blue">pay attention</strong> that the order of objects in the arrays
+ that the <code>ArgumentsProvider</code>
+provides is the same as the expected order of the parameters to your test method.
+In the example below we have put the test data in a two 'dimensional array'.</p>
+</div>
+<div class="listingblock">
+<div class="title">ArgumentsProvider example.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CabbageArgumentsTest</span> {
+
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage SPROUT = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">Brussel Sprouts</span><span class="delimiter">&quot;</span></span>, <span class="integer">10</span>, <span class="float">0.2</span>,
+                                               STRONG );
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage CAULIFLOWER = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">Cauliflower</span><span class="delimiter">&quot;</span></span>, <span class="integer">1000</span>, <span class="float">1.5</span>,
+                                                    DISTINCT );
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage KALE = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">Kale</span><span class="delimiter">&quot;</span></span>, <span class="integer">500</span>, <span class="float">0.700</span>, WEAK );
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage WHITE = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">White Cabbage</span><span class="delimiter">&quot;</span></span>, <span class="integer">1200</span>, <span class="float">1.2</span>,
+                                              DISTINCT );
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage CABBAGE = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">Cabbage</span><span class="delimiter">&quot;</span></span>, <span class="integer">600</span>, <span class="float">0.480</span>, STRONG );
+    <span class="directive">static</span> <span class="directive">final</span> Cabbage SAVOY = <span class="keyword">new</span> Cabbage( <span class="string"><span class="delimiter">&quot;</span><span class="content">Savoy Cabbage</span><span class="delimiter">&quot;</span></span>, <span class="integer">800</span>, <span class="float">1.8</span>,
+                                              VERY_STRONG );
+
+    <span class="directive">static</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Comparator</span>&lt;Cabbage&gt;&gt; comparators
+            = <span class="predefined-type">Map</span>.of(
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byStink</span><span class="delimiter">&quot;</span></span>, ( a, b ) -&gt; a.compareTo( b ),
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byWeight</span><span class="delimiter">&quot;</span></span>, ( a, b ) -&gt; <span class="predefined-type">Double</span>.compare( a.getWeight(), b
+                                                            .getWeight() ),
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byWeightAlt</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">Comparator</span>.comparing( Cabbage::getWeight ),
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byWeightNat</span><span class="delimiter">&quot;</span></span>, Cabbage::compareTo, <span class="comment">// 'natural' by weight</span>
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byVolume</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">Comparator</span>.comparing( Cabbage::getVolume ),
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">byWeightNAt2</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">Comparator</span>.naturalOrder()
+            );
+
+    <span class="comment">/**
+     * Test data table make sure the arguments have the same order as those in
+     * the test method.
+     */</span>
+    <span class="directive">static</span> <span class="predefined-type">Object</span><span class="type">[]</span><span class="type">[]</span> testData
+            = { <span class="comment">// msg, lambda name, result, cab a, cab b</span>
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">stinks worse</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">byStink</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, SPROUT, CAULIFLOWER },
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">stinks equal</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">byStink</span><span class="delimiter">&quot;</span></span>, <span class="integer">0</span>, WHITE, CAULIFLOWER },
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">stinks  less</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">byStink</span><span class="delimiter">&quot;</span></span>, -<span class="integer">1</span>, CABBAGE, SAVOY }
+            <span class="comment">// other left out</span>
+            };
+
+    <span class="comment">/**
+     * There is only one test, run multiple times, once for each row of test
+     * data.
+     *
+     * @param myData test datum
+     */</span>
+    <span class="annotation">@Disabled</span>
+    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@ArgumentsSource</span>( TestData.class )
+    <span class="type">void</span> testMethod( <span class="predefined-type">String</span> message, <span class="predefined-type">String</span> comparatorName, <span class="type">int</span> expected,
+                     Cabbage a, Cabbage b ) {
+
+        <span class="predefined-type">Comparator</span>&lt;Cabbage&gt; comp = comparators.get( comparatorName );
+
+        assertThat( <span class="predefined-type">Integer</span>.signum( comp.compare( a, b ) ) )
+                .as( message )
+                .isEqualTo( expected );
+    }
+
+    <span class="comment">/**
+     * Helper class to pass array data as Arguments Object.
+     */</span>
+    <span class="directive">static</span> <span class="type">class</span> <span class="class">TestData</span> <span class="directive">implements</span> ArgumentsProvider {
+
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments( ExtensionContext ec )
+                <span class="directive">throws</span> <span class="exception">Exception</span> {
+            <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.stream( testData ).map( Arguments::of );
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">The cabbage class for reference.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> */
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Cabbage</span> <span class="directive">implements</span> <span class="predefined-type">Comparable</span>&lt;Cabbage&gt; {
+    <span class="comment">// add the odour enum.</span>
+
+    <span class="directive">public</span> <span class="type">enum</span> Odour {
+        <span class="comment">// enums are comparable and compare using their natural order. </span>
+        <span class="comment">// the enum later in the list has a higher value in the comparison.</span>
+        NONE, THRESHOLD, WEAK, DISTINCT, STRONG, VERY_STRONG, INTOLERABLE;
+    }
+
+    <span class="directive">final</span> <span class="predefined-type">String</span> name;
+    <span class="directive">final</span> <span class="type">int</span> weight;
+    <span class="directive">final</span> <span class="type">double</span> volume;
+    <span class="directive">final</span> Odour odour;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The left out parts are the Constructor and getters for the fields.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_split_it_yourselves"><a class="anchor" href="#_split_it_yourselves"></a><a class="link" href="#_split_it_yourselves">1.7. Split it yourselves</a></h3>
+<div class="paragraph">
+<p>Sometimes you need a varying set of values (var-args) in your test, but CsvSource does not accommodate var-args.</p>
+</div>
+<div class="paragraph">
+<p>In that case you can format one or more of the string such, that you can easily chop it up into an array of Strings, which could then be
+interpreted as some other type. You only need to choose a separator different than that the CsvSource records use. We have had good experience
+with the '|' character which is both recognizable but not too obtrusive.</p>
+</div>
+<div class="listingblock">
+<div class="title">Simulated varargs</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@ParameterizedTest</span>
+  <span class="annotation">@CsvSource</span>({
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">A, B, C|D|E|F</span><span class="delimiter">&quot;</span></span>  <i class="conum" data-value="1"></i><b>(1)</b>
+  })
+  <span class="type">void</span> someTest(<span class="predefined-type">String</span> s1, <span class="predefined-type">String</span> s2, <span class="predefined-type">String</span> rest) {
+    <span class="predefined-type">String</span> <span class="type">[]</span> restAsArray=rest.split(<span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">|</span><span class="delimiter">&quot;</span></span>);
+    <span class="comment">// use in test.</span>
+  }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>You can add spaces in the csvsource lines to improve readability and to align stuff.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If your varargs parameters provides only single characters, you can <em>split</em> with the empty string into single character <code>String</code>-s.<br>
+For example <code>"ABC".split("")</code> produces the array <code>{"A", "B", "C"}</code>.<br>
+Alternatively you can use <code>"ABC".toCharArray()</code> which produces <code>{'A', 'B', 'C'}</code>, an array of primitive <code>char</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If your self-split array should contain int values, you can use this helper method.
+A similar trick can be applied for long and double too and also for objects that can easily be mapped from a short String.
+In the latter case it would be best to also supply a lambda expression to do the conversion, which can then be used in a <code>map(&#8230;&#8203;)</code>
+function place of the <code>Integer::parseInt</code> in the code below.</p>
+</div>
+<div class="paragraph">
+<p>Such helper can be static an be put in your collection of test
+helpers.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
+</div>
+<div class="listingblock">
+<div class="title">Split to int array.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> <span class="type">int</span><span class="type">[]</span> stringToInts( <span class="predefined-type">String</span> input ) {
+       <span class="keyword">return</span> Stream.of( input.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">|</span><span class="delimiter">&quot;</span></span>))
+               .mapToInt( <span class="predefined-type">Integer</span>::parseInt )
+               .toArray();
+   }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Split to Object arrays</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> &lt;T&gt; T<span class="type">[]</span> stringToObjects( <span class="predefined-type">String</span> input, Function&lt;<span class="predefined-type">String</span>, T&gt; fun ) {
+        <span class="keyword">return</span> (T<span class="type">[]</span>) Stream.of( input.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">|</span><span class="delimiter">&quot;</span></span> ) )
+                .map( fun )
+                .toArray( <span class="predefined-type">Object</span><span class="type">[]</span>::<span class="keyword">new</span> );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you do not yet fully understand what this means, pay attention in week 4.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_a_method_as_a_source_for_the_test_data"><a class="anchor" href="#_using_a_method_as_a_source_for_the_test_data"></a><a class="link" href="#_using_a_method_as_a_source_for_the_test_data">1.8. Using a method as a Source for the test Data</a></h3>
+<div class="paragraph">
+<p>In all given examples above, the test data is more or less constant, at least the compiler is the last
+that somehow computes them. Sometimes you need some kind of processing of the test data. For instance the test data
+depend on an environment variable, like the amount of test data, or the test data must be compose from some dynamic value
+that is only apparent ate run time. This is where <code>@MethodSource</code> comes in. At runtime something that can be evaluated can influence the test data.</p>
+</div>
+<div class="paragraph">
+<p>The use case we had for this the ALDA sorting exercise. We want to run tests even if not all variants are available. We ask the student&#8217;s implementation
+which sorting variants are available, and then prepare a set of test data for each variant.</p>
+</div>
+<div class="paragraph">
+<p>Technically it works a lot like the ArgumentsProvider. The <code>static</code> method  must return a Stream of some kind. If you choose <code>Arguments</code> as the stream-element-type,
+the test method looks the same as as a normal parameterized test.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> Stream&lt;Arguments&gt; allSortersAndTestCounts() {
+        SortKind<span class="type">[]</span> supportedSorters = TestBase.factory.supportedSorters(); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> Stream.of( supportedSorters ).map( ss -&gt; { <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="keyword">return</span> IntStream.of( <span class="integer">2</span>, <span class="integer">3</span>, <span class="integer">10</span>, <span class="integer">100</span>, <span class="integer">1000</span> )
+                    .mapToObj( i -&gt; arguments( ss, i ) );
+        } ).flatMap( x -&gt; x );  <i class="conum" data-value="3"></i><b>(3)</b>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The number of ready test is determined by the factory, which return am aaar of enum values like QUICK or INSERTION.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This stream combines each sort kind with a number of elements in a queue to be sorted, as a stream of arguments</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>this identity function (lamba) as argument to flatMap unpacks the elements of the inner stream and puts each as element in
+the outer stream.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The stream (and lambda) will be further addressed in week 5.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Because we are collecting test tricks, here is another one:</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_recipe_i_test_equals_and_hashcode"><a class="anchor" href="#_test_recipe_i_test_equals_and_hashcode"></a><a class="link" href="#_test_recipe_i_test_equals_and_hashcode">2. Test Recipe I, Test Equals and hashCode</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We may sprinkle our testing stuff with a few recipes for often occurring tests.
+This is the the first installment.</p>
+</div>
+<div class="paragraph">
+<p><strong>Equals</strong> and <strong>hashCode</strong> are not twins in the direct sense, but indeed methods whose implementation should
+have a very direct connection.
+From the java <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" target="_blank" rel="noopener">Object API </a> follows
+ that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Two objects that are equal by their equal method, than their hashCode should also be equal.</p>
+</li>
+<li>
+<p>Note that the reverse is not true. If two hashCode are the same, that does not imply that the objects are equal.</p>
+</li>
+<li>
+<p>A good hashCode 'spreads' the objects well, but this is not a very strict requirement or a requirement that can be enforced. A poor hashCode
+will lead to poor Hash{Map|Set}  lookup performance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Although hashCodes are invented to speedup finding object in a hash map or hash set, these collections use hashCode in the first part of the search,
+but must verify equality as final step(s).</p>
+</div>
+<div class="paragraph">
+<p>The thing is that the equals method must consider quite a few things, expressed with conditional evaluation (if-then-else).
+The good thing is an IDE typically provides a way to generate  equals and hashCode for you and these implementations are typically of good quality. But
+in particular the equals method there are quite some ifs, sometimes in disguise, coded as <code>&amp;&amp;</code>, so this will throw some flies in your code-coverage ointment.</p>
+</div>
+<div class="paragraph">
+<p>However, we can balance this generated code by a piece of reusable test code, that can be used for almost all cases.
+In fact we have not found a case where it does not apply.<br>
+Let us first explain the usage and then the implementation.<br>
+Suppose you have an object with three fields, <code>name</code>, <code>birthDate</code> and <code>id</code>. All these fields should be considered in equals and hashCode.<br>
+As an exercise, create such and object now in your IDE, call it Student, why not.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Student</span> {
+  <span class="directive">final</span> <span class="predefined-type">String</span> name;
+  <span class="directive">final</span> LocalDate birthDate;
+  <span class="directive">final</span> <span class="type">int</span> id;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From the above, the IDE can generate a <strong>constructor</strong>, <strong>equals</strong> and <strong>hashCode</strong> and <strong>toString</strong>. What are you waiting for? Because it is not test driven?
+You would be almost right, but why test drive something that can be generated.<br>
+However, if your spec does <strong class="red">not</strong> demand equals and hashCode,
+then <strong class="red big">do not write/generate</strong> them. That would be unwanted code. But if the requirements DO insist on equals and hashCode,
+ make sure that the fields to be considered match the requirements. Choose only final fields.</p>
+</div>
+<div class="paragraph">
+<p>After having such a generated equals and hashCode you have the predicament of writing a test. HashCode is relatively easy. It should produce an
+integer, but what value is unspecified, so just invoking it would do the trick for test coverage.
+The devil is in the equals details, because it has to consider:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Is the other object <code>this</code>? If yes, return <code>true</code>.</p>
+</li>
+<li>
+<p>Is the other object <code>null</code>? Return <code>false</code> if it is.</p>
+</li>
+<li>
+<p>Now consider the type.<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Is the other of the same type as <code>this</code>? If not return <code>false</code>.</p>
+</li>
+<li>
+<p>Now we are in known terrain, the other is of the same type, so the object has the same fields.<br>
+For each field test it <code>this.field.equals(other.field)</code>. If not return false.</p>
+</li>
+<li>
+<p>Using <code>Objects.equals(this.fieldA, other.fieldB)</code> can be an efficient solution to avoid testing for nullity of either field.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Generated equals. It is fine.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">boolean</span> equals( <span class="predefined-type">Object</span> obj ) {
+        <span class="keyword">if</span> ( <span class="local-variable">this</span> == obj ) {
+            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+        }
+        <span class="keyword">if</span> ( obj == <span class="predefined-constant">null</span> ) {
+            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+        }
+        <span class="keyword">if</span> ( getClass() != obj.getClass() ) {
+            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+        }
+        <span class="directive">final</span> Student other = (Student) obj;
+        <span class="keyword">if</span> ( <span class="local-variable">this</span>.id != other.id ) {
+            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+        }
+        <span class="keyword">if</span> ( !Objects.equals( <span class="local-variable">this</span>.name, other.name ) ) {
+            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+        }
+        <span class="keyword">return</span> Objects.equals( <span class="local-variable">this</span>.birthDate, other.birthDate );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You see a pattern here: The number of ifs is 3 + the number of fields.<br>
+To test this, and to make sure you hit all code paths, you need to test with this,
+with null, with an distinct (read newly constructed) object with all fields equal,
+and then one for each field, which differs from the reference object only in said field.</p>
+</div>
+<div class="paragraph">
+<p>Define those instances (for this example) as follows.</p>
+</div>
+<div class="listingblock">
+<div class="title">Instances for complete equals and hashCode test and coverage</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">//@Disabled</span>
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testEqualsAndHash() {
+        Student ref = <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1999</span>, <span class="octal">03</span>, <span class="integer">23</span> ), <span class="integer">123</span> );
+        Student equ = <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1999</span>, <span class="octal">03</span>, <span class="integer">23</span> ), <span class="integer">123</span> );
+        Student sna = <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jen</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1999</span>, <span class="octal">03</span>, <span class="integer">23</span> ), <span class="integer">123</span> ); <i class="conum" data-value="1"></i><b>(1)</b>
+        Student sda = <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1998</span>, <span class="octal">03</span>, <span class="integer">23</span> ), <span class="integer">123</span> ); <i class="conum" data-value="2"></i><b>(2)</b>
+        Student sid = <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1999</span>, <span class="octal">03</span>, <span class="integer">23</span> ), <span class="integer">456</span> ); <i class="conum" data-value="3"></i><b>(3)</b>
+        verifyEqualsAndHashCode( ref, equ, sna, sda, sid );
+        <span class="comment">//fail( &quot;testMethod reached it's and. You will know what to do.&quot; );</span>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Differs in name.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Differs in birthdate (year).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Differs in id.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The implementation of the <code>verifyEqualsAndHashCode</code> has been done with generics and a dash of AssertJ stuff.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample test helper in separate class.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Helper for equals tests, which are tedious to get completely covered.
+     *
+     * @param &lt;T&gt; type of class to test
+     * @param ref reference value
+     * @param equal one that should test equals true
+     * @param unEqual list of elements that should test unequal in all cases.
+     */</span>
+     <span class="directive">public</span> <span class="directive">static</span> &lt;T&gt; <span class="type">void</span> verifyEqualsAndHashCode( T ref, T equal, T... unEqual ) {
+         <span class="predefined-type">Object</span> object = <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>;
+         T tnull = <span class="predefined-constant">null</span>;
+         <span class="predefined-type">String</span> cname = ref.getClass().getCanonicalName();
+         <span class="comment">// I got bitten here, assertJ equalTo does not invoke equals on the</span>
+         <span class="comment">// object when ref and 'other' are same.</span>
+         <span class="comment">// THAT's why the first one differs from the rest.</span>
+         SoftAssertions.assertSoftly( softly-&gt; {
+           softly.assertThat( ref.equals( ref ) )
+                   .as( cname + <span class="string"><span class="delimiter">&quot;</span><span class="content">.equals(this): with self should produce true</span><span class="delimiter">&quot;</span></span> )
+                   .isTrue();
+           softly.assertThat( ref.equals( tnull ) )
+                   .as( cname + <span class="string"><span class="delimiter">&quot;</span><span class="content">.equals(null): ref object </span><span class="delimiter">&quot;</span></span>
+                           + safeToString( ref ) + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and null should produce false</span><span class="delimiter">&quot;</span></span>
+                   )
+                   .isFalse();
+           softly.assertThat( ref.equals( object ) )
+                   .as( cname + <span class="string"><span class="delimiter">&quot;</span><span class="content">.equals(new Object()): ref object</span><span class="delimiter">&quot;</span></span>
+                           + <span class="string"><span class="delimiter">&quot;</span><span class="content"> compared to other type should produce false</span><span class="delimiter">&quot;</span></span>
+                   )
+                   .isFalse();
+           softly.assertThat( ref.equals( equal ) )
+                   .as( cname + <span class="string"><span class="delimiter">&quot;</span><span class="content"> ref object [</span><span class="delimiter">&quot;</span></span> + safeToString( ref )
+                           + <span class="string"><span class="delimiter">&quot;</span><span class="content">] and equal object [</span><span class="delimiter">&quot;</span></span> + safeToString( equal )
+                           + <span class="string"><span class="delimiter">&quot;</span><span class="content">] should report equal</span><span class="delimiter">&quot;</span></span>
+                   )
+                   .isTrue();
+           <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="integer">0</span>; i &lt; unEqual.length; i++ ) {
+               T ueq = unEqual[ i ];
+               softly.assertThat( ref )
+                       .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">testing supposed unequal objects</span><span class="delimiter">&quot;</span></span>)
+               .isNotEqualTo( ueq );
+           }
+           <span class="comment">// ref and equal should have same hashCode</span>
+           softly.assertThat( ref.hashCode() )
+                   .as( cname + <span class="string"><span class="delimiter">&quot;</span><span class="content"> equal objects </span><span class="delimiter">&quot;</span></span>
+                           + ref.toString() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and </span><span class="delimiter">&quot;</span></span>
+                           + equal.toString() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> should have same hashcode</span><span class="delimiter">&quot;</span></span>
+                   )
+                   .isEqualTo( equal.hashCode() );
+        });
+     }
+
+    <span class="comment">/**
+     * ToString that deals with any exceptions that are thrown during its
+     * invocation.
+     *
+     * When x.toString triggers an exception, the returned string contains a
+     * message with this information plus class and system hashCode of the
+     * object.
+     *
+     * @param x to turn into string or a meaningful message.
+     * @return &quot;null&quot; when x==null, x.toString() when not.
+     */</span>
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> safeToString( <span class="predefined-type">Object</span> x ) {
+        <span class="keyword">if</span> ( x == <span class="predefined-constant">null</span> ) {
+            <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">null</span><span class="delimiter">&quot;</span></span>;
+        }
+        <span class="keyword">try</span> {
+            <span class="keyword">return</span> x.toString();
+        } <span class="keyword">catch</span> ( <span class="predefined-type">Throwable</span> e ) {
+            <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">invoking toString on instance </span><span class="delimiter">&quot;</span></span>
+                    + x.getClass().getCanonicalName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">@</span><span class="delimiter">&quot;</span></span>
+                    + <span class="predefined-type">Integer</span>.toHexString( <span class="predefined-type">System</span>.identityHashCode( x ) )
+                    + <span class="string"><span class="delimiter">&quot;</span><span class="content"> causes an exception </span><span class="delimiter">&quot;</span></span> + e.toString();
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above code has been used before but now adapted for AssertJ and JUnit 5.</p>
+</div>
+<div class="paragraph">
+<p>It is of course best to put this in some kind of test helper library, so you can reuse it over and over without having to
+resort to copy and waste.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_exercise_fraction_part_3"><a class="anchor" href="#_exercise_fraction_part_3"></a><a class="link" href="#_exercise_fraction_part_3">Exercise Fraction part 3.</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Fraction Part 3, Comparable, hashCode and equals</summary>
+<div class="paragraph">
+<p>When you thus far did the fraction exercise according to the specifications, it is
+functionally complete, or as we formally say, the <strong>Functional Requirements</strong> given
+are fulfilled. However, the fraction class can be improved a bit, addressing the
+non functional requirement of user friendliness.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Instead of writing new tests, in some case you can simply add more test data records to your test class for
+the tests that probably already exists. It is completely legal to use only part of the the test data.
+Or make a special operation in your operation lookup , that produces a fraction with an op out of two
+fractions and then  'abuse' the 2nd fraction by taking it&#8217;s numerator to get an int that you need in the operation <code>f.plus(int)</code>.<br>
+That can look like <code class="blue">"plusInt", ( f1, f2 ) &#8594; f1.plus( f2.getNumerator() )</code>,<code class="gray">// ignoring f2.denom</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating a fraction in which the denominator is 1 should be written as <code>new Fraction(x)</code>,<br>
+thereby improving the API.</p>
+</li>
+<li>
+<p>Writing a fraction expression is a bit tedious:<br>
+<code>Fraction oneThird= new Fraction(1,2).times(new Fraction(2,3))</code> is a bit of a mouth full.<br>
+ We want to be able to write <code>Fraction oneThird=frac(1,2).times(frac(2,3))</code>.<br>
+ For that we need a <em>static factory method</em>,
+ that takes two ints and creates a new Fraction from them.</p>
+</li>
+<li>
+<p>Do the same thing for a one argument <code>Fraction frac( int )</code>.</p>
+</li>
+<li>
+<p>With fraction you want to be able to see quickly if its value exceeds 1 or not,<br>
+so we want the fraction <code>"(3/2)"</code> to produce a to string
+of <code>"(1+(1/2))"</code>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Overloading, the term used in the text below, means that you have the <strong class="green">same</strong> method name, but
+a <strong class="green">different</strong> parameter list. The difference here is in the difference in the parameter types, not names.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adding to, subtracting from , multiplying with, or dividing by an <em class="blue">int</em>eger value should be easier to write.<br>
+For instance <code>Fraction two = frac( 1, 4 ).times( 8 )</code>,<br>
+which means the <strong>times</strong>, <strong>divideBy</strong>, <strong>plus</strong> and <strong>minus</strong> methods all get an <em>overloaded</em> sibling with just one int parameter.
+As an example of such overloading: for divideBY whe will have <code>Fraction divideBy(Fraction other)</code> and <code>Fraction divideBy(int number)</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are also a few functional requirements:
+ we would like to add</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Equals</strong> The fraction does not yet support equals.<br>
+Even if numerator and denominator are equal, the inherited from <code>Object.equals</code> method will say false when the
+instances don&#8217;t refer to the same fraction object. We need to do better.</p>
+</li>
+<li>
+<p><strong>hashCode</strong> The fraction has (should have) final fields only, making it a perfect candidate for key in a <code>HashMap</code> or <code>HashSet</code>.<br>
+It is also good practice to override <strong>hashCode</strong> whenever you override <strong>equals</strong>.</p>
+</li>
+<li>
+<p><strong>Comparable Fraction</strong> The fraction class should implement the comparable interface, making it easy to test which of two fractions is the biggest.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Test equals and HashCode</strong> Write a test method to test for <code>equals</code> and <code>hashCode</code>.<br>
+Use the utility method mentioned in the previous paragraphs. It is given in the test class.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Implement hashCode and equals</strong>. Use the IDE to generate the methods and accept the result.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Test Comparable</strong> Write a Parameterized test to test the comparable fractions.<br>
+A csvsource record  could look like <code>"'one third is less that one half', 1|3,1|2, -1"</code>.<br>
+Use at least 3 such records to test all possible outcomes of <code>compareTo()</code>.<br>
+Pay attention to the fact that the result of a comparison with compareTo is interpreted wisely,
+that is, the test record specifies the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#signum(int)" target="_blank" rel="noopener">signum </a> of the result,
+so assert the signum of the compare-result is equal to the expected value.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Implement Comparable</strong> Make the Fraction comparable by having it implement the corresponding interface.<br>
+If the fractions are \(\frac{a}{b}\) and \(\frac{c}{d}\), then it is sufficient to compare
+the cross product of numerators and denominators \(a\times{d}\) and \(c\times{b}\),
+because the denominator in the comparison should be made equal, \(b\times{d}\), but needs
+not to be used. To avoid overflow, use long-math.<br>
+This is easily done by using <code>Long.compare( long, long )</code> to do the compare work and use the proper expressions as input for the ints.<br>
+Cast one of the inputs in the expression to long does the <a href="https://docs.oracle.com/javase/specs/jls/se11/html/jls-5.html">trick</a>.
+It is called a promotion, in particular a widening conversion.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong class="blue big">And that makes 3/3 or one whole fraction.</strong></p>
+</div>
+</details></div><!--end fraction-part3 -->
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Think test driven! So write tests FIRST, and then code. Testing is ensuring that the code is usable.
+To make code testable is also a design exercise: you need to make decisions about the design of your program when you write your tests. If you cannot test it, you cannot use it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_flawless_password"><a class="anchor" href="#_exercise_flawless_password"></a><a class="link" href="#_exercise_flawless_password">Exercise Flawless Password</a></h3>
+<div class='ex'><details class='ex' open><summary class='ex'>Flawless passwords</summary>
+<div class="paragraph">
+<p>Whenever you register an account somewhere, you are asked to create a password. Usually, this
+password needs to adhere to a certain standard such as a minimum of eight characters or at least one uppercase
+letter, a special character such as ampersand (&amp;), star (*), dash (-) or exclamation marks (!).</p>
+</div>
+<div class="paragraph">
+<p>In this exercise, you have to write methods that validate a password. For example, one
+method checks whether the password contains an uppercase letter. Remember to start writing
+the tests first! The password should follow these rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>be at least 10 characters long.</p>
+</li>
+<li>
+<p>contain at least one <strong>uppercase letter</strong>.</p>
+</li>
+<li>
+<p>contain at least one <strong>lowercase letter</strong>.</p>
+</li>
+<li>
+<p>contain at least one <strong>digit</strong>.</p>
+</li>
+<li>
+<p>contain at least one <strong>special character</strong>, defined as NOT a letter and not a digit.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When all requirements are met, the password will not be blank, so that needs no separate encoding.</p>
+</div>
+<div class="paragraph">
+<p>The list of special characters in ASCII is <code>!"#$%&amp;'()*+,-./:;&lt;&#8658;?@[\]^_{|}~</code> and `.
+I found that out with the little program <code>validator.SpecialChars</code>. It chooses all ASCII characters between character number 33 (space+1).
+and 127, excluding those that qualify as letters aor digits.</p>
+</div>
+<div class="paragraph">
+<p>The java Character class has quite a few <code>static</code> methods to check if a character classifies as a certain kind of character. For instance
+<code>Character.isDigit('9')</code>  will return <code>true</code> as will  <code>Character.isUpper('Ä')</code>.</p>
+</div>
+<div class="paragraph">
+<p>The design you are going to implement is using a so called <strong>FlawSet</strong>, a set of flaws or missing requirements.
+This uses the approach of <em>elimination</em>. In this case elimination of flaws or missing requirements.</p>
+</div>
+<div class="paragraph">
+<p>Each Flaw is modeled as a value of the <code>enum</code> <code>Flaw</code> which according to the requirements has 5 values.
+Each value has a description on what the flaw is, and a character to encode the flaws as a short string. This is helpful in testing as you will see.</p>
+</div>
+<div class="paragraph">
+<p>In the validator we create a set of flaws and fill it with all possible flaws. If a requirement is met, the flaw (not meeting the requirement)
+can be removed from the set. If the set is empty, because all potential flaws have been removed, you know that the subject of the flaw tests meets all requirements.
+It is <strong>flawless</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The FlawSet is modeled using an EnumSet. An EnumSet is an implementation of a set with the member type an <span class="blue">enum</span> of some sort, the Flaw <span class="blue">enum</span> in our case.
+An EnumSet is a very space efficient and fast set implementation.<br>
+Study <strong>Horstmann Vol I Section 9.4.6</strong> and  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumSet.html">EnumSet api</a>.</p>
+</div>
+<div class="paragraph">
+<p>The validator test should be set up using a parameterized test, using a CsvSource, in which each line contains a password and the set of flaws that it has.
+To avoid too long texts in in the table we encode each flaw as a single character, which are hopefully mnemonic, to help readability of the test method.
+For instance <strong>'U'</strong> means missing upper case, <strong>'l'</strong> missing lower case.
+This is the encoding character in the Flaw enum.</p>
+</div>
+<div class="paragraph">
+<p>The Flaw enum has two convenience methods, which you can use as is.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>static EnumSet&lt;Flaw&gt; stringToFlawSet( String encoding )</code> that takes a String and returns a FlawSet that goes with it.</p>
+</li>
+<li>
+<p><code>static Flaw encodingToFlaw( char encoding )</code> that returns a Flaw value dependent on its encoding character.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Flaw enum. (imports left out)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.EnumSet</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">java.util.EnumSet.noneOf</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">java.util.stream.Collectors.toCollection</span>;
+
+<span class="type">enum</span> Flaw {
+    NOUPPER( <span class="string"><span class="delimiter">'</span><span class="content">U</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">No UPPER case letter</span><span class="delimiter">&quot;</span></span> ),
+    NOLOWER( <span class="string"><span class="delimiter">'</span><span class="content">l</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">No lower case letter</span><span class="delimiter">&quot;</span></span> ),
+    NODIGIT( <span class="string"><span class="delimiter">'</span><span class="content">8</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">No digit</span><span class="delimiter">&quot;</span></span> ),
+    NOSPECIAL( <span class="string"><span class="delimiter">'</span><span class="content">#</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">No special character</span><span class="delimiter">&quot;</span></span> ),
+    TOO_SHORT( <span class="string"><span class="delimiter">'</span><span class="content">s</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Too short</span><span class="delimiter">&quot;</span></span> );
+    <span class="directive">final</span> <span class="type">char</span> encoding;
+    <span class="directive">final</span> <span class="predefined-type">String</span> description;
+
+    Flaw( <span class="type">char</span> encoding, <span class="predefined-type">String</span> description ) {
+        <span class="local-variable">this</span>.encoding = encoding;
+        <span class="local-variable">this</span>.description = description;
+    }
+
+    <span class="type">char</span> getEncoding() {
+        <span class="keyword">return</span> encoding;
+    }
+
+    <span class="predefined-type">String</span> getDescription() {
+        <span class="keyword">return</span> description;
+    }
+
+    <span class="directive">static</span> Flaw encodingToFlaw( <span class="type">char</span> encoding ) {
+        <span class="keyword">for</span> ( validator.Flaw flaw : values() ) {
+            <span class="keyword">if</span> ( flaw.getEncoding() == encoding ) {
+                <span class="keyword">return</span> flaw;
+            }
+        }
+        <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+    }
+
+    <span class="comment">/**
+     * Collect the encoded flaws into an initially empty set.
+     * @param encoding the flaws
+     * @return the set of flaws matching the encoding.
+     */</span>
+    <span class="directive">static</span> <span class="predefined-type">EnumSet</span>&lt;Flaw&gt; stringToFlawSet( <span class="predefined-type">String</span> encoding ) {   <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> encoding.chars()
+                .mapToObj( c -&gt; Flaw.encodingToFlaw( (<span class="type">char</span>) c ) ) <i class="conum" data-value="2"></i><b>(2)</b>
+                .filter( f -&gt; f != <span class="predefined-constant">null</span> )                        <i class="conum" data-value="3"></i><b>(3)</b>
+                .collect( toCollection( () -&gt; noneOf( Flaw.class ) ) ); <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Do not worry if you do not understand this immediately, the details will follow starting week 4 or 5.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Hey, still reading? You seem interested. This converts the int stream into an object stream of enum values.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We do not want null values. Might happen when an encoding is not valid.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Then collect it into a collection, in the specific case an <code>EnumSet</code> of <code>Flaw</code> values. We start with the empty set, which will
+be filled with the values resulting from the stream.<br>
+Note that we left out the imports.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>Flaw</code> enum and it&#8217;s test are already in the project. I can&#8217;t hurt to study the tests.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. encoding table</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">encoding</th>
+<th class="tableblock halign-left valign-top">Flaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'U'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No UPPER case letter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'l'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No lower case letter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'8'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No digit</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'#'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No special character</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'s'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Too short</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Write two tests,</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>invalidPassword</strong> that checks for <strong class="red">invalid</strong> passwords as <code>@ParameterizedTest</code> which uses a table of invalid password and the encoding of the flaws to detect.</p>
+</li>
+<li>
+<p><strong>validPassword</strong> that accepts (one) or two valid passwords. You can also implement that as a <code>@ParameterizedTest</code>, but in the one password variant, you can get by
+with a simple unit test method.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>First write the test for invalid passwords. Use a <code>@ParameterizedTest</code> and a <code>@CvsSource</code>.
+The test should assert that an exception is thrown and that all desciptions of the found flaws are present in the message.
+Make sure you have a csv test line for each of the failure cases, but also test for passwords that have multiple flaws.
+Best is to write all the invalid password and their encodings, but comment out the ones you are not yet testing.</p>
+</div>
+<div class="paragraph">
+<p>The csv records should contain two values, a flawed password and the encoded flaws.
+Example <code>"'password',U8#s"</code> because the password does not contain digits, UPPER case, nor special characters, and is too short, the encoded flaws are <code>U8#s</code>.
+You can apply the trick to <em>split</em> with an empty string to get the encodings as 1 character string. Or you can stream the encoding with String.
+Note that the order of the encoding characters should not matter, but proper coding style might say write them consistently in definition- or alphabetical order.
+Choice is up to you. We chose the former.</p>
+</div>
+<div class="paragraph">
+<p>When the password is invalid, throw an <code>IllegalPasswordException</code> with a message that contains the descriptions of all flaws found.</p>
+</div>
+<div class="paragraph">
+<p>The idea of the validator method is that you initially fill an EnumSet with all possible flaw values, which is very easy: <code>EnumSet.allOf( Flaw.class )</code>.
+Then for every character of the password check,
+check if it fulfills a requirement. If it does, you can eliminate the corresponding Flaw from the set.
+See the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumSet.html" target="_blank" rel="noopener">EnumSet </a>
+or <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" target="_blank" rel="noopener">Set </a> API on how to do that.
+Once you have used up all the characters in the password, check if the set is empty.
+If it is, the password meets it&#8217;s requirement and is flaw<strong class="green">less</strong>;<br>
+if not, the set contains the requirements <strong class="red">not</strong> fulfilled and the password is to be considered flawed.</p>
+</div>
+</details></div><!--end ex 1-->
+</div>
+<div class="sect2">
+<h3 id="_exercise_enum_calculator"><a class="anchor" href="#_exercise_enum_calculator"></a><a class="link" href="#_exercise_enum_calculator">Exercise Enum Calculator</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Exercise 3: Enum Calculator</summary>
+<div class="paragraph">
+<p>In this exercise you build a calculator that has its operations expressed in an <strong class="blue">enum</strong> called <code>Operator</code>.<br>
+This enum uses a field of type <code>IntBinaryOperator</code> which itself is a <strong>Functional</strong> interface, specifies the method <code>applyAsInt(int a, int b)</code>.
+You will use that field to evaluate the expression.
+The enum values in Operation and ADD, SUBTRACT,
+   MULTIPLY, DIVIDE, and POWER with the usual meaning.<br>
+Each enum value has a symbol of type String
+<code>"+"</code> for ADD, etc and <code>"**"</code> for the Power operation.</p>
+</div>
+<div class="paragraph">
+<p>Your task is to test driven develop the Operator-enum. The main class called Calculator is given. It uses the Operator to do the actual computation.
+It can compute simple space-separated integer expressions like <code>2 + 3</code> of <code>2 ** 10</code>.</p>
+</div>
+<div class="paragraph">
+<p>The functional requirements are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Operator class has a constructor that takes 2 parameters:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>a symbol string and</p>
+</li>
+<li>
+<p>a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/IntBinaryOperator.html" target="_blank" rel="noopener">IntBinaryOperator </a>
+functional interface, which defines the shape of a lambda expression.<br>
+You use these to supply the actual computation to the enum value
+like in <code>ADD( "+", ( a, b ) &#8594; a + b )</code> for value ADD, symbol + and lambda <code>( a, b ) &#8594; a + b )</code>.
+Both constructor parameters are saved as fields.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>You should be able to lookup the Operator by its symbol, using a static method <code>Operator get(String symbol)</code>.</p>
+</li>
+<li>
+<p>The Operator has a compute function <code>int compute(int a, int b)</code>, which does the actual work and uses the method applyAsInt.</p>
+</li>
+<li>
+<p>In most cased the lambda expression fits on the same line as the symbol. In case of the <code>**</code>, use a loop or stream to do the exponentiation.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. All operations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Op</th>
+<th class="tableblock halign-center valign-top">Symbol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ADD</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">'+'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SUBTRACT</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">'-'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MULTIPLY</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">'*'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DIVIDE</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">'/'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POWER</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">'**'</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The main class, Calculator reads the input as lines and splits the input by white space, to make parsing easier.
+So you will have to give the input values and operator separated by white space. See below.</p>
+</div>
+<div class="paragraph">
+<p>The non-functional requirements regarding the tests are that you use a JUnit 5 <code>@ParameterizedTest</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">A csv source could look like this. Abbreviated.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="annotation">@ParameterizedTest</span>
+   <span class="annotation">@CsvSource</span>( {
+        <span class="comment">// the compiler will turn the lines in one string each.</span>
+        <span class="comment">// eg the first line results in the String &quot;add,+,6, 2, 3 &quot;</span>
+        <span class="comment">// we use this technique to let the compiler</span>
+        <span class="comment">// do the _hard_ work of computing the result values.</span>
+        <span class="comment">// message, sym, expected, a,b</span>
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">add,       +,</span><span class="delimiter">&quot;</span></span> + ( <span class="integer">2</span> + <span class="integer">3</span> ) + <span class="string"><span class="delimiter">&quot;</span><span class="content">, 2, 3 </span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">subtract,  -,</span><span class="delimiter">&quot;</span></span> + ( <span class="integer">2</span> - <span class="integer">3</span> ) + <span class="string"><span class="delimiter">&quot;</span><span class="content">, 2, 3 </span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">multiply,  *,</span><span class="delimiter">&quot;</span></span> + ( <span class="integer">2</span> * <span class="integer">3</span> ) + <span class="string"><span class="delimiter">&quot;</span><span class="content">, 2, 3 </span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">divide,    /,</span><span class="delimiter">&quot;</span></span> + ( <span class="integer">2</span> / <span class="integer">3</span> ) + <span class="string"><span class="delimiter">&quot;</span><span class="content">, 2, 3 </span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">power,    **,</span><span class="delimiter">&quot;</span></span> + ( <span class="integer">2</span> * <span class="integer">2</span> * <span class="integer">2</span> ) + <span class="string"><span class="delimiter">&quot;</span><span class="content">, 2, 3 </span><span class="delimiter">&quot;</span></span>,
+   } )
+    <span class="directive">public</span> <span class="type">void</span> testOperator( <span class="predefined-type">String</span> message, <span class="predefined-type">String</span> symbol,
+                             <span class="type">int</span> expected, <span class="type">int</span> a, <span class="type">int</span> b  ) {
+      <span class="comment">// test code left out, the exercise ;-))</span>
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The app that uses the Operator class is shown below.</p>
+</div>
+<div class="listingblock">
+<div class="title">Calculator at work</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Calculator</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+        <span class="predefined-type">Scanner</span> scanner = <span class="keyword">new</span> <span class="predefined-type">Scanner</span>( <span class="predefined-type">System</span>.in );
+        <span class="predefined-type">System</span>.out.print( <span class="string"><span class="delimiter">&quot;</span><span class="content">calc: </span><span class="delimiter">&quot;</span></span> );
+        <span class="predefined-type">String</span> line = scanner.nextLine();
+        <span class="predefined-type">String</span><span class="type">[]</span> tokens = line.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">s+</span><span class="delimiter">&quot;</span></span> );
+        <span class="keyword">while</span> ( tokens.length &gt;= <span class="integer">3</span> ) {
+            <span class="predefined-type">System</span>.out.println( line + <span class="string"><span class="delimiter">&quot;</span><span class="content"> = </span><span class="delimiter">&quot;</span></span> + compute( tokens ) );
+            <span class="predefined-type">System</span>.out.print( <span class="string"><span class="delimiter">&quot;</span><span class="content">calc: </span><span class="delimiter">&quot;</span></span> );
+            line = scanner.nextLine();
+            tokens = line.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">s+</span><span class="delimiter">&quot;</span></span> );
+        }
+    }
+
+    <span class="comment">/**
+     * Compute takes three tokens, a, operatorSymbol, and  b as in &quot;5&quot;, &quot;+&quot;,&quot; &quot;6&quot;.
+     * @param tokens to be evaluated.
+     */</span>
+    <span class="directive">static</span> <span class="type">int</span> compute( <span class="predefined-type">String</span>... tokens ) {
+        <span class="keyword">if</span> ( tokens.length &lt; <span class="integer">3</span> ) {
+            <span class="keyword">return</span> <span class="integer">0</span>;
+        }
+        <span class="type">int</span> a = <span class="predefined-type">Integer</span>.parseInt( tokens[ <span class="integer">0</span> ] );
+        <span class="type">int</span> b = <span class="predefined-type">Integer</span>.parseInt( tokens[ <span class="integer">2</span> ] );
+        <span class="predefined-type">String</span> symbol = tokens[ <span class="integer">1</span> ];
+
+        <span class="keyword">return</span> Operator.get( symbol ).compute( a, b ); <i class="conum" data-value="1"></i><b>(1)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>lookup operation and apply it to the values.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">sample output</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">calc: 3 ** 8
+3 ** 8 = 6561
+calc: 4 + 12
+4 + 12 = 16</code></pre>
+</div>
+</div>
+</details></div><!--end enum calculator -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_exercise_fraction_part_1">Fraction Part 1 Constructor and normalisation</a></p>
+</li>
+<li>
+<p><a href="#_exercise_fraction_part_2">Fraction Part 2 operations</a></p>
+</li>
+<li>
+<p><a href="#_exercise_fraction_part_3">Fraction Part 3 better API, nicer toString</a></p>
+</li>
+<li>
+<p><a href="#_exercise_flawless_password">Flawless Password</a></p>
+</li>
+<li>
+<p><a href="#_exercise_enum_calculator">Enum Calculator</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_links"><a class="anchor" href="#_links"></a><a class="link" href="#_links">Links</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests" target="_blank" rel="noopener">JUnit 5 Parameterized Tests </a></p>
+</li>
+<li>
+<p><a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-CsvSource" target="_blank" rel="noopener">CSV Source Tests </a></p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/parameterized-tests-junit-5" target="_blank" rel="noopener">Baeldung on Parameterized Tests with JUnit 5 </a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. Have your own tiny project and copy parts of that to your other projects, such as a java class called TestUtils.java
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. Not all equals implementation look at the type of this, See the java.util.List doc for a counter example
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W10 Date/Time API and Internationalization</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W10 Date/Time API and Internationalization</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_the_date_and_time_api">1. The Date and Time API</a></li>
+<li><a href="#_number_formats">2. Number Formats</a></li>
+<li><a href="#_testing_localized_exceptions">3. Testing Localized Exceptions</a></li>
+<li><a href="#_additional_pointers">4. Additional Pointers</a></li>
+<li><a href="#_internationalization_i18n_of_a_pub">Internationalization (I18N) of a Pub</a></li>
+<li><a href="#_exercises_in_this_part">Exercises in this part</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_date_and_time_api"><a class="anchor" href="#_the_date_and_time_api"></a><a class="link" href="#_the_date_and_time_api">1. The Date and Time API</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Java, an <code>Instant</code> represents a point on the time line. The origin (called epoch) is arbitrarily set at midnight
+of the first of January 1970 Greenwich time (UTC). <code>Instant.now()</code> returns the current point on the time line,
+being the number of seconds since the epoch (stored as <code>long</code>) and the number of nano seconds (stored as <code>int</code>). Each
+day has 24x60x60 = 86400 seconds. A <code>Duration</code> is the amount of time between two instants. Both <code>Instant</code> and <code>Duration</code>
+are immutable.</p>
+</div>
+<div class="paragraph">
+<p>An <code>Instant</code> does not have a human readable format. The two kinds of human time in the java API are <em>local date/time</em> and
+<em>zoned time</em>. Local date/time has a date and/or time of day, but no associated time zone. Examples:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/calendar_example_LocalDate.png" alt="calendar example LocalDate" width="25%" title="Local Date example"></span> Local Date example.
+<span class="image"><img src="./images/alarmclock_example_LocalTime.jpg" alt="alarmclock example LocalTime" width="25%" title="Local Time example"></span> Local Time Example.</p>
+</div>
+<div class="paragraph">
+<p>Do not use zoned time, unless really necessary. Today&#8217;s date can be retrieved using <code>LocalDate.now()</code>, an arbitrary date
+with <code>LocalDate.of(&lt;year&gt;, &lt;month&gt;, &lt;day&gt;)</code> like <code>LocalDate.of(2021, 5, 1)</code> being first of May 2021. The amount of time
+between dates is called a <code>Period</code>. Check the java API to read about convenient methods of <code>LocalDate</code> and <code>Period</code>. An
+interesting one is the <code>datesUntil(&#8230;&#8203;)</code> method on <code>LocalDate</code>, which returns a <code>Stream&lt;LocalDate&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>LocalTime</code> objects can be created like LocalDates, e.g.: <code>LocalTime endOfLecture = LocalTime.now().plusHours(1);</code></p>
+</div>
+<div class="paragraph">
+<p>Zoned times make use of time zomes. Java uses the IANA database: <a href="https://www.iana.org/time-zones" class="bare">https://www.iana.org/time-zones</a>
+To make a zoned time out of a <code>LocalDateTime</code> you can use the <code>ZonedDateTime.of()</code> method or do it like this:
+<code>ZonedDateTime current = LocalDateTime.now().atZone(ZoneId.of("Europe/Amsterdam"));</code>. Now you get a specific <code>Instant</code> in time.
+The other way around, you can can find the corresponding <code>ZonedDateTime</code> in another time zone using <code>instant.atZone(&#8230;&#8203;)</code>.</p>
+</div>
+<div class="paragraph">
+<p>To represent dates and times in readable and customizable formats, use the <code>DateTimeFormatter</code> class. It can use predefined
+standard formatters, <code>Locale</code> specific formatters and formatters with custom patterns.</p>
+</div>
+<div class="paragraph">
+<p>This paragraph is based on Core Java Volume 2, 11th edition, chapter 6 by Cay Horstmann.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_number_formats"><a class="anchor" href="#_number_formats"></a><a class="link" href="#_number_formats">2. Number Formats</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some of you might have noticed that one of the teacher tests in the FXTriangulate exercise of week 8 fails on your machine.</p>
+</div>
+<div class="paragraph">
+<p>This is because on the machine we developed, the locale is set to en_US.
+This causes the numbers to be formatted in the way that <code class="blue">Double.parseDouble(String input)</code> expects it.
+If you run the same tests on a machine with say a German Locale, the test that reads the length back from the label,
+use Double.parseDouble(), which is then surprised to find a comma instead of the decimal point, and fails with a format exception.</p>
+</div>
+<div class="paragraph">
+<p>To solve that, modify the test in method <span class="blue">tLength</span> such that the line<br>
+<code>double l = Double.parseDouble( ltext.split( ":" )[ 1 ] );</code> reads<br>
+<code>double l = getDoubleConsideringLocale( ltext.split( ":" )[ 1 ] );</code>,
+so that the whole test method reads</p>
+</div>
+<div class="listingblock">
+<div class="title">fxtriangulate.GUITest.tLength</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvSource</span>( {
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">a,greenCircle,blueCircle,500.0,400.0,100.0,100.0,500.0</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">b,redCircle,blueCircle,400.0,100.0,100.0,100.0,500.0</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">c,greenCircle,redCircle,300.0,100.0,100.0,400.0,100.0</span><span class="delimiter">&quot;</span></span>, } )
+    <span class="directive">public</span> <span class="type">void</span> tLength( <span class="predefined-type">String</span> line, <span class="predefined-type">String</span> p1, <span class="predefined-type">String</span> p2, <span class="type">double</span> expected,
+            <span class="type">double</span> x1, <span class="type">double</span> y1, <span class="type">double</span> x2, <span class="type">double</span> y2 ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+        <span class="type">double</span> xOrg = stage.getX();
+        <span class="type">double</span> yOrg = stage.getY();
+        FxRobot rob = <span class="keyword">new</span> FxRobot();
+        rob.drag( <span class="string"><span class="delimiter">'</span><span class="content">#</span><span class="delimiter">'</span></span> + p1 ).dropTo( xOrg + x1, yOrg + y1 );
+        rob.drag( <span class="string"><span class="delimiter">'</span><span class="content">#</span><span class="delimiter">'</span></span> + p2 ).dropTo( xOrg + x2, yOrg + y2 );
+        <span class="predefined-type">String</span> ltext = labelMap.get( line ).apply( triangulator ).getText();
+        <span class="type">double</span> l = getDoubleConsideringLocale( ltext.split( <span class="string"><span class="delimiter">&quot;</span><span class="content">:</span><span class="delimiter">&quot;</span></span> )[ <span class="integer">1</span> ] ); <i class="conum" data-value="1"></i><b>(1)</b>
+        assertThat( l ).isCloseTo( expected, within( <span class="float">0.1</span> ) );
+<span class="comment">//        fail( &quot;method tLength reached end. You know what to do.&quot; );</span>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>changed line.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Consider the local in which the number is written.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Use the default locale to parse a double value from a string.
+     * @param input string
+     * @return the double
+     * @throws ParseException if the string does not parse to double.
+     */</span>
+    <span class="directive">static</span> <span class="type">double</span> getDoubleConsideringLocale( <span class="predefined-type">String</span> input ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+        <span class="keyword">return</span> <span class="predefined-type">DecimalFormat</span>.getNumberInstance().parse( input ).doubleValue(); <i class="conum" data-value="1"></i><b>(1)</b>
+    }
+
+    <span class="comment">/**
+    * Use the given locale to parse a double value from a string.
+    * @param locale to use.
+    * @param input string.
+    * @return the double.
+    * @throws ParseException if the string does not parse to double.
+    */</span>
+   <span class="directive">static</span> <span class="type">double</span> getDoubleConsideringLocale( <span class="predefined-type">Locale</span> locale, <span class="predefined-type">String</span> input ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+       <span class="keyword">return</span> <span class="predefined-type">DecimalFormat</span>.getNumberInstance(locale).parse( input ).doubleValue();
+   }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>DecimalFormat.getNumberInstance gets a format that understands the default locale.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Set the locale for the execution. Useful for tests.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">          <span class="predefined-type">Locale</span>.setDefault( <span class="predefined-type">Locale</span>.GERMANY ); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Set the locale to GERMANY if it isn&#8217;t already. Similar for other languages.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_localized_exceptions"><a class="anchor" href="#_testing_localized_exceptions"></a><a class="link" href="#_testing_localized_exceptions">3. Testing Localized Exceptions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The standard way of testing exceptions with assertj is explained in <a href="week01.html#_assert_exceptions">week01</a>.</p>
+</div>
+<div class="paragraph">
+<p>To get to the localized message, which contains the message as translated by the locale framework is a bit more involved.</p>
+</div>
+<div class="paragraph">
+<p>Luckily, AssertJ allows you to extract information from a Throwable, by using an extractor function. Now the Lambda bells should ring.</p>
+</div>
+<div class="listingblock">
+<div class="title">To make a long story very short: here is an example:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span><span class="type">[]</span> keys = keyWords.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">|</span><span class="delimiter">&quot;</span></span>);
+    assertThatThrownBy( () -&gt; {
+                MainSimulation.main( args );
+    } ).isExactlyInstanceOf( exceptionMap.get( expectionClassName ) )
+            .extracting( e -&gt; e.getLocalizedMessage() ) <i class="conum" data-value="1"></i><b>(1)</b>
+            .asString()           <i class="conum" data-value="2"></i><b>(2)</b>
+            .contains( keys ); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>extract using <code class="blue">Function&lt;? super Throwable,​T&gt;</code>, <code class="black">e &#8594; getLocalizedMessage()</code> in this case.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the assertion for in String. Do <strong class="red">not</strong> use <code>toString()</code>, because that produces a <em>String</em>, not an <strong class="blue">AbstractStringAssert</strong>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>And use the assert to check that the string contains the required key information.</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/assertjtypehints.png" alt="assertjtypehints">
+</div>
+<div class="title">Figure 1. If you turn on type hints in NetBeans-IDE (or in intelij) you can see what the type is on which you call <code>contains(keys)</code></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_pointers"><a class="anchor" href="#_additional_pointers"></a><a class="link" href="#_additional_pointers">4. Additional Pointers</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>If you haven&#8217;t read the Horstmann book but you need an introduction into Internationalization,
+read this tutorial from DZONE <a href="https://dzone.com/articles/a-beginners-guide-to-java-internationalization">here</a>.
+Make sure to read the bit about Resource Bundles, as you use them in the exercise for this week.</p>
+</li>
+<li>
+<p>Jakob Jenkov also has a tutorial on <a href="http://tutorials.jenkov.com/java-internationalization/index.html" target="_blank" rel="noopener">Java Internationalization </a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_internationalization_i18n_of_a_pub"><a class="anchor" href="#_internationalization_i18n_of_a_pub"></a><a class="link" href="#_internationalization_i18n_of_a_pub">Internationalization (I18N) of a Pub</a></h2>
+<div class="sectionbody">
+<div class='ex'><details class='ex'><summary class='ex'>In the pub (Spanish beer)</summary>
+<div class="paragraph">
+<p><strong>In the pub Spanish</strong></p>
+</div>
+<div class="paragraph">
+<p>For this exercise, you are expanding on the pub exercise again. This time, enums and exceptions are all implemented and tested. The focus this week is on Internationalization! We want to make sure that the pub can run in different languages.</p>
+</div>
+<div class="imageblock related thumb right">
+<div class="content">
+<img src="./images/spanishBeerResources.png" alt="The resources in this project" height="^">
+</div>
+</div>
+<div class="paragraph">
+<p>Open the project folder in Netbeans. Let&#8217;s first look at the resources of the project. You will  notice a bunch of new files in the resources folder. The files contain the translations of error messages into Dutch, German and Spanish. For example, the <code>inthepub_nl_NL.properties</code> file contains</p>
+</div>
+<div class="paragraph">
+<p>A good way of working is to create languages files for other that the default (typically English)
+to have the English text as comment and as a hint for the translator.
+Then the key value (the string at the left side of the equals sign) do not have to contain the full english texts,
+which might need escaping, such as when the key contains whitespace. In this exercise we banned the white space
+in the key altogether, and derive the keys from the default message with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> msg = getMessage(); <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="predefined-type">String</span> key = msg.toLowerCase().replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">s</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">_</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="predefined-type">String</span> lMessage = bundle.containsKey( key ) ? bundle.getString( key ) : msg; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>get the original message.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>translate to lower case and replace spaces with underscores, which yields the key.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If that key is found, use its message, otherwise use the default, non-internationalized version.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">The dutch file</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>#hello=Hello
+hello=Hallo
+#good_morning=Good Morning
+good_morning=Goede Morgen
+#you_drank_too_much=You drank too much
+you_drank_too_much=U hebt te veel gedronken
+#beer_is_sold_out=beer is sold out
+beer_is_sold_out=Het bier is uitverkocht
+#you_are_too_young_to_drink=you are too young to drink
+you_are_too_young_to_drink=U bent te jong voor drank</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So when the pub raises an <code>EmptyStockException</code> and the <code>Locale</code> is Dutch, it should display the <em>Dutch</em> error message, not the English one. You don&#8217;t need to touch the language properties files, unless you want to add more languages (or perhaps our Spanish is too horrible!).</p>
+</div>
+<div class="paragraph">
+<p>In this exercise you work on the files:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>LanguageTest.java</code>, which is your main file for testing your implementation. Remember, work test-driven! What you should check is that the Exceptions are thrown with a message in the correct language.</p>
+</li>
+<li>
+<p><code>PubException.java</code>, this is a new Exception that all other Exceptions inherit. It is the one responsible for translating the error messages. Your implementation goes here.</p>
+</li>
+<li>
+<p><code>HablasEspañol.java</code>, which provides a <code>main</code> method for you to play around with the languages. Feel free to change this code to your liking to familiarize yourself with Internationalization, it is not tested.</p>
+</li>
+<li>
+<p><code>MainSimulationTest.java</code> to complete the simulation tests. The business code is given. Push up the coverage.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you want to run the program, you can use the <code>run.sh</code> file that we provided in the project&#8217;s repository. Simply execute it to test the pub simulation. Alternatively, simply type <code>java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.ParlezEspañol</code> in your command line interface. Of course, this will throw errors as long as you haven&#8217;t written your implementation!</p>
+</div>
+<div class="paragraph">
+<p><strong>Where should I start?</strong></p>
+</div>
+<div class="paragraph">
+<p>Start with the <code>PubException.java</code> class and implement the constructor so that the compilor errors will go away.
+Then, move to <code>LanguageTest.java</code> and work on the rest of the exercise, first writing the tests and then implementing in the <code>PubException</code> class.</p>
+</div>
+<div class="listingblock">
+<div class="title">Windows run command</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+rem @author David Greven - https://github.com/grevend
+if not exist target/classes call mvn clean compile
+chcp 65001
+cls
+java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.HablasEspañol
+java -Duser.language=es -Duser.country=ES -cp target/classes/ pub.HablasEspañol
+pause</code></pre>
+</div>
+</div>
+</details></div><!--end ex 1-->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_internationalization_i18n_of_a_pub">I18N Pub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

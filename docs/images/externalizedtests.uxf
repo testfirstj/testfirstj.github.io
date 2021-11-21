@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>800</x>
+      <y>160</y>
+      <w>140</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+{library}
+*AssertJ*
+bg=red
+transparency=90
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>390</x>
+      <y>40</y>
+      <w>300</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+{module}
+{test-library}
+*rangetest*
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>60</x>
+      <y>420</y>
+      <w>260</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>rangeextension
+{business}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>40</x>
+      <y>310</y>
+      <w>670</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>{module}
+&lt;&lt;during development&gt;&gt;
+*rangesextension*
+bg=cyan
+transparency=70
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>800</x>
+      <y>50</y>
+      <w>140</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+{library}
+*JUnit5*
+bg=red
+transparency=90
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>150</y>
+      <w>180</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>template=&lt;R,P,D&gt;
+{abstract}
+*/RangeTestBase/*
+bg=pink
+layer=3
+transparency=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>220</y>
+      <w>30</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;230.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>140</x>
+      <y>230</y>
+      <w>90</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0;70.0;60.0;70.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>590</x>
+      <y>90</y>
+      <w>230</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+uses &gt;</panel_attributes>
+    <additional_attributes>210.0;10.0;110.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>590</x>
+      <y>190</y>
+      <w>230</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+uses &gt;</panel_attributes>
+    <additional_attributes>210.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>220</y>
+      <w>260</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+optionally uses &gt;
+fg=red
+</panel_attributes>
+    <additional_attributes>160.0;10.0;120.0;20.0;120.0;190.0;10.0;270.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>110</y>
+      <w>230</w>
+      <h>370</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+optionally uses &gt;
+fg=red
+</panel_attributes>
+    <additional_attributes>160.0;10.0;90.0;70.0;90.0;280.0;10.0;350.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>470</y>
+      <w>170</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt; tests
+fg=blue</panel_attributes>
+    <additional_attributes>10.0;20.0;150.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>190</y>
+      <w>280</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt; tests</panel_attributes>
+    <additional_attributes>10.0;20.0;260.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>420</x>
+      <y>110</y>
+      <w>240</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>rangetest</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>90</x>
+      <y>170</y>
+      <w>160</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>template=&lt;R,P,D&gt;
+&lt;&lt;interface&gt;&gt;
+*/Range/*
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>470</y>
+      <w>210</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lw=2
+BigDecimalRange
+layer=3
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>70</x>
+      <y>140</y>
+      <w>210</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>range</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>430</x>
+      <y>450</y>
+      <w>220</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>{test class}
+*BigDecimalRangeTest*
+layer=2
+bg=pink
+layer=3
+transparency=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>410</x>
+      <y>400</y>
+      <w>260</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>rangeextension
+{test sources}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>730</x>
+      <y>450</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Both test and business 
+class are leafs in a generic
+inheritance tree.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>40</x>
+      <y>40</y>
+      <w>270</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+{module}
+genericranges
+bg=yellow
+transparency=70</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>50</x>
+      <y>380</y>
+      <w>320</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+rangesextension
+layer=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

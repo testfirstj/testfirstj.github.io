@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W6 Reflection</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W6 Reflection</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_reflection">1. Reflection</a></li>
+<li><a href="#_reflection_and_correcting_student_exams">2. Reflection and correcting student exams.</a>
+<ul class="sectlevel2">
+<li><a href="#_class_genealogy">Class Genealogy</a></li>
+<li><a href="#_generating_code_using_templates">2.1. Generating code using Templates</a></li>
+<li><a href="#_entity_deconstructor_generator">Entity Deconstructor Generator</a></li>
+</ul>
+</li>
+<li><a href="#_service_class_self_registration">3. Service class Self registration.</a>
+<ul class="sectlevel2">
+<li><a href="#_self_registering_deconstructor">Self Registering Deconstructor.</a></li>
+</ul>
+</li>
+<li><a href="#_optional_demystified">4. Optional demystified</a></li>
+<li><a href="#_generic_mapper">Generic Mapper.</a></li>
+<li><a href="#_use_a_maven_plugin_to_generate_mappers_on_the_fly">5. Use a Maven Plugin to generate mappers on the fly</a></li>
+<li><a href="#_improvements_on_the_mapper">6. Improvements on the Mapper.</a></li>
+<li><a href="#_exercise_sql_table_sqlgenerator">Exercise SQL table sqlgenerator</a></li>
+<li><a href="#_reading">Reading</a></li>
+<li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Use standard techniques</div>
+<div class="paragraph">
+<p>In cooking, working with traditional techniques often provides the best results.
+The recipes have had the most testing and have been optimized over time. Compare to cooking with water.
+We know the properties of cooking in water well: The maximum temperature is more
+or less self regulating (as long as there is water in the cauldron) and under otherwise
+similar conditions such as pressure, the result is pretty much predictable and almost risk-free.</p>
+</div>
+<div class="paragraph">
+<p>The same with programming. The techniques shown in this part about reflection should <strong class="big red">NOT</strong> be used on a daily basis but
+be reserved for special cases, such as making a tool set (maybe called a framework), that can then make working on standard recipes
+a bit more efficient for the programmer.
+Frameworks typically pay their keep with a little performance degradation, because they need some extra work either at application startup,
+in preparation of the executable, when used or all of the former.</p>
+</div>
+<div class="paragraph">
+<p>If the use of a framework makes the normal programming more complex, you might want to consider <strong class="big red">not</strong> using it.<br>
+In all cases, you should be aware of the consequences.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="big">Reclection or class introspection is used to leverage the infomation that is avialable in classes. Using the information that is
+available about a class and by implication about the instances of the class can help to avoid <em>copy-and-waste</em> programming.
+It helps keeping the code <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reflection"><a class="anchor" href="#_reflection"></a><a class="link" href="#_reflection">1. Reflection</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Reflection is a multi-edged tool.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reflection can be used to access parts of instances that would otherwise not be available.</p>
+</li>
+<li>
+<p>Reflection can be used to list information about fields, methods, and constructors.</p>
+</li>
+<li>
+<p>Access via reflection is slower than regular access, because of the safety/security checks that are made on each access</p>
+</li>
+<li>
+<p>It is also slow for the extra indirection needed to do the work when compared
+to the optimized instructions for say access a field.</p>
+</li>
+<li>
+<p>It is <strong class="red">less type-safe</strong>, so you loose much of the comfort you have in the IDE, such as code-completion or intellisense(tm).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For instance you lookup a method by name (a String) and that makes you deal with at least one exception. This still does not produce
+the actual method, but instead a <span class="blue">Method</span> object which you must give the reference to the object on which you want to apply the method and the parameters
+to that method in an <code>Object[]</code> array.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some of the problems can be mitigated a little with the proper amount of smartness, in particular caching previous results,
+and also by using <code>MethodHandle</code> in the java.lang.invoke package introduced in Java 7.</p>
+</div>
+<div class="paragraph">
+<p>Things that can be done using reflection is building access templates to read
+and write plain old java objects, typically entity classes, without having to copy and paste a lot of
+similar code.
+This, and code generation, is the approach that some frameworks use to reduce the
+amount of boilerplate or copy and paste code that needs to be written.</p>
+</div>
+<div class="paragraph">
+<p>We will be doing all of that in this part.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reflection_and_correcting_student_exams"><a class="anchor" href="#_reflection_and_correcting_student_exams"></a><a class="link" href="#_reflection_and_correcting_student_exams">2. Reflection and correcting student exams.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong class="big">Not unit testing, but assessing the grades student get for their solutions.</strong></p>
+</div>
+<div class="paragraph">
+<p>We teachers use reflection quite a bit when correcting the tasks in performance assessments.
+This is also the way that the MOOC in PRC1 does parts of it&#8217;s testing.
+This is a special kind of unit testing, that is <strong class="red">NOT</strong> the norm.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> but serves as an illustration on what
+you can do with reflection.</p>
+</div>
+<div class="paragraph">
+<p>As teacher / examiners</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We cannot expect that a class that the candidate should write is present.</p>
+</li>
+<li>
+<p>At the time of writing the tests the class certainly is not available. We therefore have
+to instantiate the objects using reflection.</p>
+</li>
+<li>
+<p>Sometimes the task states the requirement of only having a specific set of field types with specific visibility or other properties.</p>
+</li>
+<li>
+<p>We want the candidates to stick to the naming conventions.</p>
+</li>
+<li>
+<p>When you run the jacoco coverage plugin, jacoco itself adds so called <em>synthetic</em> members, which
+are not found in the source code of the business class, but are added by jacoco by way of instrumentation.</p>
+</li>
+<li>
+<p>We want to check that a method or field has the required visibility, <span class="blue">static</span>-ness, <span class="blue">final</span>ity, or <span class="blue">abstract</span>ness.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As an example verifying the visibility and other modifiers such as <code>static</code> and <code>final</code> may be subject
+of the correction work we need to do.</p>
+</div>
+<div class="paragraph">
+<p>In the java .class file, the <span class="blue">Modifier</span> of fields, methods, and of types such as classes and interfaces
+are simply defined as a bit set packed into an int, and store with the byte code in the class file.</p>
+</div>
+<div class="paragraph">
+<p>The following modifiers are defined:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modifier</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">keyword</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">int value</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Applies to</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUBLIC</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>public</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, F, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRIVATE</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>private</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, F, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROTECTED</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, F, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STATIC</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>static</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, F, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FINAL</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>final</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, F, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SYNCHRONIZED</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>synchronized</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">32</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VOLATILE</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>volatile</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">64</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">F</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRANSIENT</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>transient</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">128</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">F</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NATIVE</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>native</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">256</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INTERFACE</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>interface</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ABSTRACT</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>abstract</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">1024</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, M</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STRICT</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>strict</code></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2048</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">C, M</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Applies</strong> to means <strong>C</strong>lass, <strong>F</strong>ield or <strong>M</strong>ethod.</p>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong> that default or package private has no modifier bit of its own. If none of
+<code>public</code>, <code>protected</code>, or <code>private</code> is set, then that is when you get the default.</p>
+</div>
+<div class="paragraph">
+<p>As an example, a <span class="blue">public</span> final method has modifier <span class="green">1+16+1024 = 1041, or 0x411</span>.</p>
+</div>
+<div class="paragraph">
+<p>Below you see a selection of the helper methods we use to correct performance assessments.</p>
+</div>
+<div class="listingblock">
+<div class="title">Does the class' field name comply with the standard naming conventions?</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
+     * Check the field definition of a class, including naming conventions.
+     *
+     * @param targetClass to check
+     * @param modifiers visibility, static, final
+     * @param type of the field
+     * @param fieldName of the field
+     * @throws SecurityException when field is not accessible.
+     */</span>
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> checkFieldAndNaming( <span class="predefined-type">Class</span>&lt;?&gt; targetClass,
+                                            <span class="type">int</span> modifierMask,
+                                            <span class="type">int</span> modifiers,
+                                            <span class="predefined-type">Class</span>&lt;?&gt; type, <span class="predefined-type">String</span> fieldName )
+            <span class="directive">throws</span> <span class="exception">SecurityException</span> {
+        <span class="keyword">if</span> ( ( PUBLIC | STATIC | FINAL ) == modifiers ) {  <i class="conum" data-value="1"></i><b>(1)</b>
+            assertAllUpper( fieldName );
+        } <span class="keyword">else</span> {                                           <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="type">char</span> firstChar = fieldName.charAt( <span class="integer">0</span> );
+            assertEquals( <span class="string"><span class="delimiter">&quot;</span><span class="content">first char not lower case</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + (<span class="type">char</span>) <span class="predefined-type">Character</span>.
+                          toLowerCase(
+                                  firstChar ), <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + (<span class="type">char</span>) firstChar );
+        }
+        checkField( targetClass, modifierMask, modifiers, type, fieldName );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Needs to be all UPPER CASE</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Needs to start with a lower case character.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Check the modifiers on a field.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
+ * Check the field definition of a class.
+ *
+ * This method tests if the required modifiers are set. Example: to check
+ * private, but not require final, specify modifierMask == Modifier.PUBLIC |
+ * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired
+ *
+ * @param targetClass to check
+ * @param modifierMask visibility, static, final
+ * @param modsRequired required modifiers
+ * @param fieldType of the field
+ * @param fieldName of the field
+ * @throws SecurityException when field is not accessible
+ */</span>
+<span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> checkField( <span class="predefined-type">Class</span>&lt;?&gt; targetClass,
+                               <span class="type">int</span> modifierMask,
+                               <span class="type">int</span> modsRequired,
+                               <span class="predefined-type">Class</span>&lt;?&gt; fieldType,
+                               <span class="predefined-type">String</span> fieldName )
+        <span class="directive">throws</span> <span class="exception">SecurityException</span> {
+    <span class="predefined-type">Field</span> f = <span class="predefined-constant">null</span>;
+    <span class="keyword">try</span> {
+        f = targetClass.getDeclaredField( fieldName );
+        assertEquals( <span class="string"><span class="delimiter">&quot;</span><span class="content">field </span><span class="delimiter">&quot;</span></span> + fieldName + <span class="string"><span class="delimiter">&quot;</span><span class="content"> should be of type </span><span class="delimiter">&quot;</span></span>
+                + fieldType, fieldType, f.getType() );
+        <span class="type">int</span> fieldModifiers = f.getModifiers();
+        <span class="keyword">if</span> ( ( modifierMask &amp; fieldModifiers ) != modsRequired ) {
+            fail( <span class="string"><span class="delimiter">&quot;</span><span class="content">field '</span><span class="delimiter">&quot;</span></span> + f.getName()
+                    + <span class="string"><span class="delimiter">&quot;</span><span class="content">' should be declared '</span><span class="delimiter">&quot;</span></span>
+                    + <span class="predefined-type">Modifier</span>.toString( modsRequired )
+                    + <span class="string"><span class="delimiter">&quot;</span><span class="content">', you declared it '</span><span class="delimiter">&quot;</span></span>
+                    + <span class="predefined-type">Modifier</span>.toString( fieldModifiers ) + <span class="string"><span class="delimiter">'</span><span class="char">\'</span><span class="delimiter">'</span></span> );
+        }
+    } <span class="keyword">catch</span> ( <span class="exception">NoSuchFieldException</span> ex ) {
+        fail( <span class="string"><span class="delimiter">&quot;</span><span class="content">your class '</span><span class="delimiter">&quot;</span></span> + targetClass
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">' does not contain the required field '</span><span class="delimiter">&quot;</span></span>
+                + <span class="predefined-type">Modifier</span>.toString( modifierMask )
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>
+                + fieldType.getSimpleName()
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + fieldName + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span> );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_class_genealogy"><a class="anchor" href="#_class_genealogy"></a><a class="link" href="#_class_genealogy">Class Genealogy</a></h3>
+<div class="paragraph">
+<p>In the following exercise you will use the information that is available
+in the Class object. You will find the interfaces, super classes, and interfaces implemented by the super classe and the class
+as well as the fields that are defined in each of the classes in the field hierarchy.</p>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>Class Genealogy</summary>
+<div class="imageblock left thumb">
+<div class="content">
+<img src="./images/jbuttontree.png" alt="jbuttontree">
+</div>
+<div class="title">Figure 1. inspiration for this task</div>
+</div>
+<div class="paragraph">
+<p>Your task is to create a program that lists the class hierarchy of class names given on
+the command line.</p>
+</div>
+<div class="paragraph">
+<p>The output should be a tree-like structure with <code>Object</code> at the top and
+the <code>named class</code> at the bottom and all intermediate <code>super classes</code> in
+between in proper order. For every level in the hierarchy, add two spaces for indentation.
+At the end the program of the hierarchy it should show the non-static fields that are
+defined in all classes in the hierarchy with the modifiers in the order of definition.</p>
+</div>
+<div class="paragraph">
+<p>To get a class object you can use <code>Class.forName(String name)</code> which, if
+the class is loadable by the JVM, is loaded.</p>
+</div>
+<div class="paragraph">
+<p>As usual, start with writing the tests. The test class has two tests:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>One to show the genealogy of the Genealogy class itself.</p>
+</li>
+<li>
+<p>One to show the class hierarchy of <code>javax.swing.JButton</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The picture only shows the direct lines of ancestry, not the interfaces. In this task you
+should show the implemented interfaces plus the fields.</p>
+</div>
+<div class="paragraph">
+<p>The elements (or supertypes, i.e. super classes and interfaces) that should be contained in the <code>javax.swing.JButton</code> are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.awt.Component</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.awt.image.ImageObserver</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.awt.MenuContainer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.io.Serializable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.awt.Container</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.swing.JComponent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.swing.TransferHandler$HasGetTransferHandler</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.swing.AbstractButton</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.awt.ItemSelectable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.swing.SwingConstants</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.swing.JButton</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.accessibility.Accessible</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>At the bottom of the hierarchy we want all <em>non-static</em> <strong>Declared</strong> <strong class="blue">fields</strong> in the class hierarchy in declaration order,
+that is in order from the top of the hierarchy to the bottom and within the classes in field order.</p>
+</div>
+<div class="listingblock">
+<div class="title">To determine if a field is non-statid use</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">Predicate</span>&lt;<span class="predefined-type">Field</span>&gt; nonStatic = ( <span class="predefined-type">Field</span> f ) -&gt; !<span class="predefined-type">Modifier</span>.isStatic( f.getModifiers() );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you ask an interface for its modifier, it will say INTERFACE ABSTRACT, which is not very informative.
+So it would be better to only show the visibility of a type and field.
+Visibility is encoded in the lower three bits of the type or member Modifier,
+meaning that <code>String visibility = Modifier.tostring( m.getModifiers() &amp; ( 7+16 ));</code> produces
+the visibility and finality in string form.</p>
+</div>
+<div class="paragraph">
+<p>In the project you will find some sample classes to test your application with.</p>
+</div>
+<div class="paragraph">
+<p>Testing can be done by using <code>assertThat(String).contains(String&#8230;&#8203;.)</code>.
+Doing so will get a quick full coverage, but testing the exact result may be a bit tricky.</p>
+</div>
+<div class="paragraph">
+<p>Formatting test can be done with your eye-balls.</p>
+</div>
+<div class="paragraph">
+<p>You do <span class="green">not</span> have to test the sample classes.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example output for "java.lang.StringBuilder"</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">$ ./run.sh java.lang.StringBuilder
+class hierarchy of [java.lang.StringBuilder]
+ public java.lang.Object
+   abstract java.lang.AbstractStringBuilder  implements public java.lang.Appendable, public java.lang.CharSequence
+     public final java.lang.StringBuilder  implements public java.io.Serializable, public java.lang.Comparable
+//declared fields:
+{
+     byte[] value  // declared in: AbstractStringBuilder
+   , byte coder  // declared in: AbstractStringBuilder
+   , int count  // declared in: AbstractStringBuilder
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the fields are package private, and declared in a <span class="blue">package private</span> class, the <code>AbstractStringBuilder</code>.
+If you run the program on java.lang.StringBuffer and see almost the same. This is because the two classes are siblings
+sharing the same immediate parent class, the package private AbstractStringBuilder, which does most of the actual work.</p>
+</div>
+</details></div><!--end Class Genealogy -->
+</div>
+<div class="sect2">
+<h3 id="_generating_code_using_templates"><a class="anchor" href="#_generating_code_using_templates"></a><a class="link" href="#_generating_code_using_templates">2.1. Generating code using Templates</a></h3>
+<div class="paragraph">
+<p>In the Java versions before Java 16, generating source code could be a bit tedious,
+because in Java a String can&#8217;t contain line breaks, that is a line cannot be multiple lines lone with only one set of quotes.
+The Java 14+ text block feature solves that, and is final in Java 16, but we will deal with it here anyway.</p>
+</div>
+<div class="paragraph">
+<p>If you know what your code looks like, your can put it in a file, maybe even starting
+by copying from an existing java class. The template below is created that way and has our advised code style.</p>
+</div>
+<div class="listingblock">
+<div class="title">Assume your template text looks like</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package %1$s;
+
+import deconstructorregistry.Deconstructor;
+/**
+ * This is generated code. Do not edit, your changes will be lost.
+ */
+public class %2$sDeconstructor {
+
+    /**
+     * The purpose of self registration is not being able to
+     * create new instances, other then by the class loader.
+     */
+    private %2$sDeconstructor() {
+    }
+
+    static {
+        Mapper.register( %2$s.class, new %2$sDeconstructor() );
+    }
+
+    /**
+     * Deconstruct an entity into an array.
+     * @param %2$s the victim
+     */
+    @Override
+    public Object[] deconstruct(  %2$s %3$s ) {
+       return new Object[]{
+            %4$s
+       };
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the template you see special 'tokens' like <code>%2ss</code>, which means: use the second parameter, and interpret as string.
+In this case the template specifies 4 parameters:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>is the package name,</p>
+</li>
+<li>
+<p>is the entity type name,</p>
+</li>
+<li>
+<p>is the parameter name of the deconstructor method</p>
+</li>
+<li>
+<p>is the the place where the list of getters should land.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Reading the template from a file and put it in a String constant.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> templateText( <span class="predefined-type">String</span> templateName ) {
+        <span class="predefined-type">String</span> text = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+        <span class="predefined-type">Class</span> clz = Constants.class;
+
+        <span class="keyword">try</span> ( <span class="predefined-type">InputStream</span> in = clz.getResourceAsStream( templateName ) ) {
+            text = <span class="keyword">new</span> <span class="predefined-type">String</span>( in.readAllBytes<span class="error">​</span>() );
+        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) {
+            <span class="predefined-type">Logger</span>.getLogger( Constants.class.getName() )
+                    .log( <span class="predefined-type">Level</span>.SEVERE, ex.getMessage() );
+        }
+        <span class="keyword">return</span> text;
+    }
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> CODE_TEMPLATE = templateText(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">CodeTemplate-java.txt</span><span class="delimiter">&quot;</span></span> );</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Use the template with the positional parameters.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> classText = <span class="predefined-type">String</span>.format( CODE_TEMPLATE,
+            GENERATED_PACKAGE, <i class="conum" data-value="1"></i><b>(1)</b>
+            typeName, <i class="conum" data-value="2"></i><b>(2)</b>
+            paramName, <i class="conum" data-value="3"></i><b>(3)</b>
+            getters( entityType ) <i class="conum" data-value="4"></i><b>(4)</b>
+    );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Parameters to</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>the</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>template</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>as explained above.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_entity_deconstructor_generator"><a class="anchor" href="#_entity_deconstructor_generator"></a><a class="link" href="#_entity_deconstructor_generator">Entity Deconstructor Generator</a></h3>
+<div class="paragraph lead">
+<p>Some of the operations you want to do on entities do not belong to the responsibility of
+the entity. As an example: providing various external representations, such as
+a list of entities as a csv (comma separated value) file. It is not the entities responsibility to format its
+information in every possible format. Often the toString() method is not really fit for business but mainly meant for debugging.
+You use an external class to achieve a specific format. The EntityDeconstructor is such a helper for
+the simplest cases, such a simple csv. Writing such helper class can be largely automated, taking most of the
+boilerplate coding away from the easily bored but 😎 programmer.</p>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>Entity Deconstructor</summary>
+<div class="paragraph">
+<p><strong class="big">This exercise has two parts, the generator and the registry, so the generator generates code that fits the registry exercise</strong></p>
+</div>
+<div class="paragraph">
+<p>To ease the handling of handling <em>entities</em> in a business application, a deconstructor method is a <em>nice to have</em>.</p>
+</div>
+<div class="paragraph">
+<p>A <strong>deconstructor</strong> takes an <span class="blue">entity</span> and returns an array of <span class="blue">Object</span>s containing all fields of the entity.</p>
+</div>
+<div class="paragraph">
+<p>This allows things such as getting the data to create a csv representation without having to do that inside the entity class.
+In the last exercises in this part you will use even more information, so you can create things such as json format, yaml,
+or fill a prepared statement when you want to put entities into a database using jdbc (which we will do next week).</p>
+</div>
+<div class="listingblock">
+<div class="title">example usage</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="keyword">for</span>( <span class="predefined-type">Object</span> fieldValue: deconstruct( student )) {
+     <span class="comment">// do something with the field value</span>
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This deconstructor is not automatically provided by the IDE, and it takes a bit of wrestling with the editor.
+Why not <em>generate</em> a deconstructor from the information that is in the class-object of the entity?</p>
+</div>
+<div class="paragraph">
+<p>A deconstructor would have the following API, with the Student as example:</p>
+</div>
+<div class="listingblock">
+<div class="title">Given a student entity:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Student</span>{
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Integer</span> snummer;
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> lastname;
+    <span class="comment">//...</span>
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Boolean</span> active;
+    <span class="comment">// rest left out</span>
+
+    <span class="comment">// methods left out</span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">the <span class="blue">StudentDeconstructor</span> could look like this (abbreviated).</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">StudentDeconstructor</span> {
+
+  <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct( Student s ) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+        s.getSnummer(),
+        s.getLastname(),
+       <span class="comment">// some left out for brevity</span>
+       s.getActive()
+    };
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated deconstructor is specialized for the Student class, and it is really fast.</p>
+</div>
+<div class="paragraph">
+<p>In this exercise you will create the deconstructor java code given the entity class name on the command line.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>    generateDeconstructor sampleentities.Student &gt; path/to/StudentDeconstructor.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>The fine print</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The generated code must be a valid class, and be acceptable by the java compiler.</p>
+</li>
+<li>
+<p>The parameter on the command line is the fully qualified entity name such as <code>sampleentities.Student</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Use Class.forName(String) to try to load the class.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The package declaration should be the same as that of the entity.</p>
+</li>
+<li>
+<p>The entity classes should be available in binary form so we can reflect on them.</p>
+</li>
+<li>
+<p>The name of the Deconstructor type should be the name of the entity type with <code>"Deconstructor"</code> appended. E.g. <span class="green">StudentDeconstructor</span>.</p>
+</li>
+<li>
+<p>The type and signature of the deconstructor method should be <code>public static Object[] deconstructor( EntityType )</code>,
+like  <code>public static Object[] deconstructor( Student )</code>.</p>
+</li>
+<li>
+<p>The field values should be obtained using the getter for the field. Assume <strong>'get'</strong> as prefix for all methods</p>
+</li>
+<li>
+<p>The getter should be constructed according to the convention, <code>get+&lt;fieldname with first letter capitalized&gt;</code>. E.g the getter for field <code>firstname</code> is get<strong>F</strong>irstname.</p>
+</li>
+<li>
+<p>The values obtained by the getters should be placed in the order of field declaration of the entity type.</p>
+</li>
+<li>
+<p>The generated code should be fit for human consumption, with reasonable indentation so that eye-ball inspection of the generated code is meaningful.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the project you will find a pre-made set of tests in which you have to add some test data and
+details of the tests.</p>
+</div>
+<div class="paragraph">
+<p>In the tests:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove all _unneeded_<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>
+white space. This can be done easily with:<br>
+ <code class="blue">stream().map (line &#8594; line.trim()).filter(l &#8594; !l.isEpmty())</code>.
+ This trick has been packed in a method called cleanCode that takes the whole generated text, cleans it and returns it as a list of Strings.</p>
+</li>
+<li>
+<p>Test each aspect with a separate test data line. Use the <code>Student</code> class, which is given in the <code>sampleentities</code> package.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Windows run script to run the entitydeconstructor from the command line. Called run.cmd</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+rem @author David Greven - https://github.com/grevend
+set jar=target/entitydeconstructor-2.0-SNAPSHOT.jar
+if not exist %jar% cls &amp; echo Maven... &amp; call mvn package
+echo.
+java -jar %jar% %*</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">bash script to do the same as the above. Will work in git-bash too.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">#!/bin/bash
+jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if [ ! -e ${jar} ]; then mvn package; fi
+java -jar ${jar} &quot;$@&quot;</code></pre>
+</div>
+</div>
+</details></div><!--end Entity Deconstructor -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_service_class_self_registration"><a class="anchor" href="#_service_class_self_registration"></a><a class="link" href="#_service_class_self_registration">3. Service class Self registration.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some services provided by classes are greatly helped if the
+using class does not have to instantiate a class, but can simple look it up.</p>
+</div>
+<div class="paragraph">
+<p>Looking up an entity instead of creating your own can also help performance, because
+an next lookup can return the same object, so the expense of the first instantiation
+is paid only for the first instance. This can make an expensive construct still usable, once
+the instances are used often enough. This trades startup cost for flexibility and less
+repetitive programmer&#8217;s (you) work.</p>
+</div>
+<div class="paragraph">
+<p>This looking up is done in something called a registry.</p>
+</div>
+<div class="paragraph">
+<p>How cool would it be that a service like a Deconstructor could register itself, by supplying
+the key (the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
+look up the deconstructor</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">void</span> useEntity( E e ) {
+
+    <span class="keyword">for</span> (<span class="predefined-type">Object</span> f : Deconstructor.forType( e.getClass() ) ) {
+      <span class="comment">// use fields.</span>
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To make this work, we need to do a bit of designing, a class diagram will help.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/selfregister.svg" alt="selfregister">
+</div>
+<div class="title">Figure 2. A subclass registering it self in a superclass.</div>
+</div>
+<div class="paragraph">
+<p>The self registration works by the fact that the class loader initializes the class,
+which include executing the static blocks in the code.</p>
+</div>
+<div class="paragraph">
+<p>The registry can now be implemented as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">Loading a class that then self registers.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">Deconstructor</span>&lt;E&gt; {
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">ConcurrentMap</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, Deconstructor&lt;?&gt;&gt; register
+         = <span class="keyword">new</span> <span class="predefined-type">ConcurrentHashMap</span>&lt;&gt;();
+
+    <span class="directive">public</span> <span class="directive">static</span> &lt;E&gt; Deconstructor&lt;E&gt; forType( <span class="predefined-type">Class</span>&lt;E&gt; et ) {
+        <span class="keyword">if</span> ( !register.containsKey( et ) ) {
+            loadDeconstructorClass( et );
+        }
+        <span class="keyword">return</span> (Deconstructor&lt;E&gt;) register.get( et );
+    }
+
+    <span class="directive">private</span> <span class="directive">static</span> &lt;E&gt; <span class="type">void</span> loadDeconstructorClass( <span class="predefined-type">Class</span>&lt;E&gt; forEntity ) {
+        <span class="predefined-type">String</span> deconstructorName = forEntity.getName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">Deconstructor</span><span class="delimiter">&quot;</span></span>;
+        <span class="keyword">try</span> {
+            <span class="predefined-type">Class</span>.forName( deconstructorName, <span class="predefined-constant">true</span>, forEntity.getClassLoader() );
+        } <span class="keyword">catch</span> ( <span class="exception">ClassNotFoundException</span> ex ) {
+            <span class="predefined-type">Logger</span>.getLogger( Deconstructor.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE,
+                    ex.getMessage() );
+        }
+    }
+
+    <span class="directive">protected</span> <span class="directive">static</span> <span class="type">void</span> register( <span class="predefined-type">Class</span>&lt;?&gt; et, Deconstructor&lt;?&gt; dec ) {
+        register.put( et, dec );
+    }
+
+    <span class="comment">/**
+     * Method to be implemented by (potentially generated) leaf deconstructors.
+     *
+     * @param entity to deconstruct
+     * @return field values in array
+     */</span>
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct( E entity );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Self registration in a subclass</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">StudentDeconstructor</span> <span class="directive">extends</span> Deconstructor&lt;Student&gt; {
+
+  <span class="directive">private</span> StudentDeconstructor(){
+    <span class="comment">// do what is needed to make this a valid objects</span>
+    <span class="comment">// or leave empty to suppress a default constructor.</span>
+  }
+
+  <span class="comment">/**
+   * Static block to self register.
+   */</span>
+  <span class="directive">static</span> {
+    <span class="predefined-type">Registry</span>.register( Student.class, <span class="keyword">new</span> StudentDeconstructir() );
+  }
+
+  <span class="comment">// other details left out</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the self registering class does not have to be public, so you can keep
+it nicely tucked away as a package private Deconstructor, which can be kept in sync
+with the entities it supports in the same package.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Whenever you modify any of the types that are processed by say a Deconstructor,
+regenerate the Deconstructors for those types in that package.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_self_registering_deconstructor"><a class="anchor" href="#_self_registering_deconstructor"></a><a class="link" href="#_self_registering_deconstructor">Self Registering Deconstructor.</a></h3>
+<div class="paragraph lead">
+<p>The problem with the Deconstructor of the previous exercise is that the user class
+must know the entity and the Deconstructor, to find a matching pair.<br>
+Finding the entity type is easy, just ask the (non-null) entity for its type by using <code class="blue">Class&lt;?&gt; entity.getClass()</code>.<br>
+Finding the Deconstructor is not as easy, certainly for a utility class that wants to turn any list of any kind of entity
+into a csv file.<br>
+The idea is then to use the entity to lookup the matching Deconstructor. This will loosen
+up the coupling between classes and its users.</p>
+</div>
+<div class='ex'><details open class='ex'><summary>Self-registering Deconstructor</summary>
+<div class="paragraph">
+<p>In this project you can use some of the code of the previous exercise, with a few tweaks.</p>
+</div>
+<div class="paragraph">
+<p>Enhance the generated Deconstructor in the previous exercise to make it self registering.
+To do that make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Make the generated Deconstructor extend the Deconstructor&lt;E&gt;, where E is the entityType of the requested Deconstronstructor.<br>
+E.g. <code class="blue">StudentDeconstructor extends Deconstructor&lt;Student&gt;</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This make the generated Deconstructor a <a href="week04.html#_design_for_extension_and_reusing_generics_tests">leaf class</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Make the constructor or the generated Deconstructor <code class="blue">private</code>.</p>
+</li>
+<li>
+<p>Add the self registering static block.</p>
+</li>
+<li>
+<p>The deconstruct method can be the same as that from the previous exercise.</p>
+</li>
+<li>
+<p>and lastly, make the deconstruct method non-static, because you cannot overwrite static methods,
+but need a normal method in the leaf class.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>While developing, use the new generator to generate a few deconstuctors,
+and see if the deconstructors work, by enabling the DeconstructorTest in the sampleentities test package.</p>
+</div>
+</details></div><!--end Self-registering deconstructor -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optional_demystified"><a class="anchor" href="#_optional_demystified"></a><a class="link" href="#_optional_demystified">4. Optional demystified</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many terminal stream operations return an <code class="blue">Optional</code>. Rationale: the required element
+may not be present, or the Stream is empty to start with. Or the filter throws everything out.</p>
+</div>
+<div class="paragraph">
+<p>Optional is an interesting concept all by itself.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An Optional can be considered as a very short stream of at most one element.</p>
+</li>
+<li>
+<p>You can apply a map operation to an Optional, which transforms the <strong>content</strong> of the optional (if any) and
+produces an optional containing the result of the mapping.</p>
+</li>
+<li>
+<p>You  can even stream() the optional, which allows you to apply all operation that a stream provides (since 9).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All this can be used in an algorithm, in which you want to chain a bunch of methods, each of which
+requiring that the parameter is non-null.</p>
+</div>
+<div class="listingblock">
+<div class="title">Traditional returning null</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  SomeType result;
+  <span class="type">var</span> a = m1();
+  <span class="type">var</span> b=<span class="predefined-constant">null</span>;
+  <span class="type">var</span> c=<span class="predefined-constant">null</span>;
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != a ) {
+    b = m2( a );
+  }
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != b ) {
+    c = m3( b );
+  }
+
+  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != c ) {
+    result = m4( c );
+  }
+  <span class="keyword">return</span> result;
+  <span class="comment">// do something with result</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using Optional. Returning Optional&lt;SomeType&gt;</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  Optional&lt;SomeType&gt; result
+     = m1ReturningOptional() <i class="conum" data-value="1"></i><b>(1)</b>
+      .map( a-&gt; m2( a ) )
+      .map( b-&gt; m3( b ) )
+      .map( c-&gt; m4( c ) );
+  <span class="keyword">return</span> result;
+  <span class="comment">// do something with Optional result</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The chain starts with a method returning an optional. The remaining methods <code>m2(&#8230;&#8203;)</code>, <code>m3(&#8230;&#8203;)</code>, and <code>m4(&#8230;&#8203;)</code> are unchanged.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the last example, an <code class="blue">Optional&lt;SomeType&gt;</code> is returned, that can either be unwrapped of passed on as such for further processing.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>TL;DR:</strong> If you apply map as a chained operation to an <code class="blue">Optional</code>, the function supplied as
+ parameter to the <code>map(..)</code> method is applied to the _content _of the optional and returns the result in another Optional.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generic_mapper"><a class="anchor" href="#_generic_mapper"></a><a class="link" href="#_generic_mapper">Generic Mapper.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong class="big">Disclaimer: No students were hurt or will be hurt by developing a student mapper.</strong></p>
+</div>
+<div class="paragraph lead">
+<p>A <strong>mapper</strong> is a technical term that describes that something is turned into something else.
+That still sounds dangerous like turning naughty kids into frogs, but in this case it
+is simply turning an object into something the other side can deal with. Like
+turning a student object into an array of its constituting parts, so it can be put into a database
+or sent across a wire. Mwah, still sounds scary&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>The mapper below can turn an entity into an array of Object, and vise-versa,
+can <strong>Stream</strong> the object as Field-value pairs or as name-value pairs, and can provide other (meta) information
+about the fields as a list of <strong>Field</strong>s of the entity class when needed.</p>
+</div>
+<div class="paragraph">
+<p>The deconstructor part is the same as the deconstructor in the previous exercises.</p>
+</div>
+<div class="paragraph">
+<p>A <strong>Mapper</strong> takes the responsibility of reflecting on an entity type, and be able to
+extract information from the class, to be able to manipulate the instances of the entity type.
+To services it provides are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Constructing and deconstructing entities of the type.</p>
+</li>
+<li>
+<p>Providing and caching the meta information of the type.</p>
+</li>
+<li>
+<p>Providing the identity-type of the entity. In many uses of mappers, such as databases or mapping,<br>
+the key type of the identity field is important, so that is kept to.</p>
+</li>
+<li>
+<p>Do expensive and difficult reflection operations once and cache the collected information.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Mapper you will create in this exercise can be a building block in the 'Plumbing' of your application,
+and can be extended with functionality as needed.</p>
+</div>
+<div class='ex'><details class='ex' open><summary class='ex'>GenericMapper</summary>
+<div class="paragraph">
+<p>To get to this exercise, we started with copy and pasting, the deconstructor bits and combined them into this new and
+final project and functionality. You do not have to do the copying, that has already been done in the new project.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/generatedmapper.svg" alt="generatedmapper">
+</div>
+<div class="title">Figure 3. The Generic Mapper class diagram</div>
+</div>
+<div class="paragraph">
+<p>The mapper we create is a continuation of the Deconstructor and DeconstructorGenerator and brings it
+all together as a library/API and the accompanying Generator in one package/module.</p>
+</div>
+<div class="paragraph">
+<p>We started with the deconstructorregistry project. Simply copy the classes over to the new project and refactor the name of
+the Deconstructor to Mapper, because it will become one quite soon.
+Also refactor/rename the Leaf mappers generated by your deconstructorgenerator to <strong>XXXMapper</strong>, and while you are at it, rename the
+DeconstructorGenerator to MapperGenerator, because that is its final role.</p>
+</div>
+<div class="paragraph">
+<p>As far as the deconstruction part of the mapper is concerned, we are done. We can now also lookup mappers using the mechanism explored in the
+the DeconstructorRegistry exercise.</p>
+</div>
+<div class="paragraph">
+<p>The missing bits are the meta data we want to keep (cache) for the entity class, so we have the meta data, such as field name and type
+handy.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reflect on the type (Class&lt;E&gt;.class) to find the <strong>declared fields</strong>, and save this info in an array for later use. (Cache it).</p>
+</li>
+<li>
+<p>Use the types of the declared fields to create a MethodType Object matching a <strong>constructor</strong> of the entity that takes all fields.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the programmer has his constructor created by the IDE, and selected all fields, then you should be fine.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>unreflect</code> the constructor to get a <code class="blue">MethodHandle</code> and use that to create Function&lt;Object[],E&gt;, which is equivalent to
+a factory method that calls a constructor to create an entity. Save this function object as field in the mapper.</p>
+</li>
+<li>
+<p>Keep the entityType for later reference in a field and provide an <code class="blue">abstract Class&lt;?&gt; keyType()</code> method, so we can ask the subclass for the
+type of <code>&lt;K&gt;.</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Creating the method type for a Constructor that takes all fields</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">Class</span><span class="type">[]</span> fieldTypes = ...               <i class="conum" data-value="1"></i><b>(1)</b>
+    MethodType ctorType = MethodType.methodType( <span class="type">void</span>.class, fieldTypes ); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use the saved field types.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the method handle.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>With the above, our mapper is almost done.</p>
+</div>
+<div class="paragraph">
+<p>You can now implement the <code>public Stream&lt;FieldPair&gt; stream(E e)</code><br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start by getting the fields via the deconstruct method.</p>
+</li>
+<li>
+<p>Use an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/IntStream.html">IntStream</a>
+to generate the indices to visit all elements of the field array:
+<code>IntStream.range( 0, fields.length )</code>.</p>
+</li>
+<li>
+<p>Map (with mapToObj) each index to a <code class="blue">new FieldPair</code>, whereby you take the key from the name of the fields array,
+and the value from the deconstructed <code class="blue">Object[]</code>.</p>
+</li>
+<li>
+<p>Return the resulting array.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Stream an entity as Stream of <strong>FieldPair</strong>s</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> Stream&lt;FieldPair&gt; stream( E entity ) {
+        <span class="predefined-type">Object</span><span class="type">[]</span> fieldValues = deconstruct( entity ); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> IntStream
+                .range( <span class="integer">0</span>, entityFields.length )      <i class="conum" data-value="2"></i><b>(2)</b>
+                .mapToObj( i -&gt; <span class="keyword">new</span> FieldPair( entityFields[i].getName(),
+                fieldValues[i] )
+                );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>cached array fieldValues and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>deconstuctor result array have the same length by definition.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Done.</p>
+</div>
+<div class="paragraph">
+<p><strong>The mapper can now be used as follows:</strong></p>
+</div>
+<div class="listingblock">
+<div class="title">Student mapper in action one  a Student.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">Object</span><span class="type">[]</span> studentArgs = <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+        snummer, lastName, tussenVoegsel, firstName, dob, cohort, email, gender,
+        group, <span class="predefined-constant">true</span>
+    };
+
+    <span class="directive">static</span> Student jan = <span class="keyword">new</span> Student(
+            snummer, lastName, tussenVoegsel, firstName, dob, cohort, email,
+            gender, group, <span class="predefined-constant">true</span>
+    );
+
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> tStudentMapperConstructs() {
+         Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
+         Student xJan = mapper.construct( sData );
+         assertThat( xJan ).usingRecursiveComparison().isEqualTo( jan );
+     }
+
+     <span class="comment">//@Disabled(&quot;Think TDD&quot;)</span>
+     <span class="annotation">@Test</span>
+     <span class="directive">public</span> <span class="type">void</span> tStudentMapperDeconstructs() {
+         Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
+         <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct = mapper.deconstruct( jan );
+         assertThat( deconstruct ).isEqualTo( sData );
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We also expanded on the idea of generating the leaf deconstructors. In this case
+we have a MapperGenerator that uses a template to generate mappers. The generating part
+is almost exactly the same as in the deconstructor generator exercise. Only the test data is a bit longer.</p>
+</div>
+<div class="listingblock">
+<div class="title">Here is the Template</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> %<span class="integer">1</span><span class="error">$</span><span class="namespace">s</span>;
+
+<span class="keyword">import</span> %<span class="integer">2</span><span class="error">$</span><span class="include">s</span>;
+<span class="keyword">import</span> <span class="include">genericmapper.Mapper</span>;
+<span class="keyword">import</span> <span class="include">java.util.function.Function</span>;
+
+<span class="comment">/**
+ * Generated code. Do not edit, your changes will be lost.
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> %<span class="integer">3</span><span class="error">$</span><span class="class">sMapper</span> <span class="directive">extends</span> Mapper&lt;%<span class="integer">3</span><span class="error">$</span>s, %<span class="integer">4</span><span class="error">$</span>s&gt; {
+
+    <span class="comment">// No public ctor</span>
+    <span class="directive">private</span> %<span class="integer">3</span><span class="error">$</span>sMapper() {
+        <span class="local-variable">super</span>( %<span class="integer">3</span><span class="error">$</span>s.class );
+    }
+
+    <span class="comment">// self register</span>
+    <span class="directive">static</span> {
+        Mapper.register( <span class="keyword">new</span> %<span class="integer">3</span><span class="error">$</span>sMapper() );
+    }
+
+    <span class="comment">// the method that it is all about</span>
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct(  %<span class="integer">3</span><span class="error">$</span>s %<span class="integer">5</span><span class="error">$</span>s ) {
+           <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+              %<span class="integer">6</span><span class="error">$</span>s
+           };
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> Function&lt;%<span class="integer">3</span><span class="error">$</span>s, %<span class="integer">4</span><span class="error">$</span>s&gt; keyExtractor() {
+        <span class="keyword">return</span> ( %<span class="integer">3</span><span class="error">$</span>s %<span class="integer">5</span><span class="error">$</span>s ) -&gt; %<span class="integer">5</span><span class="error">$</span>s.%<span class="integer">7</span><span class="error">$</span>s;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Class</span>&lt;%<span class="integer">4</span><span class="error">$</span>s&gt; keyType() {
+        <span class="keyword">return</span> %<span class="integer">4</span><span class="error">$</span>s.class;
+
+    }
+}</code></pre>
+</div>
+</div>
+</details></div> <!--genericmapper -->
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When you have a class hierarchy, make sure that the fields are in the order you want.
+At the moment of writing, NetBeans IDE creates the parameters for the constructor in the order sub class fields first, then super class.
+You may either have to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Refrain from using class hierarchies in your entities (probably wisest).<br>
+This is the advise Java 14 implicitly gives with the introduced <a href="https://www.infoq.com/news/2020/08/java16-records-instanceof/">record</a> feature which is final in Java 16.</p>
+</li>
+<li>
+<p>Take extra care when creating sub-<em>entities</em></p>
+</li>
+<li>
+<p>Modify the mapper, that tries to resolve this potential problem be selecting the proper field order.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The later can be done by trying the top-down field order first and try the bottom-up order when that fails and then give up.
+DO NOT try all possible mutations of the field order because that is a real big problem.</p>
+</div>
+<div class="paragraph">
+<p><strong class="big">When you use the Mapper as above, do not forget to Generate the Mappers, otherwise
+your program will almost certainly fail.</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_use_a_maven_plugin_to_generate_mappers_on_the_fly"><a class="anchor" href="#_use_a_maven_plugin_to_generate_mappers_on_the_fly"></a><a class="link" href="#_use_a_maven_plugin_to_generate_mappers_on_the_fly">5. Use a Maven Plugin to generate mappers on the fly</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To make the generic mapper even more useful, in particular for project 2, we have added
+a maven plugin. Add the maven plugin as shown below to the maven project that contains the
+entities.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Automagically generate mapper with <code>mvn compile</code> in the entities project. Pom from AIS example PRJ2 revised-implementaion</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+    <span class="tag">&lt;repositories&gt;</span>
+        <span class="tag">&lt;repository&gt;</span>
+            <span class="tag">&lt;id&gt;</span>fontysvenlo.org<span class="tag">&lt;/id&gt;</span>
+            <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository<span class="tag">&lt;/url&gt;</span>
+        <span class="tag">&lt;/repository&gt;</span>
+    <span class="tag">&lt;/repositories&gt;</span>
+    <span class="tag">&lt;pluginRepositories&gt;</span>  <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="tag">&lt;pluginRepository&gt;</span>
+            <span class="tag">&lt;id&gt;</span>sebiplugins<span class="tag">&lt;/id&gt;</span>
+            <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository/<span class="tag">&lt;/url&gt;</span>
+        <span class="tag">&lt;/pluginRepository&gt;</span>
+    <span class="tag">&lt;/pluginRepositories&gt;</span>
+    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>fontys<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>AirlineInformationSystem<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>1.1-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;relativePath&gt;</span>..<span class="tag">&lt;/relativePath&gt;</span>
+    <span class="tag">&lt;/parent&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>BusinessEntities<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.1-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;dependencies&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>sebiannotations<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;type&gt;</span>jar<span class="tag">&lt;/type&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>genericmapper<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>[2.2.0,)<span class="tag">&lt;/version&gt;</span>  <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="tag">&lt;type&gt;</span>jar<span class="tag">&lt;/type&gt;</span>
+            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;/dependencies&gt;</span>
+    <span class="tag">&lt;build&gt;</span>
+        <span class="tag">&lt;plugins&gt;</span>
+            <span class="tag">&lt;plugin&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>mapperplugin<span class="tag">&lt;/artifactId&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+                <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+                <span class="tag">&lt;executions&gt;</span>
+                    <span class="tag">&lt;execution&gt;</span>
+                        <span class="tag">&lt;id&gt;</span>gen-src<span class="tag">&lt;/id&gt;</span>
+                        <span class="tag">&lt;phase&gt;</span>generate-sources<span class="tag">&lt;/phase&gt;</span>
+                        <span class="tag">&lt;goals&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>sebimappergenerator<span class="tag">&lt;/goal&gt;</span>
+                        <span class="tag">&lt;/goals&gt;</span>
+                        <span class="tag">&lt;configuration&gt;</span>
+                            <span class="tag">&lt;entityPackages&gt;</span>
+                                <span class="tag">&lt;entityPackage&gt;</span>businessentities<span class="tag">&lt;/entityPackage&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+                            <span class="tag">&lt;/entityPackages&gt;</span>
+                            <span class="tag">&lt;classesDir&gt;</span>${basedir}/target/classes<span class="tag">&lt;/classesDir&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
+                            <span class="tag">&lt;outDir&gt;</span>${basedir}/src/main/java<span class="tag">&lt;/outDir&gt;</span><i class="conum" data-value="6"></i><b>(6)</b>
+                        <span class="tag">&lt;/configuration&gt;</span>
+                    <span class="tag">&lt;/execution&gt;</span>
+                <span class="tag">&lt;/executions&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;/plugins&gt;</span>
+    <span class="tag">&lt;/build&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>do not forget to declare an extra pluginRepository.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>You need to have (on your pc) version 2.2.0 or higher of the genericmapper. Change your version accordingly in the pom of project genericmapper22.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The mapper plugin has  groupId <code>nl.fontys.sebivenlo</code>, which should be no surprise, and the <strong>artifactId</strong> is <code>mapperplugin</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify which package is processed by the plugin.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Tell the mapper generator plugin where to look for entities <code>.class</code> files.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Here you can set where the generated files land. This setting makes them land in the same package as the entities themselves.
+(That package is <code>businessentities</code> in the example).</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not forget to add the <strong>pluginRepository</strong> like in the example.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can also generate mapper in the test package. For that add an execution with a different id and with appropriate values for <strong>classesDir</strong> and <strong>outDir</strong>.</p>
+</div>
+<div class="paragraph">
+<p>To make this work, you need an additional class <code class="blue">MapperGeneratorRunner</code>, given below, in the genericmapper project (for you in 2021 <strong>genericmapper22</strong>).</p>
+</div>
+<div class="paragraph">
+<p>You may have to tweak your <code>MapperGenerator</code> a bit. In theory you can drop all static methods in that class,
+since those have been moved to the runner. Call it a belated separation of concerns.</p>
+</div>
+<div class="paragraph">
+<p>The code is also directly available as <a href="../exercises/code/mappergeneratorrunner/src/main/java/genericmapper/MapperGeneratorRunner.java">raw</a></p>
+</div>
+<div class="paragraph">
+<p>The exerise projects (without solution, so the original exercises)
+are also on github, under <a href="https://github.com/sebivenlo/mapperplugin" target="_blank" rel="noopener">mapper plugin </a>.</p>
+</div>
+<div class='demo'><details class='demo'><summary class='demo'>GenericMapperRunner, code to add</summary>
+<div class="listingblock">
+<div class="title">MapperGeneratorRunner. There, I said it.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">genericmapper</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">genericmapper.Constants.generatedJavaFileName</span>;
+<span class="keyword">import</span> <span class="include">java.io.File</span>;
+<span class="keyword">import</span> <span class="include">java.io.FileNotFoundException</span>;
+<span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="keyword">import</span> <span class="include">java.io.PrintStream</span>;
+<span class="keyword">import</span> <span class="include">java.net.MalformedURLException</span>;
+<span class="keyword">import</span> <span class="include">java.net.URL</span>;
+<span class="keyword">import</span> <span class="include">java.net.URLClassLoader</span>;
+<span class="keyword">import</span> <span class="include">java.nio.file.Files</span>;
+<span class="keyword">import</span> <span class="include">java.nio.file.Path</span>;
+<span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="keyword">import</span> <span class="include">java.util.Set</span>;
+<span class="keyword">import</span> <span class="include">java.util.logging.Level</span>;
+<span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="keyword">import</span> <span class="include">java.util.stream.Collectors</span>;
+<span class="keyword">import</span> <span class="include">java.util.stream.Stream</span>;
+
+<span class="comment">/**
+ * Helper for mapper plugin.
+ * This class accepts the parameters of the plugin and passes it to
+ * individual MapperGenarator instances.
+ *
+ * @author Pieter van den Hombergh {@code Pieter.van.den.Hombergh@gmail.com}
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MapperGeneratorRunner</span> {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+        <span class="predefined-type">String</span> pOutDir = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">mapper.generator.outDir</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">out</span><span class="delimiter">&quot;</span></span> );
+        <span class="predefined-type">String</span> pClassesDir = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">mapper.generator.classesDir</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">target/classes</span><span class="delimiter">&quot;</span></span> );
+        <span class="predefined-type">String</span><span class="type">[]</span> packNames;
+        <span class="keyword">if</span> ( args.length &gt; <span class="integer">0</span> ) {
+            packNames = args;
+        } <span class="keyword">else</span> {
+            packNames = <span class="keyword">new</span> <span class="predefined-type">String</span><span class="type">[]</span>{ <span class="string"><span class="delimiter">&quot;</span><span class="content">entities</span><span class="delimiter">&quot;</span></span> };
+        }
+        <span class="keyword">new</span> MapperGeneratorRunner( pClassesDir, pOutDir, packNames ).run();
+    }
+
+    <span class="directive">final</span> <span class="predefined-type">String</span> classesDir;
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> outDir;
+    <span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> packNames;
+
+    <span class="directive">public</span> MapperGeneratorRunner( <span class="predefined-type">String</span> baseDir, <span class="predefined-type">String</span> outDir, <span class="predefined-type">String</span><span class="type">[]</span> packNames ) {
+        <span class="local-variable">this</span>.classesDir = baseDir;
+        <span class="local-variable">this</span>.outDir = outDir;
+        <span class="local-variable">this</span>.packNames = packNames;
+
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> run() {
+        <span class="keyword">try</span> {
+            <span class="keyword">for</span> ( <span class="predefined-type">String</span> packName : packNames ) {
+                generateMappers( outDir, classesDir,
+                        getCanditateEntityNames(
+                                classesDir, packName ) );
+            }
+        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> | <span class="exception">ClassNotFoundException</span> ex ) {
+            <span class="predefined-type">Logger</span>.getLogger( MapperGenerator.class.getName() )
+                    .log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
+        }
+    }
+
+    <span class="comment">/**
+     * Get the list of candidate entities from the compiled classes
+     * directory.The method removes the following file name patterns from the
+     * available files below the start directory.
+     * &lt;ul&gt;
+     * &lt;li&gt;any filename containing a dash, such as in doc-info.class or
+     * module-info.class&lt;/li&gt;
+     * &lt;li&gt;Any class name ending in Mapper.class&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param startDir   to start
+     * @param entPackage package for entities
+     *
+     * @return list of possible entity classes.
+     *
+     * @throws IOException dir
+     */</span>
+    <span class="directive">public</span> <span class="predefined-type">Set</span>&lt;<span class="predefined-type">String</span>&gt; getCanditateEntityNames( <span class="predefined-type">String</span> startDir,
+                                                <span class="predefined-type">String</span> entPackage )
+            <span class="directive">throws</span> <span class="exception">IOException</span> {
+        Path startPath = Path.of( startDir );
+        Path root = Path.of(
+                startDir + fileSep + entPackage.replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">.</span><span class="delimiter">&quot;</span></span>, fileSep ) );
+        <span class="keyword">if</span> ( Files.exists( root ) ) {
+            <span class="keyword">try</span> ( Stream&lt;Path&gt; stream = Files.walk( root,
+                    <span class="predefined-type">Integer</span>.MAX_VALUE ) ) {
+                <span class="keyword">return</span> stream
+                        .filter( file -&gt; !Files.isDirectory( file ) )
+                        .filter( f -&gt; !fileNameContains( f, <span class="string"><span class="delimiter">&quot;</span><span class="content">-</span><span class="delimiter">&quot;</span></span> ) ) <span class="comment">// avoid info files</span>
+                        .filter( f -&gt; !fileNameEndsWith( f, <span class="string"><span class="delimiter">&quot;</span><span class="content">Mapper.class</span><span class="delimiter">&quot;</span></span> ) )
+                        .filter( file -&gt; fileNameEndsWith( file, <span class="string"><span class="delimiter">&quot;</span><span class="content">.class</span><span class="delimiter">&quot;</span></span> ) )
+                        .map( p -&gt; startPath.relativize( p ) )
+                        .map( Path::toString )
+                        .map( s -&gt; s.substring( <span class="integer">0</span>,
+                        s.length() - <span class="string"><span class="delimiter">&quot;</span><span class="content">.class</span><span class="delimiter">&quot;</span></span>.length() ) )
+                        .map( s -&gt; s.replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span> ) )
+                        .collect( Collectors.toSet() );
+            }
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span> <span class="predefined-type">Collections</span>.emptySet();
+        }
+    }
+
+    <span class="directive">static</span> <span class="type">boolean</span> fileNameEndsWith( Path file, <span class="predefined-type">String</span> end ) {
+        <span class="keyword">return</span> file.getFileName().toString().endsWith( end );
+    }
+
+    <span class="directive">static</span> <span class="type">boolean</span> fileNameContains( Path file, <span class="predefined-type">String</span> needle ) {
+        <span class="keyword">return</span> file.getFileName().toString().contains( needle );
+    }
+
+    <span class="directive">static</span> <span class="predefined-type">String</span> pathSep = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">path.separator</span><span class="delimiter">&quot;</span></span> );
+    <span class="directive">static</span> <span class="predefined-type">String</span> fileSep = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">file.separator</span><span class="delimiter">&quot;</span></span> );
+
+    <span class="type">void</span> generateMappers( <span class="predefined-type">String</span> outDir, <span class="predefined-type">String</span> classPathElement,
+                          <span class="predefined-type">Collection</span>&lt;<span class="predefined-type">String</span>&gt; entityNames ) <span class="directive">throws</span>
+            <span class="exception">ClassNotFoundException</span>, <span class="exception">FileNotFoundException</span>, <span class="exception">MalformedURLException</span> {
+        <span class="predefined-type">URLClassLoader</span> cl = <span class="keyword">new</span> <span class="predefined-type">URLClassLoader</span>( <span class="keyword">new</span> <span class="predefined-type">URL</span><span class="type">[]</span>{
+            Path.of( classesDir ).toUri().toURL()
+        } );
+        <span class="keyword">for</span> ( <span class="predefined-type">String</span> entityName : entityNames ) {
+            <span class="predefined-type">Class</span>&lt;?&gt; clz = <span class="predefined-type">Class</span>.forName( entityName, <span class="predefined-constant">true</span>, cl );
+            <span class="predefined-type">String</span> fileName = generatedJavaFileName( outDir, clz );
+            <span class="predefined-type">File</span> dir = <span class="keyword">new</span> <span class="predefined-type">File</span>( fileName );
+            dir.getParentFile().mkdirs();
+            <span class="predefined-type">String</span> javaSource = <span class="keyword">new</span> MapperGenerator( clz ).javaSource();
+            <span class="keyword">if</span> ( !javaSource.isBlank() ) {
+                <span class="keyword">try</span> ( <span class="predefined-type">PrintStream</span> out = <span class="keyword">new</span> <span class="predefined-type">PrintStream</span>( fileName ) ) {
+                    out.print( javaSource );
+                    out.flush();
+                }
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</details></div>
+<div class="paragraph">
+<p>Once you have added the class and updated your entities (sub) project, simply build the entities project (mvn package or mvn install),
+and the entities will find their mappers alongside in the same package.</p>
+</div>
+<div class="paragraph">
+<p>You may have to do a few tweaks in the Constants class, but they should be self evident.
+When you are done, bump the version of the genericmapper to <code class="black">2.2.0</code> instead of <code class="black">2.2-SNAPSHOT</code>, so the mapperplugin can find it.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is best to keep the entities in a separate package and maybe also in a maven project of their own.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_improvements_on_the_mapper"><a class="anchor" href="#_improvements_on_the_mapper"></a><a class="link" href="#_improvements_on_the_mapper">6. Improvements on the Mapper.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the weeks after publications of the genericmapper exercise we have invested further time into the mapper.
+You have noticed one of the improvements through the fact that we replaced the original exercise with genericmapper22 which is in fact nothing else
+then version 2.2.0 of said mapper.</p>
+</div>
+<div class="paragraph">
+<p>We found some additional improvemenst and do not want to deprive you from the ideas in the improvements.</p>
+</div>
+<div class="paragraph">
+<p><strong>Improvements</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Better error handling when a mapper can&#8217;t find a constructor it expects. Remember that the mapper top class tries to infer the constructor
+from the fields, including the <strong>order</strong> in the <em>fields types</em>. The improved log message contains the <strong>signature</strong> of the expected constructor,
+like  <strong class="blue">public Tutor( String firstname, String lastname, String tussenvoegsel, LocalDate dob, String gender, Integer id, String academicTitle, String teaches, String email );</strong></p>
+</li>
+<li>
+<p>The mapper filters out the <a href="https://www.baeldung.com/java-transient-keyword#introduction"><code>transient</code></a> fields.
+A transient field is a field that should <strong>NOT</strong> be serialized. We think it is proper to not include the transient fields to be part of the persisted information.</p>
+</li>
+<li>
+<p>Removed unwanted code. In particular remove the obsolete internal <code class="black">StringMapper</code>. it is NOT wanted and only causes problems.<br>
+The string mapper seemed necessary at a time during development of the mapper, but is is not and should be removed. The StringMapper was introduced when we
+added the recursion through the class hierarchy from an entity the bottom, up to but excluding Object.
+This allows entities that have super classes like <code class="blue">Student extends Person</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To introduce the improvements in your project you need to do the following edits:</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you already completed the exercise, you do not have to commit these improvements.
+If you did not, the improvements will be considered (but not tested) in the tests.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Remove</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove the file  StringMapperTest.java from the test packages, or disable it with a <code>@Disabled</code> annotion at the class level.</p>
+</li>
+<li>
+<p>Remove the entirety of the <strong>inner class</strong> <code class="blue">StringMapper</code> from <code class="blue">Mapper.java</code> or comment it out. Best is to remove it.</p>
+</li>
+<li>
+<p>Remove the static block in Mapper.java that loads the StringMapper.class into the mapper registry.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">static block to remove. Block loads StringMapper, which is now obsolete</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="directive">static</span> {
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">loading  StringMapper</span><span class="delimiter">&quot;</span></span> );
+        <span class="keyword">try</span> {
+            <span class="predefined-type">Class</span>.forName( <span class="string"><span class="delimiter">&quot;</span><span class="content">genericmapper.Mapper$StringMapper</span><span class="delimiter">&quot;</span></span> );
+        } <span class="keyword">catch</span> ( <span class="exception">ClassNotFoundException</span> neverhappens ) {
+        }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Add</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Add the following method to the Mapper class. The produces the improved error handling when a method cannot be found.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">improved log about missing constructor.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Better info when a constructor with a specific signature can't be
+     * found.
+     *
+     * The method attempts to produce the missing constructor signature.
+     *
+     * @param ex     exception that triggered this method
+     * @param fields to compute the detail info.
+     */</span>
+    <span class="type">void</span> logCannotFind( <span class="predefined-type">Throwable</span> ex, <span class="directive">final</span> <span class="predefined-type">Field</span><span class="type">[]</span> fields ) {
+        ex.setStackTrace( Stream.of( ex.getStackTrace() )
+                .filter( steFilter ).toArray( <span class="predefined-type">StackTraceElement</span><span class="type">[]</span>::<span class="keyword">new</span> ) );
+        Supplier&lt;<span class="predefined-type">String</span>&gt; msg = () -&gt; <span class="predefined-type">String</span>.format(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">failed to find constructor for class '%s'</span><span class="char">\n</span><span class="char">\t</span><span class="content">with exception type '%s' </span><span class="char">\n</span><span class="char">\t</span><span class="content">and signature</span><span class="char">\n</span><span class="content"> %3s</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>,
+                entityType.getName(), ex.getClass().getName(),
+                <span class="string"><span class="delimiter">&quot;</span><span class="char">\t</span><span class="content">public </span><span class="delimiter">&quot;</span></span> + entityType.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">( </span><span class="delimiter">&quot;</span></span> + Stream
+                .of( fields )
+                .map( f -&gt; f.getType().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + f.getName() )
+                .collect( joining( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="char">\n</span><span class="char">\t</span><span class="char">\t</span><span class="char">\t</span><span class="delimiter">&quot;</span></span> ) ) + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="char">\t</span><span class="content">);</span><span class="delimiter">&quot;</span></span> );
+        logger.log( <span class="predefined-type">Level</span>.SEVERE, ex, msg );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Replace</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Replace the code in the catch block of the method <code>final Function&lt;Object[], E&gt; findConstructor( final Field[] fields )</code>
+with a call to the above method.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">previous code in catch Block</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="keyword">catch</span> ( <span class="exception">IllegalAccessException</span> | <span class="exception">NoSuchMethodException</span> ex ) {
+            Supplier&lt;<span class="predefined-type">String</span>&gt; puk = () -&gt; <span class="predefined-type">String</span>.format(
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">failed to find constructor for class %s with exception type %s and message %3s</span><span class="delimiter">&quot;</span></span>,
+                    entityType.getClass().getName(), ex.getClass().getName(),
+                    ex.getMessage() );
+            <span class="predefined-type">Logger</span>.getLogger( Mapper.class.getName() )
+                    .log( <span class="predefined-type">Level</span>.SEVERE, puk );
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">new code in catch block.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">     <span class="keyword">catch</span> ( <span class="exception">IllegalAccessException</span> | <span class="exception">NoSuchMethodException</span> ex ) {
+            logCannotFind( ex, fields );
+     }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercise_sql_table_sqlgenerator"><a class="anchor" href="#_exercise_sql_table_sqlgenerator"></a><a class="link" href="#_exercise_sql_table_sqlgenerator">Exercise SQL table sqlgenerator</a></h2>
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>You cannot only generate Java code, but also code in another programming domain, such as
+<strong class="green">SQL</strong>. In the exercise below we will create a table definition (DDL) for a
+postgresql database using the information from the entity classes</p>
+</div>
+<div class='ex'><details open class='ex'><summary class='ex'>SQL table generator</summary>
+<div class="paragraph">
+<p>Write an application that interprets the class definition of an entity class
+via reflection and spits out an SQL table definition. This definition can be saved or be fed to a database server to create a table.</p>
+</div>
+<div class="paragraph">
+<p>The following java types and their SQL counterparts should be supported. PostgreSQL types are used.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>name</strong> of the generated table should be the name of the entity class sans package name and in simple plural.
+Simple plural means append an <strong>'s'</strong> character to the name. Rationale: A table contains Student<strong>s</strong>, plural, not <em>one</em> student.
+That is because SQL  defines both the row definition and the table at the same time.</p>
+</div>
+<div class="paragraph">
+<p>The relationship between the table and the entity is the definition of columns in the table versus the fields in the entity.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TEXT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Character</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHAR(1)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INTEGER</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INTEGER</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Short</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMALLINT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">short</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMALLINT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIGINT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIGINT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.math.BigDecimal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DECIMAL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.math.BigInteger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NUMERIC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REAL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REAL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Double</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DOUBLE PRECISION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">double</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DOUBLE PRECISION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.LocalDate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DATE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.LocalDateTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TIMESTAMP</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The generator should also support the following annotations on the fields of the entities.</p>
+</div>
+<div class="paragraph">
+<p><code>@Id</code> should generate a <strong>SERIAL</strong> or <strong>BIGSERIAL</strong> dependent on the field being a <code class="blue">Integer</code> or a <code class="blue">Long</code> and have the <strong>PRIMARY KEY</strong> attribute.<br>
+<code>@NotNull</code> should result in a <code>NOT NULL</code> constraint.<br>
+<code>@Check</code> should copy the value (text) of the annotation as parameter to the CHECK constraint.<br>
+<code>@Default</code> should copy the value as the <strong>DEFAULT</strong> value. Quote the value where needed.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Beware of primitives with table definitions</strong><br>
+If your entity has fields of <strong>primitive</strong> types, make sure that you give the table definition
+a <strong class="green big">NON NULL</strong> constraint for the corresponding column, otherwise a query might result in a null value, which
+can&#8217;t be cast to a primitive type. If you forget this you will be bitten by unexpected <strong>NullPointerException</strong>s.
+By implication, having a primitive field implies non-null, with or without annotation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The resulting table definition should be acceptable by a PostgreSQL database. Test that manually.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example Module class.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Data</span>                <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="annotation">@AllArgsConstructor</span>  <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">CourseModule</span> {
+
+    <span class="annotation">@ID</span>
+    <span class="directive">private</span> <span class="predefined-type">Integer</span> moduleid;
+
+    <span class="annotation">@NotNull</span>
+    <span class="predefined-type">String</span> name;
+
+    <span class="annotation">@NotNull</span> <span class="annotation">@Default</span>( value = <span class="string"><span class="delimiter">&quot;</span><span class="content">5</span><span class="delimiter">&quot;</span></span> ) <span class="annotation">@Check</span>(credits &gt; <span class="integer">0</span>)
+    <span class="predefined-type">Integer</span> credits;
+    <span class="comment">// extra ctor to make the default values take effect.</span>
+    <span class="directive">public</span> CourseModule( <span class="predefined-type">Integer</span> moduleid, <span class="predefined-type">String</span> name ) {
+        <span class="local-variable">this</span>( moduleid, name, <span class="integer">5</span> );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><a href="https://projectlombok.org/features/Data">Lombok framework Data annotation</a>,
+that add getters (for all fields) and setters (for non-final fields), equals and hashcode and a readable toString.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Makes sure there is a constructor that takes values for all fields.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The ID field is a bit special, because when creating an entity <em>before</em> putting it in the database will NOT have an ID yet, because
+the ID value is typically assigned by the database by means of a sequence or other identity generating mechanism.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example Output.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> coursemodules (
+  moduleid SERIAL <span class="directive">PRIMARY</span> <span class="type">KEY</span>,
+  name <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+  credits <span class="predefined-type">integer</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="directive">DEFAULT</span> (<span class="integer">5</span>) <span class="keyword">CHECK</span> (credits &gt; <span class="integer">0</span>)
+);</code></pre>
+</div>
+</div>
+</details></div><!--end sqltablegenerator -->
+<div class="listingblock">
+<div class="title">Windows run script to run the sqlgenerator from the command line.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+rem @author David Greven - https://github.com/grevend
+set jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if not exist %jar% cls &amp; echo Maven... &amp; call mvn package
+echo.
+java -jar %jar% %*</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">bash script to do the same as the above. Will work in git-bash too.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">#!/bin/bash
+jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
+if [ ! -e ${jar} ]; then mvn package; fi
+java -jar ${jar} &quot;$@&quot;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">Reading</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Horstmann V1 Ch 5.7</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part.</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_class_genealogy">Class Genealogy</a></p>
+</li>
+<li>
+<p><a href="#_entity_deconstructor_generator">Entity Deconstructor Generator</a></p>
+</li>
+<li>
+<p><a href="#_self_registering_deconstructor">Self Registering Deconstructor</a></p>
+</li>
+<li>
+<p><a href="#_generic_mapper">Generic Mapper</a></p>
+</li>
+<li>
+<p><a href="#_exercise_sql_table_sqlgenerator">SQL Table Generator</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. It is utterly unsuited for TDD
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. the white space is there to improve redability, but is the first that can be discarded, which is what a compiler does as one of the first steps
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:51:07 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

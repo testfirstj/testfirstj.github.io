@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W9 Statemachines and Regex</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W9 Statemachines and Regex</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_implementing_behavior_using_state_machines">1. Implementing behavior using state machines.</a></li>
+<li><a href="#_exercise_olifantysballs">Exercise OlifantysBalls</a></li>
+<li><a href="#_state_machines_and_embedded_systems">2. State Machines and embedded systems</a></li>
+<li><a href="#_other_uses_of_state_machines">3. Other uses of State Machines</a></li>
+<li><a href="#_template_engine_text_processing_with_state_machines">Template Engine: Text processing with state machines.</a></li>
+<li><a href="#_state_machines_and_regular_expressions">4. State machines and regular expressions</a></li>
+<li><a href="#_regular_expressions">5. Regular expressions</a>
+<ul class="sectlevel2">
+<li><a href="#_basic_regex_syntax_and_rules">5.1. Basic regex syntax and rules</a></li>
+<li><a href="#_grouping">5.2. Grouping</a></li>
+</ul>
+</li>
+<li><a href="#_reading_grades_from_text_source">Reading grades from text source</a></li>
+<li><a href="#_reading">6. Reading</a></li>
+<li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementing_behavior_using_state_machines"><a class="anchor" href="#_implementing_behavior_using_state_machines"></a><a class="link" href="#_implementing_behavior_using_state_machines">1. Implementing behavior using state machines.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Systems sometimes have to exhibit some kind of behavior that is different observable
+ output over time. This is different from a pure function, which will always produce the
+same output for the same input. The behavior differs depending on the 'history'
+the system experienced, typically in the form of 'events' or method calls that happened over time.
+Such method calls change the state the system is in. We call such behavior state-full
+and this way of operating is often implemented using a 'state machine'.
+In this week and in the AADE course we will be using two concepts:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The state (machine) diagram</p>
+</li>
+<li>
+<p>The State pattern</p>
+</li>
+</ol>
+</div>
+<hr>
+<div class="paragraph">
+<p><span class="image left thumb"><img src="./images/lamp-battery-switch.gif" alt="lamp battery switch" title="simple switch circuit, from 'https://electronics.stackexchange.com/'"></span> A state machine
+ is a software concept used to implement the behavior of something whose 'reaction'
+ or outcome depends on the events that happened over time. A very simple example is a lamp and a switch.
+When properly connected and none of the parts is defect, the bulb will light up when the switch is in the on state.
+As state machine: the switch passes current when it has been turned on, which can be expressed as a turn-on event, making the bulb light up.
+From the diagram it should be obvious that a current can only flow if the switch is in the on (or closed) state.</p>
+</div>
+<div class="paragraph">
+<p>In software we model this as the <em>path</em> the code takes, which then depends on some condition or value.</p>
+</div>
+<div class="paragraph">
+<p><span class="image left thumb"><img src="./images/switch.svg" alt="switch" title="state diagram model of simple switch"></span>
+The state diagram is a way to express the behavior in a graphical manner. Each state of the system is drawn as a box with rounded corners, like in the diagram on the left.
+In the <a href="https://en.wikipedia.org/wiki/State_pattern" target="_blank" rel="noopener">GoF State </a> pattern, which is an object oriented way of modeling state behavior, one uses different
+objects to realize the effect of changing the software path. The objects all implement the same interface, but have a different implementation.
+Then, whenever a state switching event occurs, the current state object is replaced by the state object for the new state.</p>
+</div>
+<div class="paragraph">
+<p><span class="image right thumb"><img src="./images/railway-switch.gif" alt="railway switch" title="railway switch from 'https://en.wikipedia.org/wiki/Railroad_switch'"></span> As another analogy, you can think of a railway switch.
+The active state object will always have the same behavior. One makes the train go <em>straight</em>, the other makes it go <em>right</em>.
+Each state on itself always does the same, like a pure function, so with the same input (train) the same output is produced.
+The switching between states makes it possible to control the direction of the train traffic.</p>
+</div>
+<div class="paragraph">
+<p>State machines or state charts can be implemented in several ways. In this week we will apply an OO approach using the well known
+<a href="https://en.wikipedia.org/wiki/State_pattern" target="_blank" rel="noopener">State Pattern </a>, combined with <code class="blue">enums</code> and some Java 8 features, in particular <code class="blue">default</code> methods.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>State</strong> Pattern has the following UML class diagram:</p>
+</div>
+<div class="imageblock left thumb">
+<div class="content">
+<img src="./images/StatePattern.svg" alt="StatePattern">
+</div>
+<div class="title">Figure 1. State Pattern</div>
+</div>
+<div class="paragraph">
+<p>We deal with a context, an <em>abstract</em> state and multiple concrete state implementations that do the work
+and represent the state elements in the diagram. In the diagram above there
+would be a state instance for both <strong>ConcreteStateA</strong> and <strong>ConcreteStateB</strong>.
+In the implementation of the exercise of this week we will be using <code class="blue">enum</code> as the basic construct for our work.</p>
+</div>
+<div class="paragraph">
+<p>Using a functional state approach by using <code>enum</code> has the following advantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>There is no chance of creating new states. Enum ensures that the only
+instances there ever will be are created at class loading time. You always know all states there ever will be.</p>
+</li>
+<li>
+<p>A state can be implemented as a pure function, making the number of tests needed minimal. The inputs to the state are
+the state of the context (or technically, the state stored in the context), the inputs, and the event or method call.</p>
+</li>
+<li>
+<p>Such functions and thereby state instances can be shared between contexts, because functional states do not have any
+state themselves. The actual state is saved in the context. This is not because <span class="blue">enum</span>s
+cannot have state, they can, but because a functional state in a state-machine shouldn&#8217;t.
+It <span class="big">IS</span> the state and should <span class="big">not have</span> any. It should always do the same. More importantly, they are immutable,
+meaning no one can break them by setting some wrong value.</p>
+</li>
+<li>
+<p>A functional state is easily tested without a need for a complex context.
+The context can easily be <em>mocked</em> as can be seen in this week&#8217;s olifantysballs exercise.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The disadvantage of using functional states in this way is that they cannot keep information themselves, such as counting something.
+But quite often the counting involves only a few possible values, which can be states themselves, or can be realized in the context.
+As an example for few counting states you might consider a traffic light which counts green, yellow, red.</p>
+</div>
+<div class="admonitionblock warning red">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A common error made by novice programmers is to call a method inside a constructor that takes the constructor&#8217;s type as a parameter.</p>
+</div>
+<div class="listingblock">
+<div class="title">Do <strong class="big red">not</strong> do this inside the constructor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    StateMachine(){
+      <span class="local-variable">this</span>.initialState = State.IDLE;
+      <span class="local-variable">this</span>.initialState.enter( <span class="local-variable">this</span> ); <i class="conum" data-value="1"></i><b>(1)</b>
+
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Problematic call of someField.enter(this) inside constructor. Something to avoid.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The problem is that the constructor may not yet be complete, in particular when fields are defined and
+initialized later in the constructor or even after the constructor definition.</p>
+</div>
+<div class="paragraph">
+<p>To avoid this problem, you typically have some init() method that should be called after construction or use a factory method that does something similar.
+In the gumball machine we chose the later. You can find the details in the javadoc documentation of the exercise.</p>
+</div>
+<div class="listingblock">
+<div class="title">Use init method.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    StateMachine(){
+      <span class="local-variable">this</span>.initialState = State.IDLE;
+
+    }
+
+    StateMachine init(){
+      <span class="local-variable">this</span>.initialState.enter( <span class="local-variable">this</span> ); <i class="conum" data-value="1"></i><b>(1)</b>
+      <span class="keyword">return</span> <span class="local-variable">this</span>;
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Caller has not much extra work.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    StateMachine sm = <span class="keyword">new</span> StateMachine().init();</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Do not aways use all tricks you&#8217;ve learned so far. They are not always needed.
+In particular, states do not have to be generic, and with
+enums that would even be impossible, because an enum value is a leaf class all by it self,
+so making it generic for later specialisation like in the <a href="week04.html#_self_use_in_generic_definitions">Zoo example in part 4</a> is futile.
+If you appear to run into this situation, because your <strong class="green">context</strong> is generic, do not simply use raw objects but see if you can refactor out an interface that is NOT generic,
+too be implemented by the context that wants to be generic. You will see that in the JsonMarshaller, the state machine part.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercise_olifantysballs"><a class="anchor" href="#_exercise_olifantysballs"></a><a class="link" href="#_exercise_olifantysballs">Exercise OlifantysBalls</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Mockito is a very powerful tool and serves the developer best when you stick
+to the rule of not writing code that is not executed. This applies to stubbing and mocking as well.
+When you stub or mock something, that fact serves as a kind of documentation for the developer or
+maintainer of the code and by implication of the tests as well. So if you apply stubbing and get a warning,
+do not just simply turn of the warning, but also document the potential unneeded stubbing.</p>
+</div>
+<div class="paragraph">
+<p>There are situations where you must compromise between the strictness of Mockito and
+the convenience of other aspects of a test approach. One such case is applicable to the GumballStateTest,
+where we use one test table as external test data. This test data is used in all tests. Changing the test data
+to just including the exactly right stubbing or mocking would make the test data set bigger, and thereby
+less easy to comprehend.</p>
+</div>
+<div class="paragraph">
+<p>In the exercise below we applied the annotation<br>
+ <code class="blue">@MockitoSettings( strictness = Strictness.WARN )</code><br>
+ on two methods, where a specific interaction does not take place with all test data.</p>
+</div>
+<div class="paragraph">
+<p><strong class="big red">TURN of Warnings only, once you have verified that the path you tread is safe given the conditions of the tests</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class='ex'><details class='ex' open><summary class='ex'>Olifantys Balls</summary>
+<div class="paragraph">
+<p>In this exercise you will test driven develop the behavior of a gumball machine.
+You will be implementing a state machine using the <a href="https://en.wikipedia.org/wiki/State_pattern" target="_blank" rel="noopener">GoF State Pattern </a>.
+The machine has following events:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code class="blue">insertCoin()</code>,</p>
+</li>
+<li>
+<p><code class="blue">ejectCoin(&#8230;&#8203;)</code>,</p>
+</li>
+<li>
+<p><code class="blue">refill(&#8230;&#8203;)</code>,</p>
+</li>
+<li>
+<p>and <code class="blue">draw(&#8230;&#8203;)</code><br>
+which can be understood as events, modeled in the interface <code class="blue">State</code> and should
+therefore have an implementation in each state.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>and four states:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code class="blue">SOLD_OUT</code>,</p>
+</li>
+<li>
+<p><code class="blue">NO_COIN</code>,</p>
+</li>
+<li>
+<p><code class="blue">HAS_COIN</code></p>
+</li>
+<li>
+<p>and <code class="blue">WINNER</code>.</p>
+</li>
+</ul>
+</div>
+<div id="state_diagram" class="imageblock">
+<div class="content">
+<img src="./images/statemachine.svg" alt="State machine">
+</div>
+<div class="title">Figure 2. state diagram of the gumball machine.</div>
+</div>
+<div class="paragraph">
+<p>Study the state diagram, it is the (whole) specification of our gumball system.</p>
+</div>
+<div class="paragraph">
+<p>You should find that the system starts in the state</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>SOLD_OUT</strong>, and will go to <strong>NO_COIN</strong> after a refill
+with some gumballs.</p>
+</li>
+<li>
+<p>When you insert a coin, it goes to <strong>HAS_COIN</strong>, in which you can draw to get a ball.</p>
+</li>
+<li>
+<p>If the machine becomes empty by a draw, it will go to <strong>SOLD_OUT</strong>,</p>
+</li>
+<li>
+<p>If not and you are lucky because the winner guard is true, the state is <strong>WINNER</strong> in which you can draw another ball without extra payment.</p>
+</li>
+<li>
+<p>If not winner or after the extra draw the system will go back to <strong>NO_COIN</strong>, waiting for the next coin insertion.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>As last detail, when after <strong>WINNER</strong> the machine becomes empty because draw takes the last ball, the system will go to the <strong>SOLD_OUT</strong> out state.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div id="context" class="imageblock">
+<div class="content">
+<img src="./images/gumball-context.svg" alt="Context">
+</div>
+<div class="title">Figure 3. context in the state machine</div>
+</div>
+<div class="paragraph">
+<p>Because both the Java artefacts <code>Context</code> and <code>State</code> in the initial design are
+interfaces, we&#8217;ve added the UML <code>public</code> visibility modifier to all methods,
+because that is how interfaces work in Java.</p>
+</div>
+<div class="paragraph">
+<p>The circled plusses near StateEnum is the UML way of saying that SOLD_OUT etc are inner classes of StateEnum, which they effectively are.</p>
+</div>
+<div class="paragraph">
+<p>The <code>OlifantysBallMachine</code> implements two interfaces with the exact purpose of</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>GumBallApi</code> being the public API for consumption by the client and the</p>
+</li>
+<li>
+<p><code>Context</code> interface as one of the collaborators in the state pattern.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To keep the API simple, that interface has one public static method for the client to get an instance of the package private OlifantysBallMachine.
+This keeps our design nice and tidy with the least possible coupling and leakage of unneeded information to the client. See it as an example of a clean design.</p>
+</div>
+<div class="paragraph">
+<p>The behavior is easily modeled in a state diagram, but can also be expressed in a <em>state transition table</em>, which has exactly the same
+information with the added benefit that it can easily be understood by a program, in our case the tests of the state machine.
+Using such state transition table is an older technique than the state machine diagrams.
+It predates UML, but is still valuable, in particular because it will easily list all
+possibile states and thus will help to find more test cases, ensuring that the set of tests is complete.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><span class="image thumb left"><img src="./images/gumballmachine-thumb.png" alt="gumballmachine thumb" height="200" title="gumball machine"></span>
+In a real machine or automaton, such as a vending machine, the state machine will control one or
+more devices. As an example, think of a coffee brewer, which must grind coffee, maybe dispense cups,
+boil water and brew the coffee by pressing the water through the ground coffee, thereby filling the cup. To work properly, these
+'devices', such as boiler, grinder, cup dispenser, and pump need to be switched on and off. This is best done on enter (turn on) and
+exit (turn off) of the state, and is the reason why the State interface provides these methods. They are not used in the gumball exercise because there
+is no device, only imaginary, but might be used in a future exercise or project. A properly programmed context must therefor call the
+<code>enter(&#8230;&#8203;)</code> and <code>exit(&#8230;&#8203;)</code> methods when changing state, and a context test should verify that.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Test data in a table</strong>
+In the table below, <code>empty</code> and <code>winner</code> are <em>guard expressions</em>, with the outcome specified for the moment of evaluation. Guard expressions
+have a state decide if it should react to the trigger (guard == true) or not. A guard comes from outside the state and is typically available on the context, as in this exercise.
+Where the guard is not relevant, it is set to false. Nicer would have been leave the guard&#8217;s table cell empty when it is not relevant but that does not
+play very well with junit csv tests and would complicate the tests. Another approach would be to have a line each for each of the possible guard values, to ensure that guard
+really does not have effect in specific cases.</p>
+</div>
+<div class="paragraph">
+<p>For the column <strong>End State</strong>, empty means no state change.</p>
+</div>
+<table id="StateTable" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">#Start State</th>
+<th class="tableblock halign-left valign-top">trigger</th>
+<th class="tableblock halign-left valign-top">End State</th>
+<th class="tableblock halign-left valign-top">empty</th>
+<th class="tableblock halign-left valign-top">winner</th>
+<th class="tableblock halign-left valign-top">dispense</th>
+<th class="tableblock halign-left valign-top">refills</th>
+<th class="tableblock halign-left valign-top">expected text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OlifantysGumball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OlifantysGumball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OlifantysGumball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ejectCoin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarter returned</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You should draw to get your ball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refill</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refilled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You must put in a coin before you can continue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ejectCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You must put in a coin before you can continue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAS_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You inserted a coin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refill</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refilled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Machine is empty</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Machine is empty</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Machine is empty</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refill</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refilled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You got two gumballs for your coin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OlifantysGumball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You should draw once more to get an extra ball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insertCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You should draw once more to get an extra ball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refill</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refilled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"># STATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trigger pairs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">that</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">have</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not been</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">used</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and should be ignored</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WINNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ejectCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You should draw once more to get an extra ball</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLD_OUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ejectCoin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Machine is empty</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We will start testing the state enum <code>StateEnum</code>.</p>
+</div>
+<div class="paragraph">
+<p>The table reiterates that the state <code>HAS_COIN</code> needs the most attention in testing.<br>
+Also note that this table is just the specification, just like the state diagram,
+and not the implementation.</p>
+</div>
+<div class="paragraph">
+<p>To get our <code>State</code> tested without any real machine nearby, we must mock out <code>Context</code>.
+This can be done by hand, but would soon make us create a context implementation that sort of works, but</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>first of all, is not tested itself, thus violates the TDD workflow</p>
+</li>
+<li>
+<p>does not behave the way we need it in the test for the <code>State</code> type</p>
+</li>
+<li>
+<p>and we do not need to have this context to behave in any way other
+then to give predictable answers when called by the State, and we must
+ensure that the State has the exact interactions we want. Not too few, and also not too many.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is where <a href="http://mockito.org" target="_blank" rel="noopener">Mockito </a> comes in. We only use a few of its features, namely</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the mocking facility,</p>
+</li>
+<li>
+<p>recording and playback of method calls and return values</p>
+</li>
+<li>
+<p>verification of the correct calls on the mocked Context.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Our setup looks as follows:</p>
+</div>
+<div id="Mock-setup" class="listingblock">
+<div class="title">preparing for tests: setup.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Mock</span>
+    <span class="directive">final</span> <span class="predefined-type">Context</span> ctx; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    StringOutput sout = <span class="keyword">new</span> StringOutput(); <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="predefined-type">PrintStream</span> out = sout.asPrintStream(); <i class="conum" data-value="3"></i><b>(3)</b>
+
+    <span class="comment">/**
+     * Map the trigger name from the csv file to a lambda expression of type
+     * {@code BiConsumer&lt;Context,State&gt;}.
+     */</span>
+    <span class="directive">static</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, BiConsumer&lt;<span class="predefined-type">Context</span>, State&gt;&gt; triggerMap = <span class="predefined-type">Map</span>.of( <i class="conum" data-value="4"></i><b>(4)</b>
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">insertCoin</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.insertCoin( c ),
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">ejectCoin</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.ejectCoin( c ),
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">drawBall</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.draw( c ),
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">refill</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.refill( c, <span class="integer">5</span> )
+    );
+
+    <span class="type">void</span> setupMocks() { <i class="conum" data-value="5"></i><b>(5)</b>
+        when( ctx.getOutput() ).thenReturn( out );
+        <span class="comment">// any colour will do.</span>
+        when( ctx.dispense() ).thenReturn( <span class="keyword">new</span> OlifantysGumball( <span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> ) );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The context is mocked in the constructor</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>StringOuput and PrintStream are combined into a PrintStream that takes the role of system output.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Creates a <code>StringOutput</code> and
+ ensure that anything output by the context is returned in an easily
+interpreted <code>String</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>translates strings to actual lambda expressions that do the interaction in the test.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Is the setup the standard mocks are trained to return the appropriate things on specific method calls.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This basic setup is done for every test anew and makes sure our SUT has a fresh
+collaborator every time, ignorant of what happened in earlier tests.</p>
+</div>
+<div class="paragraph">
+<p><strong>First test</strong></p>
+</div>
+<div class="paragraph">
+<p>The tabular form of the state machine behavior above is taken as the input form the parameterized tests.</p>
+</div>
+<div class="paragraph">
+<p>First we get the initial state from the csv test  source, which is in the column name "Start State".
+Because we need a State enum value we need to look that up using the enum classes' <code>values()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>When a state method is invoked, it can or should have multiple interactions with the
+context. To test that, we use the mocked context. First we need to complete it&#8217;s teaching, that
+is what to answer on the boolean methods  <code>isEmpty()</code> and <code>isWinner()</code>. We take the values from the two columns winner and empty</p>
+</div>
+<div class="imageblock thumb right">
+<div class="content">
+<img src="./images/seq_draw.svg" alt="seq draw">
+</div>
+<div class="title">Figure 4. sequence diagram of draw</div>
+</div>
+<div class="paragraph">
+<p>Here is an example a first test: Make sure the machine does not return any ball(s)
+when it&#8217;s state is <code>NO_COIN</code>. From the <a href="#state_diagram">state diagram of the gumball machine.</a> we learn that the action
+<code>draw()</code> should only be effective in the state <code>HAS_COIN</code>. This gives the
+interaction, modeled in the sequence diagram below. The dispense method should only be called in specif states.</p>
+</div>
+<div class="paragraph">
+<p>As can be seen in the sequence diagram, the <code>dispense()</code> call is only allowed in
+the state <code>HAS_COIN</code>, not in <code>NO_COIN</code>. Let the test <code>verify</code> that using a mockito
+verify. A Mockito <code>verify</code> is similar to a JUnit <code>assertXXX</code>, it will complain (in Java terms:
+throw an Assert Exception), that a dispense() is NOT happening.</p>
+</div>
+<div id="First-Test" class="listingblock">
+<div class="title">first test</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvFileSource</span>( resources = { <span class="string"><span class="delimiter">&quot;</span><span class="content">testtable.csv</span><span class="delimiter">&quot;</span></span> } )
+    <span class="directive">public</span> <span class="type">void</span> verifyDispense(
+            <span class="type">int</span> nr, <span class="predefined-type">String</span> initialStateName, <span class="predefined-type">String</span> finalStateName,
+            <span class="predefined-type">String</span> triggerName, <span class="type">boolean</span> empty, <span class="type">boolean</span> winner,
+            <span class="type">int</span> dispenseCount, <span class="type">int</span> addBallsCount, <span class="predefined-type">String</span> expectedText ) {
+
+        State initialState = StateEnum.valueOf( initialStateName ); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="type">var</span> triggerAction = triggerMap.get( triggerName );          <i class="conum" data-value="2"></i><b>(2)</b>
+
+        <span class="comment">// prime collaborator</span>
+        when( ctx.isEmpty() ).thenReturn( empty );                  <i class="conum" data-value="3"></i><b>(3)</b>
+        when( ctx.isWinner() ).thenReturn( winner );                <i class="conum" data-value="4"></i><b>(4)</b>
+
+        triggerAction.accept( ctx, initialState );                  <i class="conum" data-value="5"></i><b>(5)</b>
+
+        verify( ctx, times( dispenseCount ) ).dispense();           <i class="conum" data-value="6"></i><b>(6)</b>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Select the appropriate instance of the State.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Lookup the interaction in the 'lambda' map, which translates strings to BiConsumer of Context and State.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Read the values empty and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>winner from the table and use them to train the mocked context.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Do the interaction</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>verify the the number of dispenses matches the requirement, in the NO_COIN state 0.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>CsvFileSourceStateTest has in total 4 tests which assert all stated requirements in the table.</p>
+</div>
+<div class="paragraph">
+<p><strong>assertMessage</strong> that verifies that the correct output is 'printed'<br>
+<strong>verifyDispense</strong> ensures that the exact number of balls is dispensed, 0 or 1.<br>
+<strong>verifyRefillAddsBalls</strong> that some balls are added to the machine when refill is called<br>
+<strong>verifyStateTransition</strong> does what the name says.</p>
+</div>
+<div class="paragraph">
+<p><strong>Do not forget the context.</strong></p>
+</div>
+<div class="paragraph">
+<p>The context&#8217;s implementation becomes surprisingly simple.
+It only needs to forward the  event or 'trigger' to the current state, which in turn
+will tell the context what to do.</p>
+</div>
+<div class="paragraph">
+<p>The context must provide a bit of functionality to make the actions directed by the states meaningful.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>forward the trigger to the state, providing itself as the first parameter. For instance
+<code>insertCoin()</code> in the API should result in an `insertCoin(Context) call in the state.</p>
+</li>
+<li>
+<p>Remember what state the context is 'in'. We do that with the changeState method.</p>
+</li>
+<li>
+<p>invoke the exit and enter method when we swicth between states.</p>
+</li>
+<li>
+<p>invoke the enter method on the initial state.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>and a few more.
+These test bodies are given in the test class 'OlifantysMachineImpleTest' with their purpose,
+so you should be able to fill in the blanks.</p>
+</div>
+<div class="paragraph">
+<p><strong>How about coverage</strong><br>
+Some of the tests in OlifantysMachineImpleTest are there for the purpose of maintaining
+a high coverage. Since you are already familiar with test coverage, it simply is a matter
+of turning on the proper maven profile.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The csv test data are in a separate resource folder. If you try to test just one file,
+make sure you do <strong>test project first</strong>, which makes maven copy over the csv file to a place where
+the unit test can find it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div> <!--havingaball-->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_state_machines_and_embedded_systems"><a class="anchor" href="#_state_machines_and_embedded_systems"></a><a class="link" href="#_state_machines_and_embedded_systems">2. State Machines and embedded systems</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The techniques used in the olifantysballs exercise are also applicable to real hardware automatons,
+such as coffee brewers. It is where the enter and exit methods of each states come from, to be able to turn on
+and off devices that are active in a state and inactive in another.
+In <strong>C</strong> the enum can be replaced by <span class="blue">struct</span>s containing function pointers, which point to the
+correct implementation of each function. Functions that do not have to be overridden can simply point to a default implementation,
+and changing state is replacing one such struct by the struct for the next state.
+The 'main' program would set up and initialize the structs.</p>
+</div>
+<div class="listingblock">
+<div class="title">using method pointers in C</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span class="keyword">typedef</span> <span class="keyword">struct</span> stateHandles{
+    <span class="directive">void</span> (*ejectCoin)();
+    ...
+} State ;
+
+State NO_COIN= {
+  &amp;defaultEjectCount;
+  ...
+};
+
+State state=...
+
+    state-&gt;ejectCion();</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_uses_of_state_machines"><a class="anchor" href="#_other_uses_of_state_machines"></a><a class="link" href="#_other_uses_of_state_machines">3. Other uses of State Machines</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>State machines or <a href="https://en.wikipedia.org/wiki/Automaton">Automaton</a>s are not only of interest
+in actual vending machines or toys, but also in many other problems in the computer science domain.
+One such application is that of regular expressions. Another is what compilers do when
+<a href="https://en.wikipedia.org/wiki/Lexical_analysis">Lexing</a> and <a href="https://en.wikipedia.org/wiki/Parsing">Parsing</a> the source code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_template_engine_text_processing_with_state_machines"><a class="anchor" href="#_template_engine_text_processing_with_state_machines"></a><a class="link" href="#_template_engine_text_processing_with_state_machines">Template Engine: Text processing with state machines.</a></h2>
+<div class="sectionbody">
+<div class='ex'><details open class='ex'><summary class='ex'>Exercise Template Engine</summary>
+<div class="paragraph">
+<p>Use case: Think serial mail or mail merge or something similar.</p>
+</div>
+<div class="paragraph">
+<p>The code is also a kind of template, you need to fill in the empty spots, like in an assessment.</p>
+</div>
+<div class="paragraph">
+<p><span class="image left thumb"><img src="https://www.ancient-symbols.com/images/collages/1300-1000/sigil-symbols.jpg" alt="sigil symbols" width="240" title="Sigil from 'https://www.ancient-symbols.com/images/collages/1300-1000/sigil-symbols.jpg'"></span>
+There will be talk about <strong>sigil</strong>, a magic sign. In the example we use two:<br>
+'{{'  as starter and '}}' as terminator,
+but the solution is flexible enough to take any other pair you like. Sigil stands for the character or character-sequence
+given and is there to make parsing of template text easier. By choosing a proper set, they will not handicap what you can write in your template text.
+The defaults are quite reasonable.
+And if you do, you can always <strong>escape</strong>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Sigil_(magic)">Wikipedia on What is a sigil?</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Use case and idea</strong><br>
+This exercise is about a simple templating engine.</p>
+</div>
+<div class="paragraph">
+<p>Its usecase is a typical serial letter generator. This comes in handy when
+you want to send 'personalised' emails to students. A seasoned
+informatics person knows you should not use <code>eval(&#8230;&#8203;)</code> for
+that, because that will potentially execute any code.</p>
+</div>
+<div class="paragraph">
+<p>Say you have some text and you want to substitute certain words with
+something from a data source, such as student names and/or
+grades. Then you could embellish the text with special tokens called
+sigils (magic signs) that help to find the words to be substituted. An
+example may help:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">Dear {{teacher}},
+
+We would like to complain about the module {{mod}}.
+We learn to little and the examples are way too trivial.
+We would like to receive our moneys worth of teaching.
+Kind regards,
+The students.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example the magic signs are the <code>{{</code> and <code>}}</code> sequences, anything in
+between is understood as key in the map, and when found, replaced by
+the mapped value.</p>
+</div>
+<div class="listingblock">
+<div class="title">If the map is filled like:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">Map</span>&lt;<span class="predefined-type">Object</span>, <span class="predefined-type">String</span>&gt; map = <span class="predefined-type">Map</span>.of(
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">teacher</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Richard van den Ham</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">mod</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Programming Concepts 2 (PRC2)</span><span class="delimiter">&quot;</span></span>
+);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Then the engine can be created and started as</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">Function&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; lookup = ( s ) -&gt; map.getOrDefault( s, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> );
+<span class="comment">// write to file.</span>
+<span class="keyword">new</span> Engine( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, lookup )
+        .reading( <span class="string"><span class="delimiter">&quot;</span><span class="content">letter.txt</span><span class="delimiter">&quot;</span></span> )
+        .writing( <span class="string"><span class="delimiter">&quot;</span><span class="content">mail-out.txt</span><span class="delimiter">&quot;</span></span> )
+        .run();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This program will print to a the file name 'mail-out.txt'.</p>
+</div>
+<div class="listingblock">
+<div class="title">sample output</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">Dear Richard van den Ham,
+
+We would like to complain about the module Programming Concepts 2 (PRC2).
+We learn too little and the examples are way too trivial.
+Kind regards,
+The students.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Design</strong></p>
+</div>
+<div class="paragraph">
+<p>The design is about a simple state machine with five states. See figure <a href="#states">state diagram</a>.</p>
+</div>
+<div class="paragraph">
+<p>In addition the "templating engine" has two helper classes, a <code>SigilMatcher</code> and the <code>enum TemplateState</code>. See the
+<a href="#class-diagram">class diagram</a> These classes are package private and so are the methods in them.</p>
+</div>
+<div class="paragraph">
+<p>The methods you use to configure the engine, constructors, the
+<code>readingXXX(&#8230;&#8203;)</code>, and
+<code>writing(&#8230;&#8203;)</code> are part of a so called <strong>fluent</strong> API. They, plus the
+<code>accept(int)</code> and <code>run()</code> methods are the only methods that are
+part of the public API.</p>
+</div>
+<div class="paragraph">
+<p>Given the sigils as above, the Test data in the EngineTest test class are:</p>
+</div>
+<div class="listingblock">
+<div class="title">test data</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">static</span> Stream&lt;ET&gt; getTestValues() {
+    <span class="comment">// we use a helper class ET to collect strings into a engine test data object.</span>
+    ET<span class="type">[]</span> testData = <span class="keyword">new</span> ET<span class="type">[]</span>{
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello {{world}}...</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello Schöne Heimat...</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello {{süßes}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello Schöne Heimat</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">süßes</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">now somethings with {{two}} words to {{replace}}</span><span class="delimiter">&quot;</span></span>, <span class="comment">// template</span>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">now somethings with more words to work with</span><span class="delimiter">&quot;</span></span>, <span class="comment">// expected</span>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">two</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">more</span><span class="delimiter">&quot;</span></span>, <span class="comment">//  kv 1</span>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">replace</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">work with</span><span class="delimiter">&quot;</span></span> <span class="comment">// kv 2</span>
+                ),
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Niks geen substituties</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Niks geen substituties</span><span class="delimiter">&quot;</span></span> ),
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {alone}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {alone}}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// incomplete starter</span>
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me { {alone}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me { {alone}}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken starter</span>
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}, go away</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}, go away</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken postfix</span>
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}}, go away I am Broken at the {{Tail}</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me , go away I am Broken at the {{Tail}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken postfix at tail</span>
+                <span class="comment">// text below for escaping version only.</span>
+                <span class="comment">// Note the duplication of the \ char to make the strings valid Java strings.</span>
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Look ma, this is how you write a sigil</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> text in your letter: </span><span class="char">\\</span><span class="content">{{my dear boy}}</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and I used </span><span class="char">\\</span><span class="char">\\</span><span class="content"> to write this example</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Look ma, this is how you write a sigil</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> text in your letter: {{my dear boy}}</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and I used </span><span class="char">\\</span><span class="content"> to write this example</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">not used</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">not used either</span><span class="delimiter">&quot;</span></span> <span class="comment">// kv1</span>
+                ),
+                <span class="comment">// below different sigil lengths, 1 and 3.</span>
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello single char template {world}...</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello single char template Schöne Heimat...</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
+                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">@</span><span class="delimiter">'</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">And it works with three and other escape as well.</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">text in your letter: {{{my dear boy}}}.</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">And it works with three and other escape as well.</span><span class="delimiter">&quot;</span></span>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">text in your letter: well, that depends.</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">my dear boy</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">well, that depends</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// kv1</span>
+            };
+    <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.stream( testData );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Your Task.</strong></p>
+</div>
+<div class="paragraph">
+<p>The sigil matcher is complete, tested and implemented. It is also a
+state full class, however NOT using the state pattern, but simply
+counting the characters matched. So that implementation will provide
+little help in your real task. Sorry.</p>
+</div>
+<div class="paragraph">
+<p>Implement this design. Develop test driven. (Should be easy. The test data are already waiting in the code).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Implement the <code>reading</code> method in <code>Engine</code>.</p>
+</li>
+<li>
+<p>You only need to complete the <code>testEngine</code> method in the <code>EngineTest</code> test class.</p>
+</li>
+<li>
+<p>Implement the state machine in the <code>TemplateState</code> class,
+see the <a href="#states">state diagram</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Look for the todo&#8217;s with <span class="keyseq"><kbd>CTRL</kbd>+<kbd>6</kbd></span> in NetBeans IDE.</p>
+</div>
+<div class="paragraph">
+<p><strong>Hints</strong><br>
+A statemachine reacts to 'events' or method calls.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The functions in java.util.function have no member that processes chars. The reason for that is
+that in many case chars can be processed as ints. Also, when retrieving the character elements from a CharSequence (an interface implemented by the java.lang.String class)
+using either the method <code>IntStream chars()</code> or <code>IntStream codePoints()</code> will produce an <code>intStream</code>. For the processing part that is just fine. One needs only to remember
+to cast the values to `char`s when writing them to the output.</p>
+</li>
+<li>
+<p>In this state machine the event of importance
+is the invocation of the method <code>Engine.accept(int char)</code>, which is stipulated by the <code>IntConsumer</code> functional interface.</p>
+</li>
+<li>
+<p>The Engine provides an accept(int) method that matches the <code>IntConsumer</code> functional interface.
+This means  that is the engine is fed one character at the time. You can use that method as a method reference (<code>this::accept</code>) or a lambda expression.
+(<code>(c) &#8594; accept(c)</code>).</p>
+</li>
+<li>
+<p>To use a file with text as input template you will have to turn that file into many accept calls.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Think of streams, and use the method <code>Files.lines()</code>, study what
+<strong>flatMap</strong> and <strong>flatMapToInt</strong> is all about and use it to get the result: from
+stream of strings to stream of int, one int per character of the string. In the String API you have two options. Either one will do in most cases.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Make a drawing (pencil, paper). <code>Files.line</code> produces a stream, the Engine puts
+itself at the end, consuming the stream of `int`s. You have to tie
+these parts together.</p>
+</li>
+</ul>
+</div>
+<div id="class-diagram" class="imageblock">
+<div class="content">
+<img src="./images/engineclassesx.svg" alt="engineclassesx">
+</div>
+<div class="title">Figure 5. class diagram</div>
+</div>
+<div class="paragraph">
+<p>In the class diagram of engine substitute Engine for the T in the <code>ObjIntConsumer&lt;T&gt;</code>.<br>
+Remember that an ObjIntConsumer takes two inputs and produces no direct return value. State Pattern in action with a twist of enum thrown in.</p>
+</div>
+<div id="states" class="imageblock">
+<div class="content">
+<img src="./images/templaterStateMachinex-i.svg" alt="templaterStateMachinex i">
+</div>
+<div class="title">Figure 6. state diagram</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>There is a difference between the state machine diagram on this website and in the source folder in the project.
+The diagram on this website should take precedence, because this is how we test it now.
+The difference actually only affects the way wrongly formatted template documents are handled, so the choice is arbitrary. In the
+design in this website, the 'junk' is output, in the other it is discarded. Showing the junk may help the user to find the error
+in the template earlier. A more professional variant might produce some diagnostics, but we left that out of the exercise.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div> <!-- end template engine -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_state_machines_and_regular_expressions"><a class="anchor" href="#_state_machines_and_regular_expressions"></a><a class="link" href="#_state_machines_and_regular_expressions">4. State machines and regular expressions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can find a lot on the relation between state machines and regular expressions.
+In most cases, including in Java, the regex is translated or compiled into a statemachine (just) before matches are attempted.</p>
+</div>
+<div class="paragraph">
+<p>A nice illustration is given by the
+<a href="https://regexper.com/">REGEXPER</a> website, that turns a regex into a railroad diagram. This make the understanding of a regular expression way easier.</p>
+</div>
+<div class="paragraph">
+<p>A simple regex : Dutch postal code: <code>"\d{4}\s[A-Z]{2}"</code></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/janissl/simple-java-regex-tester">Git hub for simple reges tester</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/postcode-regex.svg" alt="postcode regex">
+</div>
+<div class="title">Figure 7. with diagram</div>
+</div>
+<div class="paragraph">
+<p>The postcode railroad diagram reads as a digit followed by 3 more digits, a space, a letter and one more letter.</p>
+</div>
+<div class="listingblock">
+<div class="title">More complex example:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// note that you can break off the regex in java and intersperse it with comments.</span>
+<span class="predefined-type">String</span> emailRegex=<span class="string"><span class="delimiter">&quot;</span><span class="content">^[a-zA-Z0-9.!#$%&amp;''*+/=?^_`{|}~-]+</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// quite some rubish before the at sign</span>
+     <span class="string"><span class="delimiter">&quot;</span><span class="content">@</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// the at sign followed by a more restricted set of chars,</span>
+          <span class="comment">//  with some lengths restrictions</span>
+     <span class="string"><span class="delimiter">&quot;</span><span class="content">[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// optional non capt grp</span>
+     <span class="comment">// any number of letter-number combos</span>
+     <span class="string"><span class="delimiter">&quot;</span><span class="content">(?:</span><span class="char">\\</span><span class="content">.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/email-regex.svg" alt="email regex">
+</div>
+<div class="title">Figure 8. Produces this 'railroad' diagram. which is equivalent to a state machine diagram.</div>
+</div>
+<div class="paragraph">
+<p>Note that there is not one TRUE regex for email addresses. If you want to know the nitty-gritty details
+of valid email addresses look at RFC 8398 or RFC 5322, or ask in CSAR class.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Once you understand that regexes are state machine specifications, and that is is easy to create state machines
+that never 'terminate', you understand that regular expressions can also be dangerous.</p>
+</div>
+<div class="paragraph">
+<p>Accepting a regular expression
+from any source may cause a denial of service attack, because such expression may put your server into an endless loop.</p>
+</div>
+<div class="paragraph">
+<p>Advice: only accept a restricted set of regexes, maybe parse them before use. In particular avoid back tracking constructs.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS">Regular expression Denial of Service - ReDoS</a></p>
+</div>
+<div class="paragraph">
+<p><strong class="big black">So beware</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_regular_expressions"><a class="anchor" href="#_regular_expressions"></a><a class="link" href="#_regular_expressions">5. Regular expressions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An often heard saying is: <em>When you have a problem that can be solved with a regular
+expression, you actually have two problems, the problem and how to write the expression.</em></p>
+</div>
+<div class="paragraph">
+<p>There is indeed some truth in the saying: Regular expressions can be hard to read (and hence maintain), and sometime hard to write as well.</p>
+</div>
+<div class="paragraph">
+<p>The problem lies in the fact that the format of the most popular form, the Perl dialect, is quite terse.
+However you can do quite a few things to improve at least their readability.</p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="848" height="480" src="https://www.youtube.com/embed/EkluES9Rvak?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basic_regex_syntax_and_rules"><a class="anchor" href="#_basic_regex_syntax_and_rules"></a><a class="link" href="#_basic_regex_syntax_and_rules">5.1. Basic regex syntax and rules</a></h3>
+<div class="paragraph">
+<p>A simple string is also a regular expression. As far as there are no meta characters involved,
+a string simply matches itself.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first meta character you need to know is the dot <code class="blue">'.'</code>, which matches any character. So a line
+with a dot will match any line that is the same as the line with any substution for the dot character (including itself).</p>
+</li>
+<li>
+<p>The second  meta character is the backslash <code class="blue">'\'</code>. It takes the special meaning (as in meta) of the following character away.
+Back to our matching line: if you want exactly a dot at the place of the dot, prefix it with a backslash, so it will be understood as a dot. Like this: [red]"\.".
+ But since we using Java, and the backslash already has a special role in strings, you must double the backslash in most cases, thus: <code class="blue">"\\."</code>.</p>
+</li>
+<li>
+<p>The next are the quantifier: how many of something do you want.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>? 0 or one, aka at most.  So "a?" means at most one a.</p>
+</li>
+<li>
+<p>+ at least one.</p>
+</li>
+<li>
+<p>* any number of times, including zero.</p>
+</li>
+<li>
+<p>numberic quantifier, using braces ('{' and  '}''). For instance "a{1,4}" means a between 1 and 4 times, inclusive.
+You can also write "a{3}" meaning exaclty 3 as. Or a lower (a{2,} for at least 2 a)  or upper boundary (a{,12}) at most 12.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>character classes</p>
+<div class="ulist">
+<ul>
+<li>
+<p>user specified: [aeiou] matches the English vowels, [a-p] the first 16 characters of the alphabet, [a-pA-P] the same, but ignoring case.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>predefined :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>\w = word which stands for c-word, which is the set of legal characters to start a (method or variable) name in C, but also in Java and
+many other programming languages. [a-zA-Z_] a through z in both cases and the underscore.</p>
+</li>
+<li>
+<p>\W negates the class, in this case it matches the non-word characters</p>
+</li>
+<li>
+<p>\d the decimal digits</p>
+</li>
+<li>
+<p>\D not a digit.
+etc.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">char</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">match all</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">at least one quantifier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">?</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ate most one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">start of quantifier spec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">end of quantifier spec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">start character class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">end character class</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The definition as far as java is concerned is given in the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html">java.util.Pattern</a> class.
+You do not have to know all details, the summary above suffices for the most cases. The java doc of pattern gives a complete overview.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grouping"><a class="anchor" href="#_grouping"></a><a class="link" href="#_grouping">5.2. Grouping</a></h3>
+<div class="paragraph">
+<p>Sometimes you are not just interested in a match or not, but want to capture parts of the input for further processing.
+For that you use the parenthesis '(' and ')'. A group, when found, will get a number (or even a name, but that is not in this lesson).
+Group 0 is typically the whole expression, and number one the first group identified with the parenthesis.</p>
+</div>
+<div class="paragraph">
+<p>So if you have a regular expression string line "a(eiou)", group number one will be the group containing the vowel following a, if any.</p>
+</div>
+<div class="paragraph">
+<p>To get acquainted with regular expressions, it is very helpful to write some tests, to verify your pattern or assumptions on the pattern.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading_grades_from_text_source"><a class="anchor" href="#_reading_grades_from_text_source"></a><a class="link" href="#_reading_grades_from_text_source">Reading grades from text source</a></h2>
+<div class="sectionbody">
+<div class='ex'><details open class='ex'><summary class='ex'>Grade Capture</summary>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Use capture groups.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To be able to insert student grades into progress, the teachers want to be able to copy and paste
+grades from a spreadsheet (which is the typical way grades are assembled) into a text area.
+In this exercise, a simple file will do as the source of the grades, because working with a real clipboard is a project in itself.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The spreadsheet is replaced by a text file with one or more spaces or tabs ("white space") as column separator.</p>
+</li>
+<li>
+<p>The spreadsheet has the typical format that the student number is in the first column and the<br>
+grade for that student is in the last column. The columns in between are arbitrary and may contain anything.</p>
+</li>
+<li>
+<p>You may ignore the spreadsheet part, because the paste action is done in a text area,
+which can be collected as a text, that can be divided into lines and columns, the column separator being white space.</p>
+</li>
+<li>
+<p>The student number consist of 7 consecutive digits, the grade can consists of one digit,<br>
+two digits (a 10) or two digits separated by a dot or period (.) or a comma (,),<br>
+since both continental Europeans and English speaking teachers want to enter grades this way.</p>
+</li>
+<li>
+<p>The number of columns is not fixed and may change within one input, e.g. having separate column(s) for the optional Dutch 'tussenvoegsel'.
+A regex pattern to represent this is available in the <code>GradeFilter</code> class.</p>
+</li>
+<li>
+<p>When no grade is found in the input line, and the getResult method is invoked anyway,
+the result should contain  key=<code>null</code>  and value =<code>null</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>So both the <code>grade</code> and <code>studentId</code> methods should in that case return <code>null</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A set of test data is given and has the exact input as the table below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Test data</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1112%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"># "quoted test input"</th>
+<th class="tableblock halign-left valign-top">should match</th>
+<th class="tableblock halign-left valign-top">found group value</th>
+<th class="tableblock halign-left valign-top">found snummer</th>
+<th class="tableblock halign-left valign-top">grade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785895 Jan Jansen   8.7.1997 6.6 8.3  2.4 6,8</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">true</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">6,8</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785895</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">6.8D</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3895785 Piet Jansen  8.7.1997</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">false</p></th>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3895785</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">0.0D</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785985 Henk Jansen  8.12.1994 6.6 8.3  2.4 7.9</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">true</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">7.9</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785985</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">7.9D</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785915 Niki Jansen  8.12.1994 6.6 8.3  2.4 8</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">true</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">8</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">3785915</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">8D</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">1245717 Joepie Hombergh van den 18.03.1992 10.0 10.0  10.0 10</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">true</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">10</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">1245717</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">10D</p></th>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Note</strong> that the first column of the csv file is the <strong>"quoted input"</strong>, so should be seen as one input.
+The rest of the columns are the output values to be used in the assertions. Empty cells represent <code>null</code> values.</p>
+</div>
+<div class="paragraph">
+<p>The result type of the <code>getResult()</code> method in the <code>GradeCapture</code> class may look a bit strange: <code>AbstractMap.SimpleEntry&lt;Integer,Double&gt;</code>.
+The type is what is stored in hash maps and such, and is a way to use a tupple without having to declare the class. It is a kludge, just a way to have a pair
+of objects. It stems from the fact that the student-number-grade pairs will typically land in a Map of sorts anyway.<br>
+Java 14 has a preview feature called <a href="https://openjdk.java.net/jeps/359"><code>record</code></a> which will make this more way  more elegant. There you would write <code>record GradeResult(int snummer,double grade){}</code> as the full 'class' definition,
+including constructor, getters, toString and hashCode and equals. It is likely to have that as a standard feature in Java 15 and onward, and will be quite useful in case
+you want a method to return more than just one value.</p>
+</div>
+<div class="paragraph">
+<p><strong>Your Tasks</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Complete the TODOs in the test classes. (Press control+6 in NetBeans IDE)</p>
+</li>
+<li>
+<p>In the <strong>GradeFilter</strong> class complete all TODOs.</p>
+</li>
+<li>
+<p>In the client class there is a last todo and that is to use the grade filter in the <code>getGradesAsMap()</code> method, by reading a file as lines,
+applying the gradefilter on each line and collect the student numbers and grades in a map with student number as key and grade as value.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>There are a few naming problems in the exercise, because of incomplete (renaming) refactoring. Where you see the class name <code>GradeFilter</code> read (or replace it with)
+<code>GradeCapture</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</details></div> <!-- gradecapture -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">6. Reading</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Regular expressions: Horstmann, Vol II Section 2.7</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>regex tester at <a href="https://regex101.com">regex101</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part.</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_exercise_olifantysballs">Olifantys Balls</a></p>
+</li>
+<li>
+<p><a href="#_template_engine_text_processing_with_state_machines">Template Engine</a></p>
+</li>
+<li>
+<p><a href="#_reading_grades_from_text_source">Grade Capture</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 11:08:14 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>

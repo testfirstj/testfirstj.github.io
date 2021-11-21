@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
+<meta name="keywords" content="Test Driven Java SEBI Venlo">
+<meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
+<title>W7 Java Database Access</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="css/sebistyle.css">
+<link rel="stylesheet" href="css/mooc.css">
+<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
+<script src="js/top.js" type="text/javascript"></script>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>W7 Java Database Access</h1>
+<div class="details">
+<span id="author" class="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br>
+<span id="revdate">V2.0  2021-01-10</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_currywurst_is_not_made_of_steel_and_vice_versa">Currywurst is not made of steel and vice versa.</a>
+<ul class="sectlevel2">
+<li><a href="#_the_purpose_of_modeling_is_communication">The purpose of modeling is communication</a></li>
+</ul>
+</li>
+<li><a href="#_java_database_connectivity">1. Java DataBase Connectivity</a>
+<ul class="sectlevel2">
+<li><a href="#_database_connection_credentials_and_java_properties">1.1. DataBase connection credentials and Java Properties.</a></li>
+<li><a href="#_using_a_data_source">1.2. Using a Data source</a></li>
+<li><a href="#_resultset">1.3. ResultSet</a></li>
+<li><a href="#_anatomy_of_a_prepared_statement">1.4. Anatomy of a prepared statement</a></li>
+</ul>
+</li>
+<li><a href="#_traditional_preparing_statements">2. Traditional preparing statements</a>
+<ul class="sectlevel2">
+<li><a href="#_database_meta_information">2.1. Database Meta Information</a></li>
+</ul>
+</li>
+<li><a href="#_transactions">3. Transactions</a></li>
+<li><a href="#_using_stored_procedures">4. Using Stored Procedures</a></li>
+<li><a href="#_the_tao_of_dao">5. The TAO of DAO.</a>
+<ul class="sectlevel2">
+<li><a href="#_update">5.1. Update</a></li>
+<li><a href="#_exercise_generic_dao">Exercise Generic DAO</a></li>
+</ul>
+</li>
+<li><a href="#_testing_databases">6. Testing databases</a>
+<ul class="sectlevel2">
+<li><a href="#_transactions_2">6.1. Transactions</a></li>
+</ul>
+</li>
+<li><a href="#_data_first_or_objects_first">7. Data First or Objects first?</a>
+<ul class="sectlevel2">
+<li><a href="#_objects_first">7.1. Objects First.</a></li>
+<li><a href="#_database_first">7.2. Database First.</a></li>
+<li><a href="#_what_is_best">7.3. What is best?</a></li>
+<li><a href="#_proper_design_promotes_security">7.4. Proper Design Promotes Security.</a></li>
+</ul>
+</li>
+<li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table id="main-menu" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8823%;">
+<col style="width: 5.8832%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="index.html" title="Home">TOP</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock">week</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week01.html" title="What is TDD">01</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week02.html" title="Parameterized Tests">02</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week03.html" title="Testability and Mockito">03</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week04.html" title="Generics">04</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week05.html" title="Lambdas and Streams">05</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week06.html" title="Reflection">06</a></p></td>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a href="week07.html" title="Java Database Access">07</a></p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week09.html" title="Statemachines and Regex">09</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="week12.html" title="Security">12</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="setup.html" title="Setup your System">SETUP</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
+</li>
+<li>
+<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_currywurst_is_not_made_of_steel_and_vice_versa"><a class="anchor" href="#_currywurst_is_not_made_of_steel_and_vice_versa"></a><a class="link" href="#_currywurst_is_not_made_of_steel_and_vice_versa">Currywurst is not made of steel and vice versa.</a></h2>
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>There seems to be a controversy about when to add <a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinalities</a> and when not.<br>
+The answer is, as always: <em class="big black">it depends</em>.<br>
+The <strong class="blue">purpose</strong> of the diagram is what counts, so apply separation of concerns in the diagrams
+you make in analysis and design too.
+That does <strong>not</strong> mean that analysis is about data, and design is about the software system, but that the
+aspect you are dealing with in your model will decide what kind of information is needed in a diagram.<br></p>
+</div>
+<div class="sect2">
+<h3 id="_the_purpose_of_modeling_is_communication"><a class="anchor" href="#_the_purpose_of_modeling_is_communication"></a><a class="link" href="#_the_purpose_of_modeling_is_communication">The purpose of modeling is communication</a></h3>
+<div class="paragraph">
+<p>A model in any form is a <em>simplification</em> of reality. Model is the art of <em>leaving out details</em> that are not relevant.
+Not relevant for the <em>purpose</em> of the model. Modeling in this sense also implies that there can be more models of the same reality.
+Each of these models can then highlight different aspects of interest for what you want to communicate. You want to express these aspects to
+communicate a meaning, relation, dependency, composition etcetera. A model is always about abstraction because it never IS the real thing
+but only describe some of it&#8217;s aspects.</p>
+</div>
+<div class="paragraph">
+<p>Models can have different form. Formulas in math, screenplay or scripts for a movie, descriptive text, and diagrams.
+In UML we have many model types. The trick is to choose the correct model type for the aspects you want to discover.
+Drawing can be done with a pencil and paper is willing, so you can easily become confused about syntax and semantics of
+the modeling language, in particular on what to use when.</p>
+</div>
+<div class="paragraph">
+<p>A natural order of modeling, diagram wise, is something like this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A sketch of the things involved, or a picture, which serves as an initial model. This is what you collect in an interview.</p>
+</li>
+<li>
+<p>The UML equivalent is an <a href="https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-object-diagram/">Object diagram</a>,
+in which you can simply draw 6 dogs if that is what fits in a kennel.</p>
+</li>
+<li>
+<p>Or simplify it and draw 1 dog and and add 6 to say that you have six. It makes the model simpler and still have the same information.</p>
+</li>
+<li>
+<p>You want to model relations between objects, like ownership or space to live. In an object diagram that is a line between objects, and as far
+as dogs and owner goes the 'direction' of the line goes both ways, because <em>'you know your boss, don&#8217;t you George?'</em>.</p>
+</li>
+<li>
+<p>Drawing many owners and dogs becomes tedious, so you need another simplification to leave details out. This gets you to
+   an entity relation diagram or domain model. The diagram does what the name implies: objects and their associations. So one icon to represent dog and
+owner plus the connecting line suffices. Add multiplicites to express that an owner can have multiple dogs, but no less than one, less he/she not
+be an owner. As far as the dog is concerned there is only one real pack leader at any time.
+The graphical syntax you use (lines and boxes) can look a lot like an object diagram. The relevant details are in the relations
+and multiplicities or cardinalities at the ends.</p>
+</li>
+<li>
+<p>A next abstraction is wanting to reason about <strong>types</strong> a.k.a. classes in UML. The class diagram actually has the wrong name, it should have been called
+the <strong>type diagram</strong>. Its purpose is to find the relations between types, who uses whom or who determines what. It is about dependencies and further abstraction.
+For instance, both a dog and child should be able to listen, so they have a commonality you want to express, like <code>Obeyor</code> which is not a word
+but expresses what you want the sub-types to do. It does not change dog nor child but extracts the detail you want to reason about.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong class="big">Modeling serves to highlight the important aspects.</strong> Choose the proper kind of diagram and try to closely
+stick to the syntax and semantics of the diagram <strong>and its purpose</strong>, so it helps the understanding of the details you <em>DO</em>
+want to communicate.</p>
+</div>
+<div class="paragraph">
+<p><strong class="big gray">Modeling is always about <span class="black">leaving out details</span>. Making things simpler</strong>.<br>
+<strong class="big black">Do not add details to a diagram that make no sense.</strong></p>
+</div>
+<div class="paragraph">
+<p>To paraphrase someone famous <a href="https://www.championingscience.com/2019/03/15/everything-should-be-made-as-simple-as-possible-but-no-simpler/">Everything should be made as simple as possible, but no simpler</a>.</p>
+</div>
+<div class="paragraph">
+<p>The above implies that the situation is not <strong class="black">black</strong> or <strong class="white">white</strong>, but some shade of <span class="gray">gray</span>.<br>
+That grayness is the reason of the confusion, because there is not one answer that fits in all situations.<br>
+It also means that you do <span class="big red">not</span> have to draw all diagrams all of the time, but only the diagrams that are needed. The question of
+course is: How do you know that it is needed? The answer is: as soon as you want to discover or explain something.
+Discovering is explaining to yourself. In a course where you need to learn the syntax and semantics of a language you must
+of course practice it and use the "words" (icons, lines) to form proper sentences (models, diagrams).</p>
+</div>
+<div class="paragraph">
+<p>A model is a kind of plan and help to keep oversight, both overall and in the details, where required.</p>
+</div>
+<div class="paragraph">
+<p>Let me explain:<br></p>
+</div>
+<div class="paragraph">
+<p>First you should consider the purpose of the diagram.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you want to play out a scenario, you need objects (instances), and a box and line
+or stick model actors suffices. Boxes often will do because they are easily drawn (simplification).</p>
+</li>
+<li>
+<p>Object diagram could be the next step.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Then</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If it is about <strong>data</strong> analysis, a.k.a. <strong>domain modeling</strong>, relations between entities, then multiplicities <strong class="big">DO</strong> matter.</p>
+</li>
+<li>
+<p>A domain model show the relations between data elements. These relations often go two ways, and is natural, hence there is no prevalent direction.</p>
+</li>
+<li>
+<p>If it is about designing your system architecture, then the <strong class="big">directions</strong> of the associations (<strong>is-A</strong>, <strong>uses</strong>, or <strong>has-A</strong>) take precedence.</p>
+</li>
+<li>
+<p>A proper class diagram of a software system is a <a href="https://en.wikipedia.org/wiki/Directed_graph">directed graph</a>.
+The relations <strong class="green">need</strong> to have a direction, so you can discover what should or can go where, or can&#8217;t.
+The directions are especially important because in dependencies (which is what these arrows show),
+<a href="https://en.wikipedia.org/wiki/Circular_dependency">you are not allowed to have cycles</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image thumb right"><img src="./images/meatgrinder.jpg" alt="meatgrinder" width="250" title="A meat grinder is not made of meat"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In a <strong>software system</strong> class diagram, that serves to find potential reuse (using an already existing idea or type etc), cardinalities have no meaning.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Its suffices to know the <strong>types</strong> (class, interface) and their relation, and you rarely need to specify how many instances you will have.</p>
+</li>
+<li>
+<p>If you <em>do need</em> to specify a number, then typically <strong class="blue">enum</strong> is the solution, which implicitly also serves as <a href="https://dzone.com/articles/java-singletons-using-enum"><em>Singleton</em></a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let us use metaphores. <strong>Sausage</strong> and <strong>Sausage Machines</strong>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <strong>domain model</strong> is about the data. It is about <em>sausage</em>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the domain you specify what proportions of meat, fat, spicing, and skin you use. This is called the recipe. The processing takes place in machines.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>A system design is about the <em>sausage machines</em>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>What type of bolts and nuts do we need. What is the type of steel for the grinder, and what is it&#8217;s shape etc.
+You need <strong>only one</strong> design ( ==template, class ) of each.</p>
+</li>
+<li>
+<p>The size (diameter) and consistency of the sausage matter, but for the rest it is metal, wood, plastic, rubber etc.</p>
+</li>
+<li>
+<p>The temperature and preparation time of course also matter, but that is how you <em>use</em> the machine.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The assembly process of the machine is the last part as far as producing machines goes.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the assembly you need to know the number of bolts, grinder wheels etc. Meat nor sausage is involved, unless you hit yourselves with a spanner.
+The sausages <strong>will</strong> be involved in the test lab. (Think test scenarios).</p>
+</li>
+<li>
+<p>You will find places where count matters, like a GUI that shows items of a varying number.<br>
+But than also, that count comes from the data. (Show the customers in a GUI list).<br></p>
+</li>
+<li>
+<p>In all other cases the GUI widgets will have <em>names</em>. These names can be applied to the system components. Those are specialized by
+for instance inheritance or composition but also by configuration, like the colour of the handle of the meat grinder or the text on a label.
+Or even applying plugins like in a meat grinder by replacing the grind wheel and extruder to get a different sausage type.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em class="big">Transformation of the domain model into the system class diagram sounds reasonable,
+  but is in fact a <a href="https://en.wikipedia.org/wiki/Fallacy">fallacy</a>.</em><br>
+<em class="big">It would be as if you could turn sausage into a sausage machine. I&#8217;m pretty sure your Butcher will tell you different when you would propose such a solution.</em></p>
+</div>
+<div class="openblock clearfix">
+<div class="title">The domain and (part of ) the system.</div>
+<div class="content">
+<div class="paragraph left">
+<div class="title">A. Data to process.</div>
+<p><span class="image"><img src="./images/Salsiccia-700x467.jpg" alt="Salsiccia 700x467" width="300"></span></p>
+</div>
+<div class="paragraph right">
+<div class="title">B. System plan.</div>
+<p><span class="image"><img src="./images/howtomeatgrinder.jpg" alt="howtomeatgrinder" width="300"></span></p>
+</div>
+</div>
+</div>
+<details>
+<summary class="title">Quiz: What UML diagram type describes the images above best?</summary>
+<div class="content">
+<div class="paragraph">
+<p>The sausages come close to an object diagram. Not much details is shown, which is proper for sausages. <em>You do not want to known</em>.
+The model is there to express <strong class="black">yummy</strong> none-the-less.</p>
+</div>
+<div class="paragraph">
+<p>The meat grinder picture is actually also an object diagram, it is the model to be used for assembly.
+It does have type names though, and luckily for my case only uses one of each. Ikea build plans are different.</p>
+</div>
+<div class="paragraph">
+<p><em>Lucy, where is that Alan-wrench?</em></p>
+</div>
+</div>
+</details>
+<div class="paragraph">
+<p>Sometimes it helps to go from the meta level to metaphors, to explain things, because \(\text{meta} = \text{abstract}^2\).<br>
+Do so if you have to explain something, but once the abstraction has been understood by the reader, you can stop simplifying.</p>
+</div>
+<div class="paragraph">
+<p><em>It is easier to model sausages than dogs, because the former sit still.</em></p>
+</div>
+<div class="paragraph">
+<p>That concludes this intermezzo on <a href="https://www.chefkoch.de/rezepte/1180961224164162/Currywurst.html">currywurst</a>.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_database_connectivity"><a class="anchor" href="#_java_database_connectivity"></a><a class="link" href="#_java_database_connectivity">1. Java DataBase Connectivity</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_database_connection_credentials_and_java_properties"><a class="anchor" href="#_database_connection_credentials_and_java_properties"></a><a class="link" href="#_database_connection_credentials_and_java_properties">1.1. DataBase connection credentials and Java Properties.</a></h3>
+<div class="paragraph">
+<p>Some things do <mark>NOT</mark> belong in source code. In particular do not put <strong>credentials</strong> of any kind
+inside files that are committed to a version control system, such as source code. Make sure you configure your
+version control system such that such files are excluded from commits.</p>
+</div>
+<div class="paragraph">
+<p>Instead put credentials in separate files, that are easily understood by both a human that uses it
+to configure access to a resource, and also by the programming language.<br>
+In java the tradition is to use so called properties files, which, also traditionally, have a file extension <code>.properties</code>.
+It also helps to give such files well known names, so the program can refer to them by that name.</p>
+</div>
+<div class="paragraph">
+<p>For the demonstrations in this part we will use the following properties file.</p>
+</div>
+<div class="listingblock">
+<div class="title"><span class="black">application.properties</span> file specifying connection details for dev and prod</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"># You can add comments here.
+
+jdbc.pg.dev.dbname=dev
+jdbc.pg.dev.username=exam
+jdbc.pg.dev.password=exam
+jdbc.pg.dev.hostname=localhost
+
+jdbc.pg.prod.dbname=prod
+jdbc.pg.prod.username=appdbuser
+jdbc.pg.prod.password=verySecretPassw00rd
+jdbc.pg.prod.hostname=dbcluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that the properties file supports two environments, <strong>dev</strong>elopment and <strong>prod</strong>uction.</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuring a datasource. Put it in a utility class.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">DataSource</span> getDataSource( <span class="directive">final</span> <span class="predefined-type">String</span> sourceName ) {
+        <span class="comment">// dataSourceByName is a map, serving as a cache.</span>
+        <span class="keyword">return</span> datasourceByName.computeIfAbsent( sourceName,
+            ( s ) -&gt; {
+                <span class="predefined-type">Properties</span> props = properties( <span class="string"><span class="delimiter">&quot;</span><span class="content">application.properties</span><span class="delimiter">&quot;</span></span> );
+
+                PGSimpleDataSource source = <span class="keyword">new</span> PGSimpleDataSource();
+
+                <span class="predefined-type">String</span> prefix = sourceName + <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="predefined-type">String</span><span class="type">[]</span> serverNames = {
+                    props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">dbhost</span><span class="delimiter">&quot;</span></span> )
+                };
+                source.setServerNames( serverNames );
+
+                <span class="predefined-type">String</span> user = props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> );
+                source.setUser( user );
+
+                source.setDatabaseName( props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">dbname</span><span class="delimiter">&quot;</span></span> ) );
+                source.setPassword( props
+                        .getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> ) );
+                <span class="predefined-type">String</span> pingQuery = <span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT current_database(), now()::TIMESTAMP as now;</span><span class="delimiter">&quot;</span></span>;
+                <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = source.getConnection();
+                    <span class="comment">// ping the database for success.</span>
+                    <span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement( pingQuery ); ) {
+                        <span class="keyword">try</span> ( <span class="predefined-type">ResultSet</span> rs = pst.executeQuery(); ) {
+                            <span class="keyword">if</span> ( rs.next() ) {
+                                <span class="predefined-type">Object</span> db = rs.getObject(  <span class="string"><span class="delimiter">&quot;</span><span class="content">current_database</span><span class="delimiter">&quot;</span></span>);
+                                <span class="predefined-type">Object</span> now = rs.getObject(  <span class="string"><span class="delimiter">&quot;</span><span class="content">now</span><span class="delimiter">&quot;</span></span>);
+                                <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">connected to db </span><span class="delimiter">&quot;</span></span>+ db.toString()+ <span class="string"><span class="delimiter">&quot;</span><span class="content">, date/time is </span><span class="delimiter">&quot;</span></span> + now.toString() );
+                            }
+                        }
+
+                } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) {
+                    <span class="predefined-type">Logger</span>.getLogger( PgJDBCUtils.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
+                }
+                <span class="keyword">return</span> source;
+            }
+            ); <span class="comment">// end of lambda.</span>
+      }
+
+      <span class="comment">// read properties</span>
+      <span class="directive">static</span> <span class="predefined-type">Properties</span> properties( <span class="predefined-type">String</span> propFileName ) {
+          <span class="predefined-type">Properties</span> properties = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+          <span class="keyword">try</span> (
+                  <span class="predefined-type">FileInputStream</span> fis = <span class="keyword">new</span> <span class="predefined-type">FileInputStream</span>( propFileName ); ) {
+              properties.load( fis );
+          } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ignored ) {
+              <span class="predefined-type">Logger</span>.getLogger( PgJDBCUtils.class.getName() ).log(
+                      <span class="predefined-type">Level</span>.INFO,
+                      <span class="string"><span class="delimiter">&quot;</span><span class="content">attempt to read file from well known location failed'</span><span class="delimiter">&quot;</span></span>,
+                      ignored );
+          }
+          <span class="keyword">return</span> properties;
+      }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The sourceName is the key or namespace from where to pickup the connection details. Simple and effective.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_a_data_source"><a class="anchor" href="#_using_a_data_source"></a><a class="link" href="#_using_a_data_source">1.2. Using a Data source</a></h3>
+<div class="paragraph">
+<p>There are some traditional ways to obtain a database connection. We use a <strong>DataSource</strong>, which itself
+can be seen as a resource, similar to a service in the architecture diagram of the <a href="week03.html#_exercise_testable_design">testable design</a>.
+The data source can then be used to obtain a connection. In the example you see a class that needs a DataSource
+that is provided at construction time of the class, so it is available when the instance is created.
+A connection is <code>AutoClosable</code> so candidate for <strong class="green">try-with-resources</strong>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using a datasource to obtain a connection and use the connection</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">simplejdbc</span>;
+
+<span class="keyword">import</span> <span class="include">java.sql.Connection</span>;
+<span class="keyword">import</span> <span class="include">java.sql.SQLException</span>;
+<span class="keyword">import</span> <span class="include">javax.sql.DataSource</span>;
+
+<span class="comment">/**
+ *
+ * @author hom
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DataSourceDemo</span> {
+
+    <span class="directive">final</span> <span class="predefined-type">DataSource</span> datasource; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="directive">public</span> DataSourceDemo( <span class="predefined-type">DataSource</span> datasource ) { <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="local-variable">this</span>.datasource = datasource;
+    }
+
+    <span class="type">void</span> demo() <span class="directive">throws</span> <span class="exception">SQLException</span> {  <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="predefined-type">String</span> query
+                = <span class="string"><span class="delimiter">&quot;</span><span class="content">select state.name as state,p.name as president,state.year_entered </span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                  + <span class="string"><span class="delimiter">&quot;</span><span class="content"> from president p join state state on(p.state_id_born=state.id)</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                  + <span class="string"><span class="delimiter">&quot;</span><span class="content">where state.name like 'N%'</span><span class="delimiter">&quot;</span></span>;
+            doQuery( query, <span class="predefined-type">System</span>.out );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Resource used in methods of this class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Constructor receives the DataSource.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The method uses the DataSource to get a connection in the try-with-resources block<br>
+and passes it on to the method that executes the query and deals with the result by printing it.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>doQuery(&#8230;&#8203;)</code> method uses the supplied connection to create a statement which is then executed to produce a ResultSet.
+You will see some similarities in what you have seen in project 1, using php PDO.</p>
+</div>
+<div class="listingblock">
+<div class="title">doQuery</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="type">void</span> doQuery( <span class="predefined-type">String</span> query,
+                  <span class="predefined-type">PrintStream</span> out ) <span class="directive">throws</span> <span class="exception">SQLException</span> {
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = datasource.getConnection();
+                <span class="predefined-type">Statement</span> st = con.createStatement();
+                <span class="predefined-type">ResultSet</span> rs = st.executeQuery( query ) ) {
+
+            <span class="keyword">new</span> ResultSetPrinter( rs ).printTable( out );
+
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <strong class="blue">ResultSetPrinter</strong> tries to make a nice looking table of the result of the query.
+You can imagine that this is a bit of code, but that is not relevant for this demo of JDBC.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resultset"><a class="anchor" href="#_resultset"></a><a class="link" href="#_resultset">1.3. ResultSet</a></h3>
+<div class="paragraph">
+<p>For all queries that return a tabular result, the first JDBC class
+you will use is the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/ResultSet.html"><strong>ResultSet</strong></a>.
+The ResultSet also provides so called <strong>Meta Information</strong> that describes the types of the values
+in the columns, the number of columns, display size etc.<br>
+This can be used to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>produce a nice tabular format</p>
+</li>
+<li>
+<p>by using a translation or mapping between the database types and Java types, how the column data is to be used, type wise.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_anatomy_of_a_prepared_statement"><a class="anchor" href="#_anatomy_of_a_prepared_statement"></a><a class="link" href="#_anatomy_of_a_prepared_statement">1.4. Anatomy of a prepared statement</a></h3>
+<div class="paragraph">
+<p>In the example earlier, the sql text used to create the statement is constant, because it needs no user input.
+If a statement does, you should always use a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/PreparedStatement.html">PreparedStatement</a>.</p>
+</div>
+<div class="paragraph">
+<p>In the JDBC standard you fill in the parameters from the user in multiple ways, but the simplest is to
+just use question marks (<code>?</code>)  as placeholders and specify which columns and column values
+you want to insert or update, or you want to use in your select or delete query.</p>
+</div>
+<div class="listingblock">
+<div class="title">sql query text to insert a student.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">insert</span> <span class="class">into</span> students (student_id , lastname, firstname, dob, gender) <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="keyword">values</span>   (<span class="error">?</span>        ,          <span class="error">?</span>,         <span class="error">?</span>,   <span class="error">?</span>,      <span class="error">?</span>) <i class="conum" data-value="2"></i><b>(2)</b>
+returning *                                                          <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Fields can be supplied in any order, including definition order.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>You do not need the spaces before the commas, I added them for readability.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>It is smart to <strong>always</strong> expect back what has been inserted by the database, including generated id and
+ other fields such as the database&#8217;s notion of date or time. Even smarter, but a little more work
+is to specify the columns instead of a <code>*</code>, so that the order in which you receive them is independent
+of database schema organization and <em>stable</em>.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Lots of problems can allegedly be solved with an extra level of <a href="https://en.wikipedia.org/wiki/Indirection">Indirection</a>.
+As an example: in programming there is the rule to not program against an implementation, but against an interface.
+With databases the indirection trick is: <strong>use views instead of tables</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now assume the SQL text contains the above.
+Also assume that we have an array of student data, simply as an array of objects.</p>
+</div>
+<div class="listingblock">
+<div class="title">student data in array</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="predefined-type">Object</span><span class="type">[]</span> studentData = {<span class="integer">123513</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Klaassen</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">1993-05-12</span><span class="delimiter">&quot;</span></span> , <span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>}; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The most likely source of this data a Student object deconstructed by a <a href="week06.html#_generic_mapper">StudentMapper</a>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then creating the prepared statement and filling it with values is a simple loop:</p>
+</div>
+<div class="listingblock">
+<div class="title">loop to substitute placeholders.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">     <span class="keyword">try</span> (
+          <span class="predefined-type">Connection</span> con = datasource.getConnection();
+          <span class="predefined-type">PreparedStatement</span> stmt = con.prepareStatement( query ); ) {
+
+            <span class="type">int</span> count = <span class="integer">0</span>;
+            <span class="keyword">for</span> ( <span class="predefined-type">Object</span> param : studentData ) {
+                stmt.setObject( ++count, param ); <i class="conum" data-value="1"></i><b>(1)</b>
+            }
+            <span class="keyword">return</span> stmt.executeUpdate();
+     }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>note the pre-increment, so count starts with column <strong>1</strong>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You see that this is quite simple and other than what is specified in the query, there is
+no extra need for data conversion or named column use.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Contrary to what the documentation suggests, you can almost always use setObject,
+because in the common case, what you put in is of the right type, as long as you keep the
+order of the parameter types intact.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This approach can be used to make database access even simpler, so you only have to provide the data
+in an array and the rest can be packed into utility methods.</p>
+</div>
+<div class="paragraph">
+<p>The holy grail is to find a way to do all kind of queries against tables, and the only
+thing you need to know is the table name and what entities as Java objects can be expected to
+be read from or written to the table.</p>
+</div>
+<div class="paragraph">
+<p>We combine this with the ideas presented in part 3 about testable design, part 4, generics, and part 6, reflection.
+We are quite sure that the programming style from week 5, with lambda expressions and streams will also come handy.</p>
+</div>
+<div class="paragraph">
+<p>We actually want to focus on testing the <strong>business code</strong>, with that business code to be oblivious of
+the actual persistence layer or service it uses to get the data, and avoid to write a lot of boiler plate code.
+As a replacement for the later we will introduce the DAO concept.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_traditional_preparing_statements"><a class="anchor" href="#_traditional_preparing_statements"></a><a class="link" href="#_traditional_preparing_statements">2. Traditional preparing statements</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In tests you should use traditional approaches, instead of the mechanisms your
+are testing. The code below illustrates what that means.<br>
+It is used by code that tests the bank transfer service implemented in the database. This example
+is filling the account tables from some List of accounts.</p>
+</div>
+<div class="listingblock">
+<div class="title">load accounts from list. The code is part of a test suite to prepare the database for tests.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">String</span> addAccount = <span class="string"><span class="delimiter">&quot;</span><span class="content">insert into account(accountid,balance,maxdebit,customerid,astate) </span><span class="delimiter">&quot;</span></span>
+                             + <span class="string"><span class="delimiter">&quot;</span><span class="content">values(?,?,?,?,?)</span><span class="delimiter">&quot;</span></span>;
+    <span class="directive">static</span> <span class="type">void</span> loadAccounts() <span class="directive">throws</span> <span class="exception">SQLException</span> {
+
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = olifantysSource.getConnection();
+                <span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement( addAccount ) ) {
+            <span class="keyword">for</span> ( Account account : accounts ) {
+                pst.setObject( <span class="integer">1</span>, account.accountid );
+                pst.setBigDecimal( <span class="integer">2</span>, account.balance );
+                pst.setBigDecimal( <span class="integer">3</span>, account.maxdebit );
+                pst.setObject( <span class="integer">4</span>, account.customerid );
+                pst.setString( <span class="integer">5</span>, account.astate );
+                pst.addBatch(); <i class="conum" data-value="1"></i><b>(1)</b>
+            }
+            <span class="type">int</span><span class="type">[]</span> results = pst.executeBatch();
+            <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">results = </span><span class="delimiter">&quot;</span></span> + <span class="predefined-type">Arrays</span>.toString( results ) );
+
+        } <span class="keyword">catch</span> ( PSQLException e ) {
+            <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">caused by </span><span class="delimiter">&quot;</span></span> + e.getNextException() );
+            <span class="keyword">throw</span> e;
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We do multiple inserts in one batch. Auto commit is off.
+The try-with-resources block takes care of the jdbc transaction.</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_database_meta_information"><a class="anchor" href="#_database_meta_information"></a><a class="link" href="#_database_meta_information">2.1. Database Meta Information</a></h3>
+<div class="paragraph">
+<p>DO Mention the <a href="https://www.baeldung.com/jdbc-database-metadata">metadata&#8230;&#8203;</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transactions"><a class="anchor" href="#_transactions"></a><a class="link" href="#_transactions">3. Transactions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Things that can go wrong will go wrong. This problem is aggravated by having to use multiple <em>things</em>.
+Murphy says hello again.</p>
+</div>
+<div class="paragraph lead">
+<p>A <strong>transaction</strong> is defined as a sequence of operations that can either succeed completely or be undone
+without any residual effect.<br>
+In plain English: It either happens fully, or we can forget about it.</p>
+</div>
+<div class="paragraph">
+<p>For a persistence layer that means: if it cannot fulfill the obligation it should
+make sure that nothing happens to compromise the data already stored <em>before</em> the transaction.</p>
+</div>
+<div class="paragraph">
+<p>The simple explanation of how this works is that the party that is busy with a resource gets
+the resource all for itself, locking any other parties out.
+If something fails, the mess created can either be undone (rollback) or not committed, which in effect is the same.</p>
+</div>
+<div class="paragraph">
+<div class="title">DReadlocks? by <a href="https://cilserolf.artstation.com/projects/W2JAqE">Cil Flores</a></div>
+<p><span class="image related thumb left"><img src="./images/cil-flores-jack.jpg" alt="cil flores jack" width="250" title="by Cil Flores"></span>
+Locking out sounds serious, and it is, on multiple accounts.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When using a <strong class="big">BIG</strong> lock, as locking out all other parties, things become <em class="big">VERY</em> slow.</p>
+</li>
+<li>
+<p>When lock less, like just a table, or better still, only the records we want to modify, then
+<strong class="big">DEAD</strong>locks can occur, which is even more problematic than having to wait.</p>
+</li>
+<li>
+<p>In all cases, when something goes awry, one may have to clean up mess in multiple places.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All this can be related to quite difficult problems. Luckily there are solutions to that and,
+not unimportant, as far as the database goes, that can typically deal with the issues pretty well.</p>
+</div>
+<div class="paragraph">
+<p>The hello world of transactions is transferring money between bank accounts.
+In this simplest case the bank records live in the same table.
+The essential operation involves at least two database records, one to debit (take from) and the other to credit(add to).
+To modify a record without anyone interfering, you have to lock it. So you need two locks, one for each records.
+You can only request locks in sequence, one after the other.<br>
+Now assume that other transactions are taking place at the same time, all updating the same table.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If something is difficult, see if you can find a solution that does the job, maybe even better.
+In the solution below we choose to delegate the deadlock avoidance to a (set of) stored procedures inside the database.
+This simplifies the design and implementation of the Java layer, is probably more reliable and makes less work
+for us the Java programmers, which always is cool. But be warned that someone has to test and implement
+the stored procedure. And if you aspire to become a 'FULL STACK' developer, that could be you too.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_stored_procedures"><a class="anchor" href="#_using_stored_procedures"></a><a class="link" href="#_using_stored_procedures">4. Using Stored Procedures</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As promised in the tip, we delegate the transactional responsibility to the database,
+so calling it is relatively simple.</p>
+</div>
+<div class="paragraph">
+<p>First the top level code in the proper <a href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">clean code</a> order.</p>
+</div>
+<div class="paragraph">
+<p>Calling the code is actually quite simple, it is like calling a prepared statement
+with a select that invokes the stored procedure.</p>
+</div>
+<div class="listingblock">
+<div class="title">This is what a test would look like from java through the jdbc driver.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="type">long</span>  FROM_ACCOUNT= <span class="integer">100</span>;
+    <span class="directive">static</span> <span class="type">long</span>  TO_ACCOUNT= <span class="integer">110</span>;
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> transferOK() <span class="directive">throws</span> <span class="exception">SQLException</span> {
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = dataSource.getConnection(); ) {
+            con.setAutoCommit( <span class="predefined-constant">false</span> );
+            Account pre = findAccount( con, TO_ACCOUNT );
+            <span class="type">long</span> transactionId= doQuery( con, <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="predefined-type">System</span>.out,  <i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">select transferlockfree(?,?,?,'should be ok')</span><span class="delimiter">&quot;</span></span>,  <i class="conum" data-value="3"></i><b>(3)</b>
+                FROM_ACCOUNT, TO_ACCOUNT,<span class="integer">110</span>,<span class="integer">25</span> ); <i class="conum" data-value="4"></i><b>(4)</b>
+            Account post = findAccount( con, TO_ACCOUNT );
+            assertThat( post.balance )
+                .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">transaction failed</span><span class="delimiter">&quot;</span></span>)
+                .isEqualTo( pre.balance.add( <span class="keyword">new</span> <span class="predefined-type">BigDecimal</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">25</span><span class="delimiter">&quot;</span></span> ) ) );
+            con.rollback(); <span class="comment">// this is a test, leave the account in pristine state.</span>
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implementing doQuery is left as an exercise.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>log output to system out</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>query text</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>query params</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A psql script that  does the above can be found under the link <a href="../topics/code/sql/bankingactions.sql">bankingactions.sql</a></p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://www.postgresql.org/docs/13/plpgsql.html">pgplsql</a> code in the link above avoids deadlocks by using the account records
+in a fixed from low to high order.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Although this website is about Java programming, mastering database programming on
+the database level is a skill that belongs in the skill-set of a full stack developer or architect.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_tao_of_dao"><a class="anchor" href="#_the_tao_of_dao"></a><a class="link" href="#_the_tao_of_dao">5. The TAO of DAO.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Data Access Object (DAO) pattern provides an abstraction to the business logic
+that hides and thus decouples persistence from the business logic.
+When done right, one DAO implementation can be replaced with another one, for instance
+for the purpose of testing (with a mocked DAO), speed (with an in-memory DAO) or different service,
+for instance by replacing the relational database with a (remote) rest service.</p>
+</div>
+<div class="paragraph">
+<p>Lets first start with a example of why one would like to use a <code>DAO</code>.</p>
+</div>
+<div class="paragraph">
+<p>In the CSV to Objects exercise we saw that it&#8217;s possible to use
+CSV files to store and retrieve <code>Students</code>.
+Files can be used for this purpose, however it&#8217;s not always the best solution.
+For example if we want to make sure values are of the correct type,
+model relationships between different objects or
+make sure that certain values are unique.</p>
+</div>
+<div class="paragraph">
+<p>For this level of control we can use a Relation Database Management System (RDBMS).</p>
+</div>
+<div class="paragraph">
+<p>So imagine that we want to use the database to store and retrieve <code>Students</code>,
+as done in the CSV to Objects exercise.
+The <code>Student</code> class itself is of course not responsible for anything to do with the database.
+So we need a class that is specifically for database interaction for <code>Students</code>.
+For example a <code>StudentDAO</code>. This <code>StudentDAO</code> contains methods to save, get, update and delete <code>Students</code>. For example the update method could look as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">StudentDAO.update(student) method</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Optional&lt;Student&gt; update(Student student){
+    <span class="predefined-type">String</span> query =
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">update students set (lastname, firstname, email)</span><span class="delimiter">&quot;</span></span><i class="conum" data-value="1"></i><b>(1)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">= (?, ?, ?) </span><span class="delimiter">&quot;</span></span><i class="conum" data-value="2"></i><b>(2)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">where snummer=?</span><span class="delimiter">&quot;</span></span><i class="conum" data-value="3"></i><b>(3)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">returning lastname, firstname, email</span><span class="delimiter">&quot;</span></span>;<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="keyword">try</span>(<span class="predefined-type">Connection</span> con = dataSource.getConnection();){
+        <span class="keyword">try</span>(<span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement(query)){<i class="conum" data-value="5"></i><b>(5)</b>
+            pst.setString(<span class="integer">1</span>, student.getLastname());<i class="conum" data-value="6"></i><b>(6)</b>
+            pst.setString(<span class="integer">2</span>, student.getFirstname());
+            pst.setString(<span class="integer">3</span>, student.getEmail());
+            pst.setInt(<span class="integer">4</span>, student.getSnummer());
+
+            <span class="keyword">try</span> (<span class="predefined-type">ResultSet</span> rs = pst.executeQuery();) {<i class="conum" data-value="7"></i><b>(7)</b>
+                <span class="keyword">if</span> ( rs.next() ) {<i class="conum" data-value="8"></i><b>(8)</b>
+                    <span class="keyword">return</span> Optional.ofNullable( recordToEntity( rs ) );<i class="conum" data-value="9"></i><b>(9)</b>
+                } <span class="keyword">else</span> {
+                    <span class="keyword">return</span> Optional.empty();
+                }
+            }
+        }
+    } <span class="keyword">catch</span> (<span class="exception">SQLException</span> ex) {
+        <span class="predefined-type">Logger</span>.getLogger(StudentDAO.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(ex.getMessage(), ex);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify all the names of student fields</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the correct number of placeholders</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Specify which student record to update</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the values we want back from the database</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Prepare the statement (send it to the database)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Set all the required values</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Execute the query</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Check if the <code>ResultSet</code> contains values (rows)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>Convert the <code>ResultSet</code> back to an entity (including <code>snummer</code>)</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>One of the problems with this approach is that the <code>StudentDAO</code> has to be
+updated if the <code>Student</code> entity changes. E.g. if we add a new field to <code>Student</code>
+or change the name of an existing field we have to update the <code>StudentDAO</code>.</p>
+</div>
+<div class="paragraph">
+<p>Thankfully in the previous week we created a <code>GenericMapper</code>. This <code>GenericMapper</code>
+has exactly the functionality that we need to generate the
+<code>query</code> and the <code>PreparedStatement</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">StudentDAO.update(student) using the <code>StudentMapper</code></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Optional&lt;Student&gt; update(Student student){
+    <span class="type">var</span> studentMapper = Mapper.mapperFor(Student.class);
+    <span class="type">var</span> columnNames = studentMapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
+            .stream()
+            .map( <span class="predefined-type">Field</span>::getName )<i class="conum" data-value="2"></i><b>(2)</b>
+            .collect( toList() );
+    <span class="predefined-type">String</span> columns = <span class="predefined-type">String</span>
+            .join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, columnNames );<i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">String</span> placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="predefined-type">String</span> query = format(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)</span><span class="delimiter">&quot;</span></span>
+            + <span class="string"><span class="delimiter">&quot;</span><span class="content"> returning  %2$s</span><span class="delimiter">&quot;</span></span>,
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">students</span><span class="delimiter">&quot;</span></span>,
+            columns,
+            placeholders,
+            mapper.getKeyFieldName() );
+    <span class="keyword">try</span>(<span class="predefined-type">Connection</span> con = dataSource.getConnection();){
+        <span class="keyword">try</span>(<span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement(query)){
+            fillPreparedStatement(pst, student);<i class="conum" data-value="5"></i><b>(5)</b>
+            <span class="keyword">try</span> (<span class="predefined-type">ResultSet</span> rs = pst.executeQuery();) {
+                <span class="keyword">if</span> ( rs.next() ) {
+                    <span class="keyword">return</span> Optional.ofNullable( recordToEntity( rs ) );
+                } <span class="keyword">else</span> {
+                    <span class="keyword">return</span> Optional.empty();
+                }
+            }
+        }
+    } <span class="keyword">catch</span> (<span class="exception">SQLException</span> ex) {
+        <span class="predefined-type">Logger</span>.getLogger(StudentDAO.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(ex.getMessage(), ex);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Retrieve all the fields of <code>Student</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Map the fields to their names</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Join the column names</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Helper function that creates a string containing the placeholders</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Fill the <code>PreparedStatement</code> with the values from <code>Student</code> using the <code>StudentMapper.deconstruct(student)</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By doing it this way, we don&#8217;t have to update the <code>StudentDAO</code> if the <code>Student</code>
+is changed (we can auto-generate the new StudentMapper instead).</p>
+</div>
+<div class="paragraph">
+<p>This now works for the <code>Student</code> class, but of course we need this functionality
+for more entities, e.g. <code>Lecturer</code>, <code>Course</code>, etc. We can do that by making our <code>StudentDAO</code> generic. In the previous weeks we have seen how to convert an implementation
+for a specific type to a generic base implementation. By following the same steps
+we can come to the following generic <code>DAO</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">generic DAO</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">DAO</span>&lt;E, K&gt; <span class="directive">extends</span> AutoCloseable{<i class="conum" data-value="1"></i><b>(1)</b>
+    Optional&lt;E&gt; update( E e );
+    ....<i class="conum" data-value="2"></i><b>(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Where <code>E</code> is the type of the entity (e.g. <code>Student</code>) and <code>K</code> is the type of the
+primary key (e.g. Integer)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Removed additional methods for brevity</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Usage example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  DAO&lt;Employee,<span class="predefined-type">Integer</span>&gt; sdao = daoFactory.createDao( Student.class );
+  Student j = sdao.save( <span class="keyword">new</span> Student(....) ).get(); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/daosequencesimple.svg" alt="daosequencesimple">
+</div>
+<div class="title">Figure 1. Sequence diagram of simple operation</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The return value of the save operation is an <code>Optional&lt;Student&gt;</code>. If present
+the student object contains the exact same values as the record in the database, primary key and generated field and all the rest.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A DAO is a use-once object. So you get a DAO, use and then discard it (let the garbage collector take care of it).
+If you need to work on more than one entity, you should get a transaction token, that can then be used to commit or
+rollback the operation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Transaction example.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="keyword">try</span> (
+            DAO&lt;Department, <span class="predefined-type">Integer</span>&gt; ddao = daof.createDao( Department.class );  <i class="conum" data-value="1"></i><b>(1)</b>
+            TransactionToken tok = ddao.startTransaction();              <i class="conum" data-value="2"></i><b>(2)</b>
+            DAO&lt;Employee,<span class="predefined-type">Integer</span>&gt; edao = daof.createDao( Employee.class, tok ); ) {  <i class="conum" data-value="3"></i><b>(3)</b>
+
+        savedDept = ddao.save( engineering );
+        <span class="type">int</span> depno = savedDept.getDepartmentid();
+        dilbert.setDepartmentid( depno );
+        savedDilbert = edao.save( dilbert );
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">savedDilbert = </span><span class="delimiter">&quot;</span></span> + savedDilbert );
+        tok.commit();                                                             <i class="conum" data-value="4"></i><b>(4)</b>
+    } <span class="keyword">catch</span> ( <span class="exception">Exception</span> ex ) {
+        ttok.rollback();                                                        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="predefined-type">Logger</span>.getLogger( TransactionTest.class.getName() ).
+                        log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a Dao,</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>and have it make a token for all other daos involved in this transaction to use</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>as here with the edao.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>If this point is reached we have success and commit,</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>otherwise any exception from the try-block above leads us here and we abort the transaction, thereby undoing everything that might have happened, database wise.</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/daosequencetransaction.svg" alt="daosequencetransaction">
+</div>
+<div class="title">Figure 2. Sequence diagram of transactional operation</div>
+</div>
+<div class="paragraph">
+<p>Now we can use this generic <code>DAO</code> to create a <code>StudentDAO</code>, <code>CourseDAO</code>, etc.
+The implementing class of a <code>DAO</code> needs to retrieve the correct mapper for the entity type.
+Thankfully that was also already implemented in last weeks exercise.</p>
+</div>
+<div class="listingblock">
+<div class="title">retrieving the correct mapper for entity type</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Mapper&lt;Student, <span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor(Student.class );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The are only two changes needed to make the <code>update</code> method from the non-generic <code>StudentDAO</code> work.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieve the correct mapper based on the generic type.</p>
+</li>
+<li>
+<p>Auto-generate the table name from the generic type</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>And now we have a generic <code>DAO</code> that can update entities in the database.</p>
+</div>
+<div class="paragraph">
+<p>And now back to the theory.</p>
+</div>
+<div class="paragraph">
+<p>A DAO is defined as an interface, and the implementations can be generated by a factory and are reused
+when registered in a registry. A lot like the things we saw in week 6.</p>
+</div>
+<div class="listingblock">
+<div class="title">DAO Methods</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="comment">// K is id, E is entity</span>
+<span class="type">interface</span> <span class="class">DAO</span>&lt;K,E&gt; <span class="directive">extends</span> AutoClosable {
+    Optional&lt;E&gt; get( K id );
+    <span class="predefined-type">List</span>&lt;E&gt; getAll();
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;E&gt; getByColumnValues( <span class="predefined-type">Object</span>... keyValues );
+    Optional&lt;E&gt; save( E e );
+    E update( E e );
+    <span class="type">void</span> deleteEntity( E e );
+    <span class="type">void</span> deleteById( K k );
+    <span class="keyword">default</span> TransactionToken startTransaction();
+    <span class="keyword">default</span> DAO&lt;E, K&gt; setTransactionToken( TransactionToken tok );
+    <span class="keyword">default</span> TransactionToken getTransactionToken();
+    <span class="keyword">default</span> <span class="type">int</span> size();
+    <span class="keyword">default</span> <span class="type">int</span> lastId();
+    <span class="keyword">default</span> <span class="type">void</span> close() <span class="directive">throws</span> <span class="exception">Exception</span>;
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;? <span class="directive">extends</span> E&gt; saveAll( <span class="predefined-type">List</span>&lt;E&gt; entities );
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;? <span class="directive">extends</span> E&gt; saveAll( E... entities );
+    <span class="keyword">default</span> <span class="type">void</span> deleteAll( <span class="predefined-type">Iterable</span>&lt;E&gt; entities );
+    <span class="keyword">default</span> <span class="type">void</span> deleteAll( E... entities );
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;E&gt; anyQuery( <span class="predefined-type">String</span> queryText, <span class="predefined-type">Object</span>... params );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A database specific DAO may have extra methods.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/daoclassdiagram.svg" alt="daoclassdiagram">
+</div>
+<div class="title">Figure 3. Class diagram of a DAO and its collaborators</div>
+</div>
+<div class="paragraph">
+<p>In the class diagram you see that the DAO can have multiple realizations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>In memory:</strong> The DAO is simply keeping the data in memory, typically in lists or maps.</p>
+</li>
+<li>
+<p><strong>RDBMS:</strong> Like a PostgreSQL based implementation, or even one that is database dialect agnostic.</p>
+</li>
+<li>
+<p><strong>REST:</strong> A DAO that uses rest service(s) do provide its service.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In all cases, the business logic knows a DAO factory to get a DAO, but does NOT need to know
+the implementation. The better you stick to rule of low coupling, that is let the business logic know as little as possible
+about the implementation, the better the business logic is portable to a world with different service implementations.
+For instance, the same business logic would be able to run on top of or talk to a backing RDBMS database, a rest service, a no-SQL database
+or a file-system.</p>
+</div>
+<div class="paragraph">
+<p>To make this work, the service should be rich enough, to avoid the need for the circumvention of the abstract definitions.
+One could imagine to define an abstract expression language that can express things like <code class="blue">'give me all contracts that expire before a specific date'</code>,
+including means to combine these mostly boolean expressions.
+But that would be an exercise for another day.</p>
+</div>
+<div class="paragraph">
+<p>Lets get our hands dirty implementing a DAO using PostgreSQL as the supported database.</p>
+</div>
+<div class="sect2">
+<h3 id="_update"><a class="anchor" href="#_update"></a><a class="link" href="#_update">5.1. Update</a></h3>
+<div class="paragraph">
+<p>We will now take a look at how the update method is implemented in the <code>PGDAO</code>.</p>
+</div>
+<div class="paragraph">
+<p><code class="blue">E update( E t );</code>, We get an object E and should update the correct row
+in the database, based on the primary key.</p>
+</div>
+<div class="paragraph">
+<p>The SQL statement for that is basically <code>update tablename set (col1, col2) = (val1, val2)
+where idcolumn=?</code>.
+But we want more control, because we want to get column values in the order of the entity
+so we can create an entity instance of it using the mapper.
+We can ask the same mapper for the field order.</p>
+</div>
+<div class="paragraph">
+<p>So in terms of Student: update students set <code>(firstname,&#8230;&#8203; active,)</code>,
+with all defined field names in between.</p>
+</div>
+<div class="paragraph">
+<p>The DAO code, from top (near the user of the method) to the bottom (implementation details).</p>
+</div>
+<div class="listingblock">
+<div class="title">Constructor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">final</span> Mapper&lt;E, K&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
+
+    PGDAO( PGDAOFactory fac, <span class="predefined-type">DataSource</span> ds, <span class="predefined-type">Class</span>&lt;E&gt; entityType,
+            QueryFactory queryTextCache, AbstractQueryExecutor qe ) {
+
+        <span class="local-variable">this</span>.mapper = Mapper.mapperFor( entityType );<i class="conum" data-value="2"></i><b>(2)</b>
+        ....<i class="conum" data-value="3"></i><b>(3)</b>
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Mapper&lt;E,K&gt; used by DAO&lt;K,E&gt; is as abstract (that is in terms of E) as the dao.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the mapper for the entity type</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Rest of the constructor left out for brevity</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Update method</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+<span class="directive">public</span> E update( E t ) {
+    <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != transactionToken ) {<i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> update( transactionToken.getConnection(), t );
+    }
+    <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = <span class="local-variable">this</span>.getConnection(); ) {<i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="keyword">return</span> update( con, t );<i class="conum" data-value="3"></i><b>(3)</b>
+    } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) { <span class="comment">// cannot test cover this, unless connection breaks mid-air</span>
+        <span class="predefined-type">Logger</span>.getLogger( PGDAO.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE,
+                ex.getMessage() );
+        <span class="keyword">throw</span> <span class="keyword">new</span> DAOException( ex.getMessage(), ex );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In case of a pending transaction, there is a token. Use the token&#8217;s transaction.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the connection in a try-with-resources block and do it all by yourself.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>And do the work in the method <code>E update(con, id);</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So what does the update helper method do?</p>
+</div>
+<div class="listingblock">
+<div class="title">Update helper method</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> E update( <span class="directive">final</span> <span class="predefined-type">Connection</span> c, E e ) {
+    <span class="predefined-type">String</span> sql = queryFactory.updateQueryText();<i class="conum" data-value="1"></i><b>(1)</b>
+    K key = mapper.keyExtractor().apply( e );<i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="keyword">return</span> (E) qe.doUpdate( c, sql, e, key );<i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Retrieve the actual query text (update tablename set &#8230;&#8203;.)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Retrieve the primary key</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute the actual update</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will have a look at the <code>updateQueryText</code> method in the exercise of this week, so for
+now let us focus on the <code>doUpdate</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">doUpdate method, create the prepared statement</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+E doUpdate( <span class="directive">final</span> <span class="predefined-type">Connection</span> c, <span class="predefined-type">String</span> sql, E e, K key ) <span class="directive">throws</span> DAOException {
+    <span class="keyword">try</span> ( <span class="predefined-type">PreparedStatement</span> pst = c.prepareStatement( sql ); ) {
+        <span class="predefined-type">Object</span><span class="type">[]</span> parts = mapper.deconstruct( e );
+        <span class="type">int</span> j = <span class="integer">1</span>;
+
+        <span class="comment">// all fields</span>
+        <span class="keyword">for</span> ( <span class="predefined-type">Object</span> part : parts ) {
+            <span class="keyword">if</span> ( part == <span class="predefined-constant">null</span> ) { <i class="conum" data-value="1"></i><b>(1)</b>
+                pst.setObject( j++, part );
+                <span class="keyword">continue</span>;
+            }
+            <span class="predefined-type">Object</span> po = factory.marshallOut( part ); <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="keyword">if</span> ( po <span class="keyword">instanceof</span> PGobject ) {
+                pst.setObject( j++, part, java.sql.Types.OTHER ); <i class="conum" data-value="3"></i><b>(3)</b>
+            } <span class="keyword">else</span> {
+                pst.setObject( j++, part ); <i class="conum" data-value="4"></i><b>(4)</b>
+            }
+        }
+        pst.setObject( j, key ); <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="keyword">try</span> ( <span class="predefined-type">ResultSet</span> rs = pst.executeQuery(); ) {
+            <span class="keyword">if</span> ( rs.next() ) {
+                <span class="keyword">return</span> (E) recordToEntity( rs ); <i class="conum" data-value="6"></i><b>(6)</b>
+            } <span class="keyword">else</span> {
+                <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+            }
+        }
+    } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) {
+        <span class="predefined-type">Logger</span>.getLogger( PGDAO.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>,
+                ex );
+        <span class="keyword">throw</span> <span class="keyword">new</span> DAOException( ex.getMessage(), ex );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code class="blue">null</code> needs no conversion.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Do required type conversions. The dao factory is specific to a database dialect.
+You should <strong class="red">not</strong> do this in the mapper, because that would bind the mapper to a database.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>So called <code class="blue">PGobjects</code> get special treatment. Needed for none-standard JDBC types such as TIMERANGES</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Walk through all columns in the PreparedStatement.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Put the key value at the place of the last <code>?</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>We know this guy.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Not lets have a quick look at how to convert a record from the <code>ResultSet</code> to an instance
+of the entity type.</p>
+</div>
+<div class="listingblock">
+<div class="title">recordToEntity, convert a record of the <code>ResultSet</code> to an instance of entity type</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+E recordToEntity( <span class="directive">final</span> <span class="predefined-type">ResultSet</span> rs ) <span class="directive">throws</span> <span class="exception">SQLException</span> {
+    <span class="predefined-type">Object</span><span class="type">[]</span> parts = <span class="keyword">new</span> <span class="predefined-type">Object</span>[ mapper.getArraySize() ]; <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="integer">0</span>; i &lt; parts.length; i++ ) {
+        <span class="predefined-type">Class</span>&lt;?&gt; type = mapper.entityFields().get( i ).getType();<i class="conum" data-value="2"></i><b>(2)</b>
+        parts[i] = factory.marshallIn( type, rs.getObject( i + <span class="integer">1</span> ) );<i class="conum" data-value="3"></i><b>(3)</b>
+    }
+    <span class="keyword">return</span> mapper.construct( parts );<i class="conum" data-value="4"></i><b>(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create an array that will hold all the entity fields</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the type of the entity field</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Convert the object from the record to the correct field type</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Construct a new entity instance</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now we know how the <code>PGDAO</code> update works, except for the <code>updateQueryText</code>.
+This part will be discussed in the following exercise.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercise_generic_dao"><a class="anchor" href="#_exercise_generic_dao"></a><a class="link" href="#_exercise_generic_dao">Exercise Generic DAO</a></h3>
+<div class='ex'><details open class='ex'><summary class='ex'>Generic DAO</summary>
+<div class="paragraph">
+<p>To make your part better testable we introduced a few helper types.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/pgdaodetails.svg" alt="pgdaodetails">
+</div>
+<div class="title">Figure 4. The detailed class diagram for the PGDAO and its helpers.</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Refactoring out the execution of the queries to the actual database
+and introducing the interface allows you to mock the AbstractqueryExecutor.
+The default implementation is given, and can be left as is.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The other class is the QueryFactory, which both computes AND caches
+the queries that are specific for an operation and entity type.</p>
+</div>
+<div class="paragraph">
+<p>In this exercise you will work with the <code>genericdao</code> project.
+The layout of the project is as described in the class diagram.</p>
+</div>
+<div class="paragraph">
+<p>The task is to test and implement the <code>QueryFactory</code> class.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The project you get is a complete DAO implementation with the tests and implementations
+for the QueryFactory for you to complete. Look for the <strong>TODO</strong>s (in netbeans <span class="keyseq"><kbd>ctrl</kbd>+<kbd>6</kbd></span>).</p>
+</li>
+<li>
+<p>An actual database will not be needed by your tests. However, if you would like to experiment
+with that, you need the have an <code>application.properties</code> file in the root of your directory.
+There is a template for that file to start with, but do not commit the applications.properties file.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you are only testing your own work, remove the application.properties file, so you do not enable the database tests.
+In that case the tests take about 3 seconds to run; with the database tests active, if takes 25 seconds on a fast machine.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For every operation there are two goals:
+. Write/complete the test to assert that the query contains the required parts such as
+ the sql command, column names, the placeholders (?,?,?,?,?,?) and table name.
+. In the implementation
+.. Generate the correct query string
+.. Cache the calculated query string for future use.</p>
+</div>
+<div class="paragraph">
+<p>Lets have a look at the <code>QueryFactory</code> and especially the <code>updateQueryText</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Constructor of <code>QueryFactory</code></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Mapper&lt;?, ?&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="predefined-type">ConcurrentMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; queryTextCache = <span class="keyword">new</span> <span class="predefined-type">ConcurrentHashMap</span>&lt;&gt;();<i class="conum" data-value="2"></i><b>(2)</b>
+
+<span class="directive">public</span> QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
+    <span class="local-variable">this</span>.mapper = mapper;<i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We need a mapper to be able to create the correct query strings</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Cache so we don&#8217;t need to recompute the query string every time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Save the correct mapper for this entity type</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">updateQueryText</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">String</span> updateQueryText() {
+    <span class="keyword">return</span> queryTextCache
+        .computeIfAbsent( <span class="string"><span class="delimiter">&quot;</span><span class="content">update</span><span class="delimiter">&quot;</span></span>, x -&gt; computeUpdateQueryText() <i class="conum" data-value="1"></i><b>(1)</b>
+    );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Check if "update" is already in the cache, if not compute the update query text</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So now we get to the actual computation of the update query string.</p>
+</div>
+<div class="listingblock">
+<div class="title">Compute the update query string</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="predefined-type">String</span> computeUpdateQueryText() {
+    <span class="type">var</span> columnNames = mapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
+            .stream()
+            .map( <span class="predefined-type">Field</span>::getName )<i class="conum" data-value="2"></i><b>(2)</b>
+            .collect( toList() );
+    <span class="predefined-type">String</span> columns = <span class="predefined-type">String</span>
+            .join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, columnNames );
+    <span class="predefined-type">String</span> placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">String</span> sqlt = format(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)</span><span class="delimiter">&quot;</span></span>
+            + <span class="string"><span class="delimiter">&quot;</span><span class="content"> returning  %2$s</span><span class="delimiter">&quot;</span></span>,
+            tableName(),
+            columns,
+            placeholders,
+            mapper.getKeyFieldName() );<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="keyword">return</span> sqlt;
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Get all the entity fields</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Map the fields to their respective names</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Helper method to create a string containing the number of placeholders</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Get the key field</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>And finally have a look at the <code>makePlaceHolders</code> helper method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> <span class="predefined-type">String</span> makePlaceHolders( <span class="directive">final</span> <span class="type">int</span> count ) {
+    <span class="predefined-type">String</span><span class="type">[]</span> qm = <span class="keyword">new</span> <span class="predefined-type">String</span>[ count ];
+    <span class="predefined-type">Arrays</span>.fill( qm, <span class="string"><span class="delimiter">&quot;</span><span class="content">?</span><span class="delimiter">&quot;</span></span> );
+    <span class="keyword">return</span> <span class="predefined-type">String</span>.join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, qm );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now your task is to do the same for the other methods in <code>QueryFactory</code>.<br>
+<strong>Test driven</strong> of course, so first complete the test and then implement.</p>
+</div>
+</details></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_databases"><a class="anchor" href="#_testing_databases"></a><a class="link" href="#_testing_databases">6. Testing databases</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Your database design is an essential part of your application architecture.
+Using a database properly, as in declaring constraints and let the database
+decide what is acceptable constraint wise is the way to go.</p>
+</div>
+<div class="paragraph">
+<p>When you declare a constraint, the database will <code>raise</code> (sql terminology for <code>throw</code>) an exception,
+that is delivered to the java client as an SQLException or a subclass thereof. The SQLException will contain all
+the relevant information for either the programmer (syntax problem in the statement)
+or the program&#8217;s user because the input is not acceptable.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Client side validation is no substitute for proper database checks. Client side validation
+is at best an improvement to the user experience, because the client software can help prevent problems further down (after submitting the form) the line.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_transactions_2"><a class="anchor" href="#_transactions_2"></a><a class="link" href="#_transactions_2">6.1. Transactions</a></h3>
+<div class="paragraph">
+<p>Often the interaction with the database involves the update of or insert into more then one record in one or more tables.
+Each of these operations may cause a constraint violation, meaning that the operation is not accepted. This will cause an exception.</p>
+</div>
+<div class="paragraph">
+<p>When you have such a scenario, we call that a transaction. A transaction in databases means: It either completes successfully or not at all.</p>
+</div>
+<div class="paragraph">
+<p>The setup typically is</p>
+</div>
+<div class="listingblock">
+<div class="title">jdbc transaction example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">try</span> (<span class="predefined-type">Connection</span> co= datasource.getConnection) {
+
+} <span class="keyword">catch</span>(<span class="exception">SQLException</span> sqe) {
+  co.rollback();
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_first_or_objects_first"><a class="anchor" href="#_data_first_or_objects_first"></a><a class="link" href="#_data_first_or_objects_first">7. Data First or Objects first?</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have seen in part 6 that you can retreive information about
+objects and that you can even derive code from that.<br>
+The same applies to the database. You can retrieve information
+from the data base objects (tables, views) and use that to 'reflect' on it,
+for instance, as has been shown, to get type and names of columns.</p>
+</div>
+<div class="paragraph">
+<p>There are two approaches</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Objects First.</p>
+</li>
+<li>
+<p>Data (database) first.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_objects_first"><a class="anchor" href="#_objects_first"></a><a class="link" href="#_objects_first">7.1. Objects First.</a></h3>
+<div class="paragraph">
+<p>Objects is the approach you use when the design in the programming language is leading.
+You can use all the features of object orientation, and may have to bend the <span class="big">OO</span>-rules
+a bit to fit stuff into the database. As an example for the less than perfect match:
+There is no real (usable) inheritance in the database, so the best you can do is
+join tables to go from person to teacher-attributes to teacher. The teacher is then a view. (How exactly is left as an exercise).
+The example below shows some design and implementation details for <strong>Student</strong>s.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You create you entities in Java first.</p>
+</li>
+<li>
+<p>With reflection you code mappers and table definitions.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_database_first"><a class="anchor" href="#_database_first"></a><a class="link" href="#_database_first">7.2. Database First.</a></h3>
+<div class="paragraph">
+<p>You define your data in tables and views first and use 'reflection' on it&#8217;s metadate
+to derive your entity types. Generating entities and entity mappers, which you still need,
+can be very easy, certainly with either <a href="https://projectlombok.org/">project lombok</a>, or the modern <a href="https://openjdk.java.net/jeps/395">java record like in Java 14+</a>.</p>
+</div>
+<div class="paragraph">
+<p>At the time of writing, one must be a bit carefull. Not everything works with Java 16. It is particularly annoying that the
+maven surefire plugin refuses to work with java 16 byte-codes. That should not be an excuse for dropping tests.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/ormappingandviews.svg" alt="ormappingandviews">
+</div>
+<div class="title">Figure 5. Relation between data in the RDBMS and the object model using views.</div>
+</div>
+<details class="Quiz">
+<summary class="title">Quiz: The devil is in the details. What relation is the Student Object representing?</summary>
+<div class="content">
+<div class="paragraph">
+<p>The Student object are actually records from the students_v <strong>VIEW</strong>, which can be defined as<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="keyword">OR</span> <span class="class">REPLACE</span> <span class="type">VIEW</span> students_v <span class="keyword">AS</span>
+<span class="class">SELECT</span> person.name,person.dob,student.*  <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="keyword">FROM</span> students_t natural <span class="keyword">join</span> persons_t</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>It would be better to also <em>name</em> the columns you want to have, so you have a <strong>stable</strong> view, even after
+re-defining it.</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
+<h3 id="_what_is_best"><a class="anchor" href="#_what_is_best"></a><a class="link" href="#_what_is_best">7.3. What is best?</a></h3>
+<div class="paragraph">
+<p><strong>Rule one</strong><br>
+<strong class="big">In all cases, keep the objects you transfer stupid. Apply the <a href="https://nl.wikipedia.org/wiki/KISS-principe">KISS principle</a>.</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In legacy systems, the legacy will decide the way forward, but you can use the techniques described to improve stuff. Either way.</p>
+</li>
+<li>
+<p>In green field project you can go either way, or even mix and match. As long as what you communicate with your backing store
+is a simple data carrier, generating one format from the other is equivalent in both approaches, objects first or database first.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In all cases, you win, because when you have one definition you can transform it into the other. <strong class="big black">That works</strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_proper_design_promotes_security"><a class="anchor" href="#_proper_design_promotes_security"></a><a class="link" href="#_proper_design_promotes_security">7.4. Proper Design Promotes Security.</a></h3>
+<div class="paragraph">
+<p>In the picture above you can see that you can go to quite some lengths to keep secret data private.<br>
+For instance with the postgresql <strong>roles</strong>, <strong>rules</strong>, and <strong>row level security</strong> (\(R^3\)),
+you could design a system in which no unneeded data is exposed to someone who does not need it,
+and you could expose the secret data to its rightful owner like the real person, that is identified by the personid.
+But that is a <strong class="red">red tape</strong> area for other users.</p>
+</div>
+<div class="paragraph">
+<p>It takes some work to get it done, but you see that can build to grade secure systems, only by cooking with water and
+sufficient expertise.</p>
+</div>
+<div class="paragraph">
+<p>For those that do not stop at a <strong>TL;DR</strong> signs: An interesting read might be on <a href="https://www.cybertec-postgresql.com/en/postgresql-row-level-security-views-and-a-lot-of-magic/?gclid=Cj0KCQjw0oCDBhCPARIsAII3C_FFc2UhfqqHEdYwm8pdBya4dgzSm9iuTl7szYY31sgKW5lDRyzuWBEaApSzEALw_wcB">PostgreSQL row level security</a></p>
+</div>
+<div class="paragraph">
+<p>Study the <a href="https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html">JDBC Introduction</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="pdf/070_jdbc_sheets_en.pdf" target="_blank" rel="noopener">JDBC sheets </a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part.</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_exercise_generic_dao">Generic DAO</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-11-21 10:50:31 +0100
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<!-- hello -->
+<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
+
+<script>
+//Get the button
+var mybutton = document.getElementById("top-button");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+</html>
