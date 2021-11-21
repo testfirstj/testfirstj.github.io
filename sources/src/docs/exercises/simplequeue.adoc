@@ -13,9 +13,9 @@ delegating the work to an already existing queue or (ab)using some kind of list 
 image:https://i.gifer.com/qa.gif[title="Simple Queue Experience",role="right thumb", link="https://gifer.com/en/qa"]
 In this exercise you will develop a simple queue class called `queue.SimpleQueue` to get acquainted with the TDD rhythm.
 
-We will describe the requirements of the queue as a short functional requirement, recognizable as *FRx* where x is some number.
-Where needed, we will add non-functional requirements as well (recognizable as *NFx*).
-Each functional requirement leads to a test.
+We will describe the requirements of the queue as a short **F**unctional **R**equirement, recognizable as *FRx* where x is some number.
+Where needed, we will add **N**on-**F**unctional requirements as well (recognizable as *NFx*).
+Each _functional_ requirement leads to a test.
 
 A queue is a **F**irst **I**n **F**irst **O**ut (FIFO) data structure.
 
@@ -47,10 +47,10 @@ image::ll.png[]
 //Inside the test call the test method, create a SimpleQueue Object with
 * *FR2:* queue can be created with a no-args constructor. +
   This means that there should be a constructor so that you can do `new SimpleQueue()`. +
-  If a class does not yet have any constructors, the compiler will add a default constructor,footnote:[The constructor will not be Invisible in the source code]
+  If a class does not yet have any constructors, the compiler will add a default constructor,footnote:[The constructor will not be visible in the source code]
   which is a no-arguments constructor. +
   An SimpleQueue has a method called `isEmpty()` taking no parameters, that reports that the queue contains no elements.
- Immediately after instantiating `isEmpty()` reports true.
+  Immediately after instantiating `isEmpty()` reports true.
 +
 *Test*  that the queue object is empty after creation.
 * *FR3:* The method `void put(E e)` adds an element to the queue. If the queue was empty before, the object e will appear as the first element in the queue.

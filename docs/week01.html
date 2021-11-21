@@ -1539,9 +1539,9 @@ delegating the work to an already existing queue or (ab)using some kind of list 
 In this exercise you will develop a simple queue class called <code>queue.SimpleQueue</code> to get acquainted with the TDD rhythm.</p>
 </div>
 <div class="paragraph">
-<p>We will describe the requirements of the queue as a short functional requirement, recognizable as <strong>FRx</strong> where x is some number.
-Where needed, we will add non-functional requirements as well (recognizable as <strong>NFx</strong>).
-Each functional requirement leads to a test.</p>
+<p>We will describe the requirements of the queue as a short <strong>F</strong>unctional <strong>R</strong>equirement, recognizable as <strong>FRx</strong> where x is some number.
+Where needed, we will add <strong>N</strong>on-<strong>F</strong>unctional requirements as well (recognizable as <strong>NFx</strong>).
+Each <em>functional</em> requirement leads to a test.</p>
 </div>
 <div class="paragraph">
 <p>A queue is a <strong>F</strong>irst <strong>I</strong>n <strong>F</strong>irst <strong>O</strong>ut (FIFO) data structure.</p>
@@ -1593,10 +1593,10 @@ The LinkedList has two fields of type node</p>
 </li>
 <li>
 <p><strong>FR2:</strong> queue can be created with a no-args constructor.<br>
- This means that there should be a constructor so that you can do <code>new SimpleQueue()</code>.<br>
- If a class does not yet have any constructors, the compiler will add a default constructor,<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>
- which is a no-arguments constructor.<br>
- An SimpleQueue has a method called <code>isEmpty()</code> taking no parameters, that reports that the queue contains no elements.
+This means that there should be a constructor so that you can do <code>new SimpleQueue()</code>.<br>
+If a class does not yet have any constructors, the compiler will add a default constructor,<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>
+which is a no-arguments constructor.<br>
+An SimpleQueue has a method called <code>isEmpty()</code> taking no parameters, that reports that the queue contains no elements.
 Immediately after instantiating <code>isEmpty()</code> reports true.</p>
 <div class="paragraph">
 <p><strong>Test</strong>  that the queue object is empty after creation.</p>
@@ -1852,7 +1852,7 @@ So any <code>assertThat(&#8230;&#8203;)</code> that you already have can simply 
 <a href="#_footnoteref_1">1</a>. to a Java programmer anyway
 </div>
 <div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. The constructor will not be Invisible in the source code
+<a href="#_footnoteref_2">2</a>. The constructor will not be visible in the source code
 </div>
 </div>
 <div id="footer">
