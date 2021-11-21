@@ -52,9 +52,9 @@ V2.0  2021-01-10
 |===
 
 
-* [big]*link:../reports/2021/index.php[You can find your home work tests here]*
-* [big]*https://peerweb.fontysvenlo.org/igrouprepos.php[Your personal repositories on fontys venlo ^].*
-* [big]*link:../reports/2021/pdf/PRC2-planning-202106014.pdf[Assessment schedule ^]*
+// * [big]*link:../reports/2021/index.php[You can find your home work tests here]*
+// * [big]*https://peerweb.fontysvenlo.org/igrouprepos.php[Your personal repositories on fontys venlo ^].*
+// * [big]*link:../reports/2021/pdf/PRC2-planning-202106014.pdf[Assessment schedule ^]*
 
 :numbered:
 // end 2021 top menu
