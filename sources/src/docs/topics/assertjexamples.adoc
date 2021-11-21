@@ -103,9 +103,9 @@ by following the link in this sentence. Look at the sub-interfaces and the imple
 ----
 
 <1> Assume this to be in the business code or SUT.
-<2> Not really required by a good tip to make sure the test does not trip
+<2> Not really required by the test but a good tip anyway, because it ensures that the test does not trip
   over an NPE, which might be confusing.
-<3> The following contains test makes this actually redundant
+<3> The following contains test makes _this_ assertion redundant, only here for demonstration purposes.
 <4> because we want these two at least.
 
 [source,java]
@@ -124,7 +124,9 @@ by following the link in this sentence. Look at the sub-interfaces and the imple
 <2> Mostly self (test) protect.
 <3> Just to show that you can test for not empty, but also exact size, greater etc. This assertion is actually made redundant by the test in 5.
 <4> Extract a feature out of each student using a lambda. Its function should be obvious
-<5> Then test the list of extracted values for containment.
+<5> Then test the list of extracted values for containment. Note that in this case we do not care about the (iteration) order of the collection.
+
+AssertJ has many more containment tests, to test presence of all, any, exactly, or exactly but without a specific order.
 
 [TIP]
 ====
@@ -182,7 +184,7 @@ ThrowingCallable is a Functional interface and is part of AssertJ.
         hogwarts.addStudent( draco );  // <1>
     };
 
-    assertThatCode( code)
+    assertThatCode( code )
             .as( "draco should be accepted to make the adventures possible")
             .doesNotThrowAnyException();
 ----
@@ -193,7 +195,7 @@ any other code that may cause issues.
 [NOTE]
 ====
 Sometimes you may have the situation that exceptions appear to come out of the blue, as in you have
-no idea what causes it and the stack trace is not very helpful either. In such cases, use this test method
+no idea what causes it and the stack trace is not very helpful either. In such cases, use this test approach
 to isolate the problematic code.
 ====
 

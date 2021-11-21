@@ -1152,12 +1152,12 @@ by following the link in this sentence. Look at the sub-interfaces and the imple
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Not really required by a good tip to make sure the test does not trip
+<td>Not really required by the test but a good tip anyway, because it ensures that the test does not trip
 over an NPE, which might be confusing.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The following contains test makes this actually redundant</td>
+<td>The following contains test makes <em>this</em> assertion redundant, only here for demonstration purposes.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -1197,9 +1197,12 @@ over an NPE, which might be confusing.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Then test the list of extracted values for containment.</td>
+<td>Then test the list of extracted values for containment. Note that in this case we do not care about the (iteration) order of the collection.</td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>AssertJ has many more containment tests, to test presence of all, any, exactly, or exactly but without a specific order.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1292,7 +1295,7 @@ ThrowingCallable is a Functional interface and is part of AssertJ.</p>
         hogwarts.addStudent( draco );  <i class="conum" data-value="1"></i><b>(1)</b>
     };
 
-    assertThatCode( code)
+    assertThatCode( code )
             .as( <span class="string"><span class="delimiter">&quot;</span><span class="content">draco should be accepted to make the adventures possible</span><span class="delimiter">&quot;</span></span>)
             .doesNotThrowAnyException();</code></pre>
 </div>
@@ -1315,7 +1318,7 @@ any other code that may cause issues.</td>
 <td class="content">
 <div class="paragraph">
 <p>Sometimes you may have the situation that exceptions appear to come out of the blue, as in you have
-no idea what causes it and the stack trace is not very helpful either. In such cases, use this test method
+no idea what causes it and the stack trace is not very helpful either. In such cases, use this test approach
 to isolate the problematic code.</p>
 </div>
 </td>
