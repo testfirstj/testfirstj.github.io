@@ -500,10 +500,12 @@ A connection is <code>AutoClosable</code> so candidate for <strong class="green"
     }
 
     <span class="type">void</span> demo() <span class="directive">throws</span> <span class="exception">SQLException</span> {  <i class="conum" data-value="3"></i><b>(3)</b>
-        <span class="predefined-type">String</span> query
-                = <span class="string"><span class="delimiter">&quot;</span><span class="content">select state.name as state,p.name as president,state.year_entered </span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
-                  + <span class="string"><span class="delimiter">&quot;</span><span class="content"> from president p join state state on(p.state_id_born=state.id)</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
-                  + <span class="string"><span class="delimiter">&quot;</span><span class="content">where state.name like 'N%'</span><span class="delimiter">&quot;</span></span>;
+        <span class="predefined-type">String</span> query <i class="conum" data-value="4"></i><b>(4)</b>
+                = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
+                  select state.name as state,p.name as president,state.year_entered
+                  from president p join state state on(p.state_id_born=state.id)
+                  where state.name like 'N%'
+                  </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
             doQuery( query, <span class="predefined-type">System</span>.out );
     }
 }</code></pre>
@@ -523,6 +525,10 @@ A connection is <code>AutoClosable</code> so candidate for <strong class="green"
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>The method uses the DataSource to get a connection in the try-with-resources block<br>
 and passes it on to the method that executes the query and deals with the result by printing it.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>text blocks, since java 14, combine nicely with sql queries.</td>
 </tr>
 </table>
 </div>
