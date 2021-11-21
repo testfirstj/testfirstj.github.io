@@ -33,7 +33,7 @@ details.demo{
   border: 10px solid #0A0;
 }
 
-
+/*
 summary.demo {
   display: block;
   font-family: monospace;
@@ -78,7 +78,7 @@ details[open] summary {
 }
 details{
   open:open;
-}
+} */
 
 div.exgroup {
   margin-top:.5em;
