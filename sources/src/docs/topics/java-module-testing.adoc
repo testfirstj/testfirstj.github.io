@@ -44,7 +44,7 @@ In testing, one distinguishes between so called *black* box and *white* box test
 *Black box* in this respect means that you cannot see the internals, but only those parts defined in the API.
 This is the way that a client package will use the API. Black box testing is easily supported by the module system, because the test classes behave as ordinary
 clients. +
-*White box* would better be called transparent box, but the name _white box_ stuck. In white box tests you *DO* want access to the (package) private parts
+*White box* would better be called _transparent_ box, but the name _white box_ stuck. In white box tests you *DO* want access to the (package) private parts
 of your business code. This is a bit handicapped by the way the JPMS allows access.
 
 === Standard Source code organization.
@@ -52,25 +52,20 @@ of your business code. This is a bit handicapped by the way the JPMS allows acce
 
 //image::sourcetree-modular.png[title='default source tree ']
 
-.source tree of genericdao
+.source tree of genericdao (command tree - -UL 3 src/main/)
 [source,sh]
 ----
 src
-├── main
-│   └── java
-│       └── genericdao
-│           ├── dao
-│           ├── memory
-│           └── pgdao
-└── test
-    └── java
-        ├── entities
-        ├── genericdao
-        │   ├── dao
-        │   ├── memory
-        │   └── pgdao
-        └── usertypes
+└── main
+    ├── java
+        ├── module-info.java #<1>
+        └── genericdao
+            ├── dao
+            ├── memory
+            └── pgdao
 ----
+
+<1> module-info.java at the root of the java sources.
 
 We are using maven, in which the unit test plugin is called *surefire*, the integration test plugin (which we
   did not use up to this point yet) is called *failsafe*.
