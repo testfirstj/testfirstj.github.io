@@ -486,31 +486,32 @@ See for instance the methods in
 <p><strong>Black box</strong> in this respect means that you cannot see the internals, but only those parts defined in the API.
 This is the way that a client package will use the API. Black box testing is easily supported by the module system, because the test classes behave as ordinary
 clients.<br>
-<strong>White box</strong> would better be called transparent box, but the name <em>white box</em> stuck. In white box tests you <strong>DO</strong> want access to the (package) private parts
+<strong>White box</strong> would better be called <em>transparent</em> box, but the name <em>white box</em> stuck. In white box tests you <strong>DO</strong> want access to the (package) private parts
 of your business code. This is a bit handicapped by the way the JPMS allows access.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_standard_source_code_organization"><a class="anchor" href="#_standard_source_code_organization"></a><a class="link" href="#_standard_source_code_organization">2.2. Standard Source code organization.</a></h3>
 <div class="listingblock">
-<div class="title">source tree of genericdao</div>
+<div class="title">source tree of genericdao (command tree - -UL 3 src/main/)</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">src
-├── main
-│   └── java
-│       └── genericdao
-│           ├── dao
-│           ├── memory
-│           └── pgdao
-└── test
-    └── java
-        ├── entities
-        ├── genericdao
-        │   ├── dao
-        │   ├── memory
-        │   └── pgdao
-        └── usertypes</code></pre>
+└── main
+    ├── java
+        ├── module-info.java <i class="conum" data-value="1"></i><b>(1)</b>
+        └── genericdao
+            ├── dao
+            ├── memory
+            └── pgdao</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>module-info.java at the root of the java sources.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>We are using maven, in which the unit test plugin is called <strong>surefire</strong>, the integration test plugin (which we
