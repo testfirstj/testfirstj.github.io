@@ -125,19 +125,6 @@
 </tr>
 </tbody>
 </table>
-<div class="ulist">
-<ul>
-<li>
-<p><strong class="big"><a href="../reports/2021/index.php">You can find your home work tests here</a></strong></p>
-</li>
-<li>
-<p><strong class="big"><a href="https://peerweb.fontysvenlo.org/igrouprepos.php" target="_blank" rel="noopener">Your personal repositories on fontys venlo </a>.</strong></p>
-</li>
-<li>
-<p><strong class="big"><a href="../reports/2021/pdf/PRC2-planning-202106014.pdf" target="_blank" rel="noopener">Assessment schedule </a></strong></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -222,9 +209,9 @@ which can help to ascertain that the package is the one you think it is. For ins
 </div>
 <div class="paragraph">
 <p>Installation of Java can be done either through a package manager or by downloading the
-the Java distribution from  <a href="https://adoptopenjdk.net/" target="_blank" rel="noopener">AdoptOpenJDK </a>.
-For PRC2 we will use <strong class="blue">Java 11</strong> as a minimum, but you may want to pick up
-Java 8 for older projects and maybe Java 15 (or even Java 16 when it becomes available) too.</p>
+the Java distribution from  <a href="https://adoptium.net/" target="_blank" rel="noopener">Adoptium </a>.
+For PRC2 we will use <strong class="blue">Java 17</strong> as a minimum, but you may want to pick up
+Java 11 for older projects and maybe Java 18 too.</p>
 </div>
 <div class="sect3">
 <h4 id="_linux"><a class="anchor" href="#_linux"></a><a class="link" href="#_linux">2.1.1. <span class="icon"><i class="fa fa-linux fa-fw"></i></span> Linux</a></h4>
@@ -245,31 +232,19 @@ instructions to apply to that distribution (e.g. use the correct package manager
 </table>
 </div>
 <div class="paragraph">
-<p>With a package manager:</p>
-</div>
-<div class="listingblock">
-<div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> install via apt-get</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
-sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-sudo apt update
-sudo apt install adoptopenjdk-11-hotspot</code></pre>
-</div>
-</div>
-<div class="paragraph">
 <p>Manual installation:</p>
 </div>
 <div class="paragraph">
 <p>In the example below we assume that the distribution is packed as a <code>tar.gz</code> archive.
-The example shows the archive name as of 10 February 2021,
-OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz</p>
+The example shows the archive name as of 21 November 2021,
+OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz</p>
 </div>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> unpack java distribution using the command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">sudo mkdir -p /usr/lib/jvm
 cd /usr/lib/jvm
-sudo tar xf ~/Downloads/OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz</code></pre>
+sudo tar xf ~/Downloads/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz</code></pre>
 </div>
 </div>
 </div>
@@ -290,7 +265,7 @@ brew install --cask adoptopenjdk11</code></pre>
 </div>
 <div class="paragraph">
 <p>Download the correct distribution/version of choice from
-<a href="https://adoptopenjdk.net/" target="_blank" rel="noopener">AdoptOpenJDK </a>.
+<a href="https://adoptium.net/" target="_blank" rel="noopener">Adoptium </a>.
 Install the same way as normal programs.</p>
 </div>
 </div>
@@ -310,7 +285,7 @@ Install the same way as normal programs.</p>
 </div>
 <div class="paragraph">
 <p>Download the correct distribution/version of choice from
-<a href="https://adoptopenjdk.net/" target="_blank" rel="noopener">AdoptOpenJDK </a>.
+<a href="https://adoptium.net/" target="_blank" rel="noopener">Adoptium </a>.
 Install the same way as normal programs,</p>
 </div>
 <div class="admonitionblock warning">
@@ -352,8 +327,7 @@ If you type <code>java -version</code>, and your shell says <code>command not fo
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Define JAVA_HOME</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-11.0.10+9 <i class="conum" data-value="1"></i><b>(1)</b>
-export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-amd64 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-17.0.1+12/ <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -361,10 +335,6 @@ export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-amd64 <i class="conum" dat
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>Path for manual installation</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Path for package manager installation</td>
 </tr>
 </table>
 </div>
@@ -429,19 +399,19 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Obtaining the path to Java home</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">/usr/libexec/java_home -v '15*' <i class="conum" data-value="1"></i><b>(1)</b>
-/usr/libexec/java_home -v '15.0.2'<i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="sh">/usr/libexec/java_home -v '17*' <i class="conum" data-value="1"></i><b>(1)</b>
+/usr/libexec/java_home -v '17.0.2'<i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Retrieve the path to Java 15 if installed</td>
+<td>Retrieve the path to Java 17 if installed</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Retrieve the path to a specific subversion of Java 15</td>
+<td>Retrieve the path to a specific subversion of Java 17</td>
 </tr>
 </table>
 </div>
@@ -457,7 +427,7 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Set <code>JAVA_HOME</code> dynamically with the following command (e.g. for Java 15):</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v '15*') <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v '17*') <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -484,16 +454,16 @@ This means we can specify our aliases in either <code>.zshrc</code> or in <code>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Add the following lines to ~/.zshrc:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v 11) <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v 17) <i class="conum" data-value="1"></i><b>(1)</b>
 alias j11=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 11`; java -version&quot; <i class="conum" data-value="2"></i><b>(2)</b>
-alias j15=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 15`; java -version&quot; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+alias j17=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 17`; java -version&quot; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Set the default version of Java to version 11.</td>
+<td>Set the default version of Java to version 17.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -501,7 +471,7 @@ alias j15=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 15`; java -version&q
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Alias to set the Java environment to version 15.</td>
+<td>Alias to set the Java environment to version 17.</td>
 </tr>
 </table>
 </div>
@@ -581,15 +551,15 @@ It is also the way the teachers use to compile and test the students work for th
 <p>Fetch a fresh copy of <a href="https://maven.apache.org/">Apache Maven</a> from the website.</p>
 </div>
 <div class="paragraph">
-<p>To install it, do (example uses version 3.6.3  as of 2019-11-03)</p>
+<p>To install it, do (example uses version 3.8.4  as of 2021-11-21)</p>
 </div>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> install apache maven and add to path</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">cd /usr/share
 sudo rm -fr maven
-sudo tar xf ~/Downloads/apache-maven-3.6.3-bin.tar.gz
-sudo ln -sf apache-maven-3.6.3/ maven
+sudo tar xf ~/Downloads/apache-maven-3.8.4-bin.tar.gz
+sudo ln -sf apache-maven-3.8.4/ maven
 cd /usr/bin
 sudo ln -sf ../share/maven/bin/mvn .</code></pre>
 </div>
@@ -602,11 +572,11 @@ sudo ln -sf ../share/maven/bin/mvn .</code></pre>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">hom@threehundred: /usr/share
 🐧$ mvn --version
-Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
 Maven home: /usr/share/maven
-Java version: 11.0.5, vendor: AdoptOpenJDK, runtime: /usr/lib/jvm/jdk-11.0.5+10
-Default locale: en_GB, platform encoding: UTF-8
-OS name: &quot;linux&quot;, version: &quot;5.0.0-36-generic&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;</code></pre>
+Java version: 17.0.1, vendor: Eclipse Adoptium, runtime: /usr/lib/jvm/jdk-17.0.1+12
+Default locale: en_US, platform encoding: UTF-8
+OS name: &quot;linux&quot;, version: &quot;5.13.0-21-generic&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;</code></pre>
 </div>
 </div>
 </div>
@@ -701,8 +671,8 @@ in the traditional (as in same directories as the installer would) <code>/usr/lo
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Assuming you downloaded the binary, installing it is easy</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">cd /usr/local
-sudo unzip ~/Downloads/netbeans-12.2-bin.zip
-sudo mv netbeans{,-12.2}</code></pre>
+sudo unzip ~/Downloads/netbeans-12.5-bin.zip
+sudo mv netbeans{,-12.5}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -712,7 +682,7 @@ sudo mv netbeans{,-12.2}</code></pre>
 <div class="title">netbeans script in ~/bin</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
-/usr/local/netbeans-12.2/bin/netbeans &quot;$@&quot; &amp; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+/usr/local/netbeans-12.5/bin/netbeans &quot;$@&quot; &amp; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
