@@ -38,7 +38,7 @@ image::ormappingandviews.svg[]
 
 
 .Quiz: The devil is in the details. What relation is the Student Object representing?
-[%collapsible,role="Quiz"]
+[%collapsible,role="quiz"]
 ====
 The Student object are actually records from the students_v *VIEW*, which can be defined as +
 [source,sql]

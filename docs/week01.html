@@ -1078,9 +1078,14 @@ Use it to improved the information you get when the test fails.</td>
     assertThat( f1Champ ).isSameAs( louis );</code></pre>
 </div>
 </div>
+<details class="quiz">
+<summary class="title">What is the difference between the two here: equals and same?</summary>
+<div class="content">
 <div class="paragraph">
-<p>Quiz: what is the difference between the two here: equals and same?</p>
+<p>Equals uses the <code class="blue">.equals</code> method defined for all objects, same uses <code class="blue">==</code> which works well for primitive types but can lead to surprises for reference types (i.e. objects).</p>
 </div>
+</div>
+</details>
 <div class="admonitionblock tip">
 <table>
 <tr>

@@ -43,7 +43,7 @@
                                 <toc>right</toc>
                                 <icons>font</icons>
                                 <linkcss>true</linkcss>
-                                <!-- copycss>true</copycss --> 
+                                <copycss>true</copycss> 
                                 <stylesdir>css</stylesdir>
                                 
                                 

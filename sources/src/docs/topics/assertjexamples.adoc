@@ -51,8 +51,11 @@ Either use sebipom version 3.0.0 and up or add assertj.core to your test depende
     assertThat( f1Champ ).isSameAs( louis );
 ----
 
-Quiz: what is the difference between the two here: equals and same?
-
+.What is the difference between the two here: equals and same?
+[%collapsible,role="quiz"]
+====
+Equals uses the [blue]`.equals` method defined for all objects, same uses [blue]`==` which works well for primitive types but can lead to surprises for reference types (i.e. objects).
+====
 [TIP]
 ====
 To follow along, tweak your IDE. Make sure you have the link:/2021/tips.html#_adding_your_own_code_templates_to_netbeans_ide[code template] to create a test method.

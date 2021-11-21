@@ -107,7 +107,7 @@ Let us use metaphores. *Sausage* and *Sausage Machines*.
    for instance inheritance or composition but also by configuration, like the colour of the handle of the meat grinder or the text on a label.
    Or even applying plugins like in a meat grinder by replacing the grind wheel and extruder to get a different sausage type.
 
-[big]_Transformation of the domain model into the system class diagram sounds reasonable, 
+[big]_Transformation of the domain model into the system class diagram sounds reasonable,
   but is in fact a https://en.wikipedia.org/wiki/Fallacy[fallacy]._ +
 [big]_It would be as if you could turn sausage into a sausage machine. I'm pretty sure your Butcher will tell you different when you would propose such a solution._
 
@@ -123,7 +123,7 @@ image:../images/howtomeatgrinder.jpg[width="300", scaledwidth="45%"]
 --
 
 .Quiz: What UML diagram type describes the images above best?
-[%collapsible]
+[%collapsible,role="quiz"]
 ====
 The sausages come close to an object diagram. Not much details is shown, which is proper for sausages. _You do not want to known_.
 The model is there to express [black]*yummy* none-the-less.
