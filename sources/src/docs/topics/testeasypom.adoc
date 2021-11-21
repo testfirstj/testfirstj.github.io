@@ -1,4 +1,4 @@
-== Test Easy Pom 3.0.3
+== Test Easy Pom 4.0.3
 
 
 Spelled all lower  case: `testeasypom`, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
