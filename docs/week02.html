@@ -1096,6 +1096,30 @@ As an exercise, create such and object now in your IDE, call it Student, why not
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>An up to date java programmer would use a <a href="https://openjdk.java.net/jeps/395" target="_blank" rel="noopener">Java 16+ </a> record for this kind of entity like classes.
+The whole definition would then be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">record Student ( <span class="predefined-type">String</span> name, LocalDate birthDate, <span class="type">int</span> id ) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It also saves you the time to both test AND implement equals and hashcode, because that is provided automatically.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>From the above, the IDE can generate a <strong>constructor</strong>, <strong>equals</strong> and <strong>hashCode</strong> and <strong>toString</strong>. What are you waiting for? Because it is not test driven?
 You would be almost right, but why test drive something that can be generated.<br>

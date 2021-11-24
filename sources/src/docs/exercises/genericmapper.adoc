@@ -123,7 +123,7 @@ Done.
     @Test
     public void tStudentMapperConstructs() {
          Mapper<Student,Integer> mapper = Mapper.mapperFor( Student.class );
-         Student xJan = mapper.construct( sData );
+         Student xJan = mapper.construct( studentArgs );
          assertThat( xJan ).usingRecursiveComparison().isEqualTo( jan );
      }
 
@@ -132,7 +132,7 @@ Done.
      public void tStudentMapperDeconstructs() {
          Mapper<Student,Integer> mapper = Mapper.mapperFor( Student.class );
          Object[] deconstruct = mapper.deconstruct( jan );
-         assertThat( deconstruct ).isEqualTo( sData );
+         assertThat( deconstruct ).isEqualTo( studentArgs );
      }
 ----
 
@@ -196,7 +196,7 @@ At the moment of writing, NetBeans IDE creates the parameters for the constructo
 You may either have to
 
 * Refrain from using class hierarchies in your entities (probably wisest). +
- This is the advise Java 14 implicitly gives with the introduced https://www.infoq.com/news/2020/08/java16-records-instanceof/[record] feature which is final in Java 16.
+ This is the advise Java 14+ implicitly gives with the introduced https://www.infoq.com/news/2020/08/java16-records-instanceof/[record] feature which is final in Java 16.
 * Take extra care when creating sub-_entities_
 * Modify the mapper, that tries to resolve this potential problem be selecting the proper field order.
 

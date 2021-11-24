@@ -35,6 +35,20 @@ class Student {
 }
 ----
 
+[TIP]
+====
+An up to date java programmer would use a https://openjdk.java.net/jeps/395[Java 16+ ^] record for this kind of entity like classes.
+The whole definition would then be:
+
+[source,java]
+----
+record Student ( String name, LocalDate birthDate, int id ) {
+}
+----
+
+It also saves you the time to both test AND implement equals and hashcode, because that is provided automatically.
+====
+
 From the above, the IDE can generate a *constructor*, *equals* and *hashCode* and *toString*. What are you waiting for? Because it is not test driven?
 You would be almost right, but why test drive something that can be generated. +
 However, if your spec does [red]*not* demand equals and hashCode,

@@ -1314,7 +1314,7 @@ and the value from the deconstructed <code class="blue">Object[]</code>.</p>
     <span class="annotation">@Test</span>
     <span class="directive">public</span> <span class="type">void</span> tStudentMapperConstructs() {
          Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
-         Student xJan = mapper.construct( sData );
+         Student xJan = mapper.construct( studentArgs );
          assertThat( xJan ).usingRecursiveComparison().isEqualTo( jan );
      }
 
@@ -1323,7 +1323,7 @@ and the value from the deconstructed <code class="blue">Object[]</code>.</p>
      <span class="directive">public</span> <span class="type">void</span> tStudentMapperDeconstructs() {
          Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
          <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct = mapper.deconstruct( jan );
-         assertThat( deconstruct ).isEqualTo( sData );
+         assertThat( deconstruct ).isEqualTo( studentArgs );
      }</code></pre>
 </div>
 </div>
@@ -1394,7 +1394,7 @@ You may either have to</p>
 <ul>
 <li>
 <p>Refrain from using class hierarchies in your entities (probably wisest).<br>
-This is the advise Java 14 implicitly gives with the introduced <a href="https://www.infoq.com/news/2020/08/java16-records-instanceof/">record</a> feature which is final in Java 16.</p>
+This is the advise Java 14+ implicitly gives with the introduced <a href="https://www.infoq.com/news/2020/08/java16-records-instanceof/">record</a> feature which is final in Java 16.</p>
 </li>
 <li>
 <p>Take extra care when creating sub-<em>entities</em></p>
