@@ -75,7 +75,7 @@ public record Student (
 ){} //<1>
 ----
 
-<2> indeed, no body whatsoever.
+<1> indeed, no body whatsoever.
 
 [TIP]
 ====
