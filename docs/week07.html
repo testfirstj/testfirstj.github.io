@@ -41,30 +41,31 @@
 <li><a href="#_anatomy_of_a_prepared_statement">1.4. Anatomy of a prepared statement</a></li>
 </ul>
 </li>
-<li><a href="#_traditional_preparing_statements">2. Traditional preparing statements</a>
+<li><a href="#_traditional_preparing_statements">2. Traditional preparing statements</a></li>
+<li><a href="#_database_meta_information">3. Database Meta Information</a>
 <ul class="sectlevel2">
-<li><a href="#_database_meta_information">2.1. Database Meta Information</a></li>
+<li><a href="#_check_constraints">3.1. Check constraints</a></li>
 </ul>
 </li>
-<li><a href="#_transactions">3. Transactions</a></li>
-<li><a href="#_using_stored_procedures">4. Using Stored Procedures</a></li>
-<li><a href="#_the_tao_of_dao">5. The TAO of DAO.</a>
+<li><a href="#_transactions">4. Transactions</a></li>
+<li><a href="#_using_stored_procedures">5. Using Stored Procedures</a></li>
+<li><a href="#_the_tao_of_dao">6. The TAO of DAO.</a>
 <ul class="sectlevel2">
-<li><a href="#_update">5.1. Update</a></li>
+<li><a href="#_update">6.1. Update</a></li>
 <li><a href="#_exercise_generic_dao">Exercise Generic DAO</a></li>
 </ul>
 </li>
-<li><a href="#_testing_databases">6. Testing databases</a>
+<li><a href="#_testing_databases">7. Testing databases</a>
 <ul class="sectlevel2">
-<li><a href="#_transactions_2">6.1. Transactions</a></li>
+<li><a href="#_transactions_2">7.1. Transactions</a></li>
 </ul>
 </li>
-<li><a href="#_data_first_or_objects_first">7. Data First or Objects first?</a>
+<li><a href="#_data_first_or_objects_first">8. Data First or Objects first?</a>
 <ul class="sectlevel2">
-<li><a href="#_objects_first">7.1. Objects First.</a></li>
-<li><a href="#_database_first">7.2. Database First.</a></li>
-<li><a href="#_what_is_best">7.3. What is best?</a></li>
-<li><a href="#_proper_design_promotes_security">7.4. Proper Design Promotes Security.</a></li>
+<li><a href="#_objects_first">8.1. Objects First.</a></li>
+<li><a href="#_database_first">8.2. Database First.</a></li>
+<li><a href="#_what_is_best">8.3. What is best?</a></li>
+<li><a href="#_proper_design_promotes_security">8.4. Proper Design Promotes Security.</a></li>
 </ul>
 </li>
 <li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
@@ -760,16 +761,203 @@ The try-with-resources block takes care of the jdbc transaction.</td>
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_database_meta_information"><a class="anchor" href="#_database_meta_information"></a><a class="link" href="#_database_meta_information">2.1. Database Meta Information</a></h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_database_meta_information"><a class="anchor" href="#_database_meta_information"></a><a class="link" href="#_database_meta_information">3. Database Meta Information</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>DO Mention the <a href="https://www.baeldung.com/jdbc-database-metadata">metadata&#8230;&#8203;</a></p>
+</div>
+<div class="paragraph">
+<p>In the previous part we have seen how to use reflection on java classes.</p>
+</div>
+<div class="paragraph">
+<p>A similar and standardized concept also exists for databases. You can retrieve all kind
+of <em>meta</em> information about the objects (such as tables and views) defined in your database.
+Accessing that data can be done with <strong>select</strong>ing  data from special relations in a special schema,
+called the <code class="blue">information_schema</code>.</p>
+</div>
+<div class="paragraph">
+<p>Suppose we have the following definition of a table <code>students</code> in the schema <code>public</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> public.students (
+    student_id <span class="predefined-type">INTEGER</span> <span class="directive">PRIMARY</span> <span class="type">KEY</span> GENERATED <span class="keyword">BY</span> <span class="directive">DEFAULT</span> <span class="keyword">AS</span> IDENTITY, <i class="conum" data-value="1"></i><b>(1)</b>
+    firstname <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,  <i class="conum" data-value="2"></i><b>(2)</b>
+    lastname <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    dob <span class="predefined-type">DATE</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    cohort <span class="predefined-type">integer</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="directive">DEFAULT</span>  EXTRACT(<span class="string"><span class="delimiter">'</span><span class="content">year</span><span class="delimiter">'</span></span> <span class="keyword">from</span> <span class="predefined">now</span>()), <i class="conum" data-value="3"></i><b>(3)</b>
+    email <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    gender CHARACTER(<span class="integer">1</span>) <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="keyword">check</span> (gender <span class="keyword">in</span> (<span class="string"><span class="delimiter">'</span><span class="content">F</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">M</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">U</span><span class="delimiter">'</span></span>)), <i class="conum" data-value="4"></i><b>(4)</b>
+    student_grp <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    active <span class="predefined-type">BOOLEAN</span> <span class="directive">DEFAULT</span> <span class="predefined-constant">false</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>ISO SQL for a <em>serial</em> column that by default is generated, and also is primary key.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>All columns that 'traditionally' would be varchar are now text. Just as efficient less hassle. It will always fit.
+Only use varchar if your business requires a length constraint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The cohort is the year of registration, which can be derived from the insertion moment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Gender is a one character value with a restricted value set, much like an enum, but simpler.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If after the definition your would ask the database what it knows about this table with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span> ordinal_position, column_name,data_type, column_default, is_nullable,
+       is_generated, datetime_precision
+<span class="keyword">FROM</span>   information_schema.columns <span class="keyword">WHERE</span> table_name =<span class="string"><span class="delimiter">'</span><span class="content">students</span><span class="delimiter">'</span></span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="integer">1</span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>you would get the following as output:</p>
+</div>
+<div class="listingblock small-code-font-70">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">┌──────────────────┬─────────────┬───────────┬──────────────────────────┬─────────────┬──────────────┬────────────────────┐
+│ ordinal_position │ column_name │ data_type │      column_default      │ is_nullable │ is_generated │ datetime_precision │
+╞══════════════════╪═════════════╪═══════════╪══════════════════════════╪═════════════╪══════════════╪════════════════════╡
+│                1 │ student_id  │ integer   │                          │ NO          │ NEVER        │                    │
+│                2 │ firstname   │ text      │                          │ NO          │ NEVER        │                    │
+│                3 │ lastname    │ text      │                          │ NO          │ NEVER        │                    │
+│                4 │ dob         │ date      │                          │ NO          │ NEVER        │                  0 │
+│                5 │ cohort      │ integer   │ EXTRACT(year FROM now()) │ NO          │ NEVER        │                    │
+│                6 │ email       │ text      │                          │ NO          │ NEVER        │                    │
+│                7 │ gender      │ character │                          │ NO          │ NEVER        │                    │
+│                8 │ student_grp │ text      │                          │ NO          │ NEVER        │                    │
+│                9 │ active      │ boolean   │ false                    │ NO          │ NEVER        │                    │
+└──────────────────┴─────────────┴───────────┴──────────────────────────┴─────────────┴──────────────┴────────────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From this information you can imagine that it is relatively easy to <strong>generate</strong> the matching Java types as <span class="blue">record</span> type.</p>
+</div>
+<div class="paragraph">
+<p>The resulting record would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">entities</span>;
+
+<span class="keyword">import</span> <span class="include">java.time.LocalDate</span>;
+
+<span class="directive">public</span> record Student (
+   <span class="type">int</span> student_id,
+   <span class="predefined-type">String</span> firstname,
+   <span class="predefined-type">String</span> lastname,
+   LocalDate dob,
+   <span class="type">int</span> cohort,
+   <span class="predefined-type">String</span> email,
+   <span class="type">char</span> gender,
+   <span class="predefined-type">String</span> student_grp,
+   bool active
+){} <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>indeed, no body whatsoever.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If your columns are nullable, choose a type that also 'accepts' null values, so in that case use a ref type, such as Integer or Boolean.
+If the columns in the table are declared as <strong>non-nullable</strong> you can use primitive types. I am not sure if you will notice the performance in any way.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Because in the Java layer you would like to have the meta information handy in a <span class="blue">Mapper</span>, you can generate the mapper at the same time from the database information
+instead of using reflection to the same effect. You teachers might turn that into an exercise.</p>
+</div>
+<div class="sect2">
+<h3 id="_check_constraints"><a class="anchor" href="#_check_constraints"></a><a class="link" href="#_check_constraints">3.1. Check constraints</a></h3>
+<div class="paragraph">
+<p>Similarly you can also get the information of the check constraints with another, a bit more involved query.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="comment">-- retrieve the check constraints for the user schemas</span>
+<span class="class">select</span> tc.table_schema,                                                          
+       tc.table_name,
+       string_agg(col.column_name, <span class="string"><span class="delimiter">'</span><span class="content">, </span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="type">columns</span>,
+       tc.constraint_name,
+       cc.check_clause
+<span class="keyword">from</span> information_schema.table_constraints tc
+<span class="keyword">join</span> information_schema.check_constraints cc
+     <span class="keyword">on</span> tc.constraint_schema = cc.constraint_schema
+     <span class="keyword">and</span> tc.constraint_name = cc.constraint_name
+<span class="keyword">join</span> pg_namespace nsp <span class="keyword">on</span> nsp.nspname = cc.constraint_schema
+<span class="keyword">join</span> pg_constraint pgc <span class="keyword">on</span> pgc.conname = cc.constraint_name
+                       <span class="keyword">and</span> pgc.connamespace = nsp.oid
+                       <span class="keyword">and</span> pgc.contype = <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>
+<span class="keyword">join</span> information_schema.columns col
+     <span class="keyword">on</span> col.table_schema = tc.table_schema
+     <span class="keyword">and</span> col.table_name = tc.table_name
+     <span class="keyword">and</span> col.ordinal_position = <span class="keyword">ANY</span>(pgc.conkey)
+<span class="keyword">where</span> tc.constraint_schema <span class="keyword">not</span> <span class="keyword">in</span>(<span class="string"><span class="delimiter">'</span><span class="content">pg_catalog</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">information_schema</span><span class="delimiter">'</span></span>)
+<span class="keyword">group</span> <span class="keyword">by</span> tc.table_schema,
+         tc.table_name,
+         tc.constraint_name,
+         cc.check_clause
+<span class="keyword">order</span> <span class="keyword">by</span> tc.table_schema,
+         tc.table_name;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which, because only one column in this schema actually declares a check constraint, results in:</p>
+</div>
+<div class="listingblock small-code-font-70">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">┌──────────────┬────────────┬─────────┬───────────────────────┬─────────────────────────────────────────────────────────────────┐
+│ table_schema │ table_name │ columns │    constraint_name    │                          check_clause                           │
+╞══════════════╪════════════╪═════════╪═══════════════════════╪═════════════════════════════════════════════════════════════════╡
+│ public       │ students   │ gender  │ students_gender_check │ ((gender = ANY (ARRAY['F'::bpchar, 'M'::bpchar, 'U'::bpchar]))) │
+└──────────────┴────────────┴─────────┴───────────────────────┴─────────────────────────────────────────────────────────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use the check constraints in your business code too, but actually deferring those checks as final  checks to the database is just fine. The database
+layer with throw an appropriate exception when a value is not to the liking of a constraint.</p>
+</div>
+<div class="paragraph">
+<p>You may want to use the check information in the user interface layer, to warn the user that a transaction will not succeed with a illegal or missing value.
+Parsing the check clause is of course a bit complex, but with a regex you can do a lot, and also know that most check constraint are relatively simple.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_transactions"><a class="anchor" href="#_transactions"></a><a class="link" href="#_transactions">3. Transactions</a></h2>
+<h2 id="_transactions"><a class="anchor" href="#_transactions"></a><a class="link" href="#_transactions">4. Transactions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Things that can go wrong will go wrong. This problem is aggravated by having to use multiple <em>things</em>.
@@ -841,7 +1029,7 @@ the stored procedure. And if you aspire to become a 'FULL STACK' developer, that
 </div>
 </div>
 <div class="sect1">
-<h2 id="_using_stored_procedures"><a class="anchor" href="#_using_stored_procedures"></a><a class="link" href="#_using_stored_procedures">4. Using Stored Procedures</a></h2>
+<h2 id="_using_stored_procedures"><a class="anchor" href="#_using_stored_procedures"></a><a class="link" href="#_using_stored_procedures">5. Using Stored Procedures</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As promised in the tip, we delegate the transactional responsibility to the database,
@@ -922,7 +1110,7 @@ the database level is a skill that belongs in the skill-set of a full stack deve
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_tao_of_dao"><a class="anchor" href="#_the_tao_of_dao"></a><a class="link" href="#_the_tao_of_dao">5. The TAO of DAO.</a></h2>
+<h2 id="_the_tao_of_dao"><a class="anchor" href="#_the_tao_of_dao"></a><a class="link" href="#_the_tao_of_dao">6. The TAO of DAO.</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Data Access Object (DAO) pattern provides an abstraction to the business logic
@@ -1317,7 +1505,7 @@ But that would be an exercise for another day.</p>
 <p>Lets get our hands dirty implementing a DAO using PostgreSQL as the supported database.</p>
 </div>
 <div class="sect2">
-<h3 id="_update"><a class="anchor" href="#_update"></a><a class="link" href="#_update">5.1. Update</a></h3>
+<h3 id="_update"><a class="anchor" href="#_update"></a><a class="link" href="#_update">6.1. Update</a></h3>
 <div class="paragraph">
 <p>We will now take a look at how the update method is implemented in the <code>PGDAO</code>.</p>
 </div>
@@ -1726,7 +1914,7 @@ In that case the tests take about 3 seconds to run; with the database tests acti
 </div>
 </div>
 <div class="sect1">
-<h2 id="_testing_databases"><a class="anchor" href="#_testing_databases"></a><a class="link" href="#_testing_databases">6. Testing databases</a></h2>
+<h2 id="_testing_databases"><a class="anchor" href="#_testing_databases"></a><a class="link" href="#_testing_databases">7. Testing databases</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Your database design is an essential part of your application architecture.
@@ -1755,7 +1943,7 @@ is at best an improvement to the user experience, because the client software ca
 </table>
 </div>
 <div class="sect2">
-<h3 id="_transactions_2"><a class="anchor" href="#_transactions_2"></a><a class="link" href="#_transactions_2">6.1. Transactions</a></h3>
+<h3 id="_transactions_2"><a class="anchor" href="#_transactions_2"></a><a class="link" href="#_transactions_2">7.1. Transactions</a></h3>
 <div class="paragraph">
 <p>Often the interaction with the database involves the update of or insert into more then one record in one or more tables.
 Each of these operations may cause a constraint violation, meaning that the operation is not accepted. This will cause an exception.</p>
@@ -1781,7 +1969,7 @@ Each of these operations may cause a constraint violation, meaning that the oper
 </div>
 </div>
 <div class="sect1">
-<h2 id="_data_first_or_objects_first"><a class="anchor" href="#_data_first_or_objects_first"></a><a class="link" href="#_data_first_or_objects_first">7. Data First or Objects first?</a></h2>
+<h2 id="_data_first_or_objects_first"><a class="anchor" href="#_data_first_or_objects_first"></a><a class="link" href="#_data_first_or_objects_first">8. Data First or Objects first?</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You have seen in part 6 that you can retreive information about
@@ -1804,7 +1992,7 @@ for instance, as has been shown, to get type and names of columns.</p>
 </ol>
 </div>
 <div class="sect2">
-<h3 id="_objects_first"><a class="anchor" href="#_objects_first"></a><a class="link" href="#_objects_first">7.1. Objects First.</a></h3>
+<h3 id="_objects_first"><a class="anchor" href="#_objects_first"></a><a class="link" href="#_objects_first">8.1. Objects First.</a></h3>
 <div class="paragraph">
 <p>Objects is the approach you use when the design in the programming language is leading.
 You can use all the features of object orientation, and may have to bend the <span class="big">OO</span>-rules
@@ -1825,7 +2013,7 @@ The example below shows some design and implementation details for <strong>Stude
 </div>
 </div>
 <div class="sect2">
-<h3 id="_database_first"><a class="anchor" href="#_database_first"></a><a class="link" href="#_database_first">7.2. Database First.</a></h3>
+<h3 id="_database_first"><a class="anchor" href="#_database_first"></a><a class="link" href="#_database_first">8.2. Database First.</a></h3>
 <div class="paragraph">
 <p>You define your data in tables and views first and use 'reflection' on it&#8217;s metadate
 to derive your entity types. Generating entities and entity mappers, which you still need,
@@ -1867,7 +2055,7 @@ re-defining it.</td>
 </details>
 </div>
 <div class="sect2">
-<h3 id="_what_is_best"><a class="anchor" href="#_what_is_best"></a><a class="link" href="#_what_is_best">7.3. What is best?</a></h3>
+<h3 id="_what_is_best"><a class="anchor" href="#_what_is_best"></a><a class="link" href="#_what_is_best">8.3. What is best?</a></h3>
 <div class="paragraph">
 <p><strong>Rule one</strong><br>
 <strong class="big">In all cases, keep the objects you transfer stupid. Apply the <a href="https://nl.wikipedia.org/wiki/KISS-principe">KISS principle</a>.</strong></p>
@@ -1888,7 +2076,7 @@ is a simple data carrier, generating one format from the other is equivalent in 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_proper_design_promotes_security"><a class="anchor" href="#_proper_design_promotes_security"></a><a class="link" href="#_proper_design_promotes_security">7.4. Proper Design Promotes Security.</a></h3>
+<h3 id="_proper_design_promotes_security"><a class="anchor" href="#_proper_design_promotes_security"></a><a class="link" href="#_proper_design_promotes_security">8.4. Proper Design Promotes Security.</a></h3>
 <div class="paragraph">
 <p>In the picture above you can see that you can go to quite some lengths to keep secret data private.<br>
 For instance with the postgresql <strong>roles</strong>, <strong>rules</strong>, and <strong>row level security</strong> (\(R^3\)),
@@ -1931,7 +2119,7 @@ sufficient expertise.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-21 15:00:01 +0100
+Last updated 2021-12-03 14:08:14 +0100
 </div>
 </div>
 <script type="text/x-mathjax-config">

@@ -72,3 +72,6 @@ h1{ padding: 6.5em 1em;background-image: url(fontys614x345.jpg);    background-r
 #footer { z-index: 1040;}
 .bigger{ font-size: 120%;}
 .gray{ color: #ccc; }
+.small-code-font-60 { font-size: 70%; }
+.small-code-font-70 { font-size: 70%; }
+.small-code-font-80 { font-size: 80%; }

@@ -285,6 +285,6 @@ is filling the account tables from some List of accounts.
 <1> We do multiple inserts in one batch. Auto commit is off.
  The try-with-resources block takes care of the jdbc transaction.
 
-===  Database Meta Information
-
-DO Mention the https://www.baeldung.com/jdbc-database-metadata[metadata...]
+// ===  Database Meta Information
+//
+// DO Mention the https://www.baeldung.com/jdbc-database-metadata[metadata...]

@@ -14,6 +14,8 @@ include::{topics}/sausageisnotsteel.adoc[]
 
 include::{topics}/jdbc1.adoc[]
 
+include::{topics}/dbmeta.adoc[]
+
 include::{topics}/transactions.adoc[]
 
 include::{topics}/usingstoredprocedures.adoc[]
