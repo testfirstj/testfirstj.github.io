@@ -120,7 +120,7 @@ In all cases, you should be aware of the consequences.</p>
 </div>
 </div>
 <div class="paragraph">
-<p><span class="big">Reclection or class introspection is used to leverage the infomation that is avialable in classes. Using the information that is
+<p><span class="big">Reflection or class introspection is used to leverage the information that is available in classes. Using the information that is
 available about a class and by implication about the instances of the class can help to avoid <em>copy-and-waste</em> programming.
 It helps keeping the code <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a></span></p>
 </div>
@@ -166,8 +166,8 @@ to that method in an <code>Object[]</code> array.</p>
 and also by using <code>MethodHandle</code> in the java.lang.invoke package introduced in Java 7.</p>
 </div>
 <div class="paragraph">
-<p>Things that can be done using reflection is building access templates to read
-and write plain old java objects, typically entity classes, without having to copy and paste a lot of
+<p>Things that can be done using reflection is building access templates to construct or read
+and write the fields of plain old java objects, typically entity classes, without having to copy and paste a lot of
 similar code.
 This, and code generation, is the approach that some frameworks use to reduce the
 amount of boilerplate or copy and paste code that needs to be written.</p>
@@ -181,13 +181,13 @@ amount of boilerplate or copy and paste code that needs to be written.</p>
 <h2 id="_reflection_and_correcting_student_exams"><a class="anchor" href="#_reflection_and_correcting_student_exams"></a><a class="link" href="#_reflection_and_correcting_student_exams">2. Reflection and correcting student exams.</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong class="big">Not unit testing, but assessing the grades student get for their solutions.</strong></p>
+<p><span class="big">Not unit testing, but assessing the grades student get for their solutions.</span></p>
 </div>
 <div class="paragraph">
-<p>We teachers use reflection quite a bit when correcting the tasks in performance assessments.
+<p>We teachers use reflection quite a bit when correcting the students' solutions to tasks in performance assessments.
 This is also the way that the MOOC in PRC1 does parts of it&#8217;s testing.
-This is a special kind of unit testing, that is <strong class="red">NOT</strong> the norm.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> but serves as an illustration on what
-you can do with reflection.</p>
+This is a special kind of unit testing, that is <strong class="red">NOT</strong> the norm, since it is utterly unsuited for TDD,
+but serves as an illustration on what you can do with reflection.</p>
 </div>
 <div class="paragraph">
 <p>As teacher / examiners</p>
@@ -209,7 +209,8 @@ to instantiate the objects using reflection.</p>
 </li>
 <li>
 <p>When you run the jacoco coverage plugin, jacoco itself adds so called <em>synthetic</em> members, which
-are not found in the source code of the business class, but are added by jacoco by way of instrumentation.</p>
+are not found in the source code of the business class, but are added by jacoco by way of instrumentation,
+and we need to strip those out in our assessment of the students' code.</p>
 </li>
 <li>
 <p>We want to check that a method or field has the required visibility, <span class="blue">static</span>-ness, <span class="blue">final</span>ity, or <span class="blue">abstract</span>ness.</p>
@@ -222,10 +223,10 @@ of the correction work we need to do.</p>
 </div>
 <div class="paragraph">
 <p>In the java .class file, the <span class="blue">Modifier</span> of fields, methods, and of types such as classes and interfaces
-are simply defined as a bit set packed into an int, and store with the byte code in the class file.</p>
+are simply defined as a bit set packed into an <code>int</code>, and stored with the byte code in the class file.</p>
 </div>
 <div class="paragraph">
-<p>The following modifiers are defined:</p>
+<p>The following modifiers are defined as follows:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -376,8 +377,9 @@ are simply defined as a bit set packed into an int, and store with the byte code
  * Check the field definition of a class.
  *
  * This method tests if the required modifiers are set. Example: to check
- * private, but not require final, specify modifierMask == Modifier.PUBLIC |
- * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired
+ * private, but not require final, specify both modifierMask and Modifier.PUBLIC |
+ * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired, thereby accvepting any
+ * value of the final modifier.
  *
  * @param targetClass to check
  * @param modifierMask visibility, static, final
@@ -542,7 +544,7 @@ Doing so will get a quick full coverage, but testing the exact result may be a b
 <p>You do <span class="green">not</span> have to test the sample classes.</p>
 </div>
 <div class="listingblock">
-<div class="title">Example output for "java.lang.StringBuilder"</div>
+<div class="title">Example output for <code>java.lang.StringBuilder</code></div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="text">$ ./run.sh java.lang.StringBuilder
 class hierarchy of [java.lang.StringBuilder]
@@ -559,7 +561,7 @@ class hierarchy of [java.lang.StringBuilder]
 </div>
 <div class="paragraph">
 <p>Note that the fields are package private, and declared in a <span class="blue">package private</span> class, the <code>AbstractStringBuilder</code>.
-If you run the program on java.lang.StringBuffer and see almost the same. This is because the two classes are siblings
+If you run the program on <code>java.lang.StringBuffer</code> and see almost the same. This is because these two classes are siblings
 sharing the same immediate parent class, the package private AbstractStringBuilder, which does most of the actual work.</p>
 </div>
 </details></div><!--end Class Genealogy -->
@@ -568,7 +570,7 @@ sharing the same immediate parent class, the package private AbstractStringBuild
 <h3 id="_generating_code_using_templates"><a class="anchor" href="#_generating_code_using_templates"></a><a class="link" href="#_generating_code_using_templates">2.1. Generating code using Templates</a></h3>
 <div class="paragraph">
 <p>In the Java versions before Java 16, generating source code could be a bit tedious,
-because in Java a String can&#8217;t contain line breaks, that is a line cannot be multiple lines lone with only one set of quotes.
+because in Java a String can&#8217;t contain line breaks, that is a string cannot contain multiple lines with only one set of quotes.
 The Java 14+ text block feature solves that, and is final in Java 16, but we will deal with it here anyway.</p>
 </div>
 <div class="paragraph">
@@ -578,40 +580,40 @@ by copying from an existing java class. The template below is created that way a
 <div class="listingblock">
 <div class="title">Assume your template text looks like</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>package %1$s;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> %<span class="integer">1</span><span class="error">$</span><span class="namespace">s</span>;
 
-import deconstructorregistry.Deconstructor;
-/**
+<span class="keyword">import</span> <span class="include">deconstructorregistry.Deconstructor</span>;
+<span class="comment">/**
  * This is generated code. Do not edit, your changes will be lost.
- */
-public class %2$sDeconstructor {
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> %<span class="integer">2</span><span class="error">$</span><span class="class">sDeconstructor</span> {
 
-    /**
+    <span class="comment">/**
      * The purpose of self registration is not being able to
      * create new instances, other then by the class loader.
-     */
-    private %2$sDeconstructor() {
+     */</span>
+    <span class="directive">private</span> %<span class="integer">2</span><span class="error">$</span>sDeconstructor() {
     }
 
-    static {
-        Mapper.register( %2$s.class, new %2$sDeconstructor() );
+    <span class="directive">static</span> {
+        Mapper.register( %<span class="integer">2</span><span class="error">$</span>s.class, <span class="keyword">new</span> %<span class="integer">2</span><span class="error">$</span>sDeconstructor() );
     }
 
-    /**
+    <span class="comment">/**
      * Deconstruct an entity into an array.
      * @param %2$s the victim
-     */
-    @Override
-    public Object[] deconstruct(  %2$s %3$s ) {
-       return new Object[]{
-            %4$s
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct(  %<span class="integer">2</span><span class="error">$</span>s %<span class="integer">3</span><span class="error">$</span>s ) {
+       <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+            %<span class="integer">4</span><span class="error">$</span>s
        };
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In the template you see special 'tokens' like <code>%2ss</code>, which means: use the second parameter, and interpret as string.
+<p>In the template you see special 'tokens' like <code>%2$s</code>, which means: use the second parameter, and interpret as string.
 In this case the template specifies 4 parameters:</p>
 </div>
 <div class="olist arabic">
@@ -753,7 +755,7 @@ Why not <em>generate</em> a deconstructor from the information that is in the cl
 </div>
 </div>
 <div class="paragraph">
-<p>The generated deconstructor is specialized for the Student class, and it is really fast.</p>
+<p>The generated deconstructor is specialized for the Student class, and it is also really fast, because it uses no reflection <em>by itself</em>.</p>
 </div>
 <div class="paragraph">
 <p>In this exercise you will create the deconstructor java code given the entity class name on the command line.</p>
@@ -795,7 +797,7 @@ Why not <em>generate</em> a deconstructor from the information that is in the cl
 like  <code>public static Object[] deconstructor( Student )</code>.</p>
 </li>
 <li>
-<p>The field values should be obtained using the getter for the field. Assume <strong>'get'</strong> as prefix for all methods</p>
+<p>The field values should be obtained using the getter for the field. Assume <strong>'get'</strong> as prefix for all methods, unless the field is of type <code>boolean</code> or <code>Boolean</code>.</p>
 </li>
 <li>
 <p>The getter should be constructed according to the convention, <code>get+&lt;fieldname with first letter capitalized&gt;</code>. E.g the getter for field <code>firstname</code> is get<strong>F</strong>irstname.</p>
@@ -818,7 +820,7 @@ details of the tests.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Remove all _unneeded_<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>
+<p>Remove all _unneeded_<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
 white space. This can be done easily with:<br>
  <code class="blue">stream().map (line &#8594; line.trim()).filter(l &#8594; !l.isEpmty())</code>.
  This trick has been packed in a method called cleanCode that takes the whole generated text, cleans it and returns it as a list of Strings.</p>
@@ -860,25 +862,25 @@ java -jar ${jar} &quot;$@&quot;</code></pre>
 using class does not have to instantiate a class, but can simple look it up.</p>
 </div>
 <div class="paragraph">
-<p>Looking up an entity instead of creating your own can also help performance, because
-an next lookup can return the same object, so the expense of the first instantiation
-is paid only for the first instance. This can make an expensive construct still usable, once
-the instances are used often enough. This trades startup cost for flexibility and less
+<p>Looking up an object instead of creating your own instance can also help performance, because
+an next lookup can return the same object, so the expense of the instantiation
+is paid only once, when creating the first instance. This can make an expensive construct still usable, once
+the instance is used often enough. This trades startup cost for flexibility and less
 repetitive programmer&#8217;s (you) work.</p>
 </div>
 <div class="paragraph">
-<p>This looking up is done in something called a registry.</p>
+<p>This looking up is done in something called a <strong class="blue">registry</strong>.</p>
 </div>
 <div class="paragraph">
 <p>How cool would it be that a service like a Deconstructor could register itself, by supplying
-the key (the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
+the key (the class of the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
 look up the deconstructor</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">  <span class="type">void</span> useEntity( E e ) {
 
-    <span class="keyword">for</span> (<span class="predefined-type">Object</span> f : Deconstructor.forType( e.getClass() ) ) {
+    <span class="keyword">for</span> (<span class="predefined-type">Object</span> f : Deconstructor.forType( e.getClass() ).deconstruct( e ) ) {
       <span class="comment">// use fields.</span>
     }
   }</code></pre>
@@ -911,7 +913,7 @@ which include executing the static blocks in the code.</p>
     <span class="directive">public</span> <span class="directive">static</span> &lt;E&gt; Deconstructor&lt;E&gt; forType( <span class="predefined-type">Class</span>&lt;E&gt; et ) {
         <span class="keyword">if</span> ( !register.containsKey( et ) ) {
             loadDeconstructorClass( et );
-        }
+        } <span class="comment">// assume loading is successful</span>
         <span class="keyword">return</span> (Deconstructor&lt;E&gt;) register.get( et );
     }
 
@@ -945,7 +947,7 @@ which include executing the static blocks in the code.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">StudentDeconstructor</span> <span class="directive">extends</span> Deconstructor&lt;Student&gt; {
 
   <span class="directive">private</span> StudentDeconstructor(){
-    <span class="comment">// do what is needed to make this a valid objects</span>
+    <span class="comment">// do what is needed to make this a valid object</span>
     <span class="comment">// or leave empty to suppress a default constructor.</span>
   }
 
@@ -953,7 +955,7 @@ which include executing the static blocks in the code.</p>
    * Static block to self register.
    */</span>
   <span class="directive">static</span> {
-    <span class="predefined-type">Registry</span>.register( Student.class, <span class="keyword">new</span> StudentDeconstructir() );
+    <span class="predefined-type">Registry</span>.register( Student.class, <span class="keyword">new</span> StudentDeconstructor() );
   }
 
   <span class="comment">// other details left out</span>
@@ -962,7 +964,7 @@ which include executing the static blocks in the code.</p>
 </div>
 <div class="paragraph">
 <p>Note that the self registering class does not have to be public, so you can keep
-it nicely tucked away as a package private Deconstructor, which can be kept in sync
+it nicely tucked away as a package private XXXDeconstructor, which can be kept in sync
 with the entities it supports in the same package.</p>
 </div>
 <div class="admonitionblock tip">
@@ -974,7 +976,7 @@ with the entities it supports in the same package.</p>
 <td class="content">
 <div class="paragraph">
 <p>Whenever you modify any of the types that are processed by say a Deconstructor,
-regenerate the Deconstructors for those types in that package.</p>
+regenerate the Deconstructors for those types in that same package.</p>
 </div>
 </td>
 </tr>
@@ -997,7 +999,7 @@ up the coupling between classes and its users.</p>
 </div>
 <div class="paragraph">
 <p>Enhance the generated Deconstructor in the previous exercise to make it self registering.
-To do that make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.</p>
+To do that, make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1731,7 +1733,8 @@ When you are done, bump the version of the genericmapper to <code class="black">
 </td>
 <td class="content">
 <div class="paragraph">
-<p>It is best to keep the entities in a separate package and maybe also in a maven project of their own.</p>
+<p>It is best to keep the entities plus their mappers in a separate package and maybe also in a (maven) project of their own.
+This loosens coupling and allows both client and server project use the same dependency for the entities and friends.</p>
 </div>
 </td>
 </tr>
@@ -1748,7 +1751,7 @@ You have noticed one of the improvements through the fact that we replaced the o
 then version 2.2.0 of said mapper.</p>
 </div>
 <div class="paragraph">
-<p>We found some additional improvemenst and do not want to deprive you from the ideas in the improvements.</p>
+<p>We found some additional improvements and do not want to deprive you from the ideas in the improvements.</p>
 </div>
 <div class="paragraph">
 <p><strong>Improvements</strong></p>
@@ -1757,7 +1760,7 @@ then version 2.2.0 of said mapper.</p>
 <ol class="arabic">
 <li>
 <p>Better error handling when a mapper can&#8217;t find a constructor it expects. Remember that the mapper top class tries to infer the constructor
-from the fields, including the <strong>order</strong> in the <em>fields types</em>. The improved log message contains the <strong>signature</strong> of the expected constructor,
+from the fields, including the <strong>order</strong> in the <em>fields types</em>. The improved log message contains the expected <strong>signature</strong> of the constructor,
 like  <strong class="blue">public Tutor( String firstname, String lastname, String tussenvoegsel, LocalDate dob, String gender, Integer id, String academicTitle, String teaches, String email );</strong></p>
 </li>
 <li>
@@ -1783,7 +1786,7 @@ This allows entities that have super classes like <code class="blue">Student ext
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you already completed the exercise, you do not have to commit these improvements.
+<p>If you already completed the exercise, you do not have to commit these improvements.<br>
 If you did not, the improvements will be considered (but not tested) in the tests.</p>
 </div>
 </td>
@@ -1796,7 +1799,7 @@ If you did not, the improvements will be considered (but not tested) in the test
 <div class="ulist">
 <ul>
 <li>
-<p>Remove the file  StringMapperTest.java from the test packages, or disable it with a <code>@Disabled</code> annotion at the class level.</p>
+<p>Remove the file  StringMapperTest.java from the test packages, or disable it with a <code>@Disabled</code> annotation at the class level.</p>
 </li>
 <li>
 <p>Remove the entirety of the <strong>inner class</strong> <code class="blue">StringMapper</code> from <code class="blue">Mapper.java</code> or comment it out. Best is to remove it.</p>
@@ -2126,10 +2129,7 @@ java -jar ${jar} &quot;$@&quot;</code></pre>
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. It is utterly unsuited for TDD
-</div>
-<div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. the white space is there to improve redability, but is the first that can be discarded, which is what a compiler does as one of the first steps
+<a href="#_footnoteref_1">1</a>. the white space is there to improve redability, but is the first that can be discarded, which is what a compiler does as one of the first steps
 </div>
 </div>
 <div id="footer">
