@@ -1,11 +1,11 @@
 ==  Reflection and correcting student exams.
 
-[big]*Not unit testing, but assessing the grades student get for their solutions.*
+[big]#Not unit testing, but assessing the grades student get for their solutions.#
 
-We teachers use reflection quite a bit when correcting the tasks in performance assessments.
+We teachers use reflection quite a bit when correcting the students' solutions to tasks in performance assessments.
 This is also the way that the MOOC in PRC1 does parts of it's testing.
-This is a special kind of unit testing, that is [red]*NOT* the norm.footnote:[It is utterly unsuited for TDD] but serves as an illustration on what
-you can do with reflection.
+This is a special kind of unit testing, that is [red]*NOT* the norm, since it is utterly unsuited for TDD,
+but serves as an illustration on what you can do with reflection.
 
 As teacher / examiners
 
@@ -15,7 +15,8 @@ As teacher / examiners
 * Sometimes the task states the requirement of only having a specific set of field types with specific visibility or other properties.
 * We want the candidates to stick to the naming conventions.
 * When you run the jacoco coverage plugin, jacoco itself adds so called _synthetic_ members, which
-  are not found in the source code of the business class, but are added by jacoco by way of instrumentation.
+  are not found in the source code of the business class, but are added by jacoco by way of instrumentation,
+  and we need to strip those out in our assessment of the students' code.
 * We want to check that a method or field has the required visibility, [blue]##static##-ness, [blue]##final##ity, or [blue]##abstract##ness.
 // This information is defined as the set of modifiers of the member, and implemented as a simple set of bits, packed in a int.
 
@@ -23,9 +24,9 @@ As an example verifying the visibility and other modifiers such as `static` and 
 of the correction work we need to do.
 
 In the java .class file, the [blue]#Modifier# of fields, methods, and of types such as classes and interfaces
-are simply defined as a bit set packed into an int, and store with the byte code in the class file.
+are simply defined as a bit set packed into an `int`, and stored with the byte code in the class file.
 
-The following modifiers are defined:
+The following modifiers are defined as follows:
 
 [cols="<,^,>,^",header]
 |====
@@ -92,8 +93,9 @@ Below you see a selection of the helper methods we use to correct performance as
  * Check the field definition of a class.
  *
  * This method tests if the required modifiers are set. Example: to check
- * private, but not require final, specify modifierMask == Modifier.PUBLIC |
- * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired
+ * private, but not require final, specify both modifierMask and Modifier.PUBLIC |
+ * Modifier.PRIVATE | Modifier.PROTECTED and as modsRequired, thereby accvepting any
+ * value of the final modifier.
  *
  * @param targetClass to check
  * @param modifierMask visibility, static, final

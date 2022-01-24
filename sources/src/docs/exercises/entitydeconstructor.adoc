@@ -1,7 +1,7 @@
 === Generating code using Templates
 
 In the Java versions before Java 16, generating source code could be a bit tedious,
-because in Java a String can't contain line breaks, that is a line cannot be multiple lines lone with only one set of quotes.
+because in Java a String can't contain line breaks, that is a string cannot contain multiple lines with only one set of quotes.
 The Java 14+ text block feature solves that, and is final in Java 16, but we will deal with it here anyway.
 
 If you know what your code looks like, your can put it in a file, maybe even starting
@@ -9,7 +9,7 @@ by copying from an existing java class. The template below is created that way a
 
 
 .Assume your template text looks like
-[source]
+[source,java]
 ----
 package %1$s;
 
@@ -43,7 +43,7 @@ public class %2$sDeconstructor {
 }
 ----
 
-In the template you see special 'tokens' like `%2ss`, which means: use the second parameter, and interpret as string.
+In the template you see special 'tokens' like `%2$s`, which means: use the second parameter, and interpret as string.
 In this case the template specifies 4 parameters:
 
 . is the package name,
@@ -159,7 +159,7 @@ public class StudentDeconstructor {
 }
 ----
 
-The generated deconstructor is specialized for the Student class, and it is really fast.
+The generated deconstructor is specialized for the Student class, and it is also really fast, because it uses no reflection _by itself_.
 
 In this exercise you will create the deconstructor java code given the entity class name on the command line.
 
@@ -178,7 +178,7 @@ In this exercise you will create the deconstructor java code given the entity cl
 * The name of the Deconstructor type should be the name of the entity type with `"Deconstructor"` appended. E.g. [green]#StudentDeconstructor#.
 * The type and signature of the deconstructor method should be `public static Object[] deconstructor( EntityType )`,
   like  `public static Object[] deconstructor( Student )`.
-* The field values should be obtained using the getter for the field. Assume *'get'* as prefix for all methods
+* The field values should be obtained using the getter for the field. Assume *'get'* as prefix for all methods, unless the field is of type `boolean` or `Boolean`.
 * The getter should be constructed according to the convention, `get+<fieldname with first letter capitalized>`. E.g the getter for field `firstname` is get**F**irstname.
 * The values obtained by the getters should be placed in the order of field declaration of the entity type.
 * The generated code should be fit for human consumption, with reasonable indentation so that eye-ball inspection of the generated code is meaningful.

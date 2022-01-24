@@ -75,7 +75,7 @@ Formatting test can be done with your eye-balls.
 
 You do [green]#not# have to test the sample classes.
 
-.Example output for "java.lang.StringBuilder"
+.Example output for `java.lang.StringBuilder`
 [source,text]
 ----
 $ ./run.sh java.lang.StringBuilder
@@ -92,7 +92,7 @@ class hierarchy of [java.lang.StringBuilder]
 ----
 
 Note that the fields are package private, and declared in a [blue]#package private# class, the `AbstractStringBuilder`.
-If you run the program on java.lang.StringBuffer and see almost the same. This is because the two classes are siblings
+If you run the program on `java.lang.StringBuffer` and see almost the same. This is because these two classes are siblings
 sharing the same immediate parent class, the package private AbstractStringBuilder, which does most of the actual work.
 
 ++++

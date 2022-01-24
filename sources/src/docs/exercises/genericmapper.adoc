@@ -337,7 +337,8 @@ When you are done, bump the version of the genericmapper to [black]`2.2.0` inste
 
 [TIP]
 ====
-It is best to keep the entities in a separate package and maybe also in a maven project of their own.
+It is best to keep the entities plus their mappers in a separate package and maybe also in a (maven) project of their own.
+This loosens coupling and allows both client and server project use the same dependency for the entities and friends.
 ====
 
 :sectnums:
@@ -348,12 +349,12 @@ In the weeks after publications of the genericmapper exercise we have invested f
 You have noticed one of the improvements through the fact that we replaced the original exercise with genericmapper22 which is in fact nothing else
 then version 2.2.0 of said mapper.
 
-We found some additional improvemenst and do not want to deprive you from the ideas in the improvements.
+We found some additional improvements and do not want to deprive you from the ideas in the improvements.
 
 *Improvements*
 
 . Better error handling when a mapper can't find a constructor it expects. Remember that the mapper top class tries to infer the constructor
-from the fields, including the *order* in the _fields types_. The improved log message contains the *signature* of the expected constructor,
+from the fields, including the *order* in the _fields types_. The improved log message contains the expected *signature* of the constructor,
 like  [blue]*public Tutor( String firstname, String lastname, String tussenvoegsel, LocalDate dob, String gender, Integer id, String academicTitle, String teaches, String email );*
 . The mapper filters out the https://www.baeldung.com/java-transient-keyword#introduction[`transient`] fields.
   A transient field is a field that should *NOT* be serialized. We think it is proper to not include the transient fields to be part of the persisted information.
@@ -366,13 +367,13 @@ To introduce the improvements in your project you need to do the following edits
 
 [TIP]
 ====
-If you already completed the exercise, you do not have to commit these improvements.
+If you already completed the exercise, you do not have to commit these improvements. +
 If you did not, the improvements will be considered (but not tested) in the tests.
 ====
 
 *Remove*
 
-* Remove the file  StringMapperTest.java from the test packages, or disable it with a `@Disabled` annotion at the class level.
+* Remove the file  StringMapperTest.java from the test packages, or disable it with a `@Disabled` annotation at the class level.
 * Remove the entirety of the *inner class* [blue]`StringMapper` from [blue]`Mapper.java` or comment it out. Best is to remove it.
 * Remove the static block in Mapper.java that loads the StringMapper.class into the mapper registry.
 

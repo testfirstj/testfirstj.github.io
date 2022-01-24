@@ -3,24 +3,24 @@
 Some services provided by classes are greatly helped if the
 using class does not have to instantiate a class, but can simple look it up.
 
-Looking up an entity instead of creating your own can also help performance, because
-an next lookup can return the same object, so the expense of the first instantiation
-is paid only for the first instance. This can make an expensive construct still usable, once
-the instances are used often enough. This trades startup cost for flexibility and less
+Looking up an object instead of creating your own instance can also help performance, because
+an next lookup can return the same object, so the expense of the instantiation
+is paid only once, when creating the first instance. This can make an expensive construct still usable, once
+the instance is used often enough. This trades startup cost for flexibility and less
 repetitive programmer's (you) work.
 
-This looking up is done in something called a registry.
+This looking up is done in something called a [blue]*registry*.
 // To be able to find such a registry, a registry itself is often implemented as a Singleton
 
 How cool would it be that a service like a Deconstructor could register itself, by supplying
-the key (the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
+the key (the class of the entity it can deconstruct) and as value itself. Then the client code (the method that wants to do the deconstucting) can simply
 look up the deconstructor
 
 [source,java]
 ----
   void useEntity( E e ) {
 
-    for (Object f : Deconstructor.forType( e.getClass() ) ) {
+    for (Object f : Deconstructor.forType( e.getClass() ).deconstruct( e ) ) {
       // use fields.
     }
   }
@@ -49,7 +49,7 @@ public abstract class Deconstructor<E> {
     public static <E> Deconstructor<E> forType( Class<E> et ) {
         if ( !register.containsKey( et ) ) {
             loadDeconstructorClass( et );
-        }
+        } // assume loading is successful
         return (Deconstructor<E>) register.get( et );
     }
 
@@ -83,7 +83,7 @@ public abstract class Deconstructor<E> {
 class StudentDeconstructor extends Deconstructor<Student> {
 
   private StudentDeconstructor(){
-    // do what is needed to make this a valid objects
+    // do what is needed to make this a valid object
     // or leave empty to suppress a default constructor.
   }
 
@@ -91,7 +91,7 @@ class StudentDeconstructor extends Deconstructor<Student> {
    * Static block to self register.
    */
   static {
-    Registry.register( Student.class, new StudentDeconstructir() );
+    Registry.register( Student.class, new StudentDeconstructor() );
   }
 
   // other details left out
@@ -99,13 +99,13 @@ class StudentDeconstructor extends Deconstructor<Student> {
 ----
 
 Note that the self registering class does not have to be public, so you can keep
-it nicely tucked away as a package private Deconstructor, which can be kept in sync
+it nicely tucked away as a package private XXXDeconstructor, which can be kept in sync
 with the entities it supports in the same package.
 
 [TIP]
 ====
 Whenever you modify any of the types that are processed by say a Deconstructor,
-regenerate the Deconstructors for those types in that package.
+regenerate the Deconstructors for those types in that same package.
 ====
 
 :sectnums!:
@@ -128,7 +128,7 @@ up the coupling between classes and its users.
 In this project you can use some of the code of the previous exercise, with a few tweaks.
 
 Enhance the generated Deconstructor in the previous exercise to make it self registering.
-To do that make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.
+To do that, make a static block that registers the generated Deconstructor, for instance the StudentDeconstructor.
 
 * Make the generated Deconstructor extend the Deconstructor<E>, where E is the entityType of the requested Deconstronstructor. +
   E.g. [blue]`StudentDeconstructor extends Deconstructor<Student>`.

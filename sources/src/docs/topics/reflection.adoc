@@ -1,5 +1,5 @@
 
-[big]#Reclection or class introspection is used to leverage the infomation that is avialable in classes. Using the information that is
+[big]#Reflection or class introspection is used to leverage the information that is available in classes. Using the information that is
 available about a class and by implication about the instances of the class can help to avoid _copy-and-waste_ programming.
 It helps keeping the code https://en.wikipedia.org/wiki/Don%27t_repeat_yourself[DRY]#
 
@@ -21,8 +21,8 @@ Reflection is a multi-edged tool.
 Some of the problems can be mitigated a little with the proper amount of smartness, in particular caching previous results,
 and also by using `MethodHandle` in the java.lang.invoke package introduced in Java 7.
 
-Things that can be done using reflection is building access templates to read
-and write plain old java objects, typically entity classes, without having to copy and paste a lot of
+Things that can be done using reflection is building access templates to construct or read
+and write the fields of plain old java objects, typically entity classes, without having to copy and paste a lot of
 similar code.
 This, and code generation, is the approach that some frameworks use to reduce the
 amount of boilerplate or copy and paste code that needs to be written.
