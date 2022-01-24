@@ -143,7 +143,7 @@ _It is easier to model sausages than dogs, because the former sit still._
 
 That concludes this intermezzo on https://www.chefkoch.de/rezepte/1180961224164162/Currywurst.html[currywurst].
 
-//Pieter van den Hombergh, March 2021.
+_Pieter van den Hombergh, March 2021._
 
 '''
 
