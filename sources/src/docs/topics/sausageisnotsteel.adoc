@@ -7,7 +7,7 @@
 // In particular, should a _class diagram_ have or not have arrows and or cardinalities.
 
 [.lead]
-There seems to be a controversy about when to add https://en.wikipedia.org/wiki/Cardinality_(data_modeling)[cardinalities] and when not. +
+There seems to be a controversy about when to add https://en.wikipedia.org/wiki/Cardinality_(data_modeling)[cardinalities] to (class) diagrams and when not. +
 The answer is, as always: [big black]_it depends_. +
 The [blue]*purpose* of the diagram is what counts, so apply separation of concerns in the diagrams
 you make in analysis and design too.
@@ -100,14 +100,16 @@ Let us use metaphores. *Sausage* and *Sausage Machines*.
 ** The temperature and preparation time of course also matter, but that is how you _use_ the machine.
 * The assembly process of the machine is the last part as far as producing machines goes.
 ** In the assembly you need to know the number of bolts, grinder wheels etc. Meat nor sausage is involved, unless you hit yourselves with a spanner.
- The sausages *will* be involved in the test lab. (Think test scenarios).
-** You will find places where count matters, like a GUI that shows items of a varying number. +
+   The sausages *will* be involved in the test lab. (Think test scenarios). Compare the assembly process of the meat grinder to what a compiler
+   does to a program. As far as the compiler is concerned, the program's source code is just data. And so are the components of the meat grinder during assembly.
+   During use it becomes (part of) the _system_.
+** You will find places where counts matter, like a GUI that shows items of a varying number. +
    But than also, that count comes from the data. (Show the customers in a GUI list). +
 ** In all other cases the GUI widgets will have _names_. These names can be applied to the system components. Those are specialized by
    for instance inheritance or composition but also by configuration, like the colour of the handle of the meat grinder or the text on a label.
    Or even applying plugins like in a meat grinder by replacing the grind wheel and extruder to get a different sausage type.
 
-[big]_Transformation of the domain model into the system class diagram sounds reasonable,
+[big]_Transformation_ of the domain model into the system class diagram sounds reasonable,
   but is in fact a https://en.wikipedia.org/wiki/Fallacy[fallacy]._ +
 [big]_It would be as if you could turn sausage into a sausage machine. I'm pretty sure your Butcher will tell you different when you would propose such a solution._
 

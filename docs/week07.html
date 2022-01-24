@@ -123,7 +123,7 @@
 <h2 id="_currywurst_is_not_made_of_steel_and_vice_versa"><a class="anchor" href="#_currywurst_is_not_made_of_steel_and_vice_versa"></a><a class="link" href="#_currywurst_is_not_made_of_steel_and_vice_versa">Currywurst is not made of steel and vice versa.</a></h2>
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>There seems to be a controversy about when to add <a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinalities</a> and when not.<br>
+<p>There seems to be a controversy about when to add <a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinalities</a> to (class) diagrams and when not.<br>
 The answer is, as always: <em class="big black">it depends</em>.<br>
 The <strong class="blue">purpose</strong> of the diagram is what counts, so apply separation of concerns in the diagrams
 you make in analysis and design too.
@@ -300,10 +300,12 @@ You need <strong>only one</strong> design ( ==template, class ) of each.</p>
 <ul>
 <li>
 <p>In the assembly you need to know the number of bolts, grinder wheels etc. Meat nor sausage is involved, unless you hit yourselves with a spanner.
-The sausages <strong>will</strong> be involved in the test lab. (Think test scenarios).</p>
+The sausages <strong>will</strong> be involved in the test lab. (Think test scenarios). Compare the assembly process of the meat grinder to what a compiler
+does to a program. As far as the compiler is concerned, the program&#8217;s source code is just data. And so are the components of the meat grinder during assembly.
+During use it becomes (part of) the <em>system</em>.</p>
 </li>
 <li>
-<p>You will find places where count matters, like a GUI that shows items of a varying number.<br>
+<p>You will find places where counts matter, like a GUI that shows items of a varying number.<br>
 But than also, that count comes from the data. (Show the customers in a GUI list).<br></p>
 </li>
 <li>
@@ -317,8 +319,8 @@ Or even applying plugins like in a meat grinder by replacing the grind wheel and
 </ul>
 </div>
 <div class="paragraph">
-<p><em class="big">Transformation of the domain model into the system class diagram sounds reasonable,
-  but is in fact a <a href="https://en.wikipedia.org/wiki/Fallacy">fallacy</a>.</em><br>
+<p><em class="big">Transformation</em> of the domain model into the system class diagram sounds reasonable,
+  but is in fact a <a href="https://en.wikipedia.org/wiki/Fallacy">fallacy</a>._<br>
 <em class="big">It would be as if you could turn sausage into a sausage machine. I&#8217;m pretty sure your Butcher will tell you different when you would propose such a solution.</em></p>
 </div>
 <div class="openblock clearfix">
