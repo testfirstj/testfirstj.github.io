@@ -249,13 +249,13 @@ entities.
     <version>1.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
-            <groupId>nl.fontys.sebivenlo</groupId>
+            <groupId>io.github.sebivenlo</groupId>
             <artifactId>sebiannotations</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>nl.fontys.sebivenlo</groupId>
+            <groupId>io.github.sebivenlo</groupId>
             <artifactId>genericmapper</artifactId>
             <version>[2.2.0,)</version>  <!--2-->
             <type>jar</type>
@@ -265,7 +265,7 @@ entities.
     <build>
         <plugins>
             <plugin>
-                <groupId>nl.fontys.sebivenlo</groupId>
+                <groupId>io.github.sebivenlo</groupId>
                 <artifactId>mapperplugin</artifactId> <!--3-->
                 <version>1.0</version>
                 <executions>
@@ -292,7 +292,7 @@ entities.
 
 <1> do not forget to declare an extra pluginRepository.
 <2> You need to have (on your pc) version 2.2.0 or higher of the genericmapper. Change your version accordingly in the pom of project genericmapper22.
-<3> The mapper plugin has  groupId `nl.fontys.sebivenlo`, which should be no surprise, and the *artifactId* is `mapperplugin`.
+<3> The mapper plugin has  groupId `io.github.sebivenlo`, which should be no surprise, and the *artifactId* is `mapperplugin`.
 <4> Specify which package is processed by the plugin.
 <5> Tell the mapper generator plugin where to look for entities `.class` files.
 <6> Here you can set where the generated files land. This setting makes them land in the same package as the entities themselves.

@@ -142,13 +142,13 @@ order for test driven development is:
 
 . A Constructor. You typically need instances and this is how you can construct some.
 . Getters for the fields that are defined in the constructor. If
-  such getters are not part of the public API of the class, make the
+  such getters are not part of the public API of the class, make them
   package private, to hide them from client classes outside of the
   package.
 . The `public String toString()` method, which can show
   the result of the constructor. Note that toString is often used for debugging,
   and that is what the auto-generated to string typically is for.
-.  Setters, if needed. (They are NOT in the fraction exercise). If you can get by
+. Setters, if needed. (They are NOT in the fraction exercise). If you can get by
   with a class without setters, you are typically https://www.leadingagile.com/2018/03/immutability-in-java/[better off].
 .  The business methods, one by one. In case of Fraction exercise, start at
   multiplication, because that is easiest.

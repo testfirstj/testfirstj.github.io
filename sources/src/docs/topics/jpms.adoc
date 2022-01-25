@@ -72,9 +72,9 @@ A few examples.
 .Generic Mapper
 [source,java]
 ----
-module  nl.fontys.sebivenlo.genericmapper {
+module  io.github.sebivenlo.genericmapper {
     requires java.logging;
-    requires nl.fontys.sebivenlo.sebiannotations;
+    requires io.github.sebivenlo.sebiannotations;
     exports genericmapper;
 }
 ----
@@ -82,13 +82,13 @@ module  nl.fontys.sebivenlo.genericmapper {
 .Generic DAO
 [source,java]
 ----
-module nl.fontys.sebivenlo.genericdao {
-    requires nl.fontys.sebivenlo.genericmapper;
+module io.github.sebivenlo.genericdao {
+    requires io.github.sebivenlo.genericmapper;
     requires java.logging;
     requires java.sql;
     requires java.naming;
     requires org.postgresql.jdbc;
-    requires nl.fontys.sebivenlo.sebiannotations;
+    requires io.github.sebivenlo.sebiannotations;
     exports genericdao.dao;
     exports genericdao.memory;
     exports genericdao.pgdao;

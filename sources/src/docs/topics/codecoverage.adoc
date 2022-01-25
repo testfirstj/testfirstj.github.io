@@ -8,7 +8,7 @@ branch or loop. Sometimes those nasty *checked* exceptions are in the way, becau
 have to catch them and have a hard time reaching that catch block, because it is hard to setup
 a test case where the required exception actually occurs, thereby excluding the catch block from coverage. +
 
-In sebipom we provide Jacoco as the coverage plugin.
+In testeasypom we provide Jacoco as the coverage plugin.
 You must activate it using a maven profile.
 
 '''

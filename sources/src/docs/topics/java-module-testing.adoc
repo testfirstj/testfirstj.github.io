@@ -83,9 +83,9 @@ This allows the test classes access to the package private parts of the classes,
 [source,java]
 ----
 module nl.fontys.sebidao {
-    exports nl.fontys.sebivenlo.dao;
-    exports nl.fontys.sebivenlo.dao.memory;
-    exports nl.fontys.sebivenlo.dao.pg;
+    exports io.github.sebivenlo.dao;
+    exports io.github.sebivenlo.dao.memory;
+    exports io.github.sebivenlo.dao.pg;
     requires java.logging;
     requires java.naming;
     requires java.sql;
@@ -110,29 +110,29 @@ Because this happens during testing, surefire is instructed to tell the jvm (jav
 open those packages to the world. The snippet from the maven pom file that realizes that is given below. You can copy
 and adapt it for your own purposes.
 
-.sebipom project with surefire.opens property to open op required packages for testing. Requires sebipom >= 3.0.2
+.testeasypom project with surefire.opens property to open op required packages for testing. Requires testeasypom >= 3.0.2
 [source,xml]
 ----
   <properties>
     <surefire.opens> <!--1-->
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <!--2-->
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/usertypes=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
+        --add-opens io.github.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <!--2-->
+        --add-opens io.github.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/usertypes=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
     </surefire.opens>
     <!--3-->
   </properties>
 ----
 
-<1> We are adding a property for the surefire plugin which is picked up by sebipom.
+<1> We are adding a property for the surefire plugin which is picked up by testeasypom.
 <2> In particular the arguments that are passed to the JVM that runs the tests,
   which appends *--add-opens* commands for all packages that require unit tests.
 <3> Other properties are left out for brevity.
 
 [TIP]
-The above requires sebipom version 3.0.2 or higher as parent for your project. Also works
-if the parent of your modular maven project uses sebipom as parent.
+The above requires testeasypom version 3.0.2 or higher as parent for your project. Also works
+if the parent of your modular maven project uses testeasypom as parent.
 
 Of particular importance, and project specific are the [blue]`--add-opens` commands, which you must adapt to your own project's
 pom file with your own module and package names.

@@ -35,7 +35,7 @@ You can easily run all these plugins by calling maven as `mvn site`. It will, on
 produce a website inside your target folder, aptly calls `target/site`. Use your browser to open it
 or open the target/site folder in the files tab of the IDE and right-click view on index.html.
 
-You can find the link:../sebivenlo_checks.xml[sebivenlo_checks.xml ^]footnote:[will be maintaned at the same place where you find sebipom.] check-style rules on this server by following the link 9 word to the left.
+You can find the link:../sebivenlo_checks.xml[sebivenlo_checks.xml ^]footnote:[will be maintaned at the same place where you find testeasypom.] check-style rules on this server by following the link 9 word to the left.
 
 [WARNING]
 ====

@@ -17,32 +17,26 @@ your IDE and in particular maven.
 
 
 Create the project in NetBeans as a Maven Java Application.
-Adapt the pom file of the project such that it uses sebipom as parent. You do that by declaring
+Adapt the pom file of the project such that it uses testeasypom as parent. You do that by declaring
 the parent directly after the second line that reads `<modelVersion>4.0.0</modelVersion>`. This will have
 the effect that you will have the exact plugins for the style of testing we want to teach.
 
-.Use sebipom as parent
+.Use testeasypom as parent
 [source,xml]
 ----
-    <repositories>
-      <repository>
-        <id>fontysvenlo.org</id>
-        <url>https://www.fontysvenlo.org/repository</url> <!--1-->
-      </repository>
-    </repositories>
     <parent>
-        <groupId>nl.fontys.sebivenlo</groupId>
-        <artifactId>sebipom</artifactId>
-        <version>3.0.4</version>
+        <groupId>io.github.sebivenlo</groupId> <!--1-->
+        <artifactId>testeasypom</artifactId>
+        <version>4.0.5</version>
         <relativePath/>
     </parent>
 ----
 
-<1> Add the repository where sebipom is at home.
+<1> Testeasypom lives at github in a public repository and is also published in the maven central repository.
 
 //You will notice that the IDE does not like it because it will not be able to find the parent pom.
 
-// [blue]#sebipom# is specific to our course, meaning you have to configure maven to consider the repository that is
+// [blue]#testeasypom# is specific to our course, meaning you have to configure maven to consider the repository that is
 // specific to our courses: https://www.fontysvenlo.org/repository[www.fontysvenlo.org/repository ^], where you can find semipom
 // and other small projects that are used in some of the exercises.
 //
@@ -52,7 +46,7 @@ the effect that you will have the exact plugins for the style of testing we want
 // a pom.xml file. If it does not have a settings.xml file, you can right-click on *Project Files*, which will then offer
 // to create a settings file. Accept it, then add the `<profile>` with `<id>` _sebivenlo_ to the `<profiles>` section, and activate that profile
 // in the `<activeProfiles>` section. See the examples below. This will give you access to the sebivenlo repository which we use to publish
-// sebipom and other useful maven project artifacts. +
+// testeasypom and other useful maven project artifacts. +
 // Maven settings will affect all maven projects, not just the current.
 // That is shows up in the Project Files folder is just a convenience.footnote:[settings.xml can be found in your home directory under folder `${HOME}/.m2`. It starts with a dot and may appear hidden in some cases. `${HOME}` refers to the home directory of the user.]
 //
@@ -143,8 +137,8 @@ Bravo: you have just created your first method in [blue,bold]*Test Driven Develo
 [TIP]
 ====
 If the IDE (or the compiler) complains that it can't find things, or something along that line,
-you should do, what is called a priming build: Just build once by pressing the hammer symbol or right-click on the project and select build.
-This will trigger maven to fetch all dependencies, that is the libraries that are used by the project. Sebipom selects test specific libraries to make sure
+you should do what is called a priming build: Just build once by pressing the hammer symbol or right-click on the project and select build.
+This will trigger maven to fetch all dependencies, that is the libraries that are used by the project. Testeasypom selects test specific libraries to make sure
 that we are all on the same page regarding the test dependencies in the project.
 ====
 

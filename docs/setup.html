@@ -69,10 +69,10 @@
 </li>
 </ul>
 </li>
-<li><a href="#_test_easy_pom_4_0_3">3. Test Easy Pom 4.0.3</a>
+<li><a href="#_testeasypom_4_0_6">3. Testeasypom 4.0.6</a>
 <ul class="sectlevel2">
-<li><a href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></li>
-<li><a href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></li>
+<li><a href="#_sebipom_and_java_fx">3.1. Sebipom and Java FX</a></li>
+<li><a href="#_using_the_sebipom_in_your_own_projects">3.2. Using the SeBiPom in your own projects</a></li>
 <li><a href="#_upgrade_all_projects_with_one_command">3.3. Upgrade all projects with one command</a></li>
 </ul>
 </li>
@@ -858,7 +858,7 @@ The easiest way to do this is using HomeBrew:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_test_easy_pom_4_0_3"><a class="anchor" href="#_test_easy_pom_4_0_3"></a><a class="link" href="#_test_easy_pom_4_0_3">3. Test Easy Pom 4.0.3</a></h2>
+<h2 id="_testeasypom_4_0_6"><a class="anchor" href="#_testeasypom_4_0_6"></a><a class="link" href="#_testeasypom_4_0_6">3. Testeasypom 4.0.6</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Spelled all lower  case: <code>testeasypom</code>, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
@@ -866,7 +866,7 @@ dependencies needed. Niceties to do proper Test Driver Development are provided 
 javadoc in a professional looking way, including code highlighted code snippets, checkstyle, reporting, code coverage with maven, pmd, spotbugs  etc.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/sebivenlo/testeasypom">testeasypom is hosted on github</a>.</p>
+<p><a href="https://github.com/sebivenlo/testeasypom">Sebipom is hosted on github</a>.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -877,7 +877,7 @@ javadoc in a professional looking way, including code highlighted code snippets,
 </div>
 <div class="paragraph">
 <p>This way of using maven, having a <span class="blue">super</span> or parent pom defined globally (in a repository, not on a local path), is the <span class="big black">modern</span> usage.
- It can be seen in well known big java projects such as <a href="https://spring.io/projects/spring-boot">Spring Boot</a> and <a href="https://quarkus.io/">quarkus</a>, and many other modern maven projects.</p>
+ It can be seen in well known big java projects such as <a href="https://spring.io/projects/spring-boot">Spring Boot</a> and <a href="https://quarkus.io/">quarkus</a>, to name two contenders in the java-web technology world.</p>
 </div>
 <div class="admonitionblock tip green">
 <table>
@@ -903,7 +903,7 @@ javadoc in a professional looking way, including code highlighted code snippets,
 <pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
       <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
       <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
-      <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
       <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="tag">&lt;/parent&gt;</span></code></pre>
 </div>
@@ -932,10 +932,10 @@ the basic one below. Add dependencies as required.</p>
     <span class="tag">&lt;parent&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
         <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>4.0.3<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;realtivePath</span><span class="tag">/&gt;</span><i class="conum" data-value="2"></i><b>(2)</b>
     <span class="tag">&lt;/parent&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
-    <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>basicsebimaven<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
@@ -943,7 +943,7 @@ the basic one below. Add dependencies as required.</p>
     <span class="tag">&lt;name&gt;</span>My App<span class="tag">&lt;/name&gt;</span>
     <span class="tag">&lt;properties&gt;</span>
         <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
-        <span class="tag">&lt;java.release&gt;</span>17<span class="tag">&lt;/java.release&gt;</span>
+        <span class="tag">&lt;java.release&gt;</span>11<span class="tag">&lt;/java.release&gt;</span>
         <span class="comment">&lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;</span>
         <span class="tag">&lt;exec.mainClass&gt;</span>basicsebimaven.Hello<span class="tag">&lt;/exec.mainClass&gt;</span>
     <span class="tag">&lt;/properties&gt;</span>
@@ -975,7 +975,7 @@ the basic one below. Add dependencies as required.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_testeasypom_and_java_fx"><a class="anchor" href="#_testeasypom_and_java_fx"></a><a class="link" href="#_testeasypom_and_java_fx">3.1. testeasypom and Java FX</a></h3>
+<h3 id="_sebipom_and_java_fx"><a class="anchor" href="#_sebipom_and_java_fx"></a><a class="link" href="#_sebipom_and_java_fx">3.1. Sebipom and Java FX</a></h3>
 <div class="paragraph">
 <p>If you want to use semipom and build a JavaFX project, you need to activate the <strong>fx</strong>-profile.
 In the commandline that would be</p>
@@ -997,7 +997,7 @@ In the commandline that would be</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_the_testeasypom_in_your_own_projects"><a class="anchor" href="#_using_the_testeasypom_in_your_own_projects"></a><a class="link" href="#_using_the_testeasypom_in_your_own_projects">3.2. Using the testeasypom in your own projects</a></h3>
+<h3 id="_using_the_sebipom_in_your_own_projects"><a class="anchor" href="#_using_the_sebipom_in_your_own_projects"></a><a class="link" href="#_using_the_sebipom_in_your_own_projects">3.2. Using the SeBiPom in your own projects</a></h3>
 <div class="paragraph">
 <p>To use the test libraries and other goodies that will be used throughout our course,
 you should add the <code>testeasypom</code> as parent.</p>
@@ -1014,13 +1014,13 @@ these lines in the previous section <a href="#testeasypom-as-parent">Setting tes
 </td>
 <td class="content">
 <div class="paragraph">
-<p>As of 2021-09-08, testeasypom reached version 4.0.3. Not all projects may have this version number for
+<p>As of 2022-01-25, testeasypom reached version 4.0.6. Not all projects may have this version number for
 the parent testeasypom. We improve as we go, sometimes because of tips we receive from our students, you for instance.
 Anyway, if the version is not at the newest, set it to the newest and rebuild.
 Revisit this part of the site to check the latest version number or look in the
-<a href="https://search.maven.org/search?q=g:io.github.sebivenlo" target="_blank" rel="noopener">maven central testeasypom </a>
+<a href="https://www.fontysvenlo.org/repository/io.github.sebivenlo/testeasypom/">fontysvenlo maven reposity</a>
 for the testeasypom version.<br>
-testeasypom 540.3 enables testing for modular projects but does not enforce modular projects.</p>
+Sebipom 3.0.3 enables testing for modular projects but does not enforce modular projects.</p>
 </div>
 <div class="ulist">
 <ul>

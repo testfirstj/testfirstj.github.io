@@ -236,7 +236,7 @@ of our code and tests.
 
 We use maven in 2019,
 so we will demo with the maven coverage plugin, which is already in the project by virtue of
-*sebipom*.
+*testeasypom*.
 
 
 Coverage means: did we test all there is to test? Is there some uncharted code,

@@ -11,8 +11,8 @@ You will use the *streams* to get some work with collections done in a smart way
 
 [NOTE]
 ====
-Note: to run the FX application, don't click "run" in Netbeans. Assuming you are using a sebipom based project, then
-link:../2020/tips.html#_sebipom_and_java_fx[first enable the fx profile ^], then right click the project and either
+Note: to run the FX application, don't click "run" in Netbeans. Assuming you are using a testeasypom based project, then
+link:../2020/tips.html#_testeasypom_and_java_fx[first enable the fx profile ^], then right click the project and either
 
 * select 'Run maven' and select exec _or_
 * in the Navigator, right-click the 'javafx run' entry and select 'execute goal'.

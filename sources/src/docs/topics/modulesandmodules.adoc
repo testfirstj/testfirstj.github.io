@@ -18,9 +18,9 @@ A project intended as  java module project should
 [source,java]
 ----
 module nl.fontys.sebidao {
-    exports nl.fontys.sebivenlo.dao;
-    exports nl.fontys.sebivenlo.dao.memory;
-    exports nl.fontys.sebivenlo.dao.pg;
+    exports io.github.sebivenlo.dao;
+    exports io.github.sebivenlo.dao.memory;
+    exports io.github.sebivenlo.dao.pg;
     requires java.logging;
     requires java.naming;
     requires java.sql;

@@ -272,9 +272,9 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">Generic Mapper</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module  nl.fontys.sebivenlo.genericmapper {
+<pre class="CodeRay highlight"><code data-lang="java">module  io.github.sebivenlo.genericmapper {
     requires java.logging;
-    requires nl.fontys.sebivenlo.sebiannotations;
+    requires io.github.sebivenlo.sebiannotations;
     exports genericmapper;
 }</code></pre>
 </div>
@@ -282,13 +282,13 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">Generic DAO</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module nl.fontys.sebivenlo.genericdao {
-    requires nl.fontys.sebivenlo.genericmapper;
+<pre class="CodeRay highlight"><code data-lang="java">module io.github.sebivenlo.genericdao {
+    requires io.github.sebivenlo.genericmapper;
     requires java.logging;
     requires java.sql;
     requires java.naming;
     requires org.postgresql.jdbc;
-    requires nl.fontys.sebivenlo.sebiannotations;
+    requires io.github.sebivenlo.sebiannotations;
     exports genericdao.dao;
     exports genericdao.memory;
     exports genericdao.pgdao;
@@ -519,9 +519,9 @@ This allows the test classes access to the package private parts of the classes,
 <div class="title">Module definition of sebi dao.</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">module nl.fontys.sebidao {
-    exports nl.fontys.sebivenlo.dao;
-    exports nl.fontys.sebivenlo.dao.memory;
-    exports nl.fontys.sebivenlo.dao.pg;
+    exports io.github.sebivenlo.dao;
+    exports io.github.sebivenlo.dao.memory;
+    exports io.github.sebivenlo.dao.pg;
     requires java.logging;
     requires java.naming;
     requires java.sql;
@@ -547,15 +547,15 @@ open those packages to the world. The snippet from the maven pom file that reali
 and adapt it for your own purposes.</p>
 </div>
 <div class="listingblock">
-<div class="title">sebipom project with surefire.opens property to open op required packages for testing. Requires sebipom &gt;= 3.0.2</div>
+<div class="title">testeasypom project with surefire.opens property to open op required packages for testing. Requires testeasypom &gt;= 3.0.2</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">  <span class="tag">&lt;properties&gt;</span>
     <span class="tag">&lt;surefire.opens&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <i class="conum" data-value="2"></i><b>(2)</b>
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/usertypes=ALL-UNNAMED
-        --add-opens nl.fontys.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
+        --add-opens io.github.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <i class="conum" data-value="2"></i><b>(2)</b>
+        --add-opens io.github.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/usertypes=ALL-UNNAMED
+        --add-opens io.github.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
     <span class="tag">&lt;/surefire.opens&gt;</span>
     <i class="conum" data-value="3"></i><b>(3)</b>
   <span class="tag">&lt;/properties&gt;</span></code></pre>
@@ -565,7 +565,7 @@ and adapt it for your own purposes.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>We are adding a property for the surefire plugin which is picked up by sebipom.</td>
+<td>We are adding a property for the surefire plugin which is picked up by testeasypom.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -585,8 +585,8 @@ which appends <strong>--add-opens</strong> commands for all packages that requir
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The above requires sebipom version 3.0.2 or higher as parent for your project. Also works
-if the parent of your modular maven project uses sebipom as parent.
+The above requires testeasypom version 3.0.2 or higher as parent for your project. Also works
+if the parent of your modular maven project uses testeasypom as parent.
 </td>
 </tr>
 </table>

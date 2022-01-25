@@ -20,7 +20,7 @@ So if you are in the habit of clicking build and then run your tests, you might 
 
 [TIP]
 ====
-sebipom sets the default goal to test, so if you run mvn from the command line, you only need to type `mvn`
+testeasypom sets the default goal to test, so if you run mvn from the command line, you only need to type `mvn`
 ====
 
 ==== Maven the proper way, when still in the TDD phase

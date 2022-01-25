@@ -1,16 +1,15 @@
-== Test Easy Pom 4.0.3
-
+== Testeasypom 4.0.6
 
 Spelled all lower  case: `testeasypom`, is a super pom to use in Fontys Venlo projects. It keeps your own pom.xml file simple and focused to declare just the
 dependencies needed. Niceties to do proper Test Driver Development are provided for in the testeasypom definitions, including things as being able to create
 javadoc in a professional looking way, including code highlighted code snippets, checkstyle, reporting, code coverage with maven, pmd, spotbugs  etc.
 
-https://github.com/sebivenlo/testeasypom[testeasypom is hosted on github].
+https://github.com/sebivenlo/testeasypom[Sebipom is hosted on github].
 
 * testeasypom declares no dependencies other than those for dynamic (e.g. JUnit, AssertJ etc) and static *testing* in the form of plugins and their configuration.
 
 This way of using maven, having a [blue]#super# or parent pom defined globally (in a repository, not on a local path), is the [big black]#modern# usage.
- It can be seen in well known big java projects such as https://spring.io/projects/spring-boot[Spring Boot] and https://quarkus.io/[quarkus], and many other modern maven projects.
+ It can be seen in well known big java projects such as https://spring.io/projects/spring-boot[Spring Boot] and https://quarkus.io/[quarkus], to name two contenders in the java-web technology world.
 
 [TIP,role="green"]
 ====
@@ -27,7 +26,7 @@ Note that we are using a _separately installed_ maven (3.8.4 at the time of writ
     <parent>
       <groupId>io.github.sebivenlo</groupId>
       <artifactId>testeasypom</artifactId>
-      <version>4.0.3</version>
+      <version>4.0.6</version>
       <relativePath/> // <!--1-->
     </parent>
 ----
@@ -49,10 +48,10 @@ the basic one below. Add dependencies as required.
     <parent> <!--1-->
         <groupId>io.github.sebivenlo</groupId>
         <artifactId>testeasypom</artifactId>
-        <version>4.0.3</version>
+        <version>4.0.6</version>
         <realtivePath/><!--2-->
     </parent> <!--3-->
-    <groupId>nl.fontys.sebivenlo</groupId>
+    <groupId>io.github.sebivenlo</groupId>
     <artifactId>basicsebimaven</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
@@ -60,7 +59,7 @@ the basic one below. Add dependencies as required.
     <name>My App</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.release>17</java.release>
+        <java.release>11</java.release>
         <!-- change mainClass to the proper starting point of your program, if any.-->
         <exec.mainClass>basicsebimaven.Hello</exec.mainClass>
     </properties>
@@ -79,7 +78,7 @@ the basic one below. Add dependencies as required.
 <2> Parent comes from some other repo, not local.
 <3> End of parent declaration.
 
-=== testeasypom and Java FX
+=== Sebipom and Java FX
 
 If you want to use semipom and build a JavaFX project, you need to activate the *fx*-profile.
 In the commandline that would be
@@ -92,7 +91,7 @@ In netbeans you can do that by setting the configuration like in this picture:
 .Activate a profile in netbeans
 image::fx-profile-nb.png[]
 
-=== Using the testeasypom in your own projects
+=== Using the SeBiPom in your own projects
 
 To use the test libraries and other goodies that will be used throughout our course,
 you should add the `testeasypom` as parent.
@@ -103,13 +102,13 @@ these lines in the previous section <<testeasypom-as-parent>>.
 
 [TIP]
 ====
-As of 2021-09-08, testeasypom reached version 4.0.3. Not all projects may have this version number for
+As of 2022-01-25, testeasypom reached version 4.0.6. Not all projects may have this version number for
 the parent testeasypom. We improve as we go, sometimes because of tips we receive from our students, you for instance.
 Anyway, if the version is not at the newest, set it to the newest and rebuild.
 Revisit this part of the site to check the latest version number or look in the
-https://search.maven.org/search?q=g:io.github.sebivenlo[maven central testeasypom ^]
+https://www.fontysvenlo.org/repository/io.github.sebivenlo/testeasypom/[fontysvenlo maven reposity]
 for the testeasypom version. +
-testeasypom 540.3 enables testing for modular projects but does not enforce modular projects.
+Sebipom 3.0.3 enables testing for modular projects but does not enforce modular projects.
 
 * The  source code of testeasypom lives at github in https://github.com/sebivenlo/testeasypom[sebivenlo/testeasypom].
 ====

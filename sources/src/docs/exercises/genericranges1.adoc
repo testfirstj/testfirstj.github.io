@@ -164,7 +164,7 @@ public record IntegerRange( Integer start, Integer end) implements
 
 [TIP]
 ====
-When you want to enable java preview features with projects that use sebipom,
+When you want to enable java preview features with projects that use testeasypom,
 set the #java.release# to the version you want to use, and
 add a build section to tell the compiler to turn on the preview-features.
 [source,xml]

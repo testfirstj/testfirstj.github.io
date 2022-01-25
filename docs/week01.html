@@ -365,7 +365,7 @@ order for test driven development is:</p>
 </li>
 <li>
 <p>Getters for the fields that are defined in the constructor. If
-such getters are not part of the public API of the class, make the
+such getters are not part of the public API of the class, make them
 package private, to hide them from client classes outside of the
 package.</p>
 </li>
@@ -418,23 +418,17 @@ your IDE and in particular maven.</p>
 </div>
 <div class="paragraph">
 <p>Create the project in NetBeans as a Maven Java Application.
-Adapt the pom file of the project such that it uses sebipom as parent. You do that by declaring
+Adapt the pom file of the project such that it uses testeasypom as parent. You do that by declaring
 the parent directly after the second line that reads <code>&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</code>. This will have
 the effect that you will have the exact plugins for the style of testing we want to teach.</p>
 </div>
 <div class="listingblock">
-<div class="title">Use sebipom as parent</div>
+<div class="title">Use testeasypom as parent</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;repositories&gt;</span>
-      <span class="tag">&lt;repository&gt;</span>
-        <span class="tag">&lt;id&gt;</span>fontysvenlo.org<span class="tag">&lt;/id&gt;</span>
-        <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository<span class="tag">&lt;/url&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-      <span class="tag">&lt;/repository&gt;</span>
-    <span class="tag">&lt;/repositories&gt;</span>
-    <span class="tag">&lt;parent&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>sebipom<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>3.0.4<span class="tag">&lt;/version&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>4.0.5<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span>
     <span class="tag">&lt;/parent&gt;</span></code></pre>
 </div>
@@ -443,7 +437,7 @@ the effect that you will have the exact plugins for the style of testing we want
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Add the repository where sebipom is at home.</td>
+<td>Testeasypom lives at github in a public repository and is also published in the maven central repository.</td>
 </tr>
 </table>
 </div>
@@ -493,8 +487,8 @@ Up until now you made the compiler and IDE happy.</p>
 <td class="content">
 <div class="paragraph">
 <p>If the IDE (or the compiler) complains that it can&#8217;t find things, or something along that line,
-you should do, what is called a priming build: Just build once by pressing the hammer symbol or right-click on the project and select build.
-This will trigger maven to fetch all dependencies, that is the libraries that are used by the project. Sebipom selects test specific libraries to make sure
+you should do what is called a priming build: Just build once by pressing the hammer symbol or right-click on the project and select build.
+This will trigger maven to fetch all dependencies, that is the libraries that are used by the project. Testeasypom selects test specific libraries to make sure
 that we are all on the same page regarding the test dependencies in the project.</p>
 </div>
 </td>
@@ -1016,7 +1010,7 @@ You always start with <code>assertThat( objectOfInterest ).assertingMethod(&#823
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Either use sebipom version 3.0.0 and up or add assertj.core to your test dependencies.</p>
+<p>Either use testeasypom version 3.0.0 and up or add assertj.core to your test dependencies.</p>
 </div>
 </td>
 </tr>

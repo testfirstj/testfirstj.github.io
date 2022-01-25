@@ -574,7 +574,7 @@ You only see trivial methods that configure the [blue]`RangeTestDataFactory`, wh
 .IntegerRangeTest class, the whole of it.
 [source,java]
 ----
-package nl.fontys.sebivenlo.ranges;
+package io.github.sebivenlo.ranges;
 
 import java.util.Map;
 public class IntegerRangeTest extends RangeTestBase<IntegerRange, Integer, Integer> {
