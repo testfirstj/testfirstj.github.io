@@ -13,7 +13,7 @@ other modules.
 
 
 .Modules and parent.
-image::../topics/figures/mavenmodules.svg[]
+image::mavenmodules.svg[]
 
 
 As you see in the figure, the parent lists its children. The children may have
