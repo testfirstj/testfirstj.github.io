@@ -1,0 +1,87 @@
+## Tupples and Record.
+
+Java between 11 and 17 produced quite a few additions to the language. the [blue]#record# type is
+one of them.
+
+### One return value.
+
+Often enough you need to produce more than just a simple value when returning a result from a method or function.
+Traditional OO might have solved this by letting the method modify the state of the object on which the method was called.
+However, immutability of object is fraught with problems which may introduce complexity and by that additional problems.
+So in the case you need to return more than one value from a method, you were almost forced to define a class with only role to return
+a https://en.wikipedia.org/wiki/Tuple[tuple]. Before java 14 you had to create a complete class, with typically a constructor, getters and toString and
+in many cases also equals and hascode. That is often a few handfuls of lines for a very simple task.
+
+### immutable or value object as return value.
+
+The record type introduced in java 14 and finalized in java 16 and thus part of the java 17 LTS version solves the above problem quite elegantly.
+
+In many cases when you need a record, you only need to specify type and names of the constituent parts,
+and the compiler will do the rest without produce code that potentially has to be maintained, which would be the case with _IDE-generated_ code.
+
+As an example, suppose you have an API where you need to return a name and a date. The record definition is as simple as this:
+[source,java]
+----
+import java.time.LocalDate;
+record NameDate( String name, LocalDate date){}
+----
+
+and that is it. What you get is a class with a constructor and whose object provide getters, although named using a different conventions, toString,
+hashcode and equals, and the objects are immutable as well which is a good thing.
+
+Spelling it out in classic before record classes:
+
+[source, java]
+----
+import java.time.LocalDate;
+public class NameDateClassic {
+    private final String name;
+    private final LocalDate date;
+    public NameDateClassic(String name, LocalDate date) {
+        this.name = name;
+        this.date = date;
+    }
+    public String name() { // <1>
+        return name;
+    }
+    public LocalDate date() { //<2>
+        return date;
+    }
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + this.name.hashCode();
+        hash = 73 * hash + this.date.hashCode();
+        return hash;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj instanceof NameDateClassic other ) { // <3>
+            return this.name.equals( other.name )
+                    && this.date.equals( other.date );
+        }
+        return false;
+    }
+}
+----
+
+<1> and
+<2> use the record convention for getter names.
+<3> Even with the instanceof binding feature since java 14 this classic tuple is quite a handful.
+
+In the above you can see that a record lets you write in one line what otherwise would have taken some 30 lines.
+
+
+### Optimal use cases for record.
+
+Use them as 'named' tuples, where the tuple has a name and a type as well as the elements having a name and type each.
+This is the way, at least in the Java world.
+
+Another use case for record is a Data Transfer Object (DTO), which are used to get data into and out of a database of can be sent through the wire (network).
+Here record has the added benefit that https://inside.java/2021/03/12/simpler-serilization-with-records/[deserialization is both safe and free], because the constructor is used in that case instead of some obscure constructs.
+
+The use case of DTO is often combined with Data Access Objects (DAO), in particular when you are talking to a database.
+In that case writing records and the helper class (DAO) can even be less work, because both can easily be generated from the database schema meta information.
+So generating a  DTO+DAO for each table or view can save a lot of typing and testing.
+
+See the coming chapter on reflection and generating code.

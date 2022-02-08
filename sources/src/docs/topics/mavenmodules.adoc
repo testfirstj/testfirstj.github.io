@@ -22,7 +22,7 @@ inter-dependencies. Otherwise it is just plain maven.
 .Snippet from a parent pom
 [source,xml]
 ----
-    <groupId>io.github.sebivenlo</groupId>
+    <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>parentpom</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>

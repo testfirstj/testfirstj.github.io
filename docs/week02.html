@@ -45,6 +45,13 @@
 <li><a href="#_test_recipe_i_test_equals_and_hashcode">2. Test Recipe I, Test Equals and hashCode</a>
 <ul class="sectlevel2">
 <li><a href="#_exercise_fraction_part_3">Exercise Fraction part 3.</a></li>
+</ul>
+</li>
+<li><a href="#_tupples_and_record">3. Tupples and Record.</a>
+<ul class="sectlevel2">
+<li><a href="#_one_return_value">3.1. One return value.</a></li>
+<li><a href="#_immutable_or_value_object_as_return_value">3.2. immutable or value object as return value.</a></li>
+<li><a href="#_optimal_use_cases_for_record">3.3. Optimal use cases for record.</a></li>
 <li><a href="#_exercise_flawless_password">Exercise Flawless Password</a></li>
 <li><a href="#_exercise_enum_calculator">Exercise Enum Calculator</a></li>
 </ul>
@@ -1452,6 +1459,124 @@ It is called a promotion, in particular a widening conversion.</p>
 <p><strong class="blue big">And that makes 3/3 or one whole fraction.</strong></p>
 </div>
 </details></div><!--end fraction-part3 -->
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tupples_and_record"><a class="anchor" href="#_tupples_and_record"></a><a class="link" href="#_tupples_and_record">3. Tupples and Record.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Java between 11 and 17 produced quite a few additions to the language. the <span class="blue">record</span> type is
+one of them.</p>
+</div>
+<div class="sect2">
+<h3 id="_one_return_value"><a class="anchor" href="#_one_return_value"></a><a class="link" href="#_one_return_value">3.1. One return value.</a></h3>
+<div class="paragraph">
+<p>Often enough you need to produce more than just a simple value when returning a result from a method or function.
+Traditional OO might have solved this by letting the method modify the state of the object on which the method was called.
+However, immutability of object is fraught with problems which may introduce complexity and by that additional problems.
+So in the case you need to return more than one value from a method, you were almost forced to define a class with only role to return
+a <a href="https://en.wikipedia.org/wiki/Tuple">tuple</a>. Before java 14 you had to create a complete class, with typically a constructor, getters and toString and
+in many cases also equals and hascode. That is often a few handfuls of lines for a very simple task.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_immutable_or_value_object_as_return_value"><a class="anchor" href="#_immutable_or_value_object_as_return_value"></a><a class="link" href="#_immutable_or_value_object_as_return_value">3.2. immutable or value object as return value.</a></h3>
+<div class="paragraph">
+<p>The record type introduced in java 14 and finalized in java 16 and thus part of the java 17 LTS version solves the above problem quite elegantly.</p>
+</div>
+<div class="paragraph">
+<p>In many cases when you need a record, you only need to specify type and names of the constituent parts,
+and the compiler will do the rest without produce code that potentially has to be maintained, which would be the case with <em>IDE-generated</em> code.</p>
+</div>
+<div class="paragraph">
+<p>As an example, suppose you have an API where you need to return a name and a date. The record definition is as simple as this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.time.LocalDate</span>;
+record NameDate( <span class="predefined-type">String</span> name, LocalDate date){}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and that is it. What you get is a class with a constructor and whose object provide getters, although named using a different conventions, toString,
+hashcode and equals, and the objects are immutable as well which is a good thing.</p>
+</div>
+<div class="paragraph">
+<p>Spelling it out in classic before record classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.time.LocalDate</span>;
+<span class="directive">public</span> <span class="type">class</span> <span class="class">NameDateClassic</span> {
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> name;
+    <span class="directive">private</span> <span class="directive">final</span> LocalDate date;
+    <span class="directive">public</span> NameDateClassic(<span class="predefined-type">String</span> name, LocalDate date) {
+        <span class="local-variable">this</span>.name = name;
+        <span class="local-variable">this</span>.date = date;
+    }
+    <span class="directive">public</span> <span class="predefined-type">String</span> name() { <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> name;
+    }
+    <span class="directive">public</span> LocalDate date() { <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="keyword">return</span> date;
+    }
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+        <span class="type">int</span> hash = <span class="integer">7</span>;
+        hash = <span class="integer">73</span> * hash + <span class="local-variable">this</span>.name.hashCode();
+        hash = <span class="integer">73</span> * hash + <span class="local-variable">this</span>.date.hashCode();
+        <span class="keyword">return</span> hash;
+    }
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> obj) {
+        <span class="keyword">if</span> ( obj <span class="keyword">instanceof</span> NameDateClassic other ) { <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="keyword">return</span> <span class="local-variable">this</span>.name.equals( other.name )
+                    &amp;&amp; <span class="local-variable">this</span>.date.equals( other.date );
+        }
+        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>and</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>use the record convention for getter names.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Even with the instanceof binding feature since java 14 this classic tuple is quite a handful.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the above you can see that a record lets you write in one line what otherwise would have taken some 30 lines.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_optimal_use_cases_for_record"><a class="anchor" href="#_optimal_use_cases_for_record"></a><a class="link" href="#_optimal_use_cases_for_record">3.3. Optimal use cases for record.</a></h3>
+<div class="paragraph">
+<p>Use them as 'named' tuples, where the tuple has a name and a type as well as the elements having a name and type each.
+This is the way, at least in the Java world.</p>
+</div>
+<div class="paragraph">
+<p>Another use case for record is a Data Transfer Object (DTO), which are used to get data into and out of a database of can be sent through the wire (network).
+Here record has the added benefit that <a href="https://inside.java/2021/03/12/simpler-serilization-with-records/">deserialization is both safe and free</a>, because the constructor is used in that case instead of some obscure constructs.</p>
+</div>
+<div class="paragraph">
+<p>The use case of DTO is often combined with Data Access Objects (DAO), in particular when you are talking to a database.
+In that case writing records and the helper class (DAO) can even be less work, because both can easily be generated from the database schema meta information.
+So generating a  DTO+DAO for each table or view can save a lot of typing and testing.</p>
+</div>
+<div class="paragraph">
+<p>See the coming chapter on reflection and generating code.</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -1928,7 +2053,7 @@ calc: 4 + 12
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-21 15:00:01 +0100
+Last updated 2022-02-08 14:26:54 +0100
 </div>
 </div>
 <script type="text/x-mathjax-config">
