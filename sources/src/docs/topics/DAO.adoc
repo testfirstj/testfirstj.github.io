@@ -63,6 +63,17 @@ public Optional<Student> update(Student student){
 <8> Check if the `ResultSet` contains values (rows)
 <9> Convert the `ResultSet` back to an entity (including `snummer`)
 
+.BTW, with Java 14 textblocks, your would write the query sql text as
+[source,java]
+----
+    String query =
+          """
+          update students set (lastname, firstname, email) = (?, ?, ?)
+          where snummer=?
+          returning lastname, firstname, email
+          """;
+----
+
 One of the problems with this approach is that the `StudentDAO` has to be
 updated if the `Student` entity changes. E.g. if we add a new field to `Student`
 or change the name of an existing field we have to update the `StudentDAO`.
@@ -84,8 +95,10 @@ public Optional<Student> update(Student student){
             .join( ",", columnNames );<3>
     String placeholders = makePlaceHolders( columnNames.size() );<4>
     String query = format(
-            "update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)"
-            + " returning  %2$s",
+            """
+            update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)
+            returning  %2$s
+            """,
             "students",
             columns,
             placeholders,

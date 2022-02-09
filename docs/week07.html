@@ -1216,6 +1216,17 @@ For example a <code>StudentDAO</code>. This <code>StudentDAO</code> contains met
 </tr>
 </table>
 </div>
+<div class="listingblock">
+<div class="title">BTW, with Java 14 textblocks, your would write the query sql text as</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> query =
+          <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
+          update students set (lastname, firstname, email) = (?, ?, ?)
+          where snummer=?
+          returning lastname, firstname, email
+          </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p>One of the problems with this approach is that the <code>StudentDAO</code> has to be
 updated if the <code>Student</code> entity changes. E.g. if we add a new field to <code>Student</code>
@@ -1239,8 +1250,10 @@ has exactly the functionality that we need to generate the
             .join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, columnNames );<i class="conum" data-value="3"></i><b>(3)</b>
     <span class="predefined-type">String</span> placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="4"></i><b>(4)</b>
     <span class="predefined-type">String</span> query = format(
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)</span><span class="delimiter">&quot;</span></span>
-            + <span class="string"><span class="delimiter">&quot;</span><span class="content"> returning  %2$s</span><span class="delimiter">&quot;</span></span>,
+            <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
+            update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)
+            returning  %2$s
+            </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
             <span class="string"><span class="delimiter">&quot;</span><span class="content">students</span><span class="delimiter">&quot;</span></span>,
             columns,
             placeholders,
