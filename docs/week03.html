@@ -375,7 +375,7 @@ it needs to print anyway.</p>
       <span class="directive">final</span> <span class="predefined-type">PrintStream</span> out; <i class="conum" data-value="1"></i><b>(1)</b>
 
       PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
-          <span class="local-variable">this</span>.out=<span class="predefined-type">System</span>.out;
+          <span class="local-variable">this</span>( <span class="predefined-type">System</span>.out );
       }
 
       PrintingBusiness( <span class="predefined-type">PrintStream</span> ps ) { <i class="conum" data-value="3"></i><b>(3)</b>
@@ -396,7 +396,7 @@ it needs to print anyway.</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Default constructor uses System.out to print to</td>
+<td>Default constructor (using the other constructor) uses System.out to print to</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>

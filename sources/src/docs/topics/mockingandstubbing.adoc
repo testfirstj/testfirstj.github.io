@@ -142,7 +142,7 @@ class PrintingBusiness
       final PrintStream out; // <1>
 
       PrintingBusiness() { // <2>
-          this.out=System.out;
+          this( System.out );
       }
 
       PrintingBusiness( PrintStream ps ) { //<3>
@@ -156,7 +156,7 @@ class PrintingBusiness
 ----
 
 <1> final to have a constructor set it
-<2> Default constructor uses System.out to print to
+<2> Default constructor (using the other constructor) uses System.out to print to
 <3> Redirect output to other output, for test or 'printing' in a GUI.
 <4> All facilities of PrintStream are available, including formatted printing.
 
