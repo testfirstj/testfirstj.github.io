@@ -170,7 +170,7 @@ class PrintingBusiness
 
         out.format( "%s at %d", "Oplegkaas", 957 );
 
-        assertThat( cout.toString() ).contains( "at", "Opleg kaas", "957" );
+        assertThat( cout.toString() ).contains( "at", "Oplegkaas", "957" );
     }
 ----
 
