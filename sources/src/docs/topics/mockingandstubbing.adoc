@@ -131,7 +131,7 @@ is to use System.out to print or otherwise output the results of the program. Bu
 just a [blue]`PrintStream`, which also has a lot of convenience methods with a total of 33 methods and 10 constructors.
 You do not want to restrict the use of any of its methods in the business class.
 
-The trick her is to use one of the constructors to given PrintStream something to 'print on', which you can inspect afterwards.
+The trick here is to use one of the constructors to given PrintStream something to 'print on', which you can inspect afterwards.
 Usage: The business class has a constructor.footnote:[best] or setter to take a PrintStream and always uses that to print to, if
 it needs to print anyway.
 
