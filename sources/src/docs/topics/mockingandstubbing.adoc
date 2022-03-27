@@ -138,10 +138,10 @@ it needs to print anyway.
 .Usage is business code
 [source,java]
 ----
-class PrintingBusiness
+public class PrintingBusiness
       final PrintStream out; // <1>
 
-      PrintingBusiness() { // <2>
+      public PrintingBusiness() { // <2>
           this( System.out );
       }
 
@@ -149,7 +149,7 @@ class PrintingBusiness
           this.out=ps;
       }
 
-      void businessMethod(){
+      public void businessMethod(){
           out.format( "%s at %d", "Oplegkaas", 957 ); // <4>
       }
 }

@@ -371,10 +371,10 @@ it needs to print anyway.</p>
 <div class="listingblock">
 <div class="title">Usage is business code</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">PrintingBusiness</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PrintingBusiness</span>
       <span class="directive">final</span> <span class="predefined-type">PrintStream</span> out; <i class="conum" data-value="1"></i><b>(1)</b>
 
-      PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
+      <span class="directive">public</span> PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
           <span class="local-variable">this</span>( <span class="predefined-type">System</span>.out );
       }
 
@@ -382,7 +382,7 @@ it needs to print anyway.</p>
           <span class="local-variable">this</span>.out=ps;
       }
 
-      <span class="type">void</span> businessMethod(){
+      <span class="directive">public</span> <span class="type">void</span> businessMethod(){
           out.format( <span class="string"><span class="delimiter">&quot;</span><span class="content">%s at %d</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="integer">957</span> ); <i class="conum" data-value="4"></i><b>(4)</b>
       }
 }</code></pre>
