@@ -54,12 +54,12 @@ Later in this course we see some more complex scenarios, in which we need https:
 
 == Clues needed
 
-A smart person is able to avoid work. A common strategy is to let others do it. You can achieve such smartness as well by using your tools properly.
+A smart person is able to avoid work. A common strategy is to let others do it for you. You can achieve such smartness as well by using your tools properly.
 
 For instance your IDE will gladly [green]_complete_ code that your started by showing
 a list of possible completions of the code that you already provided. However, the IDE
 can only do that if you provide it with sufficient clues. For instance when you want the IDE
-to generate a non-existing generic class, create two instance with different type parameters before your accept the hint to create class.
+to generate a non-existing generic class, create two instance with different type parameters before your accept the hint to create the class.
 
 .complete a generic
 [source,java]
@@ -70,11 +70,11 @@ Box<Integer> ib= new Box<Integer>(); // compiler will complain for non existing 
 
 ----
 
-Same applies to methods. If you want a specific return type, provide that in a declaration where you specify such type.
+The same applies to methods. If you want a specific return type, provide that in a declaration where you specify such type.
 
-The same applies to frameworks such as AssertJ, that provides an `assertThat(...)` method as entry for almost all asserts.
+It also applies to frameworks such as AssertJ, that provides an `assertThat(...)` method as entry for almost all asserts.
 But what you put on the dots is important, because the IDE will inspect the [blue]*type* of the _expression_ and then will look for the possible
-completions. The completions for an Integer or int are very different from that of a `Collection` or `Iterable`.
+completions. The completions for an Integer or int are very different from those for a `Collection` or `Iterable`.
 
 Combine this with the previous tip. First specify a variable with a type, that
 use the variable inside the `assertThat(...)` and the IDE will be able to find the available completions.

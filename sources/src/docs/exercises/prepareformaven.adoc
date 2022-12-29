@@ -122,8 +122,7 @@ the effect that you will have the exact plugins for the style of testing we want
 
 <1> You will have to type this without _completion_,  because nothing the Greeting class exists at this moment.
 
-You will notice that when you _type_ (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist
-and on top of that has not method called `greet()` that returns a String. Do not worry because the IDE is willing to help. Look for tip image:warning-bulb.png[]
+You will notice that when you _type_ (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist and on top of that has not method called `greet()` that returns a String. Do not worry because the IDE is willing to help. Look for tip image:warning-bulb.png[]
 and click on it. From the suggestions select create class in *Source directory* to create the Greeting class in the package `hi`.
 Then for the greet method, select the create method in the Greeting class.
 Up until now you made the compiler and IDE happy.

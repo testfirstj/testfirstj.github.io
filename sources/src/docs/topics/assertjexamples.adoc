@@ -1,16 +1,16 @@
 == AssertJ examples.
 
-In our course we to stick to https://assertj.github.io/doc/[AssertJ] library where possible.
+In our course we to stick to the https://assertj.github.io/doc/[AssertJ] library where possible.
 
 The rationale for that is:
 
 * The AssertJ assertion API is very powerful and can easily turn overly strict or brittle tests into more effective tests. +
   You have come across tests in the mooc that insisted on specific formatting.
-  With AssertJ you can specify elements you want to see and do not want to see. See examples below.
+  With AssertJ you can specify the elements you want to see and those you do not want to see. See examples below.
 * AssertJ tests tend to be quite *readable*, once you get used to the fluent style. You will see long method names,
   but they help understanding what is going on a no-brainer.
 * AssertJ can protect the test methods against unexpected exceptions, such as null pointers (NPE) before doing further tests.
-* With the exception of _testing exceptions_, the userinterface and api of AssertJ is quite consistent. +
+* With the exception of _testing exceptions_, the user interface and API of AssertJ is quite consistent. +
   You always start with `assertThat( objectOfInterest ).assertingMethod(...)`. +
 
 We try to use the latest stable version of AssertJ and Junit 5.
@@ -54,7 +54,7 @@ Either use testeasypom version 3.0.0 and up or add assertj.core to your test dep
 .What is the difference between the two here: equals and same?
 [%collapsible,role="quiz"]
 ====
-Equals uses the [blue]`.equals` method defined for all objects, same uses [blue]`==` which works well for primitive types but can lead to surprises for reference types (i.e. objects).
+*Equals* uses the [blue]`.equals` method defined for all objects, *same* uses [blue]`==` which works well for primitive types but can lead to surprises for reference types (i.e. objects).
 ====
 [TIP]
 ====
@@ -84,7 +84,7 @@ How the string is formatted does not matter for this test to pass. It only requi
 === Collection Containment
 
 For collections there are numerous tests. Collections in this context includes
-everything https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html[Iterable],
+everything https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html[Iterable],
 making it very powerful as can be seen in the Javadoc page of Iterable
 by following the link in this sentence. Look at the sub-interfaces and the implementing classes.
 
@@ -123,7 +123,7 @@ by following the link in this sentence. Look at the sub-interfaces and the imple
 <1> Assume that the business code produces such list.
 <2> Mostly self (test) protect.
 <3> Just to show that you can test for not empty, but also exact size, greater etc. This assertion is actually made redundant by the test in 5.
-<4> Extract a feature out of each student using a lambda. Its function should be obvious
+<4> Extract a feature out of each student using a lambda. Its function should be obvious (for student s get the student number).
 <5> Then test the list of extracted values for containment. Note that in this case we do not care about the (iteration) order of the collection.
 
 AssertJ has many more containment tests, to test presence of all, any, exactly, or exactly but without a specific order.
@@ -132,7 +132,7 @@ AssertJ has many more containment tests, to test presence of all, any, exactly, 
 ====
 Because adding a *Non-Null* test is easy and cheap in the fluent style of AssertJ,
 it can be beneficial to always do that, so your test can show it as a failure instead of tripping over
-an unexpected https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/NullPointerException.html[NPE].
+an unexpected https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/NullPointerException.html[NPE].
 It more or less self-protects the test.
 ====
 
@@ -192,7 +192,7 @@ ThrowingCallable is a Functional interface and is part of AssertJ.
 <1> Is the only code that is checked for exceptions. This isolates the "suspect" code from
 any other code that may cause issues.
 
-[NOTE]
+[TIP]
 ====
 Sometimes you may have the situation that exceptions appear to come out of the blue, as in you have
 no idea what causes it and the stack trace is not very helpful either. In such cases, use this test approach
@@ -223,7 +223,7 @@ in the same way as in the previous paragraph, then pass that `code` to the excep
     }
 ----
 
-<1> Someone that knows his classics understands that this crook can't be professor at Hogwarts.
+<1> Someone that knows his classics understands that this crook can't be a professor at Hogwarts.
 <2> The lambda defines the throwing code. `org.assertj.core.api.ThrowableAssert.ThrowingCallable` is the functional interface for this purpose.
 <3> Sometimes it is good to be a bit relaxed on the exception type like in this line.
 <4> Or you need to be quite specific. You need only one, so choose either line 2 or 3. This is just an illustration.
