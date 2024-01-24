@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021.">
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
@@ -316,7 +316,7 @@ expect?</p>
 <p>The truth is, you never get around having to make implementation decisions. We
 just try to minimize our margin for error. So when you start writing your first
 test for your (non-existing) phonebook, you HAVE to have an idea of what the
-phonebook does. So perhaps you start with "I expect that the phonebook let&#8217;s me
+phonebook is supposed to do. So perhaps you start with "I expect that the phonebook lets me
 look up a person. When I look up Alice, I expect Alice&#8217;s phone number.". What
 could such a test look like?</p>
 </div>
@@ -463,8 +463,7 @@ the effect that you will have the exact plugins for the style of testing we want
 </table>
 </div>
 <div class="paragraph">
-<p>You will notice that when you <em>type</em> (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist
-and on top of that has not method called <code>greet()</code> that returns a String. Do not worry because the IDE is willing to help. Look for tip <span class="image"><img src="./images/warning-bulb.png" alt="warning bulb"></span>
+<p>You will notice that when you <em>type</em> (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist and on top of that has not method called <code>greet()</code> that returns a String. Do not worry because the IDE is willing to help. Look for tip <span class="image"><img src="./images/warning-bulb.png" alt="warning bulb"></span>
 and click on it. From the suggestions select create class in <strong>Source directory</strong> to create the Greeting class in the package <code>hi</code>.
 Then for the greet method, select the create method in the Greeting class.
 Up until now you made the compiler and IDE happy.</p>
@@ -588,13 +587,13 @@ the arrange can be expensive or cheap, the action be fraught with risk or easy, 
 <h2 id="_clues_needed"><a class="anchor" href="#_clues_needed"></a><a class="link" href="#_clues_needed">4. Clues needed</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A smart person is able to avoid work. A common strategy is to let others do it. You can achieve such smartness as well by using your tools properly.</p>
+<p>A smart person is able to avoid work. A common strategy is to let others do it for you. You can achieve such smartness as well by using your tools properly.</p>
 </div>
 <div class="paragraph">
 <p>For instance your IDE will gladly <em class="green">complete</em> code that your started by showing
 a list of possible completions of the code that you already provided. However, the IDE
 can only do that if you provide it with sufficient clues. For instance when you want the IDE
-to generate a non-existing generic class, create two instance with different type parameters before your accept the hint to create class.</p>
+to generate a non-existing generic class, create two instance with different type parameters before your accept the hint to create the class.</p>
 </div>
 <div class="listingblock">
 <div class="title">complete a generic</div>
@@ -605,12 +604,12 @@ to generate a non-existing generic class, create two instance with different typ
 </div>
 </div>
 <div class="paragraph">
-<p>Same applies to methods. If you want a specific return type, provide that in a declaration where you specify such type.</p>
+<p>The same applies to methods. If you want a specific return type, provide that in a declaration where you specify such type.</p>
 </div>
 <div class="paragraph">
-<p>The same applies to frameworks such as AssertJ, that provides an <code>assertThat(&#8230;&#8203;)</code> method as entry for almost all asserts.
+<p>It also applies to frameworks such as AssertJ, that provides an <code>assertThat(&#8230;&#8203;)</code> method as entry for almost all asserts.
 But what you put on the dots is important, because the IDE will inspect the <strong class="blue">type</strong> of the <em>expression</em> and then will look for the possible
-completions. The completions for an Integer or int are very different from that of a <code>Collection</code> or <code>Iterable</code>.</p>
+completions. The completions for an Integer or int are very different from those for a <code>Collection</code> or <code>Iterable</code>.</p>
 </div>
 <div class="paragraph">
 <p>Combine this with the previous tip. First specify a variable with a type, that
@@ -974,7 +973,7 @@ removes the data selected.</p>
 <h2 id="_assertj_examples"><a class="anchor" href="#_assertj_examples"></a><a class="link" href="#_assertj_examples">5. AssertJ examples.</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In our course we to stick to <a href="https://assertj.github.io/doc/">AssertJ</a> library where possible.</p>
+<p>In our course we to stick to the <a href="https://assertj.github.io/doc/">AssertJ</a> library where possible.</p>
 </div>
 <div class="paragraph">
 <p>The rationale for that is:</p>
@@ -984,7 +983,7 @@ removes the data selected.</p>
 <li>
 <p>The AssertJ assertion API is very powerful and can easily turn overly strict or brittle tests into more effective tests.<br>
 You have come across tests in the mooc that insisted on specific formatting.
-With AssertJ you can specify elements you want to see and do not want to see. See examples below.</p>
+With AssertJ you can specify the elements you want to see and those you do not want to see. See examples below.</p>
 </li>
 <li>
 <p>AssertJ tests tend to be quite <strong>readable</strong>, once you get used to the fluent style. You will see long method names,
@@ -994,7 +993,7 @@ but they help understanding what is going on a no-brainer.</p>
 <p>AssertJ can protect the test methods against unexpected exceptions, such as null pointers (NPE) before doing further tests.</p>
 </li>
 <li>
-<p>With the exception of <em>testing exceptions</em>, the userinterface and api of AssertJ is quite consistent.<br>
+<p>With the exception of <em>testing exceptions</em>, the user interface and API of AssertJ is quite consistent.<br>
 You always start with <code>assertThat( objectOfInterest ).assertingMethod(&#8230;&#8203;)</code>.<br></p>
 </li>
 </ul>
@@ -1063,7 +1062,7 @@ Use it to improved the information you get when the test fails.</td>
 <summary class="title">What is the difference between the two here: equals and same?</summary>
 <div class="content">
 <div class="paragraph">
-<p>Equals uses the <code class="blue">.equals</code> method defined for all objects, same uses <code class="blue">==</code> which works well for primitive types but can lead to surprises for reference types (i.e. objects).</p>
+<p><strong>Equals</strong> uses the <code class="blue">.equals</code> method defined for all objects, <strong>same</strong> uses <code class="blue">==</code> which works well for primitive types but can lead to surprises for reference types (i.e. objects).</p>
 </div>
 </div>
 </details>
@@ -1120,7 +1119,7 @@ Note that the template adds a <strong>fail</strong> line, which should be disabl
 <h3 id="_collection_containment"><a class="anchor" href="#_collection_containment"></a><a class="link" href="#_collection_containment">5.3. Collection Containment</a></h3>
 <div class="paragraph">
 <p>For collections there are numerous tests. Collections in this context includes
-everything <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html">Iterable</a>,
+everything <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html">Iterable</a>,
 making it very powerful as can be seen in the Javadoc page of Iterable
 by following the link in this sentence. Look at the sub-interfaces and the implementing classes.</p>
 </div>
@@ -1187,7 +1186,7 @@ over an NPE, which might be confusing.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Extract a feature out of each student using a lambda. Its function should be obvious</td>
+<td>Extract a feature out of each student using a lambda. Its function should be obvious (for student s get the student number).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -1208,7 +1207,7 @@ over an NPE, which might be confusing.</td>
 <div class="paragraph">
 <p>Because adding a <strong>Non-Null</strong> test is easy and cheap in the fluent style of AssertJ,
 it can be beneficial to always do that, so your test can show it as a failure instead of tripping over
-an unexpected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/NullPointerException.html">NPE</a>.
+an unexpected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/NullPointerException.html">NPE</a>.
 It more or less self-protects the test.</p>
 </div>
 </td>
@@ -1303,11 +1302,11 @@ any other code that may cause issues.</td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -1349,7 +1348,7 @@ in the same way as in the previous paragraph, then pass that <code>code</code> t
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Someone that knows his classics understands that this crook can&#8217;t be professor at Hogwarts.</td>
+<td>Someone that knows his classics understands that this crook can&#8217;t be a professor at Hogwarts.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -1851,7 +1850,7 @@ So any <code>assertThat(&#8230;&#8203;)</code> that you already have can simply 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-21 15:00:01 +0100
+Last updated 2023-12-10 15:55:21 +0100
 </div>
 </div>
 <script type="text/x-mathjax-config">

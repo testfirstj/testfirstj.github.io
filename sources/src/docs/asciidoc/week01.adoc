@@ -24,8 +24,8 @@ image::boom250.jpeg[role="related thumb right",title='source:dumont.lib.ia.us']
 // :sectnums:
 //
 // We assume that PRC1 covers the content of chapters 1 through 6 of Horstmann sufficiently. It does
-// not hurt to skim through those first. We will introduce no new _java_ topics this week, but use
-// in but use whatever was there up until week 11 o
+// not hurt to skim through those first. We will introduce no new _java_ topics this week, but 
+// use whatever was there up until week 11 of PRC1
 //
 //
 // * Horstmann Core Java, Ed 11, Vol 1 Fundamentals Chapter 5 sections 5.1-5.5
