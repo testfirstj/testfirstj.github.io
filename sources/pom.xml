@@ -18,13 +18,13 @@
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>2.2.5</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj</artifactId>
-                        <version>2.5.11</version>
-                    </dependency>
-                </dependencies>
+                 <dependencies> 
+                     <dependency> 
+                         <groupId>org.asciidoctor</groupId> 
+                         <artifactId>asciidoctorj</artifactId> 
+                         <version>2.5.12</version>
+                     </dependency> 
+                 </dependencies> 
                 <executions>
                     <execution>
                         <id>convert-to-html</id>
