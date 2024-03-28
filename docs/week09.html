@@ -40,8 +40,14 @@
 <li><a href="#_grouping">5.2. Grouping</a></li>
 </ul>
 </li>
+<li><a href="#_matches_matchers_match_groups_and_group_names">6. Matches, Matchers, match Groups, and group names.</a>
+<ul class="sectlevel2">
+<li><a href="#_named_groups_and_comments_to_the_regex">6.1. Named groups and comments to the regex</a></li>
+<li><a href="#_useful_web_sites">6.2. Useful web sites</a></li>
+</ul>
+</li>
 <li><a href="#_reading_grades_from_text_source">Reading grades from text source</a></li>
-<li><a href="#_reading">6. Reading</a></li>
+<li><a href="#_reading">7. Reading</a></li>
 <li><a href="#_exercises_in_this_part">Exercises in this part.</a></li>
 </ul>
 </div>
@@ -1346,7 +1352,7 @@ from any source may cause a denial of service attack, because such expression ma
 expression, you actually have two problems, the problem and how to write the expression.</em></p>
 </div>
 <div class="paragraph">
-<p>There is indeed some truth in the saying: Regular expressions can be hard to read (and hence maintain), and sometime hard to write as well.</p>
+<p>There is indeed some truth in the saying: Regular expressions can be hard to read (and hence maintain), and sometimes hard to write as well.</p>
 </div>
 <div class="paragraph">
 <p>The problem lies in the fact that the format of the most popular form, the Perl dialect, is quite terse.
@@ -1354,7 +1360,7 @@ However you can do quite a few things to improve at least their readability.</p>
 </div>
 <div class="videoblock">
 <div class="content">
-<iframe width="848" height="480" src="https://www.youtube.com/embed/EkluES9Rvak?rel=0" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/EkluES9Rvak?rel=0" frameborder="0" allowfullscreen></iframe>
 </div>
 </div>
 <div class="sect2">
@@ -1409,8 +1415,7 @@ You can also write "a{3}" meaning exaclty 3 as. Or a lower (a{2,} for at least 2
 <div class="ulist">
 <ul>
 <li>
-<p>\w = word which stands for c-word, which is the set of legal characters to start a (method or variable) name in C, but also in Java and
-many other programming languages. [a-zA-Z_] a through z in both cases and the underscore.</p>
+<p>\w = word, which is the set of characters in [a-zA-Z_0-9], so a through z in both upper and lower case, the underscore and the digits 0-9.</p>
 </li>
 <li>
 <p>\W negates the class, in this case it matches the non-word characters</p>
@@ -1482,10 +1487,118 @@ For that you use the parenthesis '(' and ')'. A group, when found, will get a nu
 Group 0 is typically the whole expression, and number one the first group identified with the parenthesis.</p>
 </div>
 <div class="paragraph">
-<p>So if you have a regular expression string line "a(eiou)", group number one will be the group containing the vowel following a, if any.</p>
+<p>So if you have a regular expression string line "a(e|i|o|u)", group number one will be the group containing the vowel following a, if any.</p>
 </div>
 <div class="paragraph">
 <p>To get acquainted with regular expressions, it is very helpful to write some tests, to verify your pattern or assumptions on the pattern.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matches_matchers_match_groups_and_group_names"><a class="anchor" href="#_matches_matchers_match_groups_and_group_names"></a><a class="link" href="#_matches_matchers_match_groups_and_group_names">6. Matches, Matchers, match Groups, and group names.</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The java.util.regex package contains the classes to work with regular expressions. The most important are the <strong>Pattern</strong> and <strong>Matcher</strong> classes.</p>
+</div>
+<div class="paragraph">
+<p>A Pattern is a compiled representation of a regular expression. It is used to create a Matcher object that will match the regular expression against an input string.</p>
+</div>
+<div class="paragraph">
+<p>In a pattern you can define groups of interest, for instance values that you want to extract from the input string. The Matcher object will then contain the groups that were found in the input string. You create a group by surrounding the part of the pattern with parenthesis.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.regex.Pattern</span>;
+<span class="keyword">import</span> <span class="include">java.util.regex.Matcher</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        <span class="predefined-type">String</span> input = <span class="string"><span class="delimiter">&quot;</span><span class="content">The quick brown fox jumps over the lazy dog</span><span class="delimiter">&quot;</span></span>;
+        <span class="predefined-type">String</span> pattern = <span class="string"><span class="delimiter">&quot;</span><span class="content">The (</span><span class="char">\\</span><span class="content">w+) brown (</span><span class="char">\\</span><span class="content">w+) jumps over the (</span><span class="char">\\</span><span class="content">w+) dog</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="predefined-type">Pattern</span> p = <span class="predefined-type">Pattern</span>.compile(pattern);
+        <span class="predefined-type">Matcher</span> m = p.matcher(input);
+        <span class="keyword">if</span> (m.find()) { <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found a match</span><span class="delimiter">&quot;</span></span>);
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 0: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">0</span>)); <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 1: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">1</span>));
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 2: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">2</span>));
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 3: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">3</span>));
+        } <span class="keyword">else</span> {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">No match found</span><span class="delimiter">&quot;</span></span>);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>There are three groups in the pattern. The first group matches the word after "The", the second group matches the word after "brown", and the third group matches the word after second "the".</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>There are <em>several</em> methods to match a pattern against an input string. The <code>find</code> method is the most common one. It returns <code>true</code> if the pattern is found in the input string, and <code>false</code> otherwise. There is also a <code>matches()</code> method, which returns <code>true</code> if the pattern matches the whole input string, and <code>false</code> otherwise.
+The third method is <code>lookingAt()</code>, which returns <code>true</code> if the pattern matches the beginning of the input string, and <code>false</code> otherwise.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Group 0 is the whole match. The other groups are the parts of the input string that match the groups in the pattern.</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_named_groups_and_comments_to_the_regex"><a class="anchor" href="#_named_groups_and_comments_to_the_regex"></a><a class="link" href="#_named_groups_and_comments_to_the_regex">6.1. Named groups and comments to the regex</a></h3>
+<div class="paragraph">
+<p>You can give the groups names, so the code becomes less brittle when the pattern changes. This is done by using the syntax <code>(?&lt;name&gt;pattern)</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.regex.Pattern</span>;
+<span class="keyword">import</span> <span class="include">java.util.regex.Matcher</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        <span class="predefined-type">String</span> input = <span class="string"><span class="delimiter">&quot;</span><span class="content">The quick brown fox jumps over the lazy dog</span><span class="delimiter">&quot;</span></span>;
+        <span class="predefined-type">String</span> pattern =
+                      <span class="string"><span class="delimiter">&quot;</span><span class="content">The (?&lt;first&gt;</span><span class="char">\\</span><span class="content">w+)</span><span class="delimiter">&quot;</span></span> <span class="comment">// comment 1</span>
+                      +<span class="string"><span class="delimiter">&quot;</span><span class="content"> brown (?&lt;second&gt;</span><span class="char">\\</span><span class="content">w+)</span><span class="delimiter">&quot;</span></span> <span class="comment">// comment 2</span>
+                      +<span class="string"><span class="delimiter">&quot;</span><span class="content"> jumps over the (?&lt;third&gt;</span><span class="char">\\</span><span class="content">w+) dog</span><span class="delimiter">&quot;</span></span>; <span class="comment">// comment 3</span>
+        <span class="predefined-type">Pattern</span> p = <span class="predefined-type">Pattern</span>.compile(pattern);
+        <span class="predefined-type">Matcher</span> m = p.matcher(input);
+        <span class="keyword">if</span> (m.find()) {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found a match</span><span class="delimiter">&quot;</span></span>);
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 0: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">0</span>));
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group first: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>));
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group second: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">second</span><span class="delimiter">&quot;</span></span>));
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group third: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">third</span><span class="delimiter">&quot;</span></span>));
+        } <span class="keyword">else</span> {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">No match found</span><span class="delimiter">&quot;</span></span>);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The comments are not part of the pattern, but are there to explain the pattern. They are ignored by the compiler.
+But they are very useful to explain the pattern to others, or to yourself when you come back to the code after a while.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_useful_web_sites"><a class="anchor" href="#_useful_web_sites"></a><a class="link" href="#_useful_web_sites">6.2. Useful web sites</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html">Java Pattern class</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Matcher.html">Java Matcher class</a></p>
+</li>
+<li>
+<p><a href="https://www.freeformatter.com/java-regex-tester.html">Java regex tester</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1655,7 +1768,7 @@ applying the gradefilter on each line and collect the student numbers and grades
 </div>
 </div>
 <div class="sect1">
-<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">6. Reading</a></h2>
+<h2 id="_reading"><a class="anchor" href="#_reading"></a><a class="link" href="#_reading">7. Reading</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
