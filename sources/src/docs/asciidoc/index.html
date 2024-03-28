@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 10.1.2" />
+<meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021." />
+<meta name="keywords" content="Test Driven Java SEBI Venlo" />
+<title>Test Driven with Java</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overridden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(4);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Test Driven with Java</h1>
+<span id="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br />
+<span id="revdate">V2.0  2021-01-10</span>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="tableblock" id="top">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="100%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="index.html">TOP, title=<em>Home</em></a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">week</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week01.html">01, title="What is TDD"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week02.html">02, title="Parameterized Tests"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week03.html">03, title="Testability and Mockito"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week04.html">04, title="Generics"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week05.html">05, title="Lambdas and Streams"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week06.html">06, title="Reflection"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week07.html">07, title="Java Database Access"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week08.html">08, title="Java FX Bindings and Java Module System"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week09.html">09, title="Statemachines and Regex"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week10.html">10, title="Data Time Api anmd Internationalization"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week11.html">11, title="Exceptions, Assertionas and logging, File IO"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week12.html">12, title="Security"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="setup.html">SETUP, title="Setup your System"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="tips.html">TIPS, title="Tips Through the Weeks"</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="assessmentcorrectionrules.html">PA, title="Performance Assessment"</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+Module description <a href="../pdf/md_prc2_2021.pdf">Programming Concepts 2 ^</a>
+</p>
+</li>
+<li>
+<p>
+Previous Year <a href="../index2020.html">PRC2 2020 web page</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This site contains the up-to-date course material, exercises and announcements about PRC2
+(Programming Concepts 2: the Test Driven Way), starting in February 2021.</p></div>
+<div class="paragraph"><p>Responsible Teachers for 2021: PRC2: Martijn Bonajo, Frank van Gennip, <strong>Richard van den Ham</strong>, and Pieter van den Hombergh with editorial help from Linda Urselmans.</p></div>
+<div class="sect1">
+<h2 id="_study_materials">2. Study materials</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="corejava-1-11ed.jpg" alt="Core Java Volume I Fundamentals" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="corejava-2-11ed.jpg" alt="Core Java Volume II Advanced Features" />
+</div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+For the Java basics and advanced features we are using Cay Horstmann&#8217;s fine books from the core Java series.
+  They are on the book-list from September.
+</p>
+</li>
+<li>
+<p>
+The exercises will be published via a personal svn repository on fontysvenlo.org.<br />
+  You can find to which group you belong through <a href="https://peerweb.fontysvenlo.org/">peerweb ^</a>
+</p>
+</li>
+<li>
+<p>
+The Junit version is <a href="https://junit.org/junit5/docs/current/user-guide/">Junit 5</a>.
+</p>
+</li>
+<li>
+<p>
+"Using frameworks for testing" will start with using <a href="https://assertj.github.io/doc/">AssertJ</a>,
+  which is a modern and up to date Open Source testing framework. The documentation is of excellent quality and fun to read.
+</p>
+</li>
+<li>
+<p>
+<a href="http://horstmann.com/corejava/corejava_11ed-bonuschapter13-javafx.pdf">JavaFX bonus chapter ^</a> to Core Java Volume I
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">
+<div class="paragraph"><p>Read the corresponding Horstmann book chapters and do the tutorials before you come to class. This will make
+the lessons more effective for you, because the questions that you might have
+from studying could be answered immediately.<br />
+Studying is not glancing over some (web) pages, but experimenting with the compiler, IDE and other
+tools, to see if you can use the presented ideas and apply it in your own code.</p></div>
+</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_topics_2021">3. Topics 2021</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In the topics table below, <strong>Vol I</strong> is <em>Core Java Volume I, Fundamentals</em> and <strong>Vol II</strong> is <em>Core Java Volume II, Advanced Features</em>
+both by Cay S. Horstmann and both in the eleventh edition.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="0%" />
+<col width="39%" />
+<col width="19%" />
+<col width="39%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Week </th>
+<th align="left" valign="top"> Topic </th>
+<th align="left" valign="top"> Book </th>
+<th align="left" valign="top"> Exercises</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week01.html">01, title=<em>Mon 2021-02-08</em></a></p></td>
+<td align="left" valign="top"><p class="table">Test Driven, Unit Testing basics</p></td>
+<td align="left" valign="top"><p class="table">-</p></td>
+<td align="left" valign="top"><p class="table">FirstContact, Phone book, Mini BAr, Simple List.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week02.html">02, title=<em>Mon 2021-02-22</em></a></p></td>
+<td align="left" valign="top"><p class="table">Parameterized Tests</p></td>
+<td align="left" valign="top"><p class="table">Vol I 5.6 enum classes</p></td>
+<td align="left" valign="top"><p class="table">Fraction, Flawless Password, Enum Calculator</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week03.html">03, title=<em>Mon 2021-03-01</em></a></p></td>
+<td align="left" valign="top"><p class="table">Design for testability, Mockito</p></td>
+<td align="left" valign="top"><p class="table">-</p></td>
+<td align="left" valign="top"><p class="table">Perishable products, CandyVendingMachine as study object.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week04.html">04, title=<em>Mon 2021-03-08</em></a></p></td>
+<td align="left" valign="top"><p class="table">Generics</p></td>
+<td align="left" valign="top"><p class="table">Vol I Ch 8</p></td>
+<td align="left" valign="top"><p class="table">Generic Box, Shape Filter, Ranges in 3 parts</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week05.html">05, title=<em>Mon 2021-03-15</em></a></p></td>
+<td align="left" valign="top"><p class="table">Lambda and Streams</p></td>
+<td align="left" valign="top"><p class="table">Vol I Ch 6.2, Vol II Ch 1</p></td>
+<td align="left" valign="top"><p class="table">Simple Stream, Csv Objects, Lambda Library MinMaxCollector</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week06.html">06, title=<em>Mon 2021-03-12</em></a></p></td>
+<td align="left" valign="top"><p class="table">Reflection</p></td>
+<td align="left" valign="top"><p class="table">Vol I Ch 5.7,</p></td>
+<td align="left" valign="top"><p class="table">Generater sql table from entity, Mapper using MethodHandles. Generate JSON from entity using mapper.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week07.html">07, title=<em>Mon 2021-03-22</em></a></p></td>
+<td align="left" valign="top"><p class="table">Database access using JDBC</p></td>
+<td align="left" valign="top"><p class="table">Vol II Ch 5</p></td>
+<td align="left" valign="top"><p class="table">Data base access using generic methods and the mapper from wk 6</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week08.html">08, title=<em>Mon 2021-03-29</em></a></p></td>
+<td align="left" valign="top"><p class="table">JavaFX and Java Modules</p></td>
+<td align="left" valign="top"><p class="table">Vol I bonus Ch (pdf), Vol II Ch 9</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week09.html">09, title=<em>Mon 2021-04-19</em></a></p></td>
+<td align="left" valign="top"><p class="table">Statemachine, regex</p></td>
+<td align="left" valign="top"><p class="table">Vol I, chp 5.7,Vol II Ch 5</p></td>
+<td align="left" valign="top"><p class="table">GumballMachine, GradeCapture (regex), templating engine</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week10.html">10, title=<em>Mon 2021-04-26</em></a></p></td>
+<td align="left" valign="top"><p class="table">Date/Time API and Internationalization</p></td>
+<td align="left" valign="top"><p class="table">TBD</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week11.html">11, title=<em>Mon 2021-05-10</em></a></p></td>
+<td align="left" valign="top"><p class="table">Exceptions, Assertions and logging, File(I/O)</p></td>
+<td align="left" valign="top"><p class="table">TBD</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week12.html">12, title=<em>Mon 2021-05-17</em></a></p></td>
+<td align="left" valign="top"><p class="table">Programmers responsibility: Security</p></td>
+<td align="left" valign="top"><p class="table">TBD</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="week13.html">13, title=<em>Mon 2021-06-07</em></a></p></td>
+<td align="left" valign="top"><p class="table">Not used, buffer</p></td>
+<td align="left" valign="top"><p class="table">-</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week04.html">04, title=<em>Mon 2021-03-12</em></a></p></td>
+<td align="left" valign="top"><p class="table">Generics</p></td>
+<td align="left" valign="top"><p class="table">Test and Quality and other Qualities</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Vol. I - Ch8</p></td>
+<td align="left" valign="top"><p class="table">BoxOfThings, Shapes</p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week05.html">05, title=<em>Mon 2021-03-19</em></a></p></td>
+<td align="left" valign="top"><p class="table">Collections + Java8 Streams</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Break your code</p></td>
+<td align="left" valign="top"><p class="table">Vol. I - Ch9 + Vol. II - Ch1</p></td>
+<td align="left" valign="top"><p class="table">Lambda Library, CSV to Object Stream</p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week06.html">06, title=<em>Mon 2021-03-26</em></a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Design for testability, Date/Time API</p></td>
+<td align="left" valign="top"><p class="table">Mocking with Mockito</p></td>
+<td align="left" valign="top"><p class="table">Vol. II - Ch6</p></td>
+<td align="left" valign="top"><p class="table">First Mocks, Perishable products</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="2021/week07.html">07, title=<em>Mon 2021-04-03</em></a></p></td>
+<td align="left" valign="top"><p class="table">Logging,  + Internationalization</p></td>
+<td align="left" valign="top"><p class="table">-</p></td>
+<td align="left" valign="top"><p class="table">Vol. II - Ch7, Vol. I - Ch7.5</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Spanish Beer</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">Break</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week08.html">08, title=<em>Mon 2021-04-23</em></a></p></td>
+<td align="left" valign="top"><p class="table">State machines, Regex</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Mocking with Mockito II</p></td>
+<td align="left" valign="top"><p class="table">Vol. II - Ch2.7</p></td>
+<td align="left" valign="top"><p class="table">GradeCapture, Olifantys balls</p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week09.html">09, title=<em>Mon 2021-05-07</em></a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Networking, I/O</p></td>
+<td align="left" valign="top"><p class="table">Testing networking protocol</p></td>
+<td align="left" valign="top"><p class="table">Vol. II - Ch2.2, Ch4</p></td>
+<td align="left" valign="top"><p class="table">Template Engine</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="2021/week10.html">10, title=<em>Mon 2021-05-14</em></a></p></td>
+<td align="left" valign="top"><p class="table">Threads &amp; Concurrency</p></td>
+<td align="left" valign="top"><p class="table">Testing in case of concurrency</p></td>
+<td align="left" valign="top"><p class="table">Vol. I - Ch12</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Concurrent Restaurant</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">Ascension Day</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week12.html">12, title=<em>Mon 2021-05-28</em></a></p></td>
+<td align="left" valign="top"><p class="table">Java Reflection</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Testing non functional aspects, static tests</p></td>
+<td align="left" valign="top"><p class="table">Vol. I - Ch5.7</p></td>
+<td align="left" valign="top"><p class="table">Table Creator</p></td>
+<td align="left" valign="top"><p class="table"><a href="2021/week13.html">13, title=<em>Mon 2021-06-04</em></a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Java Platform Module System</p></td>
+<td align="left" valign="top"><p class="table">-</p></td>
+<td align="left" valign="top"><p class="table">Vol. II - Ch9</p></td>
+<td align="left" valign="top"><p class="table">Travel agency</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="2021/week14.html">14, title=<em>Mon 2021-06-11</em></a></p></td>
+<td align="left" valign="top"><p class="table">Spare</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/caution.png" alt="Caution" />
+</td>
+<td class="content">
+<div class="paragraph"><p><span class="big">You should start with the exercises in the week they are listed in and hand them in
+by committing your work to your <a href="https://peerweb.fontysvenlo.org/igrouprepos.php">personal subversion repository</a>.<br />
+<strong><span class="green">Best</span></strong> is to do that before next week&#8217;s lesson, so you even if you were not able to
+even when trying, you will at least have some questions.</span></p></div>
+<div class="paragraph"><p><strong><span class="big red">We will use a strict deadline policy for the assignments.</span></strong><br />
+<strong><span class="bigger green">You will rewarded bonus points if you deliver in time.<br />
+The hand in deadline is two lesson weeks after the publication date.</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="bigger red">Completion of all the exercises grant admission to the performance assessment!</span></strong></p></div>
+</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_way_of_working_during_practical_hours">4. Way of Working during practical hours.</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><span class="image">
+<img src="tdd.png" alt="tdd.png" />
+</span> The way of working with the practical assignments is as follows:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Each student has a personal subversion repository
+</p>
+</li>
+<li>
+<p>
+The teachers will add the starter project for the assignment in due time<br />
+ to all student repositories, which are then available for checkout by the students
+</p>
+</li>
+<li>
+<p>
+The students will work on the assignment and work TDD style.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Write a test for a requirement (typically a method),<br />
+  see it showing failure (<strong><span class="red">RED</span></strong>),
+</p>
+</li>
+<li>
+<p>
+then implement the method to turn the test <strong><span class="green">GREEN</span></strong>.
+</p>
+</li>
+<li>
+<p>
+If <strong><span class="green">GREEN</span></strong>, svn-commit both test-class AND implementing class.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+If the assignment is complete (all requirements covered with tests, all tests green and code coverage at an appropriate level )
+  ask any of the teachers or student assistants to run the teachers test on your code.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+The teachers will not explicitly test your tests, only your implementation code, but will provide you with the test report.
+</p>
+</li>
+<li>
+<p>
+They will run <strong>your</strong> tests, to see if your test report is in agreement with the teachers tests.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>This procedure is similar to the one followed during the <a href="2019/assessmentcorrectionrules.html">performance assessment</a> at the end of the semester.
+The difference is that we will review not only the implementation, but will start with reviewing the tests.
+If there is no valid test, the implementation of the method will not be considered.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ms_teams_channel_s">5. MS Teams channel(s)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>For questions and answers thus documenting them and also discussions and explanations,
+sharing information, links and other things between students and lecturers, feel free to use the MS-Teams PRC2 channel:
+<a href="https://join.slack.com/t/fontysvenlo-ict/shared_invite/enQtNTU2Nzg5OTk3OTIyLTc2OWQ4Yzk0OWNjZjVmNzY5ZTgwNmFkNTc3OGIwZDIzODQzZThiNjJkY2RhODNhNTQ4ZmQ4NDhiMmNmMmE3MWU">Slack invitation link</a>.</p></div>
+<div class="paragraph"><p>Please use the channel <strong>#prc2class</strong>. We will use this channel to ask and and answer questions during and after class.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Please note that the content of this channel will appear on youtube because we are recording the lectures. So use proper language.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>You are only allowed to use a <strong>student.fontys.nl</strong> email address. Using slack is optional, but if the students share their knowledge there,
+this can be a helpful source and learning environment.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_automatic_correction_of_practical_exercises">6. Automatic correction of practical exercises.</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In PRC1 you have become acquainted with automatic tests. In PRC2 you will not only write the implementation, but also the tests.
+These test need testing too.</p></div>
+<div class="paragraph"><p>The approach follow is having not only a correct implementation, but also some broken implementations to test your tests.</p></div>
+<div class="paragraph"><p>The exact details are spelled out in  <a href="https://prc2.fontysvenlo.org/2021/assessmentcorrectionrules.html">the rules for the performance assessment</a>.</p></div>
+<div class="paragraph"><p>In short you provide your own test code and implementation, we provide an implementation, our own tests and some broken implementations to make your
+tests have a nice red blush.</p></div>
+<div class="paragraph"><p>The ubiquitous question is always: Where do I start?</p></div>
+<div class="paragraph"><p>The answer is surprisingly simple: at the requirements of class, method or whatever you want to develop. And always start at the simple end.
+So if a requirement says that a fresh Stack is empty, that means you can write a test that asserts that a <code>new</code> instance of your class reports that it is
+empty when the <code>isEmpty()</code> is called.</p></div>
+<hr />
+<div class="paragraph"><p>The sources of this website are hosted at <a href="https://github.com/testfirstj/testfirstj.github.io">https://github.com/testfirstj/testfirstj.github.io</a></p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2022-06-05 18:31:20 CEST
+</div>
+</div>
+</body>
+</html>
