@@ -45,7 +45,7 @@
                                 <linkcss>true</linkcss>
                                 <copycss>true</copycss>
                                 <stylesdir>css</stylesdir>
-
+				<topics>../topics</topics>
 
                             </attributes>
                         </configuration>

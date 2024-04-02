@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Asciidoctor 2.0.20"><meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans"><meta name="description" content="This site contains the theory and exercise descriptions of PRC2 (Java Programming 2), starting in February 2021."><meta name="keywords" content="Test Driven Java SEBI Venlo"><title>W10 Date/Time API and Internationalization</title><style>/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
 /* Uncomment the following line when using as a custom stylesheet */
 /* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
 html{font-family:sans-serif;-webkit-text-size-adjust:100%}
@@ -130,7 +130,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -152,6 +152,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -317,7 +318,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -420,176 +421,4 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .sect1+.sect1{border:0}
 #footer{background:none}
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
-@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
-<script> document.addEventListener("DOMContentLoaded", function() { var elements = document.getElementsByClassName("math"); for (var i = 0; i < elements.length; i++) { var el = elements[i]; if (el.getAttribute("data-lang") !== "tex") { continue; } katex.render(el.textContent.slice(2, -2), el, { "displayMode": el.nodeName.toUpperCase() !== "SPAN", "throwOnError": false, }); } }); </script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script><link rel="stylesheet" href="css/sebistyle.css">
-<link rel="stylesheet" href="css/mooc.css">
-<link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
-<script src="js/top.js" type="text/javascript"></script></head><body class="article toc2 toc-right"><header><h1>W10 Date/Time API and Internationalization</h1><div class="details"><span class="author" id="author">Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans</span><br><time id="revdate" datetime="2021-01-10">V2.0  2021-01-10</time></div><nav id="toc" class="toc2" role="doc-toc"><h2 id="toc-title">Table of Contents</h2><ol class="toc-list level-1"><li><a href="#_the_date_and_time_api">1. The Date and Time API</a></li><li><a href="#_number_formats">2. Number Formats</a></li><li><a href="#_testing_localized_exceptions">3. Testing Localized Exceptions</a></li><li><a href="#_additional_pointers">4. Additional Pointers</a></li><li><a href="#_internationalization_i18n_of_a_pub">Internationalization (I18N) of a Pub</a></li><li><a href="#_exercises_in_this_part">Exercises in this part</a></li></ol></nav></header><div id="content"><section id="preamble" aria-label="Preamble"><div class="table-block" id="main-menu"><table class="frame-all grid-all stretch"><colgroup><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8823%;"><col style="width: 5.8832%;"></colgroup><tbody><tr><td class="halign-left valign-top"><a href="index.html" title="Home">TOP</a></td><th class="halign-left valign-top">week</th><td class="halign-left valign-top"><a href="week01.html" title="What is TDD">01</a></td><td class="halign-left valign-top"><a href="week02.html" title="Parameterized Tests">02</a></td><td class="halign-left valign-top"><a href="week03.html" title="Testability and Mockito">03</a></td><td class="halign-left valign-top"><a href="week04.html" title="Generics">04</a></td><td class="halign-left valign-top"><a href="week05.html" title="Lambdas and Streams">05</a></td><td class="halign-left valign-top"><a href="week06.html" title="Reflection">06</a></td><td class="halign-left valign-top"><a href="week07.html" title="Java Database Access">07</a></td><td class="halign-left valign-top"><a href="week08.html" title="Java FX Bindings and Java Module System">08</a></td><td class="halign-left valign-top"><a href="week09.html" title="Statemachines and Regex">09</a></td><th class="halign-left valign-top"><a href="week10.html" title="Data Time Api anmd Internationalization">10</a></th><td class="halign-left valign-top"><a href="week11.html" title="Exceptions, Assertionas and logging, File IO">11</a></td><td class="halign-left valign-top"><a href="week12.html" title="Security">12</a></td><td class="halign-left valign-top"><a href="setup.html" title="Setup your System">SETUP</a></td><td class="halign-left valign-top"><a href="tips.html" title="Tips Through the Weeks">TIPS</a></td><td class="halign-left valign-top"><a href="assessmentcorrectionrules.html" title="Performance Assessment">PA</a></td></tr></tbody></table></div></section>
-<section class="doc-section level-1"><h2 id="_the_date_and_time_api"><a class="anchor" href="#_the_date_and_time_api" aria-hidden="true"></a><a class="link" href="#_the_date_and_time_api">1. The Date and Time API</a></h2><p>In Java, an <code>Instant</code> represents a point on the time line. The origin (called epoch) is arbitrarily set at midnight
-of the first of January 1970 Greenwich time (UTC). <code>Instant.now()</code> returns the current point on the time line,
-being the number of seconds since the epoch (stored as <code>long</code>) and the number of nano seconds (stored as <code>int</code>). Each
-day has 24x60x60 = 86400 seconds. A <code>Duration</code> is the amount of time between two instants. Both <code>Instant</code> and <code>Duration</code>
-are immutable.</p>
-<p>An <code>Instant</code> does not have a human readable format. The two kinds of human time in the java API are <em>local date/time</em> and
-<em>zoned time</em>. Local date/time has a date and/or time of day, but no associated time zone. Examples:</p>
-<p><img src="calendar_example_LocalDate.png" alt="calendar example LocalDate" width="25%" title="Local Date example"> Local Date example.
-<img src="alarmclock_example_LocalTime.jpg" alt="alarmclock example LocalTime" width="25%" title="Local Time example"> Local Time Example.</p>
-<p>Do not use zoned time, unless really necessary. Today&#8217;s date can be retrieved using <code>LocalDate.now()</code>, an arbitrary date
-with <code>LocalDate.of(&lt;year&gt;, &lt;month&gt;, &lt;day&gt;)</code> like <code>LocalDate.of(2021, 5, 1)</code> being first of May 2021. The amount of time
-between dates is called a <code>Period</code>. Check the java API to read about convenient methods of <code>LocalDate</code> and <code>Period</code>. An
-interesting one is the <code>datesUntil(&#8230;&#8203;)</code> method on <code>LocalDate</code>, which returns a <code>Stream&lt;LocalDate&gt;</code>.</p>
-<p><code>LocalTime</code> objects can be created like LocalDates, e.g.: <code>LocalTime endOfLecture = LocalTime.now().plusHours(1);</code></p>
-<p>Zoned times make use of time zomes. Java uses the IANA database: <a class="bare" href="https://www.iana.org/time-zones">https://www.iana.org/time-zones</a>
-To make a zoned time out of a <code>LocalDateTime</code> you can use the <code>ZonedDateTime.of()</code> method or do it like this:
-<code>ZonedDateTime current = LocalDateTime.now().atZone(ZoneId.of("Europe/Amsterdam"));</code>. Now you get a specific <code>Instant</code> in time.
-The other way around, you can can find the corresponding <code>ZonedDateTime</code> in another time zone using <code>instant.atZone(&#8230;&#8203;)</code>.</p>
-<p>To represent dates and times in readable and customizable formats, use the <code>DateTimeFormatter</code> class. It can use predefined
-standard formatters, <code>Locale</code> specific formatters and formatters with custom patterns.</p>
-<p>This paragraph is based on Core Java Volume 2, 11th edition, chapter 6 by Cay Horstmann.</p></section>
-<section class="doc-section level-1"><h2 id="_number_formats"><a class="anchor" href="#_number_formats" aria-hidden="true"></a><a class="link" href="#_number_formats">2. Number Formats</a></h2><p>Some of you might have noticed that one of the teacher tests in the FXTriangulate exercise of week 8 fails on your machine.</p>
-<p>This is because on the machine we developed, the locale is set to en_US.
-This causes the numbers to be formatted in the way that <code class="blue">Double.parseDouble(String input)</code> expects it.
-If you run the same tests on a machine with say a German Locale, the test that reads the length back from the label,
-use Double.parseDouble(), which is then surprised to find a comma instead of the decimal point, and fails with a format exception.</p>
-<p>To solve that, modify the test in method <span class="blue">tLength</span> such that the line<br>
-<code>double l = Double.parseDouble( ltext.split( ":" )[ 1 ] );</code> reads<br>
-<code>double l = getDoubleConsideringLocale( ltext.split( ":" )[ 1 ] );</code>,
-so that the whole test method reads</p>
-<figure class="listing-block"><figcaption>fxtriangulate.GUITest.tLength</figcaption>
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @ParameterizedTest
-    @CsvSource( {
-        "a,greenCircle,blueCircle,500.0,400.0,100.0,100.0,500.0",
-        "b,redCircle,blueCircle,400.0,100.0,100.0,100.0,500.0",
-        "c,greenCircle,redCircle,300.0,100.0,100.0,400.0,100.0", } )
-    public void tLength( String line, String p1, String p2, double expected,
-            double x1, double y1, double x2, double y2 ) throws ParseException {
-        double xOrg = stage.getX();
-        double yOrg = stage.getY();
-        FxRobot rob = new FxRobot();
-        rob.drag( '#' + p1 ).dropTo( xOrg + x1, yOrg + y1 );
-        rob.drag( '#' + p2 ).dropTo( xOrg + x2, yOrg + y2 );
-        String ltext = labelMap.get( line ).apply( triangulator ).getText();
-        double l = getDoubleConsideringLocale( ltext.split( ":" )[ 1 ] ); <b class="conum">1</b>
-        assertThat( l ).isCloseTo( expected, within( 0.1 ) );
-//        fail( "method tLength reached end. You know what to do." );
-    }</code></pre><ol class="callout-list arabic"><li>changed line.</li></ol></figure>
-
-<figure class="listing-block"><figcaption>Consider the local in which the number is written.</figcaption>
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    /**
-     * Use the default locale to parse a double value from a string.
-     * @param input string
-     * @return the double
-     * @throws ParseException if the string does not parse to double.
-     */
-    static double getDoubleConsideringLocale( String input ) throws ParseException {
-        return DecimalFormat.getNumberInstance().parse( input ).doubleValue(); <b class="conum">1</b>
-    }
-
-    /**
-    * Use the given locale to parse a double value from a string.
-    * @param locale to use.
-    * @param input string.
-    * @return the double.
-    * @throws ParseException if the string does not parse to double.
-    */
-   static double getDoubleConsideringLocale( Locale locale, String input ) throws ParseException {
-       return DecimalFormat.getNumberInstance(locale).parse( input ).doubleValue();
-   }</code></pre><ol class="callout-list arabic"><li>DecimalFormat.getNumberInstance gets a format that understands the default locale.</li></ol></figure>
-
-<figure class="listing-block"><figcaption>Set the locale for the execution. Useful for tests.</figcaption>
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">          Locale.setDefault( Locale.GERMANY ); <b class="conum">1</b></code></pre><ol class="callout-list arabic"><li>Set the locale to GERMANY if it isn&#8217;t already. Similar for other languages.</li></ol></figure>
-</section>
-<section class="doc-section level-1"><h2 id="_testing_localized_exceptions"><a class="anchor" href="#_testing_localized_exceptions" aria-hidden="true"></a><a class="link" href="#_testing_localized_exceptions">3. Testing Localized Exceptions</a></h2><p>The standard way of testing exceptions with assertj is explained in <a href="week01.html#_assert_exceptions">week01</a>.</p>
-<p>To get to the localized message, which contains the message as translated by the locale framework is a bit more involved.</p>
-<p>Luckily, AssertJ allows you to extract information from a Throwable, by using an extractor function. Now the Lambda bells should ring.</p>
-<figure class="listing-block"><figcaption>To make a long story very short: here is an example:</figcaption>
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String[] keys = keyWords.split( "\\|");
-    assertThatThrownBy( () -&gt; {
-                MainSimulation.main( args );
-    } ).isExactlyInstanceOf( exceptionMap.get( expectionClassName ) )
-            .extracting( e -&gt; e.getLocalizedMessage() ) <b class="conum">1</b>
-            .asString()           <b class="conum">2</b>
-            .contains( keys ); <b class="conum">3</b></code></pre><ol class="callout-list arabic"><li>extract using <code class="blue">Function&lt;? super Throwable,​T&gt;</code>, <code class="black">e &#8594; getLocalizedMessage()</code> in this case.</li><li>Get the assertion for in String. Do <strong class="red">not</strong> use <code>toString()</code>, because that produces a <em>String</em>, not an <strong class="blue">AbstractStringAssert</strong>.</li><li>And use the assert to check that the string contains the required key information.</li></ol></figure>
-
-<figure class="image-block"><img src="assertjtypehints.png" alt="assertjtypehints">
-<figcaption>Figure 1. If you turn on type hints in NetBeans-IDE (or in intelij) you can see what the type is on which you call <code>contains(keys)</code></figcaption></figure></section>
-<section class="doc-section level-1"><h2 id="_additional_pointers"><a class="anchor" href="#_additional_pointers" aria-hidden="true"></a><a class="link" href="#_additional_pointers">4. Additional Pointers</a></h2><div class="ulist"><ul><li>If you haven&#8217;t read the Horstmann book but you need an introduction into Internationalization,
-read this tutorial from DZONE <a href="https://dzone.com/articles/a-beginners-guide-to-java-internationalization">here</a>.
-Make sure to read the bit about Resource Bundles, as you use them in the exercise for this week.</li><li>Jakob Jenkov also has a tutorial on <a href="http://tutorials.jenkov.com/java-internationalization/index.html" target="_blank" rel="noopener">Java Internationalization </a></li></ul></div></section>
-<section class="doc-section level-1"><h2 id="_internationalization_i18n_of_a_pub"><a class="anchor" href="#_internationalization_i18n_of_a_pub" aria-hidden="true"></a><a class="link" href="#_internationalization_i18n_of_a_pub">Internationalization (I18N) of a Pub</a></h2><div class='ex'><details class='ex'><summary class='ex'>In the pub (Spanish beer)</summary>
-<p><strong>In the pub Spanish</strong></p>
-<p>For this exercise, you are expanding on the pub exercise again. This time, enums and exceptions are all implemented and tested. The focus this week is on Internationalization! We want to make sure that the pub can run in different languages.</p>
-<div class="image-block related thumb right"><img src="spanishBeerResources.png" alt="The resources in this project" height="^"></div>
-<p>Open the project folder in Netbeans. Let&#8217;s first look at the resources of the project. You will  notice a bunch of new files in the resources folder. The files contain the translations of error messages into Dutch, German and Spanish. For example, the <code>inthepub_nl_NL.properties</code> file contains</p>
-<p>A good way of working is to create languages files for other that the default (typically English)
-to have the English text as comment and as a hint for the translator.
-Then the key value (the string at the left side of the equals sign) do not have to contain the full english texts,
-which might need escaping, such as when the key contains whitespace. In this exercise we banned the white space
-in the key altogether, and derive the keys from the default message with</p>
-<div class="listing-block"><pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String msg = getMessage(); <b class="conum">1</b>
-    String key = msg.toLowerCase().replaceAll( "\\s", "_" ); <b class="conum">2</b>
-    String lMessage = bundle.containsKey( key ) ? bundle.getString( key ) : msg; <b class="conum">3</b></code></pre><ol class="callout-list arabic"><li>get the original message.</li><li>translate to lower case and replace spaces with underscores, which yields the key.</li><li>If that key is found, use its message, otherwise use the default, non-internationalized version.</li></ol></div>
-
-<figure class="listing-block"><figcaption>The dutch file</figcaption>
-<pre class="highlightjs highlight"><code class="language-none hljs">#hello=Hello
-hello=Hallo
-#good_morning=Good Morning
-good_morning=Goede Morgen
-#you_drank_too_much=You drank too much
-you_drank_too_much=U hebt te veel gedronken
-#beer_is_sold_out=beer is sold out
-beer_is_sold_out=Het bier is uitverkocht
-#you_are_too_young_to_drink=you are too young to drink
-you_are_too_young_to_drink=U bent te jong voor drank</code></pre></figure>
-<p>So when the pub raises an <code>EmptyStockException</code> and the <code>Locale</code> is Dutch, it should display the <em>Dutch</em> error message, not the English one. You don&#8217;t need to touch the language properties files, unless you want to add more languages (or perhaps our Spanish is too horrible!).</p>
-<p>In this exercise you work on the files:</p>
-<div class="olist arabic"><ol class="arabic"><li><code>LanguageTest.java</code>, which is your main file for testing your implementation. Remember, work test-driven! What you should check is that the Exceptions are thrown with a message in the correct language.</li><li><code>PubException.java</code>, this is a new Exception that all other Exceptions inherit. It is the one responsible for translating the error messages. Your implementation goes here.</li><li><code>HablasEspañol.java</code>, which provides a <code>main</code> method for you to play around with the languages. Feel free to change this code to your liking to familiarize yourself with Internationalization, it is not tested.</li><li><code>MainSimulationTest.java</code> to complete the simulation tests. The business code is given. Push up the coverage.</li></ol></div>
-<p>If you want to run the program, you can use the <code>run.sh</code> file that we provided in the project&#8217;s repository. Simply execute it to test the pub simulation. Alternatively, simply type <code>java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.ParlezEspañol</code> in your command line interface. Of course, this will throw errors as long as you haven&#8217;t written your implementation!</p>
-<p><strong>Where should I start?</strong></p>
-<p>Start with the <code>PubException.java</code> class and implement the constructor so that the compilor errors will go away.
-Then, move to <code>LanguageTest.java</code> and work on the rest of the exercise, first writing the tests and then implementing in the <code>PubException</code> class.</p>
-<figure class="listing-block"><figcaption>Windows run command</figcaption>
-<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">@echo off
-rem @author David Greven - https://github.com/grevend
-if not exist target/classes call mvn clean compile
-chcp 65001
-cls
-java -Duser.language=nl -Duser.country=NL -cp target/classes/ pub.HablasEspañol
-java -Duser.language=es -Duser.country=ES -cp target/classes/ pub.HablasEspañol
-pause</code></pre></figure>
-</details></div><!--end ex 1--></section>
-<section class="doc-section level-1"><h2 id="_exercises_in_this_part"><a class="anchor" href="#_exercises_in_this_part" aria-hidden="true"></a><a class="link" href="#_exercises_in_this_part">Exercises in this part</a></h2><div class="ulist"><ul><li><a href="#_internationalization_i18n_of_a_pub">I18N Pub</a></li></ul></div></section></div><footer><div id="footer-text"><br>Last updated 2022-06-05 18:31:20 +0200</div><!-- hello -->
-<button onclick="topFunction()" id="top-button" title="Go to top of the page">&#x21EA;Top</button>
-
-<script>
-//Get the button
-var mybutton = document.getElementById("top-button");
-
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
-
-function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-}
-</script></footer></body></html>
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}

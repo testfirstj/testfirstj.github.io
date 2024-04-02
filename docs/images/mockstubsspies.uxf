@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.1">
+<diagram program="umlet" version="14.3.0">
   <zoom_level>10</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>300</x>
-      <y>0</y>
+      <x>160</x>
+      <y>20</y>
       <w>140</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>{DOC}
 */SomeType/*
 {non-final class 
-or interface}
-bg=#ffaa00
-</panel_attributes>
+or interface}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>220</x>
-      <y>130</y>
+      <x>30</x>
+      <y>150</y>
       <w>380</w>
       <h>90</h>
     </coordinates>
@@ -37,8 +35,8 @@ bg=green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>340</x>
-      <y>60</y>
+      <x>200</x>
+      <y>80</y>
       <w>30</w>
       <h>90</h>
     </coordinates>
@@ -48,8 +46,8 @@ bg=green</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>460</x>
-      <y>0</y>
+      <x>320</x>
+      <y>20</y>
       <w>200</w>
       <h>90</h>
     </coordinates>
@@ -66,8 +64,8 @@ bg=green
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>270</x>
-      <y>440</y>
+      <x>690</x>
+      <y>210</y>
       <w>340</w>
       <h>60</h>
     </coordinates>
@@ -81,8 +79,8 @@ bg=cyan</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>320</x>
-      <y>320</y>
+      <x>740</x>
+      <y>90</y>
       <w>30</w>
       <h>140</h>
     </coordinates>
@@ -92,23 +90,22 @@ bg=cyan</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>300</x>
-      <y>250</y>
+      <x>720</x>
+      <y>20</y>
       <w>140</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>{DOC}
 */SomeType/*
 {non-final class 
-or interface}
-bg=#ffaa00</panel_attributes>
+or interface}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>200</x>
-      <y>660</y>
+      <x>30</x>
+      <y>390</y>
       <w>430</w>
       <h>120</h>
     </coordinates>
@@ -125,53 +122,51 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>370</x>
-      <y>620</y>
+      <x>270</x>
+      <y>320</y>
       <w>30</w>
-      <h>60</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>310</x>
-      <y>570</y>
+      <x>210</x>
+      <y>270</y>
       <w>140</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>{DOC}
 {non-final class}
 *SomeType*
-bg=#ffaa00</panel_attributes>
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>440</x>
-      <y>570</y>
-      <w>220</w>
-      <h>120</h>
+      <x>340</x>
+      <y>270</y>
+      <w>170</w>
+      <h>150</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=wraps</panel_attributes>
-    <additional_attributes>10.0;10.0;200.0;10.0;200.0;100.0;190.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0;150.0;130.0;120.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>100</x>
-      <y>790</y>
-      <w>560</w>
-      <h>250</h>
+      <x>520</x>
+      <y>300</y>
+      <w>580</w>
+      <h>210</h>
     </coordinates>
     <panel_attributes>*Spy*
-A spy uses the real object, but notices its moves, 
-and records them and can interfere in any interaction.
-
-*Very much as if the room is bugged.*
+A spy uses the real object, but notices its
+moves, and records them and can interfere in any interaction.
 
 You need a concrete class to spy on, and have that do some of the real work.
 
@@ -188,8 +183,8 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>470</x>
-      <y>250</y>
+      <x>870</x>
+      <y>20</y>
       <w>260</w>
       <h>140</h>
     </coordinates>
@@ -207,41 +202,41 @@ bg=cyan</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
-      <y>80</y>
-      <w>80</w>
+      <x>280</x>
+      <y>100</y>
+      <w>130</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;50.0;60.0;10.0</additional_attributes>
+    <additional_attributes>10.0;50.0;110.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>130</x>
-      <y>700</y>
+      <x>450</x>
+      <y>400</y>
       <w>90</w>
-      <h>100</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;50.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;70.0;70.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>340</y>
-      <w>70</w>
-      <h>120</h>
+      <x>840</x>
+      <y>150</y>
+      <w>90</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;100.0;20.0;10.0;50.0;10.0</additional_attributes>
+    <additional_attributes>10.0;60.0;70.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>260</x>
-      <y>10</y>
+      <x>120</x>
+      <y>30</y>
       <w>60</w>
       <h>30</h>
     </coordinates>
@@ -251,8 +246,8 @@ bg=cyan</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>260</y>
+      <x>660</x>
+      <y>30</y>
       <w>80</w>
       <h>30</h>
     </coordinates>
@@ -262,8 +257,8 @@ bg=cyan</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>220</x>
-      <y>580</y>
+      <x>120</x>
+      <y>280</y>
       <w>110</w>
       <h>30</h>
     </coordinates>
@@ -273,109 +268,43 @@ bg=cyan</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>170</x>
-      <y>10</y>
+      <x>30</x>
+      <y>30</y>
       <w>100</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>{SUT}
 *Business*
-bg=#ffaa00</panel_attributes>
+bg=orange
+transparency=80</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>260</y>
+      <x>570</x>
+      <y>30</y>
       <w>100</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>{SUT}
 *Business*
-bg=#ffaa00</panel_attributes>
+bg=orange
+transparency=80</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>580</y>
+      <x>30</x>
+      <y>280</y>
       <w>100</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>{SUT}
 *Business*
-bg=#ffaa00</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>100</x>
-      <y>220</y>
-      <w>680</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>10.0;10.0;660.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>100</x>
-      <y>510</y>
-      <w>680</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>10.0;20.0;660.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>120</x>
-      <y>350</y>
-      <w>110</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>halign=left
-STUBBING
-fontsize=18
-bg=cyan
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>120</x>
-      <y>80</y>
-      <w>110</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>halign=left
-MOCKING
-fontsize=18
-
-bg=green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>110</x>
-      <y>660</y>
-      <w>80</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>halign=left
-SPYING
-fontsize=18
-bg=yellow
-
-</panel_attributes>
+bg=orange
+transparency=80</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

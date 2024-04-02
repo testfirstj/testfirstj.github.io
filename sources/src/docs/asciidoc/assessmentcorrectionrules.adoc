@@ -1,7 +1,7 @@
 :doctitle: Assessment Correction Rules.
 //           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
 :tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,d,d,d,h
-include::../adocresources/topmenu.adoc[]
+include::{topics}/topmenu.adoc[]
 
 From February 2019 onwards, PRC2 is about complete realisation using a test driven
 approach.

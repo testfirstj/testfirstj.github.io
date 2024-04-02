@@ -1,7 +1,7 @@
 :doctitle: W12 Security
 //           T,w,1,2,3,4,5,6,7,8,9,0,1,2,s,t,p
 :tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,h,d,d,d
-include::../adocresources/topmenu.adoc[]
+include::{topics}/topmenu.adoc[]
 
 include::{topics}/security.adoc[]
 

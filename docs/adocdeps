@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+# find dependencies in asciidoc files
+sub depfile ($$);
+my %myplaces;
+if (-e 'adoc.properties') {
+    open $f ,"<adoc.properties";
+    while (<$f>){
+	chomp; # remove trailing \n
+	($key,$value) = split/=/;
+	$myplaces{$key}=$value;
+    }
+    close($f);
+} else { # use defaults
+    %myplaces= qw(
+	topics ../sources/topics
+	images ../sources/docs/images
+	exercises ../sources/exercises
+	basedir ../sources/docs
+	);
+}
+
+$fn=$ARGV[0];
+my $targetfile=$fn;#.".html";
+$fn =~ s/\.html$//;
+my $contin=" ";
+$level='';
+$fn = "$myplaces{'basedir'}/${fn}.adoc";
+my @findings;
+# get array of dirs where file can live
+print "$targetfile : $fn " ;
+depfile($fn, 'fh00');
+my $rest; # line tail as comment
+print "\n\n";
+#print @findings;
+exit(0);
+
+
+sub depfile ($$)
+{
+  local ($fn,$fh) = @_;
+  $fh++;
+  $level = '  '.$level;
+  unless (open $fh ,"<$fn" ) {
+    print STDERR "Can't open $fn: $!\n";
+    return;
+  }
+  $regex=qr/^(?<input>(include|image|))::(?<target>.*)\[.*\]$/;
+  while (<$fh>) {
+    $dependency="";
+    ($_,$rest) = split'%';
+    if ($_ =~ $regex){
+	$target=$+{target};
+	if ($+{input} eq "image") {
+	    $target ="{images}/$target";
+	}
+	$target =~s/\{(?<t>(images|topics|exercises))\}/$myplaces{$+{t}}/;
+	if ($target !~ m/\//) {
+	    $target="$myplaces{'basedir'}/${target}";
+	}
+	$dependency = $target;
+	print qq{$dependency };
+	if ($dependency =~ m/\.adoc$/) {
+	    depfile($dependency,$fh);
+	}
+    }
+  }
+  close $fh;
+  $level=substr($level, 2);
+}
