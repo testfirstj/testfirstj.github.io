@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W1 Test Driven Development</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -136,7 +135,7 @@ provide the tests for you, so <strong class="red">you will be on your own</stron
 </div>
 <div class="imageblock related thumb right">
 <div class="content">
-<img src="./images/boom250.jpeg" alt="boom250">
+<img src="images/boom250.jpeg" alt="boom250">
 </div>
 <div class="title">Figure 1. source:dumont.lib.ia.us</div>
 </div>
@@ -199,13 +198,13 @@ like a phonebook.</p>
 </div>
 <div id="tdd-oneRedTest" class="imageblock related thumb right">
 <div class="content">
-<img src="./images/tdd-oneRedTest.png" alt="tdd oneRedTest">
+<img src="images/tdd-oneRedTest.png" alt="tdd oneRedTest">
 </div>
 <div class="title">Figure 2. Small steps. One red test at a time.</div>
 </div>
 <div id="tdd-allTestsGreen" class="imageblock related thumb left">
 <div class="content">
-<img src="./images/tdd-allTestsGreen.png" alt="tdd allTestsGreen">
+<img src="images/tdd-allTestsGreen.png" alt="tdd allTestsGreen">
 </div>
 <div class="title">Figure 3. All the tests are green, yay!</div>
 </div>
@@ -234,7 +233,7 @@ confident about your programming skills. That&#8217;s really neat!</p>
 </div>
 <div id="tdd-EnglishError" class="imageblock related thumb right">
 <div class="content">
-<img src="./images/tdd-EnglishError.png" alt="tdd EnglishError">
+<img src="images/tdd-EnglishError.png" alt="tdd EnglishError">
 </div>
 <div class="title">Figure 4. Testing in real life</div>
 </div>
@@ -300,7 +299,7 @@ your test. You have found a way to deal with the human brain. Congratulations!</
 </div>
 <div id="tdd-tddLifecycle" class="imageblock text-center">
 <div class="content">
-<img src="./images/tdd-lifecycle.png" alt="tdd lifecycle">
+<img src="images/tdd-lifecycle.png" alt="tdd lifecycle">
 </div>
 <div class="title">Figure 5. <a href="https://medium.com/@odayibasi/tdd-test-driven-development-vs-bdd-behavior-driven-development-30e225c29c14">The TDD Lifecycle. Click for image source.</a></div>
 </div>
@@ -425,12 +424,12 @@ the effect that you will have the exact plugins for the style of testing we want
 <div class="listingblock">
 <div class="title">Use testeasypom as parent</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>4.0.5<span class="tag">&lt;/version&gt;</span>
-        <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;/parent&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">    &lt;parent&gt;
+        &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+        &lt;artifactId&gt;testeasypom&lt;/artifactId&gt;
+        &lt;version&gt;4.0.5&lt;/version&gt;
+        &lt;relativePath/&gt;
+    &lt;/parent&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -444,13 +443,13 @@ the effect that you will have the exact plugins for the style of testing we want
 <div class="listingblock">
 <div class="title">firstContact</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@Test</span>
-  <span class="type">void</span> firstContact(){
-    Greeting g = <span class="keyword">new</span> Greeting( <span class="string"><span class="delimiter">&quot;</span><span class="content">Johnny</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="predefined-type">String</span> greet = g.greet();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  @Test
+  void firstContact(){
+    Greeting g = new Greeting( "Johnny" ); <i class="conum" data-value="1"></i><b>(1)</b>
+    String greet = g.greet();
     assertThat(greet)
-        .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">expecting polity greeting</span><span class="delimiter">&quot;</span></span>)
-        .contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Johnny</span><span class="delimiter">&quot;</span></span>);
+        .as("expecting polity greeting")
+        .contains("Hello", "Johnny");
   }</code></pre>
 </div>
 </div>
@@ -463,7 +462,7 @@ the effect that you will have the exact plugins for the style of testing we want
 </table>
 </div>
 <div class="paragraph">
-<p>You will notice that when you <em>type</em> (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist and on top of that has not method called <code>greet()</code> that returns a String. Do not worry because the IDE is willing to help. Look for tip <span class="image"><img src="./images/warning-bulb.png" alt="warning bulb"></span>
+<p>You will notice that when you <em>type</em> (or copy) the code above in the IDE, that compiler and IDE will not like your code, because the class Greeting does not exist and on top of that has not method called <code>greet()</code> that returns a String. Do not worry because the IDE is willing to help. Look for tip <span class="image"><img src="images/warning-bulb.png" alt="warning bulb"></span>
 and click on it. From the suggestions select create class in <strong>Source directory</strong> to create the Greeting class in the package <code>hi</code>.
 Then for the greet method, select the create method in the Greeting class.
 Up until now you made the compiler and IDE happy.</p>
@@ -556,16 +555,16 @@ and was the emotion credible.</p>
 <div class="listingblock">
 <div class="title">AAA in action</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> shouldAllowToAddAddress() {
-  <span class="comment">// Arrange</span>
-  Client client = <span class="keyword">new</span> Client();
-  Address addressA = <span class="keyword">new</span> Address(<span class="integer">221</span>b, <span class="string"><span class="delimiter">&quot;</span><span class="content">Baker Street</span><span class="delimiter">&quot;</span></span>);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void shouldAllowToAddAddress() {
+  // Arrange
+  Client client = new Client();
+  Address addressA = new Address(221b, "Baker Street");
 
-  <span class="comment">// Act</span>
+  // Act
   client.addAddress(addressA);
 
-  <span class="comment">// Assert</span>
+  // Assert
   assertThat( client.getAddresses() ).contains( addressA ));
 }</code></pre>
 </div>
@@ -598,9 +597,9 @@ to generate a non-existing generic class, create two instance with different typ
 <div class="listingblock">
 <div class="title">complete a generic</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">Box</span>&lt;<span class="predefined-type">String</span>&gt; sb= <span class="keyword">new</span> <span class="predefined-type">Box</span>&lt;<span class="predefined-type">String</span>&gt;(); <span class="comment">// compiler will complain for non existing Box class.</span>
-<span class="predefined-type">Box</span>&lt;<span class="predefined-type">Integer</span>&gt; ib= <span class="keyword">new</span> <span class="predefined-type">Box</span>&lt;<span class="predefined-type">Integer</span>&gt;(); <span class="comment">// compiler will complain for non existing Box class.</span>
-<span class="comment">// now you can let the IDE to follow its urge to do the typing for you.</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Box&lt;String&gt; sb= new Box&lt;String&gt;(); // compiler will complain for non existing Box class.
+Box&lt;Integer&gt; ib= new Box&lt;Integer&gt;(); // compiler will complain for non existing Box class.
+// now you can let the IDE to follow its urge to do the typing for you.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -629,7 +628,7 @@ After saving all files, you will have convinced both IDE and compiler.</p>
 <td class="content">
 <div class="paragraph">
 <div class="title">it is good to have a thinking pause</div>
-<p><span class="image thumb right"><img src="./images/engineeratwork.jpg" alt="engineeratwork" width="150"></span>
+<p><span class="image thumb right"><img src="images/engineeratwork.jpg" alt="engineeratwork" width="150"></span>
 Let the IDE and framework do (most) of the typing work for you, by providing clues. If you do that smartly, it
 will be easy to write code that is correct and acceptable by the compiler.<br>
 <strong class="big">Being lazy is good, both for code and smart people.</strong></p>
@@ -761,10 +760,10 @@ To avoid creating a new phonebook object in every test, we use declare a field i
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PhonebookTest</span> {
-    <span class="comment">// create the</span>
-    Phonebook phonebook= <span class="keyword">new</span> Phonebook();
-    <span class="comment">//</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class PhonebookTest {
+    // create the
+    Phonebook phonebook= new Phonebook();
+    //
 }</code></pre>
 </div>
 </div>
@@ -782,10 +781,10 @@ It&#8217;s intuitive.<sup class="footnote">[<a id="_footnoteref_1" class="footno
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> phonebookSearchByNameNotFound() {
-      assertThat( phonebook.searchByName( <span class="string"><span class="delimiter">&quot;</span><span class="content">Jukka</span><span class="delimiter">&quot;</span></span> ) )
-         .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">Person not present should return null</span><span class="delimiter">&quot;</span></span>)
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void phonebookSearchByNameNotFound() {
+      assertThat( phonebook.searchByName( "Jukka" ) )
+         .as("Person not present should return null")
          .isNull();
     }</code></pre>
 </div>
@@ -803,12 +802,12 @@ We could add another <code>assert</code> statement that checks the length of the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookAddsEntry() {
-    phonebook.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>);
-    assertThat(phonebook.searchByName(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>))
-       .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">An added person, phone number should be found</span><span class="delimiter">&quot;</span></span>)
-       .contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void phonebookAddsEntry() {
+    phonebook.add("Pekka","040-123456");
+    assertThat(phonebook.searchByName("Pekka"))
+       .as("An added person, phone number should be found")
+       .contains("040-123456");
 }</code></pre>
 </div>
 </div>
@@ -820,18 +819,18 @@ In addition, we write another test that checks that looking up a number which is
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookSearchByNumber() {
-    phonebook.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>);
-    assertThat(phonebook.searchByNumber(<span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>))
-       .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">search by number should return person's name</span><span class="delimiter">&quot;</span></span>)
-       .contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void phonebookSearchByNumber() {
+    phonebook.add("Pekka", "040-123456");
+    assertThat(phonebook.searchByNumber("040-123456"))
+       .as("search by number should return person's name")
+       .contains("Pekka");
 }
 
-<span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookSearchByNumberNotFound() {
-    assertThat(phonebook.searchByNumber(<span class="string"><span class="delimiter">&quot;</span><span class="content">02-444123</span><span class="delimiter">&quot;</span></span>))
-        .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">search for number not present should return null</span><span class="delimiter">&quot;</span></span>)
+@Test
+public void phonebookSearchByNumberNotFound() {
+    assertThat(phonebook.searchByNumber("02-444123"))
+        .as("search for number not present should return null")
         .isNull();
 }</code></pre>
 </div>
@@ -847,13 +846,13 @@ method and the <code>searchByName</code> method is now expected to yield the add
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookSearchAddress(){
-    phonebook.addEntry( <span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span> );
-    phonebook.addAddress( <span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Hulsterweg 6, Venlo</span><span class="delimiter">&quot;</span></span> );
-    assertThat(phonebook.searchByName( <span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span> ))
-       .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">after add, parts of the address required</span><span class="delimiter">&quot;</span></span>)
-       .contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hulsterweg 6</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Venlo</span><span class="delimiter">&quot;</span></span> );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void phonebookSearchAddress(){
+    phonebook.addEntry( "Pekka", "040-123456" );
+    phonebook.addAddress( "Pekka", "Hulsterweg 6, Venlo" );
+    assertThat(phonebook.searchByName( "Pekka" ))
+       .as("after add, parts of the address required")
+       .contains( "Hulsterweg 6", "Venlo" );
 }</code></pre>
 </div>
 </div>
@@ -880,12 +879,12 @@ If you forgot, revisit the part on how maps are created in PRC1. Or look at the 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookSearchAddress(){
-    phonebook.addEntry( <span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Hulsterweg 6, Venlo</span><span class="delimiter">&quot;</span></span>);
-    assertThat( phonebook.searchAddress( <span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span> ) )
-      .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">addEntry should add phone and address</span><span class="delimiter">&quot;</span></span>)
-      .contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hulsterweg 6</span><span class="delimiter">&quot;</span></span> ,<span class="string"><span class="delimiter">&quot;</span><span class="content">Venlo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span> );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void phonebookSearchAddress(){
+    phonebook.addEntry( "Pekka", "040-123456", "Hulsterweg 6, Venlo");
+    assertThat( phonebook.searchAddress( "Pekka" ) )
+      .as("addEntry should add phone and address")
+      .contains( "Hulsterweg 6" ,"Venlo", "040-123456" );
 }</code></pre>
 </div>
 </div>
@@ -950,11 +949,11 @@ In our requirement we specified that we lookup a person by name before deleting.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="directive">public</span> <span class="type">void</span> phonebookDeletesEntry() {
-    phonebook.addEntry(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">040-123456</span><span class="delimiter">&quot;</span></span>);
-    phonebook.deleteEntry(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>);
-    assertThat(phonebook.searchByName(<span class="string"><span class="delimiter">&quot;</span><span class="content">Pekka</span><span class="delimiter">&quot;</span></span>)).isNull();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+public void phonebookDeletesEntry() {
+    phonebook.addEntry("Pekka", "040-123456");
+    phonebook.deleteEntry("Pekka");
+    assertThat(phonebook.searchByName("Pekka")).isNull();
 }</code></pre>
 </div>
 </div>
@@ -1020,9 +1019,9 @@ You always start with <code>assertThat( objectOfInterest ).assertingMethod(&#823
 <div class="listingblock">
 <div class="title">test boolean value.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  car.start();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  car.start();
   assertThat( car.motorIsOn() ) <i class="conum" data-value="1"></i><b>(1)</b>
-      .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">Motor should be on after start</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="2"></i><b>(2)</b>
+      .as("Motor should be on after start") <i class="conum" data-value="2"></i><b>(2)</b>
       .isTrue(); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
@@ -1046,15 +1045,15 @@ Use it to improved the information you get when the test fails.</td>
 <div class="listingblock">
 <div class="title">Another SimpleTest</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  assertThat(car.speedLimit())
-      .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">Make it a legal car?</span><span class="delimiter">&quot;</span></span>)
-      .isEqualTo(<span class="integer">250</span>);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  assertThat(car.speedLimit())
+      .as("Make it a legal car?")
+      .isEqualTo(250);</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Equals or same?</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    assertThat( f1Champ ).isEqualTo( louis );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    assertThat( f1Champ ).isEqualTo( louis );
     assertThat( f1Champ ).isSameAs( louis );</code></pre>
 </div>
 </div>
@@ -1087,12 +1086,12 @@ Note that the template adds a <strong>fail</strong> line, which should be disabl
 <div class="listingblock">
 <div class="title">test string containment</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  Student student = ....
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  Student student = ....
 
   assertThat( student.toString() )
       .isNotNull()                              <i class="conum" data-value="1"></i><b>(1)</b>
-      .doesNotContainIgnoringCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">student{</span><span class="delimiter">&quot;</span></span>)    <i class="conum" data-value="2"></i><b>(2)</b>
-      .contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">Harry</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Potter</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">1980-07-31</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">12345</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+      .doesNotContainIgnoringCase("student{")    <i class="conum" data-value="2"></i><b>(2)</b>
+      .contains( "Harry", "Potter", "1980-07-31", "12345"); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1126,14 +1125,14 @@ by following the link in this sentence. Look at the sub-interfaces and the imple
 <div class="listingblock">
 <div class="title">simple containment.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">List</span>&lt;Professor&gt; professors = <span class="predefined-type">List</span>.of( SNAPE, DUMBLEDORE, MCGONAGALL ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    List&lt;Professor&gt; professors = List.of( SNAPE, DUMBLEDORE, MCGONAGALL ); <i class="conum" data-value="1"></i><b>(1)</b>
 
-    <span class="predefined-type">List</span>&lt;Professor&gt; teachesTransfiguration = professors.stream()
-            .filter( p -&gt; p.teaches( <span class="string"><span class="delimiter">&quot;</span><span class="content">Transfigurations</span><span class="delimiter">&quot;</span></span> ) ).collect( toList() );
+    List&lt;Professor&gt; teachesTransfiguration = professors.stream()
+            .filter( p -&gt; p.teaches( "Transfigurations" ) ).collect( toList() );
 
     assertThat( teachesTransfiguration )
             .isNotNull()                         <i class="conum" data-value="2"></i><b>(2)</b>
-            .hasSizeGreaterThanOrEqualTo( <span class="integer">2</span> )    <i class="conum" data-value="3"></i><b>(3)</b>
+            .hasSizeGreaterThanOrEqualTo( 2 )    <i class="conum" data-value="3"></i><b>(3)</b>
             .contains( DUMBLEDORE, MCGONAGALL ); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
@@ -1160,14 +1159,14 @@ over an NPE, which might be confusing.</td>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//  List&lt;Student&gt; hogwartsStudents = ...; </span><i class="conum" data-value="1"></i><b>(1)</b>
-  <span class="predefined-type">List</span>&lt;Student&gt; hogwartsStudents = <span class="predefined-type">List</span>.of( HARRY, HERMIONE, RON ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//  List&lt;Student&gt; hogwartsStudents = ...; <i class="conum" data-value="1"></i><b>(1)</b>
+  List&lt;Student&gt; hogwartsStudents = List.of( HARRY, HERMIONE, RON ); <i class="conum" data-value="1"></i><b>(1)</b>
 
   assertThat( hogwartsStudents )
           .isNotNull()                                <i class="conum" data-value="2"></i><b>(2)</b>
-          .hasSizeGreaterThanOrEqualTo( <span class="integer">3</span> )           <i class="conum" data-value="3"></i><b>(3)</b>
+          .hasSizeGreaterThanOrEqualTo( 3 )           <i class="conum" data-value="3"></i><b>(3)</b>
           .extracting( s -&gt; s.getStudentNumber() )    <i class="conum" data-value="4"></i><b>(4)</b>
-          .containsExactlyInAnyOrder( <span class="integer">12346</span>, <span class="integer">12345</span>, <span class="integer">12347</span> ); <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+          .containsExactlyInAnyOrder( 12346, 12345, 12347 ); <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1253,9 +1252,9 @@ We propagate one form, declaring a lambda first and use that as the parameter to
 <div class="listingblock">
 <div class="title">Case 1: not interested in the (checked) exception, add a throws clause.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> fileUsingMethod() <span class="directive">throws</span> <span class="exception">IOException</span> { <i class="conum" data-value="1"></i><b>(1)</b>
-        Files.lines(Path.of (<span class="string"><span class="delimiter">&quot;</span><span class="content">puk.txt</span><span class="delimiter">&quot;</span></span>) );  <i class="conum" data-value="2"></i><b>(2)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void fileUsingMethod() throws IOException { <i class="conum" data-value="1"></i><b>(1)</b>
+        Files.lines(Path.of ("puk.txt") );  <i class="conum" data-value="2"></i><b>(2)</b>
     }</code></pre>
 </div>
 </div>
@@ -1283,13 +1282,13 @@ ThrowingCallable is a Functional interface and is part of AssertJ.</p>
 <div class="listingblock">
 <div class="title">Case 2: the business code should explicitly NOT throw an exception.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    Student draco = <span class="keyword">new</span> Student(<span class="string"><span class="delimiter">&quot;</span><span class="content">Draco</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Malfoy</span><span class="delimiter">&quot;</span></span>, LocalDate.of (<span class="integer">1980</span>,<span class="integer">6</span>,<span class="integer">5</span>));
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    Student draco = new Student("Draco", "Malfoy", LocalDate.of (1980,6,5));
     ThrowingCallable code = () -&gt; {
         hogwarts.addStudent( draco );  <i class="conum" data-value="1"></i><b>(1)</b>
     };
 
     assertThatCode( code )
-            .as( <span class="string"><span class="delimiter">&quot;</span><span class="content">draco should be accepted to make the adventures possible</span><span class="delimiter">&quot;</span></span>)
+            .as( "draco should be accepted to make the adventures possible")
             .doesNotThrowAnyException();</code></pre>
 </div>
 </div>
@@ -1328,19 +1327,19 @@ in the same way as in the previous paragraph, then pass that <code>code</code> t
 <div class="listingblock">
 <div class="title">Catch a specific exception.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> addIllegalProfessor() {
-        <span class="type">var</span> malfoy = <span class="keyword">new</span> Professor( <span class="string"><span class="delimiter">&quot;</span><span class="content">Lucius</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Malfoy</span><span class="delimiter">&quot;</span></span>, LocalDate.of( <span class="integer">1953</span>, <span class="integer">10</span>, <span class="integer">9</span> ) ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void addIllegalProfessor() {
+        var malfoy = new Professor( "Lucius", "Malfoy", LocalDate.of( 1953, 10, 9 ) ); <i class="conum" data-value="1"></i><b>(1)</b>
 
         ThrowingCallable code = () -&gt; { <i class="conum" data-value="2"></i><b>(2)</b>
             hogwarts.addProfessor( malfoy );
         };
 
         assertThatThrownBy( code )
-                .isInstanceOf( <span class="exception">Exception</span>.class) <i class="conum" data-value="3"></i><b>(3)</b>
-                .isExactlyInstanceOf( <span class="exception">IllegalArgumentException</span>.class) <i class="conum" data-value="4"></i><b>(4)</b>
-                .hasMessageContainingAll( <span class="string"><span class="delimiter">&quot;</span><span class="content">should</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">teach</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="5"></i><b>(5)</b>
-        <span class="comment">// fail( &quot;addIllegalProfessor completed succesfully; you know what to do&quot; );</span>
+                .isInstanceOf( Exception.class) <i class="conum" data-value="3"></i><b>(3)</b>
+                .isExactlyInstanceOf( IllegalArgumentException.class) <i class="conum" data-value="4"></i><b>(4)</b>
+                .hasMessageContainingAll( "should","teach"); <i class="conum" data-value="5"></i><b>(5)</b>
+        // fail( "addIllegalProfessor completed succesfully; you know what to do" );
     }</code></pre>
 </div>
 </div>
@@ -1490,16 +1489,16 @@ The soft assertion will collect all failures and will report them after the soft
 <div class="listingblock">
 <div class="title">soft assertion, testing both key and value of a KeyValue object.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   <span class="type">void</span> testGetResult(){
-    <span class="comment">// some setup</span>
-    Optional&lt;KeyValue&lt;<span class="predefined-type">Integer</span>,<span class="predefined-type">Double</span>&gt;&gt; = <span class="keyword">new</span> gf(student).gradeFor(<span class="string"><span class="delimiter">&quot;</span><span class="content">PRC2</span><span class="delimiter">&quot;</span></span>);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   void testGetResult(){
+    // some setup
+    Optional&lt;KeyValue&lt;Integer,Double&gt;&gt; = new gf(student).gradeFor("PRC2");
     SoftAssertions.assertSoftly( softly -&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
-                <span class="predefined-type">AbstractMap</span>.SimpleEntry&lt;<span class="predefined-type">Integer</span>, <span class="predefined-type">Double</span>&gt; result = gf.getResult();
+                AbstractMap.SimpleEntry&lt;Integer, Double&gt; result = gf.getResult();
                 softly.assertThat( result )
-                    .extracting( <span class="string"><span class="delimiter">&quot;</span><span class="content">key</span><span class="delimiter">&quot;</span></span> )
+                    .extracting( "key" )
                     .isEqualTo( student.getStudentId() );
                 softly.assertThat( result )
-                    .extracting( <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span> )
+                    .extracting( "value" )
                     .isEqualTo( grade );
     }); <i class="conum" data-value="2"></i><b>(2)</b>
   }</code></pre>
@@ -1561,7 +1560,7 @@ The LinkedList has two fields of type node</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/ll.png" alt="ll">
+<img src="images/ll.png" alt="ll">
 </div>
 <div class="title">Figure 6. making a sketch never hurts.</div>
 </div>
@@ -1648,8 +1647,8 @@ If there is only one element in the queue, the queue should become empty.<br></p
 <div class="listingblock">
 <div class="title">setup code left as an exercise.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="keyword">for</span> ( <span class="predefined-type">String</span> string : q1) {
-        <span class="predefined-type">System</span>.out.println( string );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    for ( String string : q1) {
+        System.out.println( string );
     }
    assertThat( queue ).containsExactly( values );</code></pre>
 </div>
@@ -1670,7 +1669,7 @@ So far we played nicely with the queue. Now we want to make sure that the queue 
 <div class="listingblock">
 <div class="title">Declaring exception throwing code as lambda expression.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  ThrowingCallable code = () -&gt; { queue.peek(); };</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  ThrowingCallable code = () -&gt; { queue.peek(); };</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1746,10 +1745,10 @@ But simple may be just perfect here.</p>
 <div class="listingblock">
 <div class="title">Disable on staging machine. From JUnit 5 user guide.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="type">void</span> testOnlyOnDeveloperWorkstation() {
-        assumeTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">DEV</span><span class="delimiter">&quot;</span></span>.equals(<span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>)), <span class="string"><span class="delimiter">&quot;</span><span class="content">Aborting test: not on developer workstation</span><span class="delimiter">&quot;</span></span>);
-        <span class="comment">// remainder of test is only executed if on developer machine</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    void testOnlyOnDeveloperWorkstation() {
+        assumeTrue("DEV".equals(System.getenv("ENV")), "Aborting test: not on developer workstation");
+        // remainder of test is only executed if on developer machine
     }</code></pre>
 </div>
 </div>
@@ -1764,9 +1763,9 @@ So any <code>assertThat(&#8230;&#8203;)</code> that you already have can simply 
 <div class="listingblock">
 <div class="title">Disable test if file does not exists</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">File</span> f = <span class="keyword">new</span> <span class="predefined-type">File</span>(Path.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">testData.dat</span><span class="delimiter">&quot;</span></span>));
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    File f = new File(Path.of("testData.dat"));
     assumeThat(f)
-       .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">Test data file not available, skipping test</span><span class="delimiter">&quot;</span></span>)
+       .as("Test data file not available, skipping test")
        .exists();</code></pre>
 </div>
 </div>
@@ -1853,6 +1852,13 @@ So any <code>assertThat(&#8230;&#8203;)</code> that you already have can simply 
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

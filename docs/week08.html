@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W8 Java FX Bindings, Jigsaw (JPMS)</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -212,7 +211,7 @@ Java 16 and <a href="https://openjdk.java.net/jeps/396">JEP 396 Strongly Encapsu
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/module-graph.png" alt="module graph">
+<img src="images/module-graph.png" alt="module graph">
 </div>
 <div class="title">Figure 1. Java SE module graph</div>
 </div>
@@ -272,7 +271,7 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">Generic Mapper</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module  io.github.sebivenlo.genericmapper {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module  io.github.sebivenlo.genericmapper {
     requires java.logging;
     requires io.github.sebivenlo.sebiannotations;
     exports genericmapper;
@@ -282,7 +281,7 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">Generic DAO</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module io.github.sebivenlo.genericdao {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module io.github.sebivenlo.genericdao {
     requires io.github.sebivenlo.genericmapper;
     requires java.logging;
     requires java.sql;
@@ -298,7 +297,7 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">FXTriangulate</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module fxtriangulate {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module fxtriangulate {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.base;
@@ -312,7 +311,7 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">The FXTriangulate client, Surveyor</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module surveyor {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module surveyor {
     requires java.logging;
     requires javafx.controls;
     requires javafx.graphics;
@@ -327,10 +326,10 @@ provided interface implementation. See the <a href="https://docs.oracle.com/en/j
 <div class="listingblock">
 <div class="title">ALDA sorting srevices</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module sortingserviceapi {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module sortingserviceapi {
     exports sortingservice; <i class="conum" data-value="1"></i><b>(1)</b>
 }
-<span class="comment">// and</span>
+// and
 open module asortingservice {
     requires java.logging;
     requires sortingserviceapi;
@@ -407,7 +406,7 @@ either globally or explicitly to module B ( e.g. <code>module A { opens aPackage
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Encapsulation gone wrong: So much for shining security armor.</div>
-<p><span class="image thumb left"><img src="./images/shiningArmor-cropped.png" alt="shiningArmor cropped" width="400" title="So much for shining security armor"></span> Project Jigsaw,
+<p><span class="image thumb left"><img src="images/shiningArmor-cropped.png" alt="shiningArmor cropped" width="400" title="So much for shining security armor"></span> Project Jigsaw,
 now known as the <strong>J</strong>ava <strong>P</strong>latform <strong>M</strong>odule <strong>S</strong>ystem solves problems
 that lingered in the Java ecosystem since its inception. The standard encapsulation or visibility model
 with protection or visibility modes <code>private</code>, <code>package private (default)</code> provide too
@@ -482,7 +481,7 @@ of your business code. This is a bit handicapped by the way the JPMS allows acce
 <div class="listingblock">
 <div class="title">source tree of genericdao (command tree - -UL 3 src/main/)</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">src
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">src
 └── main
     ├── java
         ├── module-info.java <i class="conum" data-value="1"></i><b>(1)</b>
@@ -518,7 +517,7 @@ This allows the test classes access to the package private parts of the classes,
 <div class="listingblock">
 <div class="title">Module definition of sebi dao.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">module nl.fontys.sebidao {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">module nl.fontys.sebidao {
     exports io.github.sebivenlo.dao;
     exports io.github.sebivenlo.dao.memory;
     exports io.github.sebivenlo.dao.pg;
@@ -549,16 +548,16 @@ and adapt it for your own purposes.</p>
 <div class="listingblock">
 <div class="title">testeasypom project with surefire.opens property to open op required packages for testing. Requires testeasypom &gt;= 3.0.2</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">  <span class="tag">&lt;properties&gt;</span>
-    <span class="tag">&lt;surefire.opens&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">  &lt;properties&gt;
+    &lt;surefire.opens&gt; <i class="conum" data-value="1"></i><b>(1)</b>
         --add-opens io.github.sebivenlo.genericdao/genericdao.dao=ALL-UNNAMED <i class="conum" data-value="2"></i><b>(2)</b>
         --add-opens io.github.sebivenlo.genericdao/genericdao.memory=ALL-UNNAMED
         --add-opens io.github.sebivenlo.genericdao/genericdao.pgdao=ALL-UNNAMED
         --add-opens io.github.sebivenlo.genericdao/usertypes=ALL-UNNAMED
         --add-opens io.github.sebivenlo.genericdao/entities=ALL-UNNAMED,genericmapper
-    <span class="tag">&lt;/surefire.opens&gt;</span>
+    &lt;/surefire.opens&gt;
     <i class="conum" data-value="3"></i><b>(3)</b>
-  <span class="tag">&lt;/properties&gt;</span></code></pre>
+  &lt;/properties&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -597,7 +596,7 @@ pom file with your own module and package names.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/opens.svg" alt="opens" width="600">
+<img src="images/opens.svg" alt="opens" width="600">
 </div>
 <div class="title">Figure 2. opens sets module and package</div>
 </div>
@@ -651,7 +650,7 @@ in the end speed up an application.</p>
 </div>
 <div class="paragraph">
 <div class="title">tubmling dominos. source stkinfo.com</div>
-<p><span class="image thumb left related"><img src="./images/dominos2.gif" alt="dominos2"></span>
+<p><span class="image thumb left related"><img src="images/dominos2.gif" alt="dominos2"></span>
 The idea is to only invalidate a value when a change happens, and only start the computation when some one
 actually needs the result, for instance the GUI layer that needs to do a redraw.<br>
 Since Observables can be chained, changing one value may trigger a whole avalanche of computations.
@@ -675,18 +674,18 @@ specializations.</p>
 <div class="listingblock">
 <div class="title">In all examples we use two IntegerProperties.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    IntegerProperty num1 = <span class="keyword">new</span> SimpleIntegerProperty( <span class="integer">1</span> );
-    IntegerProperty num2 = <span class="keyword">new</span> SimpleIntegerProperty( <span class="integer">2</span> );</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    IntegerProperty num1 = new SimpleIntegerProperty( 1 );
+    IntegerProperty num2 = new SimpleIntegerProperty( 2 );</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Bindings using Fluent API, from Oracle Tutorial</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    NumberBinding sum = num1.add( num2 ); <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="predefined-type">System</span>.out.println( sum.getValue() );
-    num1.set(<span class="integer">2</span>);                          <i class="conum" data-value="2"></i><b>(2)</b>
-    <span class="type">int</span> result= sum.getValue();           <i class="conum" data-value="3"></i><b>(3)</b>
-    <span class="predefined-type">System</span>.out.println( result );</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    NumberBinding sum = num1.add( num2 ); <i class="conum" data-value="1"></i><b>(1)</b>
+    System.out.println( sum.getValue() );
+    num1.set(2);                          <i class="conum" data-value="2"></i><b>(2)</b>
+    int result= sum.getValue();           <i class="conum" data-value="3"></i><b>(3)</b>
+    System.out.println( result );</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -708,11 +707,11 @@ specializations.</p>
 <div class="listingblock">
 <div class="title">Bindings class</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    NumberBinding sum = Bindings.add(num1,num2); <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="predefined-type">System</span>.out.println(sum.getValue());
-    num1.setValue(<span class="integer">2</span>);                            <i class="conum" data-value="2"></i><b>(2)</b>
-    <span class="type">int</span> result= sum.getValue();                  <i class="conum" data-value="3"></i><b>(3)</b>
-    <span class="predefined-type">System</span>.err.println( result );</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    NumberBinding sum = Bindings.add(num1,num2); <i class="conum" data-value="1"></i><b>(1)</b>
+    System.out.println(sum.getValue());
+    num1.setValue(2);                            <i class="conum" data-value="2"></i><b>(2)</b>
+    int result= sum.getValue();                  <i class="conum" data-value="3"></i><b>(3)</b>
+    System.err.println( result );</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -734,16 +733,16 @@ specializations.</p>
 <div class="listingblock">
 <div class="title">Low level API</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    IntegerBinding sum( IntegerProperty n1, IntegerProperty n2 ) {
-        <span class="keyword">return</span> <span class="keyword">new</span> IntegerBinding() {      <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    IntegerBinding sum( IntegerProperty n1, IntegerProperty n2 ) {
+        return new IntegerBinding() {      <i class="conum" data-value="1"></i><b>(1)</b>
 
             {                              <i class="conum" data-value="2"></i><b>(2)</b>
-                <span class="local-variable">super</span>.bind( n1, n2 );
+                super.bind( n1, n2 );
             }
 
-            <span class="annotation">@Override</span>
-            <span class="directive">protected</span> <span class="type">int</span> computeValue() { <i class="conum" data-value="3"></i><b>(3)</b>
-                <span class="keyword">return</span> n1.get()+n2.get();
+            @Override
+            protected int computeValue() { <i class="conum" data-value="3"></i><b>(3)</b>
+                return n1.get()+n2.get();
             }
         };
     }</code></pre>
@@ -803,28 +802,28 @@ This appears the most reliable method.</p>
 <div class="listingblock">
 <div class="title">The code for that looks like this.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ModifyableDoubleBinding</span> <span class="directive">extends</span> DoubleBinding {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class ModifyableDoubleBinding extends DoubleBinding {
 
-    <span class="predefined-type">Set</span>&lt;ObservableDoubleValue&gt; values = <span class="keyword">new</span> <span class="predefined-type">HashSet</span>&lt;&gt;();
+    Set&lt;ObservableDoubleValue&gt; values = new HashSet&lt;&gt;();
 
-    <span class="annotation">@Override</span>
-    <span class="directive">protected</span> <span class="type">double</span> computeValue() {
-        <span class="type">double</span> result = values.stream()
+    @Override
+    protected double computeValue() {
+        double result = values.stream()
                 .mapToDouble( ObservableDoubleValue::get ).sum();
-        <span class="keyword">return</span> result;
+        return result;
     }
 
-    <span class="type">void</span> add( ObservableDoubleValue v ) {
-        unbind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) ); <i class="conum" data-value="1"></i><b>(1)</b>
+    void add( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue[]::new ) ); <i class="conum" data-value="1"></i><b>(1)</b>
         values.add( v );
-        bind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+        bind( values.toArray( ObservableDoubleValue[]::new ) );
         invalidate();
     }
 
-    <span class="type">void</span> remove( ObservableDoubleValue v ) {
-        unbind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+    void remove( ObservableDoubleValue v ) {
+        unbind( values.toArray( ObservableDoubleValue[]::new ) );
         values.remove( v );
-        bind( values.toArray( ObservableDoubleValue<span class="type">[]</span>::<span class="keyword">new</span> ) );
+        bind( values.toArray( ObservableDoubleValue[]::new ) );
         invalidate();
     }
 }</code></pre>
@@ -867,8 +866,8 @@ it needs some extra work from the programmer.
 <div class="listingblock">
 <div class="title">Naive approach using computeIfAbsent.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    DoubleBinding lengthBinding( <span class="predefined-type">Line</span> aLine ) { <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="keyword">return</span> lengthBindings
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    DoubleBinding lengthBinding( Line aLine ) { <i class="conum" data-value="1"></i><b>(1)</b>
+        return lengthBindings
             .computeIfAbsent( aLine,
                 l -&gt; lengthBinding(
                       l.startXProperty(),
@@ -901,26 +900,26 @@ You then can rely on the thread-safety properties of
 <div class="listingblock">
 <div class="title">Caching a single value.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   <span class="comment">/**
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   /**
     * Cache for area binding.
-    */</span>
-   <span class="directive">private</span> DoubleBinding areaBinding = <span class="predefined-constant">null</span>;
+    */
+   private DoubleBinding areaBinding = null;
 
-   <span class="comment">/**
+   /**
     * Create a binding to compute the area with a triangle determined by side
     * lengths a, b and c. This method consults the cache and has the value computed
     *
     * @return the area binding
-    */</span>
-   <span class="directive">final</span> DoubleBinding areaBinding() {
-       <span class="keyword">if</span> ( areaBinding == <span class="predefined-constant">null</span> ) {
+    */
+   final DoubleBinding areaBinding() {
+       if ( areaBinding == null ) {
            areaBinding = areaBinding( distanceBinding( redCircle, greenCircle ), <i class="conum" data-value="1"></i><b>(1)</b>
                    distanceBinding( greenCircle, blueCircle ),
                    distanceBinding( blueCircle, redCircle ) );
        }
-       <span class="keyword">return</span> areaBinding;
+       return areaBinding;
    }
-   <span class="comment">// method that creates the binding is left as an exercise</span></code></pre>
+   // method that creates the binding is left as an exercise</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -977,7 +976,7 @@ builds the graphical components or even the complete UI from such FXML files.</p
 </div>
 <div class="paragraph">
 <div class="title">Creating or updating the java controller from the FXML file.</div>
-<p><span class="image right thumb related"><img src="./images/MakeController.png" alt="MakeController"></span>
+<p><span class="image right thumb related"><img src="images/MakeController.png" alt="MakeController"></span>
 One of the most valuable tips from one of those videos is the fact that you can start with
 scenebuilder and define your graphical components and methods in SceneBuilder and hence in the
 fxml file and that then NetBeans IDE can <em>generate</em> or <strong>update</strong> the controller for you.
@@ -997,27 +996,27 @@ load the FXML by itself.</p>
 <div class="listingblock">
 <div class="title">Typical FXML file for an application.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;AnchorPane</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AnchorPane</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">root</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">prefHeight</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">564.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">prefWidth</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">535.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stylesheets</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@stylesheet.css</span><span class="delimiter">&quot;</span></span>
-  <span class="tag">&gt;</span>
-<span class="tag">&lt;/AnchorPane&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;AnchorPane id="AnchorPane" fx:id="root" prefHeight="564.0" prefWidth="535.0" stylesheets="@stylesheet.css"
+  &gt;
+&lt;/AnchorPane&gt;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">With your own component, you have to define a <code>fx:root</code>. Example from FXTriangulator exercise.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;fx:root</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">javafx.scene.Group</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://javafx.com/javafx/16</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:fx</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://javafx.com/fxml/1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREEN</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">centerY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">BLUE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;Circle</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">centerCircle</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fill</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREY</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">radius</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">5.0</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">9.5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">GREEN</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Line</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">endY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startX</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">400.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">startY</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">10.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">stroke</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">BLUE</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">redLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greenLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">blueLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-   <span class="tag">&lt;Label</span> <span class="attribute-name">fx:id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">areaLabel</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-<span class="tag">&lt;/fx:root&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;fx:root type="javafx.scene.Group" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"&gt;
+    &lt;Circle fx:id="redCircle" centerX="10.0" centerY="10.0" fill="RED" radius="5.0" /&gt;
+    &lt;Circle fx:id="greenCircle" centerX="400.0" centerY="10.0" fill="GREEN" radius="5.0" /&gt;
+    &lt;Circle fx:id="blueCircle" centerX="10.0" centerY="400.0" fill="BLUE" radius="5.0" /&gt;
+    &lt;Circle fx:id="centerCircle" fill="GREY" radius="5.0" /&gt;
+   &lt;Line id="redLine" fx:id="redLine" endX="10.0" endY="400.0" startX="400.5" startY="9.5" stroke="RED" /&gt;
+   &lt;Line id="greenLine" fx:id="greenLine" endX="10.0" endY="400.0" startX="10.0" startY="10.0" stroke="GREEN" /&gt;
+   &lt;Line id="blueLine" fx:id="blueLine" endX="10.0" endY="10.0" startX="400.0" startY="10.0" stroke="BLUE" /&gt;
+   &lt;Label fx:id="redLabel" text="a" /&gt;
+   &lt;Label fx:id="greenLabel" text="b" /&gt;
+   &lt;Label fx:id="blueLabel" text="c" /&gt;
+   &lt;Label fx:id="areaLabel" text="" /&gt;
+&lt;/fx:root&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1031,37 +1030,37 @@ if you want the widget to have sub-components.</p>
 <div class="listingblock">
 <div class="title">Class header of specialized widget.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Triangulator</span> <span class="directive">extends</span> <span class="predefined-type">Group</span> <span class="directive">implements</span> Initializable {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Triangulator extends Group implements Initializable {
 
-    <span class="annotation">@FXML</span>
+    @FXML
     Circle redCircle;
-    <span class="annotation">@FXML</span>
+    @FXML
     Circle blueCircle;
-    <span class="annotation">@FXML</span>
+    @FXML
     Circle greenCircle;
 
 
-<span class="comment">// stuff left out</span>
+// stuff left out
     Triangulator( BindingBusiness bb ) {
-        <span class="local-variable">this</span>.bb = bb;
+        this.bb = bb;
         FXMLLoader fxmlLoader =
-           <span class="keyword">new</span> FXMLLoader( getClass().getResource( <span class="string"><span class="delimiter">&quot;</span><span class="content">triangulator.fxml</span><span class="delimiter">&quot;</span></span> ) ); <i class="conum" data-value="1"></i><b>(1)</b>
+           new FXMLLoader( getClass().getResource( "triangulator.fxml" ) ); <i class="conum" data-value="1"></i><b>(1)</b>
 
         connectLoader( fxmlLoader ); <i class="conum" data-value="2"></i><b>(2)</b>
 
-        <span class="keyword">try</span> {
+        try {
             fxmlLoader.load();
-        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> exception ) {
-            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>( exception );
+        } catch ( IOException exception ) {
+            throw new RuntimeException( exception );
         }
     }
 
-    <span class="directive">final</span> <span class="type">void</span> connectLoader( FXMLLoader fxmlLoader ) { <i class="conum" data-value="3"></i><b>(3)</b>
-        fxmlLoader.setRoot( <span class="local-variable">this</span> );
-        fxmlLoader.setController( <span class="local-variable">this</span> );
+    final void connectLoader( FXMLLoader fxmlLoader ) { <i class="conum" data-value="3"></i><b>(3)</b>
+        fxmlLoader.setRoot( this );
+        fxmlLoader.setController( this );
     }
 
-<span class="comment">// more stuff left out</span>
+// more stuff left out
 }</code></pre>
 </div>
 </div>
@@ -1092,13 +1091,13 @@ The lengths can be computed using Bindings and are thus automatically updated, a
 </div>
 <div class="paragraph">
 <div class="title">Library settings hidden behind a cog-wheel.</div>
-<p><span class="image thumb left related"><img src="./images/SceneBuilderLibraryCog.png" alt="SceneBuilderLibraryCog"></span>
+<p><span class="image thumb left related"><img src="images/SceneBuilderLibraryCog.png" alt="SceneBuilderLibraryCog"></span>
 Importing into scenebuilder is then done using the tiny cog next to the search text-field labeled Library. When you choose <strong>Jar/FXML Manager</strong>, you can add
 widget libraries like you would with maven or point at a library on you machine.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/SceenBuilderLibraryManager.png" alt="SceenBuilderLibraryManager">
+<img src="images/SceenBuilderLibraryManager.png" alt="SceenBuilderLibraryManager">
 </div>
 <div class="title">Figure 3. Library Manager</div>
 </div>
@@ -1142,7 +1141,7 @@ can be put as a separate task for a developer.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/triangle-bindings.svg" alt="triangle bindings">
+<img src="images/triangle-bindings.svg" alt="triangle bindings">
 </div>
 <div class="title">Figure 4. Conventions in the triangulator.</div>
 </div>
@@ -1174,7 +1173,7 @@ name labels of the triangle edges.</p>
 <h3 id="_use_of_the_triangulator_in_the_surveyor_app"><a class="anchor" href="#_use_of_the_triangulator_in_the_surveyor_app"></a><a class="link" href="#_use_of_the_triangulator_in_the_surveyor_app">Use of the Triangulator in the Surveyor App.</a></h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/surveyor-in-use.png" alt="surveyor in use">
+<img src="images/surveyor-in-use.png" alt="surveyor in use">
 </div>
 <div class="title">Figure 5. Surveyor App UI</div>
 </div>
@@ -1214,7 +1213,7 @@ to specify which lines participate in the border length for a certain measuremen
 <div class='ex'><details open class='ex'><summary class='ex'>FX Triangulation</summary>
 <div class="imageblock">
 <div class="content">
-<img src="./images/fxtriangulator-cd.svg" alt="fxtriangulator cd">
+<img src="images/fxtriangulator-cd.svg" alt="fxtriangulator cd">
 </div>
 <div class="title">Figure 6. Class diagram Triangulatort Widget</div>
 </div>
@@ -1257,7 +1256,7 @@ and the <a href="../exercises/fxtriangulate/testapidocs/index.html">test javadoc
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/triangulate.png" alt="triangulate">
+<img src="images/triangulate.png" alt="triangulate">
 </div>
 <div class="title">Figure 7. screenshot of app</div>
 </div>
@@ -1293,11 +1292,11 @@ what the main class is.</p>
 <div class="listingblock">
 <div class="title">Set the main class in the properties section</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">   <span class="tag">&lt;properties&gt;</span>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">   &lt;properties&gt;
    ...
-    <span class="tag">&lt;exec.mainClass&gt;</span>fxtriangulate.App<span class="tag">&lt;/exec.mainClass&gt;</span>
+    &lt;exec.mainClass&gt;fxtriangulate.App&lt;/exec.mainClass&gt;
    ...
-   <span class="tag">&lt;/properties&gt;</span></code></pre>
+   &lt;/properties&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1306,7 +1305,7 @@ what the main class is.</p>
 <div class="listingblock">
 <div class="title">Linux and Mac script</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">#!/bin/bash
 
 if [ ! -f target/fxtriangulate/bin/java ]; then
     mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink <i class="conum" data-value="1"></i><b>(1)</b>
@@ -1331,7 +1330,7 @@ target/fxtriangulate/bin/java -m fxtriangulate/fxtriangulate.App <i class="conum
 <div class="listingblock">
 <div class="title">Windows version (untested)</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bat">@echo off
+<pre class="highlightjs highlight"><code class="language-bat hljs" data-lang="bat">@echo off
 set java=target/fxtriangulate/bin/java
 if not exist %java% call mvn -P fx -Dexec.mainClass=fxtriangulate.App javafx:jlink
 echo.
@@ -1369,7 +1368,7 @@ not all of it, there is a gain in using <strong class="blue">jlink</strong> as a
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/netbeansaction-fx.png" alt="netbeansaction fx">
+<img src="images/netbeansaction-fx.png" alt="netbeansaction fx">
 </div>
 <div class="title">Figure 8. You can run the triangulator from netbeans (green play button at the top) with the following settings:</div>
 </div>
@@ -1413,31 +1412,31 @@ not how it is done. So much for naming.</p>
 <div class="listingblock">
 <div class="title">Make Robby check a box and switch the scene.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Start</span>
-    <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
-        app = <span class="keyword">new</span> Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Start
+    void start( Stage stage ) throws IOException {
+        app = new Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
         app.start( stage );
-        <span class="local-variable">this</span>.stage = stage;
+        this.stage = stage;
     }
 
-<span class="comment">//    @Disabled(&quot;think TDD&quot;)</span>
-    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> tSwitch() {
+//    @Disabled("think TDD")
+    @Test
+    public void tSwitch() {
         Parent root = stage.getScene().getRoot();
         printChildren( root );
-        app.setRoot( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span> );
-        FxRobot rob = <span class="keyword">new</span> FxRobot();
-        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#cb1</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="predefined-type">Button</span> b = (<span class="predefined-type">Button</span>) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#secondaryButton</span><span class="delimiter">&quot;</span></span> ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
+        app.setRoot( "secondary" );
+        FxRobot rob = new FxRobot();
+        rob.clickOn( "#cb1" ); <i class="conum" data-value="1"></i><b>(1)</b>
+        Button b = (Button) rob.lookup( "#secondaryButton" ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
         rob.clickOn( b ); <i class="conum" data-value="3"></i><b>(3)</b>
-        pause( <span class="integer">1000</span> );  <i class="conum" data-value="4"></i><b>(4)</b>
-        b = (<span class="predefined-type">Button</span>) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#tertiaryButton</span><span class="delimiter">&quot;</span></span> ).query();
-        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#cb1</span><span class="delimiter">&quot;</span></span> );
+        pause( 1000 );  <i class="conum" data-value="4"></i><b>(4)</b>
+        b = (Button) rob.lookup( "#tertiaryButton" ).query();
+        rob.clickOn( "#cb1" );
         rob.clickOn( b );
-        pause( <span class="integer">1000</span> );
-        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span> );
+        pause( 1000 );
+        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( "secondary" );
 
-<span class="comment">//        fail( &quot;method method reached end. You know what to do.&quot; );</span>
+//        fail( "method method reached end. You know what to do." );
     }</code></pre>
 </div>
 </div>
@@ -1467,26 +1466,26 @@ not how it is done. So much for naming.</p>
 <div class="listingblock">
 <div class="title">Boring setup to make it work on a 'headless' test server.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> {
-        <span class="keyword">if</span> ( <span class="predefined-type">Boolean</span>.getBoolean( <span class="string"><span class="delimiter">&quot;</span><span class="content">SERVER</span><span class="delimiter">&quot;</span></span> ) ) {
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">java.awt.headless</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">testfx.robot</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">glass</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">testfx.headless</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">prism.order</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sw</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">prism.text</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">t2k</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">glass.platform</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Monocle</span><span class="delimiter">&quot;</span></span> );
-            <span class="predefined-type">System</span>.setProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">monocle.platform</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Headless</span><span class="delimiter">&quot;</span></span> );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    static {
+        if ( Boolean.getBoolean( "SERVER" ) ) {
+            System.setProperty( "java.awt.headless", "true" );
+            System.setProperty( "testfx.robot", "glass" );
+            System.setProperty( "testfx.headless", "true" );
+            System.setProperty( "prism.order", "sw" );
+            System.setProperty( "prism.text", "t2k" );
+            System.setProperty( "glass.platform", "Monocle" );
+            System.setProperty( "monocle.platform", "Headless" );
         }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">The required start method for an fx test</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Start</span>
-    <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
-        app = <span class="keyword">new</span> Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Start
+    void start( Stage stage ) throws IOException {
+        app = new Switcher(); <i class="conum" data-value="1"></i><b>(1)</b>
         app.start( stage );
-        <span class="local-variable">this</span>.stage = stage;
+        this.stage = stage;
     }</code></pre>
 </div>
 </div>
@@ -1504,39 +1503,39 @@ not how it is done. So much for naming.</p>
 <div class="listingblock">
 <div class="title">First the controller. The secondary and tertiary are the same but in blue or pink.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PrimaryController</span> <span class="directive">implements</span> Initializable, FXUIScraper {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class PrimaryController implements Initializable, FXUIScraper {
 
-    <span class="directive">final</span> RootSwitcher switcher;
+    final RootSwitcher switcher;
 
-    <span class="annotation">@FXML</span>
+    @FXML
     Parent primary; <i class="conum" data-value="1"></i><b>(1)</b>
 
-    <span class="annotation">@FXML</span>
+    @FXML
     CheckBox cb1;
 
-    <span class="annotation">@FXML</span>
-    <span class="predefined-type">Button</span> primaryButton;</code></pre>
+    @FXML
+    Button primaryButton;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Never program to an implemenation if there is an interface.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">RootSwitcher</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface RootSwitcher {
 
-    <span class="comment">/**
+    /**
      * Set the root of the scene on the primary stage to the named scene
      *
      * @param sceneName to use
      * @return the previous sceneName
-     */</span>
-    <span class="predefined-type">String</span> setRoot( <span class="predefined-type">String</span> sceneName );
+     */
+    String setRoot( String sceneName );
 
-    <span class="comment">/**
+    /**
      * Get the FXML controller for a named scene.
      * @param sceneName
      * @return 
-     */</span>
-    <span class="predefined-type">Object</span> getControllerForScene( <span class="predefined-type">String</span> sceneName );
+     */
+    Object getControllerForScene( String sceneName );
 }</code></pre>
 </div>
 </div>
@@ -1550,23 +1549,23 @@ not how it is done. So much for naming.</p>
 <div class="listingblock">
 <div class="title">Class declaration.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Switcher</span> <span class="directive">extends</span> Application <span class="directive">implements</span> RootSwitcher {
-  <span class="comment">// details left out</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Switcher extends Application implements RootSwitcher {
+  // details left out
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Fields</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> Scene scene;
-    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, Parent&gt; sceneParents = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;(); <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="directive">private</span> <span class="predefined-type">String</span> currentRoot = <span class="string"><span class="delimiter">&quot;</span><span class="content">primary</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="2"></i><b>(2)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    private static Scene scene;
+    private final Map&lt;String, Parent&gt; sceneParents = new HashMap&lt;&gt;(); <i class="conum" data-value="1"></i><b>(1)</b>
+    private String currentRoot = "primary"; <i class="conum" data-value="2"></i><b>(2)</b>
 
-    <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Callback</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, <span class="predefined-type">Object</span>&gt;&gt; controllerFactories <i class="conum" data-value="3"></i><b>(3)</b>
-            = <span class="predefined-type">Map</span>.ofEntries(
-                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">primary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> PrimaryController( <span class="local-variable">this</span> ) ),
-                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">secondary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> SecondaryController( <span class="local-variable">this</span> ) ),
-                    registeringFactory( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span>, ( clz ) -&gt; <span class="keyword">new</span> TertiaryController( <span class="local-variable">this</span> ) )
+    final Map&lt;String, Callback&lt;Class&lt;?&gt;, Object&gt;&gt; controllerFactories <i class="conum" data-value="3"></i><b>(3)</b>
+            = Map.ofEntries(
+                    registeringFactory( "primary", ( clz ) -&gt; new PrimaryController( this ) ),
+                    registeringFactory( "secondary", ( clz ) -&gt; new SecondaryController( this ) ),
+                    registeringFactory( "tertiary", ( clz ) -&gt; new TertiaryController( this ) )
             );</code></pre>
 </div>
 </div>
@@ -1604,9 +1603,9 @@ insert the business logic. Of course the RootSwitcher could be in another class,
 <div class="listingblock">
 <div class="title">Start method, short and sweet.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> start( Stage stage ) <span class="directive">throws</span> <span class="exception">IOException</span> {
-        scene = <span class="keyword">new</span> Scene( loadFXML( currentRoot ), <span class="integer">640</span>, <span class="integer">480</span> );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Override
+    public void start( Stage stage ) throws IOException {
+        scene = new Scene( loadFXML( currentRoot ), 640, 480 );
         stage.setScene( scene );
         stage.show();
     }</code></pre>
@@ -1615,37 +1614,37 @@ insert the business logic. Of course the RootSwitcher could be in another class,
 <div class="listingblock">
 <div class="title">Set root. As simple as it gets.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">String</span> setRoot( <span class="predefined-type">String</span> fxml ) {
-        <span class="predefined-type">String</span> prevRoot = currentRoot;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Override
+    public String setRoot( String fxml ) {
+        String prevRoot = currentRoot;
         currentRoot = fxml;
         scene.setRoot( loadFXML( currentRoot ) );
-        <span class="keyword">return</span> prevRoot;
+        return prevRoot;
     }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">LoadFxml is actually the 'cache-manager'.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> Parent loadFXML( <span class="predefined-type">String</span> fxml ) {
-        <span class="keyword">return</span> sceneParents.computeIfAbsent( fxml, <span class="local-variable">this</span>::loadFXMLResource );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    private Parent loadFXML( String fxml ) {
+        return sceneParents.computeIfAbsent( fxml, this::loadFXMLResource );
     }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Method to actually load the resource.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> Parent loadFXMLResource( <span class="directive">final</span> <span class="predefined-type">String</span> forScene ) {
-        Parent result = <span class="predefined-constant">null</span>;
-        <span class="keyword">try</span> {
-            FXMLLoader fxmlLoader = <span class="keyword">new</span> FXMLLoader( Switcher.class.getResource( forScene + <span class="string"><span class="delimiter">&quot;</span><span class="content">.fxml</span><span class="delimiter">&quot;</span></span> ) );
-            <span class="predefined-type">Callback</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, <span class="predefined-type">Object</span>&gt; factory = controllerFactories.get( forScene );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    private Parent loadFXMLResource( final String forScene ) {
+        Parent result = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader( Switcher.class.getResource( forScene + ".fxml" ) );
+            Callback&lt;Class&lt;?&gt;, Object&gt; factory = controllerFactories.get( forScene );
             fxmlLoader.setControllerFactory( factory );
             result = fxmlLoader.load();
-        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) {
-            <span class="predefined-type">Logger</span>.getLogger( Switcher.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, ex.getMessage() );
+        } catch ( IOException ex ) {
+            Logger.getLogger( Switcher.class.getName() ).log( Level.SEVERE, ex.getMessage() );
         }
-        <span class="keyword">return</span> result;
+        return result;
     }</code></pre>
 </div>
 </div>
@@ -1662,28 +1661,28 @@ Here is how you do it using ComboBoxes.</p>
 <div class="listingblock">
 <div class="title">Testing selecting a different scene using a combobox.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">//@Disabled(&quot;think TDD&quot;)</span>
-    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> tSwitchCombo() {
-        FxRobot rob = <span class="keyword">new</span> FxRobot();
-        <span class="directive">final</span> ComboBox b = (ComboBox) rob.lookup( <span class="string"><span class="delimiter">&quot;</span><span class="content">#combo</span><span class="delimiter">&quot;</span></span> ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    //@Disabled("think TDD")
+    @Test
+    public void tSwitchCombo() {
+        FxRobot rob = new FxRobot();
+        final ComboBox b = (ComboBox) rob.lookup( "#combo" ).query(); <i class="conum" data-value="2"></i><b>(2)</b>
         rob.interact( () -&gt; {
-            b.getSelectionModel().select( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span> ); <span class="comment">//tertiary</span>
+            b.getSelectionModel().select( "tertiary" ); //tertiary
         } );
-        pause( <span class="integer">500</span> );
-        rob.clickOn( <span class="string"><span class="delimiter">&quot;</span><span class="content">#primaryButton</span><span class="delimiter">&quot;</span></span> );
-        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( <span class="string"><span class="delimiter">&quot;</span><span class="content">tertiary</span><span class="delimiter">&quot;</span></span> );
-<span class="comment">//        fail( &quot;method tSwitchCombo reached end. You know what to do.&quot; );</span>
+        pause( 500 );
+        rob.clickOn( "#primaryButton" );
+        assertThat( stage.getScene().getRoot().getId() ).isEqualTo( "tertiary" );
+//        fail( "method tSwitchCombo reached end. You know what to do." );
     }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">And of course the action in the controller that triggers the scene switch.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@FXML</span>
-    <span class="type">void</span> switchToSecondary() <span class="directive">throws</span> <span class="exception">IOException</span> {
-        <span class="predefined-type">String</span> value = combo.getValue();
-        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">value = </span><span class="delimiter">&quot;</span></span> + value );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @FXML
+    void switchToSecondary() throws IOException {
+        String value = combo.getValue();
+        System.out.println( "value = " + value );
         reset();
         switcher.setRoot( value );
     }</code></pre>
@@ -1772,6 +1771,13 @@ Here is how you do it using ComboBoxes.</p>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

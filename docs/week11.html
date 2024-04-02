@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W11 Exceptions, Assertions and logging, File(I/O)</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -102,10 +101,10 @@ a running application. It can be configured without modifying the source code.</
 <div class="listingblock">
 <div class="title">Using a supplier suppresses the genartion of the log when the log level is not active.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
-    <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger( Main.class.getName() ); <i class="conum" data-value="1"></i><b>(1)</b>
-    logger.log( <span class="predefined-type">Level</span>.FINE, <i class="conum" data-value="2"></i><b>(2)</b>
-       ()-&gt; <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello %1$s args length= %2$d </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>,args.length) <i class="conum" data-value="3"></i><b>(3)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public static void main( String[] args ) {
+    Logger logger = Logger.getLogger( Main.class.getName() ); <i class="conum" data-value="1"></i><b>(1)</b>
+    logger.log( Level.FINE, <i class="conum" data-value="2"></i><b>(2)</b>
+       ()-&gt; String.format("Hello %1$s args length= %2$d ", "world",args.length) <i class="conum" data-value="3"></i><b>(3)</b>
     );
 }</code></pre>
 </div>
@@ -136,7 +135,7 @@ logging instead of simple System.out.println(&#8230;&#8203;).</p>
 <div class="listingblock">
 <div class="title"><code>logv</code> definition for NetBeans IDE</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">logger.fine( ()-&gt;<span class="string"><span class="delimiter">&quot;</span><span class="content">${EXP instanceof=</span><span class="delimiter">&quot;</span></span>&lt;any&gt;<span class="string"><span class="delimiter">&quot;</span><span class="content"> default=</span><span class="delimiter">&quot;</span></span>exp<span class="string"><span class="delimiter">&quot;</span><span class="content">} = </span><span class="delimiter">&quot;</span></span> + <span class="error">$</span>{EXP});</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">logger.fine( ()-&gt;"${EXP instanceof="&lt;any&gt;" default="exp"} = " + ${EXP});</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -166,7 +165,7 @@ by specifying what level you want for what class.</p>
 <div class="listingblock">
 <div class="title">conf/loggin.g.properties file excerpt. Set logging to fine from one program.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="properties">#.properties
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">#.properties
 handlers= java.util.logging.ConsoleHandler
 .level=FINE <i class="conum" data-value="1"></i><b>(1)</b>
 java.util.logging.ConsoleHandler.level=FINE
@@ -206,7 +205,7 @@ Add the appropriate option there, e.g. -Djava.util.logging.config.file=conf/logg
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/run-logging.png" alt="run logging">
+<img src="images/run-logging.png" alt="run logging">
 </div>
 <div class="title">Figure 1. point to project specific log file.</div>
 </div>
@@ -249,15 +248,15 @@ The way to go about to cover the catch block too is to <strong>mock</strong> the
 <div class="listingblock">
 <div class="title">to cover code</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   <span class="type">void</span> flush( <span class="type">char</span> c ) {
-        <span class="keyword">if</span> ( c == <span class="string"><span class="delimiter">'</span><span class="content">\0</span><span class="delimiter">'</span></span> ) {
-            <span class="keyword">return</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   void flush( char c ) {
+        if ( c == '\0' ) {
+            return;
         }
-        <span class="keyword">try</span> {
+        try {
             out.append( c );
-        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) { <i class="conum" data-value="1"></i><b>(1)</b>
-            <span class="predefined-type">Logger</span>.getLogger( Engine.class.getName() )
-            .log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>,   ex ); <i class="conum" data-value="2"></i><b>(2)</b>
+        } catch ( IOException ex ) { <i class="conum" data-value="1"></i><b>(1)</b>
+            Logger.getLogger( Engine.class.getName() )
+            .log( Level.SEVERE, null,   ex ); <i class="conum" data-value="2"></i><b>(2)</b>
         }
     }</code></pre>
 </div>
@@ -282,23 +281,23 @@ and remove the ex. You can of course get the message form the exceptions with <c
 <div class="listingblock">
 <div class="title">test that covers the catch block</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> tFlush() <span class="directive">throws</span> <span class="exception">IOException</span> {
-        <span class="predefined-type">Appendable</span> out = mock( <span class="predefined-type">Appendable</span>.class );        <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="predefined-type">Logger</span> engineLogger =
-              <span class="predefined-type">Logger</span>.getLogger( Engine.class.getName() ); <i class="conum" data-value="2"></i><b>(2)</b>
-        <span class="predefined-type">Handler</span> handler = mock( <span class="predefined-type">Handler</span>.class );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void tFlush() throws IOException {
+        Appendable out = mock( Appendable.class );        <i class="conum" data-value="1"></i><b>(1)</b>
+        Logger engineLogger =
+              Logger.getLogger( Engine.class.getName() ); <i class="conum" data-value="2"></i><b>(2)</b>
+        Handler handler = mock( Handler.class );
         engineLogger.addHandler( handler );               <i class="conum" data-value="3"></i><b>(3)</b>
-        Mockito.doThrow( <span class="keyword">new</span> <span class="exception">IOException</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> ) )
+        Mockito.doThrow( new IOException( "test" ) )
              .when( out )
-             .append( <span class="string"><span class="delimiter">'</span><span class="content">o</span><span class="delimiter">'</span></span> );                              <i class="conum" data-value="4"></i><b>(4)</b>
+             .append( 'o' );                              <i class="conum" data-value="4"></i><b>(4)</b>
 
-        Engine engine = <span class="keyword">new</span> Engine( <span class="predefined-type">Map</span>.of() )
-             .readingString( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello world</span><span class="delimiter">&quot;</span></span> )
+        Engine engine = new Engine( Map.of() )
+             .readingString( "Hello world" )
              .writing( out );
         engine.run();                                     <i class="conum" data-value="5"></i><b>(5)</b>
 
-        verify( handler, atLeast( <span class="integer">1</span> ) ).publish( any() ); <i class="conum" data-value="6"></i><b>(6)</b>
+        verify( handler, atLeast( 1 ) ).publish( any() ); <i class="conum" data-value="6"></i><b>(6)</b>
     }</code></pre>
 </div>
 </div>
@@ -375,27 +374,27 @@ In the inner loop, it catches and collects the exceptions that can occur when a 
 <div class="listingblock">
 <div class="title">Usage of the collecting validator: (Derived from the test code)</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">BusinessLogic</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class BusinessLogic {
 
-  <span class="directive">static</span> BulkValidator bv = <span class="keyword">new</span> BulkValidator().addValidations( <i class="conum" data-value="1"></i><b>(1)</b>
-      <span class="predefined-type">Map</span>.of( <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.id</span><span class="delimiter">&quot;</span></span>, ( <span class="predefined-type">String</span> s ) -&gt; <span class="predefined-type">Integer</span>.valueOf( s ),
-        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.someInt</span><span class="delimiter">&quot;</span></span>,
-            validateWith( <span class="predefined-type">Integer</span>::valueOf,
-                  BusinessException::<span class="keyword">new</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid integer</span><span class="delimiter">&quot;</span></span> ),
-        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.dob</span><span class="delimiter">&quot;</span></span>, LocalDate::parse,
-        <span class="string"><span class="delimiter">&quot;</span><span class="content">customer.postcode</span><span class="delimiter">&quot;</span></span>, BusinessLogic::validatePC
+  static BulkValidator bv = new BulkValidator().addValidations( <i class="conum" data-value="1"></i><b>(1)</b>
+      Map.of( "customer.id", ( String s ) -&gt; Integer.valueOf( s ),
+        "customer.someInt",
+            validateWith( Integer::valueOf,
+                  BusinessException::new, "Invalid integer" ),
+        "customer.dob", LocalDate::parse,
+        "customer.postcode", BusinessLogic::validatePC
       )
   );
 
-  <span class="type">void</span> submit( <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">String</span>&gt; inputs ) <span class="directive">throws</span> BulkException { <i class="conum" data-value="2"></i><b>(2)</b>
-      <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Object</span>&gt; validInputs=bv.validate( inputs );
+  void submit( Map&lt;String,String&gt; inputs ) throws BulkException { <i class="conum" data-value="2"></i><b>(2)</b>
+      Map&lt;String,Object&gt; validInputs=bv.validate( inputs );
       process( validInputs );  <i class="conum" data-value="3"></i><b>(3)</b>
   }
 
-  <span class="directive">private</span> <span class="type">void</span> process(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Object</span>&gt; validInputs) {  <i class="conum" data-value="4"></i><b>(4)</b>
-    <span class="comment">// use inputs. With a mapper and some</span>
-    customer = <span class="keyword">new</span> Customer( validInputs.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> ), validInputs.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">dob</span><span class="delimiter">&quot;</span></span> ));
-    <span class="comment">// do something with customer.</span>
+  private void process(Map&lt;String,Object&gt; validInputs) {  <i class="conum" data-value="4"></i><b>(4)</b>
+    // use inputs. With a mapper and some
+    customer = new Customer( validInputs.get( "name" ), validInputs.get( "dob" ));
+    // do something with customer.
   }
 }</code></pre>
 </div>
@@ -429,30 +428,30 @@ In a JavaFX based project that would be a JavaFX controller, such as a CustomerC
 <div class="listingblock">
 <div class="title">Example use in JavaFX GUI, FX controller side</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">// injected logic</span>
-    <span class="directive">final</span> BusinessLogic bl;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    // injected logic
+    final BusinessLogic bl;
 
     FXUIScraper scraper = () -&gt; root; <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="annotation">@FXML</span>
-    <span class="directive">private</span> <span class="type">void</span> submit( <span class="predefined-type">ActionEvent</span> event ) { <i class="conum" data-value="2"></i><b>(2)</b>
-        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; keyValues = scraper.getKeyValues( x -&gt; <span class="predefined-constant">true</span> );
-        <span class="keyword">try</span> {
+    @FXML
+    private void submit( ActionEvent event ) { <i class="conum" data-value="2"></i><b>(2)</b>
+        Map&lt;String, String&gt; keyValues = scraper.getKeyValues( x -&gt; true );
+        try {
             bl.submit( keyValues );
-        } <span class="keyword">catch</span> ( BulkException bex ) { <i class="conum" data-value="3"></i><b>(3)</b>
+        } catch ( BulkException bex ) { <i class="conum" data-value="3"></i><b>(3)</b>
             displayerrors( bex );
         }
     }
 
-    <span class="comment">/**
+    /**
      * The exception passed in contains a map with name of the failing controls
      * and the exception thrown.
      * @param bex exception information
-     */</span>
-    <span class="type">void</span> displayerrors( BulkException bex ) {
-        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Throwable</span>&gt; causes = bex.getCauses();
-        <span class="comment">// do something smart with the map, like asking for cause of problem</span>
-        <span class="comment">// maybe get internionalized message</span>
-        <span class="comment">// maybe change style or toiltip of the control.</span>
+     */
+    void displayerrors( BulkException bex ) {
+        Map&lt;String, Throwable&gt; causes = bex.getCauses();
+        // do something smart with the map, like asking for cause of problem
+        // maybe get internionalized message
+        // maybe change style or toiltip of the control.
     }</code></pre>
 </div>
 </div>
@@ -507,7 +506,7 @@ and  then force completion, you see a whole slew of completions. The ones named 
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/extracting-completions.png" alt="extracting completions">
+<img src="images/extracting-completions.png" alt="extracting completions">
 </div>
 <div class="title">Figure 2. completions after <code>assertThatThrownBy(&#8230;&#8203;)</code></div>
 </div>
@@ -583,6 +582,13 @@ this BulkValidator is supposed to be used an can be combined with the <code clas
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

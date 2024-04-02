@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W12 Security</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -118,7 +117,7 @@ mechanisms it has in place to help the developer prevent bugs
 (that could potentially lead to security exploits).</p>
 </div>
 <div class="paragraph">
-<p>These chapters are based on chapter 10 of Core Java, Volume II&#8212;&#8203;Advanced Features.</p>
+<p>These chapters are based on chapter 10 of Core Java, Volume II&#8211;Advanced Features.</p>
 </div>
 <div class="sect3">
 <h4 id="_class_loader"><a class="anchor" href="#_class_loader"></a><a class="link" href="#_class_loader">1.1.1. Class loader</a></h4>
@@ -221,22 +220,22 @@ code snippet.</p>
 <div class="listingblock">
 <div class="title">Different class loaders</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.sql.SQLInput</span>;
-<span class="keyword">import</span> <span class="include">java.util.List</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.sql.SQLInput;
+import java.util.List;
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
-        <span class="predefined-type">System</span>.out.println(<span class="predefined-type">List</span>.class.getClassLoader());
-        <span class="predefined-type">System</span>.out.println(<span class="predefined-type">SQLInput</span>.class.getClassLoader());
-        <span class="predefined-type">System</span>.out.println(Main.class.getClassLoader());
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(List.class.getClassLoader());
+        System.out.println(SQLInput.class.getClassLoader());
+        System.out.println(Main.class.getClassLoader());
     }
 }
 
-<span class="comment">// Output</span>
-<span class="comment">//</span>
-<span class="comment">// null</span>
-<span class="comment">// jdk.internal.loader.ClassLoaders$PlatformClassLoader@3cd1a2f1</span>
-<span class="comment">// jdk.internal.loader.ClassLoaders$AppClassLoader@55054057</span></code></pre>
+// Output
+//
+// null
+// jdk.internal.loader.ClassLoaders$PlatformClassLoader@3cd1a2f1
+// jdk.internal.loader.ClassLoaders$AppClassLoader@55054057</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -251,10 +250,10 @@ class we want to load</p>
 <div class="listingblock">
 <div class="title">Printer</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Printer</span>{
-        <span class="directive">public</span> Printer(){
-                <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello there from the internet</span><span class="delimiter">&quot;</span></span>);
-        }
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Printer{
+	public Printer(){
+		System.out.println("Hello there from the internet");
+	}
 }</code></pre>
 </div>
 </div>
@@ -265,7 +264,7 @@ the compiled class file.</p>
 <div class="listingblock">
 <div class="title">Compile and serve class file on localhost</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">javac Printer.java
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">javac Printer.java
 python3 -m http.server 8080</code></pre>
 </div>
 </div>
@@ -275,20 +274,20 @@ python3 -m http.server 8080</code></pre>
 <div class="listingblock">
 <div class="title">URLClassLoader</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
-        <span class="keyword">try</span> {
-            <span class="predefined-type">URLClassLoader</span> loader = <span class="keyword">new</span> <span class="predefined-type">URLClassLoader</span>(<span class="keyword">new</span> <span class="predefined-type">URL</span><span class="type">[]</span> { <span class="keyword">new</span> <span class="predefined-type">URL</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/</span><span class="delimiter">&quot;</span></span>) });
-            <span class="predefined-type">Class</span> c = loader.loadClass (<span class="string"><span class="delimiter">&quot;</span><span class="content">Printer</span><span class="delimiter">&quot;</span></span>);
-            <span class="predefined-type">Object</span> o = c.getDeclaredConstructor().newInstance();
-        } <span class="keyword">catch</span> (<span class="exception">Exception</span> ex) {
-            <span class="predefined-type">Logger</span>.getLogger(Main.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Main {
+    public static void main(String[] args) {
+        try {
+            URLClassLoader loader = new URLClassLoader(new URL[] { new URL("http://localhost:8080/") });
+            Class c = loader.loadClass ("Printer");
+            Object o = c.getDeclaredConstructor().newInstance();
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
-<span class="comment">// Output</span>
-<span class="comment">//</span>
-<span class="comment">// Hello there from the internet</span></code></pre>
+// Output
+//
+// Hello there from the internet</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -329,18 +328,18 @@ file (Verifier.java) to byte code (Verifier.class).</p>
 <div class="listingblock">
 <div class="title">Verifier.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">verifier</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package verifier;
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Verifier</span> {
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
-        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">1 + 2 = </span><span class="delimiter">&quot;</span></span> + calc());
+public class Verifier {
+    public static void main(String[] args) {
+        System.out.println("1 + 2 = " + calc());
     }
 
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">int</span> calc(){
-        <span class="type">int</span> x = <span class="integer">1</span>;
-        <span class="type">int</span> y = <span class="integer">2</span>;
-        <span class="type">int</span> result = x + y;
-        <span class="keyword">return</span> result;
+    public static int calc(){
+        int x = 1;
+        int y = 2;
+        int result = x + y;
+        return result;
     }
 }</code></pre>
 </div>
@@ -348,13 +347,13 @@ file (Verifier.java) to byte code (Verifier.class).</p>
 <div class="listingblock">
 <div class="title">We can use the following command to get the bytecode in mnemonic form:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">javap -c verifier.Verifier</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">javap -c verifier.Verifier</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Bytecode of the calc method</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>public static int calc();
+<pre class="highlightjs highlight"><code class="language-none hljs">public static int calc();
     Code:
        0: iconst_1  // 0x04: Push int constant 1 onto operant stack
        1: istore_0  // 0x3B: Store int into 1st local variable
@@ -403,7 +402,7 @@ these checks? Lets change the <code>Verifier.class</code> file using a
 </div>
 <div id="img-sunset" class="imageblock">
 <div class="content">
-<img src="./images/verifier_hex.png" alt="Verifier.class open inside hex editor">
+<img src="images/verifier_hex.png" alt="Verifier.class open inside hex editor">
 </div>
 <div class="title"><code>Verifier.class</code> open in hex editor, <code>calc</code> function highlighted</div>
 </div>
@@ -412,7 +411,7 @@ these checks? Lets change the <code>Verifier.class</code> file using a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Error: Unable to initialize main class verifier.Verifier
+<pre class="highlightjs highlight"><code class="language-none hljs">Error: Unable to initialize main class verifier.Verifier
 Caused by: java.lang.VerifyError: Bad local variable type</code></pre>
 </div>
 </div>
@@ -457,7 +456,7 @@ that by default all operations are permitted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">System</span>.setSecurityManager(<span class="keyword">new</span> <span class="predefined-type">SecurityManager</span>());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">System.setSecurityManager(new SecurityManager());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -490,7 +489,7 @@ the following form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grant codesource
+<pre class="highlightjs highlight"><code class="language-none hljs">grant codesource
 {
     permission1;
     permission2;
@@ -504,10 +503,10 @@ the files in the log directory, we could do that as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grant
+<pre class="highlightjs highlight"><code class="language-none hljs">grant
 {
-    permission java.io.FilePermission &quot;${user.home}/test.txt&quot;, &quot;read, write&quot;;
-    permission java.io.FilePermission &quot;${user.home}/logs/*&quot;, &quot;read&quot;;
+    permission java.io.FilePermission "${user.home}/test.txt", "read, write";
+    permission java.io.FilePermission "${user.home}/logs/*", "read";
 };</code></pre>
 </div>
 </div>
@@ -517,7 +516,7 @@ manager will trow a exception</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>java.security.AccessControlException: access denied (&quot;java.io.FilePermission&quot; &quot;&lt;path_to_file&gt;/test2.txt&quot; &quot;read&quot;)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">java.security.AccessControlException: access denied ("java.io.FilePermission" "&lt;path_to_file&gt;/test2.txt" "read")</code></pre>
 </div>
 </div>
 </div>
@@ -537,48 +536,48 @@ but <strong class="red">insecure</strong> web application.</p>
 <div class="listingblock">
 <div class="title">The main application</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">App</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class App {
 
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+    public static void main(String[] args) {
         Javalin app = Javalin.create(config -&gt; {
-            <span class="comment">// Add static files (images, html, css, javascript)</span>
-            config.addStaticFiles(<span class="string"><span class="delimiter">&quot;</span><span class="content">public</span><span class="delimiter">&quot;</span></span>);
+            // Add static files (images, html, css, javascript)
+            config.addStaticFiles("public");
         });
-        <span class="comment">// Start at port 8080</span>
-        app.start(<span class="integer">8080</span>);
+        // Start at port 8080
+        app.start(8080);
 
-        <span class="comment">// Use database helper from PRC2 to get a datasource</span>
-        <span class="directive">final</span> <span class="type">var</span> db = DBHelper.getDataSource(<span class="string"><span class="delimiter">&quot;</span><span class="content">jdbc.pg</span><span class="delimiter">&quot;</span></span>);
+        // Use database helper from PRC2 to get a datasource
+        final var db = DBHelper.getDataSource("jdbc.pg");
 
-        app.post(<span class="string"><span class="delimiter">&quot;</span><span class="content">/login</span><span class="delimiter">&quot;</span></span>, ctx -&gt; {
-            <span class="comment">// Convert JSON data to Login (username, password)</span>
-            <span class="type">var</span> data = ctx.bodyAsClass(Login.class);
+        app.post("/login", ctx -&gt; {
+            // Convert JSON data to Login (username, password)
+            var data = ctx.bodyAsClass(Login.class);
 
-            <span class="comment">// Get a database connection</span>
-            <span class="type">var</span> connection = db.getConnection();
-            <span class="comment">// Create a statement</span>
-            <span class="type">var</span> statement = connection.createStatement();
+            // Get a database connection
+            var connection = db.getConnection();
+            // Create a statement
+            var statement = connection.createStatement();
 
-            <span class="comment">// Build query to check if the username exists with the given password</span>
-            <span class="type">var</span> query = <span class="string"><span class="delimiter">&quot;</span><span class="content">select username from users where username = '</span><span class="delimiter">&quot;</span></span>
-            + data.getUsername() + <span class="string"><span class="delimiter">&quot;</span><span class="content">' and password = '</span><span class="delimiter">&quot;</span></span> + data.getPassword() + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span>;
+            // Build query to check if the username exists with the given password
+            var query = "select username from users where username = '"
+            + data.getUsername() + "' and password = '" + data.getPassword() + "'";
 
-            <span class="keyword">try</span>{
-                <span class="comment">// Execute the query</span>
-                <span class="type">var</span> rs = statement.executeQuery(query);
-                <span class="comment">// Check if user with password exists</span>
-                <span class="keyword">if</span>(rs.next()){
-                    ctx.status(<span class="integer">200</span>);
-                    <span class="comment">// Return the username</span>
-                    ctx.json(rs.getString(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>));
-                }<span class="keyword">else</span>{
-                    <span class="comment">// User doesn't exist, return error message</span>
-                    ctx.status(<span class="integer">401</span>);
-                    ctx.result(<span class="string"><span class="delimiter">&quot;</span><span class="content">The combination of username/password is not known.</span><span class="delimiter">&quot;</span></span>);
+            try{
+                // Execute the query
+                var rs = statement.executeQuery(query);
+                // Check if user with password exists
+                if(rs.next()){
+                    ctx.status(200);
+                    // Return the username
+                    ctx.json(rs.getString("username"));
+                }else{
+                    // User doesn't exist, return error message
+                    ctx.status(401);
+                    ctx.result("The combination of username/password is not known.");
                 }
-            }<span class="keyword">catch</span>(PSQLException ex){
-                <span class="comment">// Somethin went wrong with the query</span>
-                ctx.status(<span class="integer">500</span>);
+            }catch(PSQLException ex){
+                // Somethin went wrong with the query
+                ctx.status(500);
                 ctx.result(ex.getMessage());
             }
         });
@@ -589,10 +588,10 @@ but <strong class="red">insecure</strong> web application.</p>
 <div class="listingblock">
 <div class="title">Structure of the users table</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> prc2.users(
-    id SERIAL <span class="directive">PRIMARY</span> <span class="type">KEY</span>,
-    username <span class="predefined-type">TEXT</span>,
-    password <span class="predefined-type">TEXT</span>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE TABLE prc2.users(
+    id SERIAL PRIMARY KEY,
+    username TEXT,
+    password TEXT
 );</code></pre>
 </div>
 </div>
@@ -603,113 +602,113 @@ For the example we will be using the user <code>testuser</code>.</p>
 <div class="listingblock">
 <div class="title">index.html with a login form</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="html"><span class="doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;html</span> <span class="attribute-name">lang</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">en</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="tag">&lt;head&gt;</span>
-    <span class="tag">&lt;meta</span> <span class="attribute-name">charset</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">utf-8</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;meta</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">viewport</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">content</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">width=device-width, initial-scale=1, shrink-to-fit=no</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;title&gt;</span>Login<span class="tag">&lt;/title&gt;</span>
-    <span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">css/style.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="tag">&lt;/head&gt;</span>
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"&gt;
+    &lt;title&gt;Login&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;
 
-<span class="tag">&lt;body&gt;</span>
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">container</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-            <span class="tag">&lt;form</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">method</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">POST</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-title</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;div class="login"&gt;
+            &lt;form id="login" method="POST" action="login"&gt;
+                &lt;div class="form-title"&gt;
                     Login
-                <span class="tag">&lt;/div&gt;</span>
-                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Username<span class="tag">&lt;/label&gt;</span>
-                    <span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                <span class="tag">&lt;/div&gt;</span>
-                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Password<span class="tag">&lt;/label&gt;</span>
-                    <span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                <span class="tag">&lt;/div&gt;</span>
-                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-row errors hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                &lt;/div&gt;
+                &lt;div class="form-row"&gt;
+                    &lt;label for="username" class="hidden"&gt;Username&lt;/label&gt;
+                    &lt;input type="text" id="username" name="username" placeholder="username"&gt;
+                &lt;/div&gt;
+                &lt;div class="form-row"&gt;
+                    &lt;label for="password" class="hidden"&gt;Password&lt;/label&gt;
+                    &lt;input type="password" id="password" name="password" placeholder="password"&gt;
+                &lt;/div&gt;
+                &lt;div class="form-row errors hidden"&gt;
 
-                <span class="tag">&lt;/div&gt;</span>
-                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">form-actions</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                    <span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">btn full-width</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Login<span class="tag">&lt;/button&gt;</span>
-                <span class="tag">&lt;/div&gt;</span>
-            <span class="tag">&lt;/form&gt;</span>
-        <span class="tag">&lt;/div&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
+                &lt;/div&gt;
+                &lt;div class="form-actions"&gt;
+                    &lt;button class="btn full-width" type="submit"&gt;Login&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
 
-<span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">js/form.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+&lt;script src="js/form.js"&gt;&lt;/script&gt;
 
-<span class="tag">&lt;/html&gt;</span></code></pre>
+&lt;/html&gt;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">form.js Retrieve form data and send it as JSON</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="js">const loginForm = document.querySelector(<span class="string"><span class="delimiter">&quot;</span><span class="content">form#login</span><span class="delimiter">&quot;</span></span>);
-const errors = document.querySelector(<span class="string"><span class="delimiter">&quot;</span><span class="content">.errors</span><span class="delimiter">&quot;</span></span>);
+<pre class="highlightjs highlight"><code class="language-js hljs" data-lang="js">const loginForm = document.querySelector("form#login");
+const errors = document.querySelector(".errors");
 
 const submit = (event) =&gt; {
-    <span class="comment">// Stop the event</span>
+    // Stop the event
     event.preventDefault();
 
-    <span class="comment">// Retrieve the values</span>
-    const form = <span class="keyword">new</span> FormData(event.target);
+    // Retrieve the values
+    const form = new FormData(event.target);
 
-    <span class="comment">// Create new object from form entries</span>
+    // Create new object from form entries
     const data = Object.fromEntries(form.entries());
 
     login(data);
 }
 
 const setup = () =&gt; {
-    <span class="comment">// Check that login form exists</span>
-    <span class="keyword">if</span>(!loginForm){
-        console.error(<span class="string"><span class="delimiter">&quot;</span><span class="content">Login form not found</span><span class="delimiter">&quot;</span></span>);
-        <span class="keyword">return</span>;
+    // Check that login form exists
+    if(!loginForm){
+        console.error("Login form not found");
+        return;
     }
-    <span class="comment">// Add form submit handler</span>
-    loginForm.addEventListener(<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span>, submit);
+    // Add form submit handler
+    loginForm.addEventListener("submit", submit);
 };
 
 const showErrors = (error) =&gt; {
-    <span class="keyword">if</span>(!errors){
-        <span class="keyword">return</span>;
+    if(!errors){
+        return;
     }
     errors.innerHTML = error.message;
-    errors.classList.remove(<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span>);
+    errors.classList.remove("hidden");
 };
 
 const removeErrors = () =&gt; {
-    <span class="keyword">if</span>(!errors){
-        <span class="keyword">return</span>;
+    if(!errors){
+        return;
     }
-    errors.innerHTML = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
-    errors.classList.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span>)
+    errors.innerHTML = "";
+    errors.classList.add("hidden")
 }
 
 const login = async (data) =&gt; {
-    <span class="comment">// Clean up old errors</span>
+    // Clean up old errors
     removeErrors();
 
-    <span class="keyword">try</span>{
+    try{
         const message = await loginFetch(data);
-        window.alert(<span class="error">`</span>Welcome back <span class="predefined">$</span>{message}<span class="error">`</span>);
-    }<span class="keyword">catch</span>(error){
+        window.alert(`Welcome back ${message}`);
+    }catch(error){
         showErrors(error);
     }
 }
 
 const loginFetch = async (data) =&gt; {
-    const response =  await fetch(<span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span>, {
-        <span class="key">method</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">POST</span><span class="delimiter">&quot;</span></span>,
-        <span class="key">headers</span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">Content-Type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">application/json</span><span class="delimiter">&quot;</span></span> },
-        <span class="key">body</span>: JSON.stringify(data)
+    const response =  await fetch("login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
     });
-    <span class="keyword">if</span>(!response.ok){
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(await response.text());
+    if(!response.ok){
+        throw new Error(await response.text());
     }
-    <span class="keyword">return</span> await response.json();
+    return await response.json();
 }
 
 setup();</code></pre>
@@ -727,13 +726,13 @@ On the left we have successful login and on the right a unsuccessful.</p>
 <div class="content">
 <div class="imageblock left">
 <div class="content">
-<img src="./images/security_successful_login.png" alt="Successful login" width="400"">
+<img src="images/security_successful_login.png" alt="Successful login" width="400"">
 </div>
 <div class="title">Figure 1. Successful login for user <code>testuser</code></div>
 </div>
 <div class="imageblock right">
 <div class="content">
-<img src="./images/security_unsuccessful_login.png" alt="Unsuccessful login" width="400">
+<img src="images/security_unsuccessful_login.png" alt="Unsuccessful login" width="400">
 </div>
 <div class="title">Figure 2. Unsuccessful login</div>
 </div>
@@ -748,7 +747,7 @@ is unterminated</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Unterminated string literal started at position 72 in SQL select username from users where username = 'testuser'' and password = ''. Expected char</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">Unterminated string literal started at position 72 in SQL select username from users where username = 'testuser'' and password = ''. Expected char</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -766,7 +765,7 @@ we need to enter something that is always <code>true</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> or </span><span class="delimiter">'</span></span><span class="integer">1</span><span class="string"><span class="delimiter">'</span><span class="content"> = </span><span class="delimiter">'</span></span><span class="integer">1</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">' or '1' = '1</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -778,7 +777,7 @@ Using the following query we retrieve the password for <code>testuser</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> UNION SELECT password FROM users WHERE username=</span><span class="delimiter">'</span></span>testuser</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">' UNION SELECT password FROM users WHERE username='testuser</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -787,7 +786,7 @@ passwords with the following query:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> UNION SELECT CONCAT(username, </span><span class="delimiter">'</span></span> : <span class="string"><span class="delimiter">'</span><span class="content">, password) FROM users OFFSET 1 -- --</span><span class="delimiter">'</span></span></code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">' UNION SELECT CONCAT(username, ' : ', password) FROM users OFFSET 1 -- --'</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -799,7 +798,7 @@ passwords with the following query:</p>
 <p>OFFSET: By changing the offset we can enumerate the complete users table</p>
 </li>
 <li>
-<p>&#8201;&#8212;&#8201;--: SQL comment used to drop the rest of the query</p>
+<p>&#8201;&#8211;&#8201;--: SQL comment used to drop the rest of the query</p>
 </li>
 </ul>
 </div>
@@ -813,10 +812,10 @@ that has one column named <code>secret</code> we could retrieve the secrets as f
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="string"><span class="delimiter">'</span><span class="content"> union select table_schema from information_schema.tables where table_name = </span><span class="delimiter">'</span></span>users<span class="string"><span class="delimiter">'</span><span class="content">-- --  <i class="conum" data-value="1"></i><b>(1)</b>
-</span><span class="delimiter">'</span></span> <span class="keyword">union</span> <span class="class">select</span> table_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string"><span class="delimiter">'</span><span class="content">public</span><span class="delimiter">'</span></span><span class="comment">-- --   </span><i class="conum" data-value="2"></i><b>(2)</b>
-<span class="string"><span class="delimiter">'</span><span class="content"> union select column_name from information_schema.columns where table_name=</span><span class="delimiter">'</span></span>secrets<span class="string"><span class="delimiter">'</span><span class="content">-- --  <i class="conum" data-value="3"></i><b>(3)</b>
-</span><span class="delimiter">'</span></span> <span class="keyword">union</span> <span class="class">select</span> secret <span class="keyword">from</span> secrets<span class="comment">-- --                                                     </span><i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">' union select table_schema from information_schema.tables where table_name = 'users'-- --  <i class="conum" data-value="1"></i><b>(1)</b>
+' union select table_name from information_schema.tables where table_schema='public'-- --   <i class="conum" data-value="2"></i><b>(2)</b>
+' union select column_name from information_schema.columns where table_name='secrets'-- --  <i class="conum" data-value="3"></i><b>(3)</b>
+' union select secret from secrets-- --                                                     <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -853,8 +852,8 @@ create a new user and only give it the <code>select</code> right on the table <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> ROLE app LOGIN;          <i class="conum" data-value="1"></i><b>(1)</b>
-<span class="class">GRANT</span> <span class="class">SELECT</span> <span class="keyword">ON</span> users <span class="keyword">TO</span> app;   <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE ROLE app LOGIN;          <i class="conum" data-value="1"></i><b>(1)</b>
+GRANT SELECT ON users TO app;   <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -875,7 +874,7 @@ we are met with the following error message:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>ERROR: permission denied for table secrets</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">ERROR: permission denied for table secrets</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -980,7 +979,7 @@ slightly change the text (adding a '.' at the end).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Text:   This is a test string to hash
+<pre class="highlightjs highlight"><code class="language-none hljs">Text:   This is a test string to hash
 Sha256: f70b476ff948472f8e4e52793a5a2779e636c20dd5336d3a8a4455374318db35
 Text:   This is a test string to hash.
 Sha256: 862a9e0d0890a7a28e27c558c80820a0db36eea02e51e2dee8094deade308319</code></pre>
@@ -1094,7 +1093,7 @@ request to <code>/login</code>, see the image below.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/wireshark_request.png" alt="Wireshark showing the request">
+<img src="images/wireshark_request.png" alt="Wireshark showing the request">
 </div>
 </div>
 <div class="paragraph">
@@ -1104,7 +1103,7 @@ see the username and password in the request.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/wireshark_tcp_stream.png" alt="Wireshark tcp stream">
+<img src="images/wireshark_tcp_stream.png" alt="Wireshark tcp stream">
 </div>
 </div>
 <div class="paragraph">
@@ -1143,7 +1142,7 @@ for a public facing server by using
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/lets_encrypt.png" alt="Let&#8217;s encrypt on PRC2 website">
+<img src="images/lets_encrypt.png" alt="Let&#8217;s encrypt on PRC2 website">
 </div>
 </div>
 <div class="paragraph">
@@ -1154,7 +1153,7 @@ streamlines the process for you.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/https_localhost.png" alt="Self-signed certificate on localhost">
+<img src="images/https_localhost.png" alt="Self-signed certificate on localhost">
 </div>
 </div>
 </div>
@@ -1183,10 +1182,10 @@ entered the wrong username or the wrong password.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">if</span>(username == <span class="predefined-constant">null</span>){
-    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Username not found.</span><span class="delimiter">&quot;</span></span>
-}<span class="keyword">else</span> <span class="keyword">if</span>(password == <span class="predefined-constant">null</span>){
-    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Wrong password.</span><span class="delimiter">&quot;</span></span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if(username == null){
+    return "Username not found."
+}else if(password == null){
+    return "Wrong password."
 }</code></pre>
 </div>
 </div>
@@ -1212,6 +1211,13 @@ or that the password is wrong.</p>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

@@ -9,9 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>Test Driven with Java</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -110,12 +110,12 @@
 <div class="sectionbody">
 <div class="imageblock related thumb left">
 <div class="content">
-<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167199/"><img src="./images/corejava-1-11ed.jpg" alt="Core Java Volume I Fundamentals"></a>
+<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167199/"><img src="images/corejava-1-11ed.jpg" alt="Core Java Volume I Fundamentals"></a>
 </div>
 </div>
 <div class="imageblock related thumb right">
 <div class="content">
-<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167175/"><img src="./images/corejava-2-11ed.jpg" alt="Core Java Volume II Advanced Features"></a>
+<a class="image" href="https://www.oreilly.com/library/view/core-java-volume/9780135167175/"><img src="images/corejava-2-11ed.jpg" alt="Core Java Volume II Advanced Features"></a>
 </div>
 </div>
 <div class="ulist">
@@ -294,7 +294,7 @@ The hand in deadline is two lesson weeks after the publication date.</strong></p
 <h2 id="_way_of_working_during_practical_hours"><a class="anchor" href="#_way_of_working_during_practical_hours"></a><a class="link" href="#_way_of_working_during_practical_hours">4. Way of Working during practical hours.</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image right"><img src="./images/tdd.png" alt="tdd"></span> The way of working with the practical assignments is as follows:</p>
+<p><span class="image right"><img src="images/tdd.png" alt="tdd"></span> The way of working with the practical assignments is as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -411,6 +411,13 @@ empty when the <code>isEmpty()</code> is called.</p>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

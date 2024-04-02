@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W3 Testable and Mockito</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -150,7 +149,7 @@ This is <strong class="red">very wrong</strong>. What you are testing in that ca
 </div>
 <div class="imageblock right thumb">
 <div class="content">
-<img src="./images/fitness.jpg" alt="fitness" width="360">
+<img src="images/fitness.jpg" alt="fitness" width="360">
 </div>
 <div class="title">Figure 1. Never imagined coding as a work out.</div>
 </div>
@@ -168,7 +167,7 @@ or do not give the actual printer to the business class but <em>instead</em> som
 thinks it is a printer and replace that with whatever suits you for the test.</p>
 </div>
 <div class="paragraph">
-<p><span class="image right,thumb"><img src="./images/annoyed-32.png" alt="annoyed 32"></span>
+<p><span class="image right,thumb"><img src="images/annoyed-32.png" alt="annoyed 32"></span>
 <strong>'Nice'</strong> you say, <strong class="red">now I have two problems'</strong>:</p>
 </div>
 <div class="olist arabic">
@@ -185,7 +184,7 @@ thinks it is a printer and replace that with whatever suits you for the test.</p
 <h3 id="_stay_cool_have_a_mockito"><a class="anchor" href="#_stay_cool_have_a_mockito"></a><a class="link" href="#_stay_cool_have_a_mockito">1.1. Stay cool, have a Mockito.</a></h3>
 <div class="imageblock left thumb">
 <div class="content">
-<img src="./images/mockito-drink.jpg" alt="mockito drink">
+<img src="images/mockito-drink.jpg" alt="mockito drink">
 </div>
 <div class="title">Figure 2. it gets better.</div>
 </div>
@@ -204,7 +203,7 @@ out of (return values) of the real object while it is used by the SUT. You can m
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/mockstubsspies.svg" alt="mockstubsspies">
+<img src="images/mockstubsspies.svg" alt="mockstubsspies">
 </div>
 <div class="title">Figure 3. Class diagram explaining mocks, stubs and spies</div>
 </div>
@@ -214,15 +213,15 @@ out of (return values) of the real object while it is used by the SUT. You can m
 <div class="listingblock">
 <div class="title">The printer interface.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">Printer</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface Printer {
 
-    <span class="type">void</span> println( <span class="predefined-type">String</span> print );
+    void println( String print );
 
-    <span class="comment">/**
+    /**
      * Make it deal with objects too.
      * @param o to print.
-     */</span>
-    <span class="keyword">default</span> <span class="type">void</span> println( <span class="predefined-type">Object</span> o ) {
+     */
+    default void println( Object o ) {
         printLn( o.toString() );
     }
 }</code></pre>
@@ -234,11 +233,11 @@ out of (return values) of the real object while it is used by the SUT. You can m
 <div class="listingblock">
 <div class="title">Business test class.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> doesItPrint() {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void doesItPrint() {
         Printer pr = mock( Printer.class );  <i class="conum" data-value="1"></i><b>(1)</b>
 
-        Business b = <span class="keyword">new</span> Business( pr );     <i class="conum" data-value="2"></i><b>(2)</b>
+        Business b = new Business( pr );     <i class="conum" data-value="2"></i><b>(2)</b>
 
         b.work();                                 <i class="conum" data-value="3"></i><b>(3)</b>
 
@@ -273,25 +272,25 @@ out of (return values) of the real object while it is used by the SUT. You can m
 <div class="listingblock">
 <div class="title">Verify that what is printed is okay.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Mock</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Mock
     Printer printer; <i class="conum" data-value="1"></i><b>(1)</b>
 
     Business business;
 
-    <span class="annotation">@BeforeEach</span>
-    <span class="type">void</span> setup() {
-        business = <span class="keyword">new</span> Business( printer );  <i class="conum" data-value="2"></i><b>(2)</b>
+    @BeforeEach
+    void setup() {
+        business = new Business( printer );  <i class="conum" data-value="2"></i><b>(2)</b>
     }
 
-    <span class="annotation">@Test</span>
-    <span class="type">void</span> doesItPrintBusiness() {
-        ArgumentCaptor&lt;<span class="predefined-type">String</span>&gt; lineCaptor = ArgumentCaptor.forClass( <span class="predefined-type">String</span>.class ); <i class="conum" data-value="3"></i><b>(3)</b>
+    @Test
+    void doesItPrintBusiness() {
+        ArgumentCaptor&lt;String&gt; lineCaptor = ArgumentCaptor.forClass( String.class ); <i class="conum" data-value="3"></i><b>(3)</b>
 
-        business.work( <span class="string"><span class="delimiter">&quot;</span><span class="content">Linda</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="4"></i><b>(4)</b>
+        business.work( "Linda" ); <i class="conum" data-value="4"></i><b>(4)</b>
 
         verify( printer ).println( lineCaptor.capture() ); <i class="conum" data-value="5"></i><b>(5)</b>
-        assertThat( lineCaptor.getAllValues() ).contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Linda</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="6"></i><b>(6)</b>
-        fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">test does It print ended. You know what to do.</span><span class="delimiter">&quot;</span></span>);</code></pre>
+        assertThat( lineCaptor.getAllValues() ).contains( "Hello Linda" ); <i class="conum" data-value="6"></i><b>(6)</b>
+        fail("test does It print ended. You know what to do.");</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -371,19 +370,19 @@ it needs to print anyway.</p>
 <div class="listingblock">
 <div class="title">Usage is business code</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PrintingBusiness</span>
-      <span class="directive">final</span> <span class="predefined-type">PrintStream</span> out; <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class PrintingBusiness
+      final PrintStream out; <i class="conum" data-value="1"></i><b>(1)</b>
 
-      <span class="directive">public</span> PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
-          <span class="local-variable">this</span>( <span class="predefined-type">System</span>.out );
+      public PrintingBusiness() { <i class="conum" data-value="2"></i><b>(2)</b>
+          this( System.out );
       }
 
-      PrintingBusiness( <span class="predefined-type">PrintStream</span> ps ) { <i class="conum" data-value="3"></i><b>(3)</b>
-          <span class="local-variable">this</span>.out=ps;
+      PrintingBusiness( PrintStream ps ) { <i class="conum" data-value="3"></i><b>(3)</b>
+          this.out=ps;
       }
 
-      <span class="directive">public</span> <span class="type">void</span> businessMethod(){
-          out.format( <span class="string"><span class="delimiter">&quot;</span><span class="content">%s at %d</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="integer">957</span> ); <i class="conum" data-value="4"></i><b>(4)</b>
+      public void businessMethod(){
+          out.format( "%s at %d", "Oplegkaas", 957 ); <i class="conum" data-value="4"></i><b>(4)</b>
       }
 }</code></pre>
 </div>
@@ -411,14 +410,14 @@ it needs to print anyway.</p>
 <div class="listingblock">
 <div class="title">Use in tests</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> tformattedPrint() {
-        ConsoleOutput cout = <span class="keyword">new</span> ConsoleOutput();
-        <span class="predefined-type">PrintStream</span> out = cout.asPrintStream();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Test
+    public void tformattedPrint() {
+        ConsoleOutput cout = new ConsoleOutput();
+        PrintStream out = cout.asPrintStream();
 
-        out.format( <span class="string"><span class="delimiter">&quot;</span><span class="content">%s at %d</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="integer">957</span> );
+        out.format( "%s at %d", "Oplegkaas", 957 );
 
-        assertThat( cout.toString() ).contains( <span class="string"><span class="delimiter">&quot;</span><span class="content">at</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Oplegkaas</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">957</span><span class="delimiter">&quot;</span></span> );
+        assertThat( cout.toString() ).contains( "at", "Oplegkaas", "957" );
     }</code></pre>
 </div>
 </div>
@@ -429,20 +428,20 @@ by using a StringBuilder as intermediate and then transfer the output to a GUI e
 <div class="listingblock">
 <div class="title">Definition of AppendAndClear interface.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@FunctionalInterface</span>
-<span class="directive">public</span> <span class="type">interface</span> <span class="class">AppendAndClear</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@FunctionalInterface
+public interface AppendAndClear {
 
-    <span class="comment">/**
+    /**
      * Append a string to this AppendAndClear.
      *
      * @param toAppend text to add.
-     */</span>
-    <span class="type">void</span> appendText( <span class="predefined-type">String</span> toAppend );
+     */
+    void appendText( String toAppend );
 
-    <span class="comment">/**
+    /**
      * Clear the output. Optional operation.
-     */</span>
-    <span class="keyword">default</span> <span class="type">void</span> clear() {
+     */
+    default void clear() {
     }
 }</code></pre>
 </div>
@@ -450,16 +449,16 @@ by using a StringBuilder as intermediate and then transfer the output to a GUI e
 <div class="listingblock">
 <div class="title">Implementation of ConsoleOutput</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">consoleoutput</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package consoleoutput;
 
-<span class="keyword">import</span> <span class="include">java.io.ByteArrayOutputStream</span>;
-<span class="keyword">import</span> <span class="include">java.io.IOException</span>;
-<span class="keyword">import</span> <span class="include">java.io.OutputStream</span>;
-<span class="keyword">import</span> <span class="include">java.io.PrintStream</span>;
-<span class="keyword">import</span> <span class="include">java.nio.charset.Charset</span>;
-<span class="keyword">import</span> <span class="include">java.nio.charset.StandardCharsets</span>;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
-<span class="comment">/**
+/**
  * Test helper, to be able to redirect a PrintStream to any writable.
  *
  * Use case: write to string or StringBuilder for test or e.g. javafx
@@ -467,66 +466,66 @@ by using a StringBuilder as intermediate and then transfer the output to a GUI e
  * lambda) and you're set.
  *
  * @author Pieter van den Hombergh {@code &lt;p.vandenhombergh@fontys.nl&gt;}
- */</span>
-<span class="directive">public</span> <span class="type">class</span> <span class="class">ConsoleOutput</span> <span class="directive">extends</span> <span class="predefined-type">OutputStream</span> {
+ */
+public class ConsoleOutput extends OutputStream {
 
-    <span class="directive">protected</span> <span class="directive">final</span> <span class="predefined-type">ByteArrayOutputStream</span> baos = <span class="keyword">new</span> <span class="predefined-type">ByteArrayOutputStream</span>();
-    <span class="directive">final</span> AppendAndClear aac;
+    protected final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    final AppendAndClear aac;
 
-    <span class="comment">/**
+    /**
      * Create a Console output copying data to given AppendAndClear.
      *
      * @param ta append and clear to copy all written text to.
-     */</span>
-    <span class="directive">public</span> ConsoleOutput( AppendAndClear ta ) {
-        <span class="local-variable">this</span>.aac = ta;
+     */
+    public ConsoleOutput( AppendAndClear ta ) {
+        this.aac = ta;
     }
 
-    <span class="comment">/**
+    /**
      * Without appendable.
-     */</span>
-    <span class="directive">public</span> ConsoleOutput() {
-        <span class="local-variable">this</span>( <span class="predefined-constant">null</span> );
+     */
+    public ConsoleOutput() {
+        this( null );
     }
 
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> write( <span class="type">int</span> b ) <span class="directive">throws</span> <span class="exception">IOException</span> {
-        <span class="keyword">if</span> ( aac != <span class="predefined-constant">null</span> ) {
-            <span class="predefined-type">String</span> s = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + ( (<span class="type">char</span>) b );
+    @Override
+    public void write( int b ) throws IOException {
+        if ( aac != null ) {
+            String s = "" + ( (char) b );
             aac.appendText( s );
         }
-        baos.write( (<span class="type">byte</span>) b );
+        baos.write( (byte) b );
     }
 
-    <span class="comment">/**
+    /**
      * Clear and discard output.
-     */</span>
-    <span class="directive">public</span> <span class="type">void</span> clear() {
-        <span class="keyword">if</span> ( aac != <span class="predefined-constant">null</span> ) {
+     */
+    public void clear() {
+        if ( aac != null ) {
             aac.clear();
         }
         baos.reset();
     }
 
-    <span class="comment">/**
+    /**
      * Get the accumulated string since start or clear.
      *
      * @return the string
-     */</span>
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
-        <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">String</span>( baos.toByteArray(), StandardCharsets.UTF_8 );
+     */
+    @Override
+    public String toString() {
+        return new String( baos.toByteArray(), StandardCharsets.UTF_8 );
     }
 
-    <span class="comment">/**
+    /**
      * Factory method to get this ConsoleOutput as PrintStream.
      *
      * @return the print stream.
-     */</span>
-    <span class="directive">public</span> <span class="predefined-type">PrintStream</span> asPrintStream() {
-        <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">PrintStream</span>( <span class="local-variable">this</span>, <span class="predefined-constant">true</span>, <span class="predefined-type">Charset</span>.defaultCharset() );
+     */
+    public PrintStream asPrintStream() {
+        return new PrintStream( this, true, Charset.defaultCharset() );
     }
-} <span class="comment">// eof ConsoleOutput</span></code></pre>
+} // eof ConsoleOutput</code></pre>
 </div>
 </div>
 <div class="sidebarblock">
@@ -603,7 +602,7 @@ Instead, you train it to return <code>2</code> when the input is <code>1</code> 
 <div class="listingblock">
 <div class="title">To help you, here is a series of commands that will be handy:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   when(mockedObject.methodOfObject()).thenReturn(something); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   when(mockedObject.methodOfObject()).thenReturn(something); <i class="conum" data-value="1"></i><b>(1)</b>
    verify(someObject).methodOfObject();                       <i class="conum" data-value="2"></i><b>(2)</b>
    assertThat(someCalculatedStuffFromBusinessObject)
        .isEqualTo(someValue); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
@@ -634,7 +633,7 @@ arguments that are passed to methods. In our example, our argument is a string, 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">ArgumentCaptor&lt;<span class="predefined-type">String</span>&gt; stringCaptor = ArgumentCaptor.forClass( <span class="predefined-type">String</span>.class );</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ArgumentCaptor&lt;String&gt; stringCaptor = ArgumentCaptor.forClass( String.class );</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -734,7 +733,7 @@ and makes it <em class="red">unobservable</em>, which is bad from the testing st
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/testable-business.gif" alt="testable business">
+<img src="images/testable-business.gif" alt="testable business">
 </div>
 <div class="title">Figure 4. Giving the business what it really needs make the business testable</div>
 </div>
@@ -743,13 +742,13 @@ and makes it <em class="red">unobservable</em>, which is bad from the testing st
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/businessarch.svg" alt="businessarch">
+<img src="images/businessarch.svg" alt="businessarch">
 </div>
 <div class="title">Figure 5. business class in the application</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/businesstest.svg" alt="businesstest">
+<img src="images/businesstest.svg" alt="businesstest">
 </div>
 <div class="title">Figure 6. business class in the test lab</div>
 </div>
@@ -838,7 +837,7 @@ That&#8217;s why Mockito <strong class="red">complains</strong> when you mock so
 <div class="listingblock">
 <div class="title">example Mockito Warning</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">Unnecessary stubbings detected.
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">Unnecessary stubbings detected.
 Clean &amp; maintainable test code requires zero unnecessary code.
 Following stubbings are unnecessary (click to navigate to relevant line of code):
 1. -&gt; at ps.CashRegisterTest.isProductLookedUpAndDisplayed(CashRegisterTest.java:71)
@@ -864,7 +863,7 @@ might be perishable.</p>
 </div>
 <div class="paragraph">
 <div class="title">Class diagram</div>
-<p><span class="image"><img src="./images/perishablesales.svg" alt="perishablesales"></span></p>
+<p><span class="image"><img src="images/perishablesales.svg" alt="perishablesales"></span></p>
 </div>
 <div class="paragraph">
 <p>In the design we left out the GUI-controller, which would normally invoke the <code>correctSalesPrice(bb: LocalDate)</code>,
@@ -926,9 +925,9 @@ product will be donated to a food bank.</p>
 <div class="listingblock">
 <div class="title">Sales API</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   Product lookupProduct(<span class="type">int</span> barcode);
-   <span class="type">int</span> salesPrice(<span class="type">int</span> barcode, LocalDate bestBefore);
-   <span class="predefined-type">String</span> sold(SalesRecord sale);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   Product lookupProduct(int barcode);
+   int salesPrice(int barcode, LocalDate bestBefore);
+   String sold(SalesRecord sale);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1166,6 +1165,13 @@ Assume that the tests only use one of each product type. This relevant business 
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W5 λ &amp; Streams</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -254,8 +253,8 @@ If you need to declare a functional interface that potentially throws an excepti
 <div class="listingblock">
 <div class="title">throwing functional interface</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">ThrowingBiFunction</span>&lt;T,U, R,&lt;X <span class="directive">extends</span> <span class="predefined-type">Throwable</span>&gt;&gt; {
-    R apply(T t, U u) <span class="directive">throws</span> X;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">interface ThrowingBiFunction&lt;T,U, R,&lt;X extends Throwable&gt;&gt; {
+    R apply(T t, U u) throws X;
 }</code></pre>
 </div>
 </div>
@@ -275,7 +274,7 @@ by calling toString() on a lambda expression is something rather useless, concoc
 <div class="listingblock">
 <div class="title">toString() is useless with lambda expressions</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="predefined-type">Comparator</span>&lt;Student&gt; gradeComp = (a,b) -&gt; <span class="predefined-type">Double</span>.compare(a.getGrade(),b.getGrade());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  Comparator&lt;Student&gt; gradeComp = (a,b) -&gt; Double.compare(a.getGrade(),b.getGrade());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -283,7 +282,7 @@ by calling toString() on a lambda expression is something rather useless, concoc
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">jshell&gt; class Student{ double grade; double getGrade(){return grade;}}
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jshell&gt; class Student{ double grade; double getGrade(){return grade;}}
 |  created class Student
 
 jshell&gt; Comparator&lt;Student&gt; gradeComp = (a,b) -&gt; Double.compare(a.getGrade(),b.getGrade());
@@ -291,7 +290,7 @@ gradeComp ==&gt; $Lambda$16/0x00000008000b3040@1e88b3c
 
 jshell&gt; gradeComp
 jshell&gt; gradeComp.toString()
-$3 ==&gt; &quot;$Lambda$16/0x00000008000b3040@1e88b3c&quot;</code></pre>
+$3 ==&gt; "$Lambda$16/0x00000008000b3040@1e88b3c"</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -380,7 +379,7 @@ The belt starts at a source (for instance a Supplier) and can on or more <em>int
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/streamops.png" alt="streamops">
+<img src="images/streamops.png" alt="streamops">
 </div>
 </div>
 <div class="paragraph">
@@ -391,7 +390,7 @@ The belt starts at a source (for instance a Supplier) and can on or more <em>int
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Flexible-Conveyor.jpg" alt="Conveyor and collecting">
+<img src="images/Flexible-Conveyor.jpg" alt="Conveyor and collecting">
 </div>
 </div>
 <div class="sect2">
@@ -399,28 +398,19 @@ The belt starts at a source (for instance a Supplier) and can on or more <em>int
 <div class="listingblock">
 <div class="title">assume you want to know the sum of the wages for women.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">select</span> <span class="predefined">sum</span>(salary)
-<span class="keyword">from</span>   people
-<span class="keyword">where</span>  gender = <span class="string"><span class="delimiter">'</span><span class="content">FEMALE</span><span class="delimiter">'</span></span></code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">select sum(salary)
+from   people
+where  gender = 'FEMALE'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">same in Java, get the sum of payments to women.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>    <span class="type">int</span> womensPay =
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    int womensPay =
         people.stream()                                         <i class="conum" data-value="1"></i><b>(1)</b>
             .filter(p -&gt; p.getGender() == Person.Gender.FEMALE) <i class="conum" data-value="2"></i><b>(2)</b>
             .mapToInt(p -&gt; p.getSalary())                       <i class="conum" data-value="3"></i><b>(3)</b>
-            .sum();                                             <i class="conum" data-value="4"></i><b>(4)</b>
-</pre></td>
-</tr></table></code></pre>
+            .sum();                                             <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -446,19 +436,11 @@ The belt starts at a source (for instance a Supplier) and can on or more <em>int
 <div class="listingblock">
 <div class="title">variant using a method reference.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>    <span class="type">int</span> womensPay =
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    int womensPay =
         people.stream()
             .filter(p -&gt; p.getGender() == Person.Gender.FEMALE)
             .mapToInt( Person::getSalary )                      <i class="conum" data-value="1"></i><b>(1)</b>
-            .sum();</pre></td>
-</tr></table></code></pre>
+            .sum();</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -492,7 +474,7 @@ Often you can begin coding by adding the terminal operation immediately and inse
 <div class="listingblock">
 <div class="title">count all students.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">int</span> studentcount = students.stream()
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  int studentcount = students.stream()
   .count();</code></pre>
 </div>
 </div>
@@ -560,7 +542,7 @@ Construct the predicate and invoke the method with this predicate as parameter. 
 <div class="listingblock">
 <div class="title">example predicate</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">Predicate</span>&lt;Student&gt; redHaired s -&gt; s.getHairColor() == HairColor.RED;</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    Predicate&lt;Student&gt; redHaired s -&gt; s.getHairColor() == HairColor.RED;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -719,17 +701,17 @@ demonstrates the working of your module.</p>
 <div class="listingblock">
 <div class="title">Using the csvobject utility class.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">CSVObjectStream&lt;Student&gt; os
-            = <span class="keyword">new</span> CSVObjectStream&lt;Student&gt;(Paths.get( <span class="string"><span class="delimiter">&quot;</span><span class="content">students.csv</span><span class="delimiter">&quot;</span></span> ) );
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">CSVObjectStream&lt;Student&gt; os
+            = new CSVObjectStream&lt;Student&gt;(Paths.get( "students.csv" ) );
 
         os.stream( Factories::createStudent,
-                    r -&gt; r[ <span class="integer">0</span> ].matches( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d+</span><span class="delimiter">&quot;</span></span> ) )
-            .forEach( <span class="predefined-type">System</span>.out::println );</code></pre>
+                    r -&gt; r[ 0 ].matches( "\\d+" ) )
+            .forEach( System.out::println );</code></pre>
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/csvobjectclasses.svg" alt="csvobjectclasses">
+<img src="images/csvobjectclasses.svg" alt="csvobjectclasses">
 </div>
 <div class="title">Figure 1. class diagram csvobjectstream</div>
 </div>
@@ -772,7 +754,7 @@ You will use the <strong>streams</strong> to get some work with collections done
 </div>
 <div class="imageblock related thumb left">
 <div class="content">
-<img src="./images/lambdalibrary.png" alt="Screenshot of what the Lambda Library FX application looks like" height="^">
+<img src="images/lambdalibrary.png" alt="Screenshot of what the Lambda Library FX application looks like" height="^">
 </div>
 <div class="title">Figure 2. The FX application works out of the box and you should not touch any of the FX parts. You will only work on the library itself.</div>
 </div>
@@ -833,7 +815,7 @@ at 0, not 1.</p>
 <div class="listingblock">
 <div class="title">Windows run script</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">@echo off
 rem @author David Greven - https://github.com/grevend
 mvn -P fx javafx:run</code></pre>
 </div>
@@ -931,7 +913,7 @@ that using a parallel stream would improve the performance gain, and it does, bu
 <div class="listingblock">
 <div class="title">Simple API, that can be used in the following way:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">   <span class="predefined-type">List</span>&lt;Student&gt; students=...;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   List&lt;Student&gt; students=...;
 
    Optional&lt;MinMax&lt;Student&gt;&gt; extremesByAge =
        student.stream()
@@ -987,7 +969,7 @@ If no element was in the stream, an empty <code>Optional</code> has to be return
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/minmaxcollector.svg" alt="minmaxcollector">
+<img src="images/minmaxcollector.svg" alt="minmaxcollector">
 </div>
 <div class="title">Figure 3. class diagram</div>
 </div>
@@ -1032,12 +1014,12 @@ The test data for the tests can look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-   <span class="annotation">@CsvSource</span>(value={
-       <span class="comment">// input, min, max</span>
-       <span class="string"><span class="delimiter">&quot;</span><span class="content">P,P,P</span><span class="delimiter">&quot;</span></span>,
-       <span class="string"><span class="delimiter">&quot;</span><span class="content">A|B,A,B</span><span class="delimiter">&quot;</span></span>,
-       <span class="string"><span class="delimiter">&quot;</span><span class="content">B|C|A,A,C</span><span class="delimiter">&quot;</span></span>,
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ParameterizedTest
+   @CsvSource(value={
+       // input, min, max
+       "P,P,P",
+       "A|B,A,B",
+       "B|C|A,A,C",
 
    })</code></pre>
 </div>
@@ -1156,7 +1138,7 @@ and of course</p>
 <div class="listingblock">
 <div class="title">which allows you to quickly look at the contents of a map with a one-liner</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    map.forEach((k, v) -&gt; <span class="predefined-type">System</span>.out.println(k + <span class="string"><span class="delimiter">&quot;</span><span class="content">=</span><span class="delimiter">&quot;</span></span> + v));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    map.forEach((k, v) -&gt; System.out.println(k + "=" + v));</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1196,20 +1178,20 @@ It has many set operations.</p>
 <div class="listingblock">
 <div class="title">Vowels</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">BitSet</span> vowels = <span class="keyword">new</span> <span class="predefined-type">BitSet</span>(<span class="integer">128</span>);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    private static BitSet vowels = new BitSet(128);
 
-    <span class="directive">static</span> { <span class="comment">// done when the class is loaded.</span>
-        <span class="keyword">for</span> ( <span class="type">char</span> c : <span class="string"><span class="delimiter">&quot;</span><span class="content">aeiouAEIOU</span><span class="delimiter">&quot;</span></span>.toCharArray() ) {
+    static { // done when the class is loaded.
+        for ( char c : "aeiouAEIOU".toCharArray() ) {
            vowels.set(c);
         }
     }
 
-    <span class="type">boolean</span> isVowel(<span class="type">char</span> c) {
-       <span class="keyword">return</span> vowels.get(z);
+    boolean isVowel(char c) {
+       return vowels.get(z);
     }
 
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span>... args){
-       <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">z is vowel: </span><span class="delimiter">&quot;</span></span>+isVowel(<span class="string"><span class="delimiter">'</span><span class="content">z</span><span class="delimiter">'</span></span>));
+    public static void main(String... args){
+       System.out.println("z is vowel: "+isVowel('z'));
     }</code></pre>
 </div>
 </div>
@@ -1247,34 +1229,34 @@ requiring that the parameter is non-null.</p>
 <div class="listingblock">
 <div class="title">Traditional returning null</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  SomeType result;
-  <span class="type">var</span> a = m1();
-  <span class="type">var</span> b=<span class="predefined-constant">null</span>;
-  <span class="type">var</span> c=<span class="predefined-constant">null</span>;
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != a ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  SomeType result;
+  var a = m1();
+  var b=null;
+  var c=null;
+  if ( null != a ) {
     b = m2( a );
   }
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != b ) {
+  if ( null != b ) {
     c = m3( b );
   }
 
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != c ) {
+  if ( null != c ) {
     result = m4( c );
   }
-  <span class="keyword">return</span> result;
-  <span class="comment">// do something with result</span></code></pre>
+  return result;
+  // do something with result</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Using Optional. Returning Optional&lt;SomeType&gt;</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  Optional&lt;SomeType&gt; result
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  Optional&lt;SomeType&gt; result
      = m1ReturningOptional() <i class="conum" data-value="1"></i><b>(1)</b>
       .map( a-&gt; m2( a ) )
       .map( b-&gt; m3( b ) )
       .map( c-&gt; m4( c ) );
-  <span class="keyword">return</span> result;
-  <span class="comment">// do something with Optional result</span></code></pre>
+  return result;
+  // do something with Optional result</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1363,6 +1345,13 @@ requiring that the parameter is non-null.</p>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",
