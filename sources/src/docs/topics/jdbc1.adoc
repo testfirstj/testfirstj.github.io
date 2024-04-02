@@ -17,7 +17,7 @@ For the demonstrations in this part we will use the following properties file.
 .[black]#application.properties# file specifying connection details for dev and prod
 [source,properties]
 ----
-include::code/simplejdbc/application.properties[]
+include::{topics}/code/simplejdbc/application.properties[]
 ----
 
 You can see that the properties file supports two environments, **dev**elopment and **prod**uction.

@@ -115,7 +115,7 @@ For the column *End State*, empty means no state change.
 [[StateTable]]
 [format="csv", options="header,small"]
 |===
-include::{testsourcedir}/resources/olifantysballs/testtable.csv[]
+include::{topics}/solution/olifantysballs/src/test/resources/olifantysballs/testtable.csv[]
 |===
 
 We will start testing the state enum `StateEnum`.

@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W9 Statemachines and Regex</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -123,7 +122,7 @@ In this week and in the AADE course we will be using two concepts:</p>
 </div>
 <hr>
 <div class="paragraph">
-<p><span class="image left thumb"><img src="./images/lamp-battery-switch.gif" alt="lamp battery switch" title="simple switch circuit, from 'https://electronics.stackexchange.com/'"></span> A state machine
+<p><span class="image left thumb"><img src="images/lamp-battery-switch.gif" alt="lamp battery switch" title="simple switch circuit, from 'https://electronics.stackexchange.com/'"></span> A state machine
  is a software concept used to implement the behavior of something whose 'reaction'
  or outcome depends on the events that happened over time. A very simple example is a lamp and a switch.
 When properly connected and none of the parts is defect, the bulb will light up when the switch is in the on state.
@@ -134,14 +133,14 @@ From the diagram it should be obvious that a current can only flow if the switch
 <p>In software we model this as the <em>path</em> the code takes, which then depends on some condition or value.</p>
 </div>
 <div class="paragraph">
-<p><span class="image left thumb"><img src="./images/switch.svg" alt="switch" title="state diagram model of simple switch"></span>
+<p><span class="image left thumb"><img src="images/switch.svg" alt="switch" title="state diagram model of simple switch"></span>
 The state diagram is a way to express the behavior in a graphical manner. Each state of the system is drawn as a box with rounded corners, like in the diagram on the left.
 In the <a href="https://en.wikipedia.org/wiki/State_pattern" target="_blank" rel="noopener">GoF State </a> pattern, which is an object oriented way of modeling state behavior, one uses different
 objects to realize the effect of changing the software path. The objects all implement the same interface, but have a different implementation.
 Then, whenever a state switching event occurs, the current state object is replaced by the state object for the new state.</p>
 </div>
 <div class="paragraph">
-<p><span class="image right thumb"><img src="./images/railway-switch.gif" alt="railway switch" title="railway switch from 'https://en.wikipedia.org/wiki/Railroad_switch'"></span> As another analogy, you can think of a railway switch.
+<p><span class="image right thumb"><img src="images/railway-switch.gif" alt="railway switch" title="railway switch from 'https://en.wikipedia.org/wiki/Railroad_switch'"></span> As another analogy, you can think of a railway switch.
 The active state object will always have the same behavior. One makes the train go <em>straight</em>, the other makes it go <em>right</em>.
 Each state on itself always does the same, like a pure function, so with the same input (train) the same output is produced.
 The switching between states makes it possible to control the direction of the train traffic.</p>
@@ -155,7 +154,7 @@ The switching between states makes it possible to control the direction of the t
 </div>
 <div class="imageblock left thumb">
 <div class="content">
-<img src="./images/StatePattern.svg" alt="StatePattern">
+<img src="images/StatePattern.svg" alt="StatePattern">
 </div>
 <div class="title">Figure 1. State Pattern</div>
 </div>
@@ -209,9 +208,9 @@ As an example for few counting states you might consider a traffic light which c
 <div class="listingblock">
 <div class="title">Do <strong class="big red">not</strong> do this inside the constructor</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    StateMachine(){
-      <span class="local-variable">this</span>.initialState = State.IDLE;
-      <span class="local-variable">this</span>.initialState.enter( <span class="local-variable">this</span> ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    StateMachine(){
+      this.initialState = State.IDLE;
+      this.initialState.enter( this ); <i class="conum" data-value="1"></i><b>(1)</b>
 
     }</code></pre>
 </div>
@@ -235,21 +234,21 @@ In the gumball machine we chose the later. You can find the details in the javad
 <div class="listingblock">
 <div class="title">Use init method.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    StateMachine(){
-      <span class="local-variable">this</span>.initialState = State.IDLE;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    StateMachine(){
+      this.initialState = State.IDLE;
 
     }
 
     StateMachine init(){
-      <span class="local-variable">this</span>.initialState.enter( <span class="local-variable">this</span> ); <i class="conum" data-value="1"></i><b>(1)</b>
-      <span class="keyword">return</span> <span class="local-variable">this</span>;
+      this.initialState.enter( this ); <i class="conum" data-value="1"></i><b>(1)</b>
+      return this;
     }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Caller has not much extra work.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    StateMachine sm = <span class="keyword">new</span> StateMachine().init();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    StateMachine sm = new StateMachine().init();</code></pre>
 </div>
 </div>
 </td>
@@ -356,7 +355,7 @@ therefore have an implementation in each state.</p>
 </div>
 <div id="state_diagram" class="imageblock">
 <div class="content">
-<img src="./images/statemachine.svg" alt="State machine">
+<img src="images/statemachine.svg" alt="State machine">
 </div>
 <div class="title">Figure 2. state diagram of the gumball machine.</div>
 </div>
@@ -395,7 +394,7 @@ with some gumballs.</p>
 </div>
 <div id="context" class="imageblock">
 <div class="content">
-<img src="./images/gumball-context.svg" alt="Context">
+<img src="images/gumball-context.svg" alt="Context">
 </div>
 <div class="title">Figure 3. context in the state machine</div>
 </div>
@@ -439,7 +438,7 @@ possibile states and thus will help to find more test cases, ensuring that the s
 </td>
 <td class="content">
 <div class="paragraph">
-<p><span class="image thumb left"><img src="./images/gumballmachine-thumb.png" alt="gumballmachine thumb" height="200" title="gumball machine"></span>
+<p><span class="image thumb left"><img src="images/gumballmachine-thumb.png" alt="gumballmachine thumb" height="200" title="gumball machine"></span>
 In a real machine or automaton, such as a vending machine, the state machine will control one or
 more devices. As an example, think of a coffee brewer, which must grind coffee, maybe dispense cups,
 boil water and brew the coffee by pressing the water through the ground coffee, thereby filling the cup. To work properly, these
@@ -758,27 +757,27 @@ ensure that the State has the exact interactions we want. Not too few, and also 
 <div id="Mock-setup" class="listingblock">
 <div class="title">preparing for tests: setup.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Mock</span>
-    <span class="directive">final</span> <span class="predefined-type">Context</span> ctx; <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Mock
+    final Context ctx; <i class="conum" data-value="1"></i><b>(1)</b>
 
-    StringOutput sout = <span class="keyword">new</span> StringOutput(); <i class="conum" data-value="2"></i><b>(2)</b>
-    <span class="predefined-type">PrintStream</span> out = sout.asPrintStream(); <i class="conum" data-value="3"></i><b>(3)</b>
+    StringOutput sout = new StringOutput(); <i class="conum" data-value="2"></i><b>(2)</b>
+    PrintStream out = sout.asPrintStream(); <i class="conum" data-value="3"></i><b>(3)</b>
 
-    <span class="comment">/**
+    /**
      * Map the trigger name from the csv file to a lambda expression of type
      * {@code BiConsumer&lt;Context,State&gt;}.
-     */</span>
-    <span class="directive">static</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, BiConsumer&lt;<span class="predefined-type">Context</span>, State&gt;&gt; triggerMap = <span class="predefined-type">Map</span>.of( <i class="conum" data-value="4"></i><b>(4)</b>
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">insertCoin</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.insertCoin( c ),
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">ejectCoin</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.ejectCoin( c ),
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">drawBall</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.draw( c ),
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">refill</span><span class="delimiter">&quot;</span></span>, ( c, s ) -&gt; s.refill( c, <span class="integer">5</span> )
+     */
+    static Map&lt;String, BiConsumer&lt;Context, State&gt;&gt; triggerMap = Map.of( <i class="conum" data-value="4"></i><b>(4)</b>
+            "insertCoin", ( c, s ) -&gt; s.insertCoin( c ),
+            "ejectCoin", ( c, s ) -&gt; s.ejectCoin( c ),
+            "drawBall", ( c, s ) -&gt; s.draw( c ),
+            "refill", ( c, s ) -&gt; s.refill( c, 5 )
     );
 
-    <span class="type">void</span> setupMocks() { <i class="conum" data-value="5"></i><b>(5)</b>
+    void setupMocks() { <i class="conum" data-value="5"></i><b>(5)</b>
         when( ctx.getOutput() ).thenReturn( out );
-        <span class="comment">// any colour will do.</span>
-        when( ctx.dispense() ).thenReturn( <span class="keyword">new</span> OlifantysGumball( <span class="string"><span class="delimiter">&quot;</span><span class="content">RED</span><span class="delimiter">&quot;</span></span> ) );
+        // any colour will do.
+        when( ctx.dispense() ).thenReturn( new OlifantysGumball( "RED" ) );
     }</code></pre>
 </div>
 </div>
@@ -829,7 +828,7 @@ is what to answer on the boolean methods  <code>isEmpty()</code> and <code>isWin
 </div>
 <div class="imageblock thumb right">
 <div class="content">
-<img src="./images/seq_draw.svg" alt="seq draw">
+<img src="images/seq_draw.svg" alt="seq draw">
 </div>
 <div class="title">Figure 4. sequence diagram of draw</div>
 </div>
@@ -848,17 +847,17 @@ throw an Assert Exception), that a dispense() is NOT happening.</p>
 <div id="First-Test" class="listingblock">
 <div class="title">first test</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@ParameterizedTest</span>
-    <span class="annotation">@CsvFileSource</span>( resources = { <span class="string"><span class="delimiter">&quot;</span><span class="content">testtable.csv</span><span class="delimiter">&quot;</span></span> } )
-    <span class="directive">public</span> <span class="type">void</span> verifyDispense(
-            <span class="type">int</span> nr, <span class="predefined-type">String</span> initialStateName, <span class="predefined-type">String</span> finalStateName,
-            <span class="predefined-type">String</span> triggerName, <span class="type">boolean</span> empty, <span class="type">boolean</span> winner,
-            <span class="type">int</span> dispenseCount, <span class="type">int</span> addBallsCount, <span class="predefined-type">String</span> expectedText ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @ParameterizedTest
+    @CsvFileSource( resources = { "testtable.csv" } )
+    public void verifyDispense(
+            int nr, String initialStateName, String finalStateName,
+            String triggerName, boolean empty, boolean winner,
+            int dispenseCount, int addBallsCount, String expectedText ) {
 
         State initialState = StateEnum.valueOf( initialStateName ); <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="type">var</span> triggerAction = triggerMap.get( triggerName );          <i class="conum" data-value="2"></i><b>(2)</b>
+        var triggerAction = triggerMap.get( triggerName );          <i class="conum" data-value="2"></i><b>(2)</b>
 
-        <span class="comment">// prime collaborator</span>
+        // prime collaborator
         when( ctx.isEmpty() ).thenReturn( empty );                  <i class="conum" data-value="3"></i><b>(3)</b>
         when( ctx.isWinner() ).thenReturn( winner );                <i class="conum" data-value="4"></i><b>(4)</b>
 
@@ -978,8 +977,8 @@ The 'main' program would set up and initialize the structs.</p>
 <div class="listingblock">
 <div class="title">using method pointers in C</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="c"><span class="keyword">typedef</span> <span class="keyword">struct</span> stateHandles{
-    <span class="directive">void</span> (*ejectCoin)();
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">typedef struct stateHandles{
+    void (*ejectCoin)();
     ...
 } State ;
 
@@ -1048,7 +1047,7 @@ example may help:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="text">Dear {{teacher}},
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Dear {{teacher}},
 
 We would like to complain about the module {{mod}}.
 We learn to little and the examples are way too trivial.
@@ -1065,20 +1064,20 @@ the mapped value.</p>
 <div class="listingblock">
 <div class="title">If the map is filled like:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">Map</span>&lt;<span class="predefined-type">Object</span>, <span class="predefined-type">String</span>&gt; map = <span class="predefined-type">Map</span>.of(
-        <span class="string"><span class="delimiter">&quot;</span><span class="content">teacher</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Richard van den Ham</span><span class="delimiter">&quot;</span></span>,
-        <span class="string"><span class="delimiter">&quot;</span><span class="content">mod</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Programming Concepts 2 (PRC2)</span><span class="delimiter">&quot;</span></span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Map&lt;Object, String&gt; map = Map.of(
+        "teacher", "Richard van den Ham",
+        "mod", "Programming Concepts 2 (PRC2)"
 );</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Then the engine can be created and started as</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">Function&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; lookup = ( s ) -&gt; map.getOrDefault( s, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> );
-<span class="comment">// write to file.</span>
-<span class="keyword">new</span> Engine( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, lookup )
-        .reading( <span class="string"><span class="delimiter">&quot;</span><span class="content">letter.txt</span><span class="delimiter">&quot;</span></span> )
-        .writing( <span class="string"><span class="delimiter">&quot;</span><span class="content">mail-out.txt</span><span class="delimiter">&quot;</span></span> )
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Function&lt;String, String&gt; lookup = ( s ) -&gt; map.getOrDefault( s, "" );
+// write to file.
+new Engine( "{{", "}}", lookup )
+        .reading( "letter.txt" )
+        .writing( "mail-out.txt" )
         .run();</code></pre>
 </div>
 </div>
@@ -1088,7 +1087,7 @@ the mapped value.</p>
 <div class="listingblock">
 <div class="title">sample output</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="text">Dear Richard van den Ham,
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Dear Richard van den Ham,
 
 We would like to complain about the module Programming Concepts 2 (PRC2).
 We learn too little and the examples are way too trivial.
@@ -1119,44 +1118,44 @@ part of the public API.</p>
 <div class="listingblock">
 <div class="title">test data</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">static</span> Stream&lt;ET&gt; getTestValues() {
-    <span class="comment">// we use a helper class ET to collect strings into a engine test data object.</span>
-    ET<span class="type">[]</span> testData = <span class="keyword">new</span> ET<span class="type">[]</span>{
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello {{world}}...</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello Schöne Heimat...</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello {{süßes}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello Schöne Heimat</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">süßes</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">now somethings with {{two}} words to {{replace}}</span><span class="delimiter">&quot;</span></span>, <span class="comment">// template</span>
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">now somethings with more words to work with</span><span class="delimiter">&quot;</span></span>, <span class="comment">// expected</span>
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">two</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">more</span><span class="delimiter">&quot;</span></span>, <span class="comment">//  kv 1</span>
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">replace</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">work with</span><span class="delimiter">&quot;</span></span> <span class="comment">// kv 2</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">static Stream&lt;ET&gt; getTestValues() {
+    // we use a helper class ET to collect strings into a engine test data object.
+    ET[] testData = new ET[]{
+                et( "{{", "}}", '\\', "hello {{world}}...", "hello Schöne Heimat...",
+                "world", "Schöne Heimat" ),
+                et( "{{", "}}", '\\', "hello {{süßes}}", "hello Schöne Heimat", "süßes", "Schöne Heimat" ),
+                et( "{{", "}}", '\\', "now somethings with {{two}} words to {{replace}}", // template
+                "now somethings with more words to work with", // expected
+                "two", "more", //  kv 1
+                "replace", "work with" // kv 2
                 ),
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Niks geen substituties</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Niks geen substituties</span><span class="delimiter">&quot;</span></span> ),
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {alone}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {alone}}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// incomplete starter</span>
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me { {alone}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me { {alone}}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken starter</span>
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}, go away</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}, go away</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken postfix</span>
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me {{alone}}, go away I am Broken at the {{Tail}</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">Leave me , go away I am Broken at the {{Tail}</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// broken postfix at tail</span>
-                <span class="comment">// text below for escaping version only.</span>
-                <span class="comment">// Note the duplication of the \ char to make the strings valid Java strings.</span>
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Look ma, this is how you write a sigil</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> text in your letter: </span><span class="char">\\</span><span class="content">{{my dear boy}}</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and I used </span><span class="char">\\</span><span class="char">\\</span><span class="content"> to write this example</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">Look ma, this is how you write a sigil</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> text in your letter: {{my dear boy}}</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> and I used </span><span class="char">\\</span><span class="content"> to write this example</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">not used</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">not used either</span><span class="delimiter">&quot;</span></span> <span class="comment">// kv1</span>
+                et( "{{", "}}", '\\', "Niks geen substituties", "Niks geen substituties" ),
+                et( "{{", "}}", '\\', "Leave me {alone}}", "Leave me {alone}}" ), // incomplete starter
+                et( "{{", "}}", '\\', "Leave me { {alone}}", "Leave me { {alone}}" ), // broken starter
+                et( "{{", "}}", '\\', "Leave me {{alone}, go away", "Leave me {{alone}, go away" ), // broken postfix
+                et( "{{", "}}", '\\', "Leave me {{alone}}, go away I am Broken at the {{Tail}",
+                "Leave me , go away I am Broken at the {{Tail}" ), // broken postfix at tail
+                // text below for escaping version only.
+                // Note the duplication of the \ char to make the strings valid Java strings.
+                et( "{{", "}}", '\\', "Look ma, this is how you write a sigil"
+                + " text in your letter: \\{{my dear boy}}"
+                + " and I used \\\\ to write this example",
+                "Look ma, this is how you write a sigil"
+                + " text in your letter: {{my dear boy}}"
+                + " and I used \\ to write this example",
+                "not used", "not used either" // kv1
                 ),
-                <span class="comment">// below different sigil lengths, 1 and 3.</span>
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="char">\\</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello single char template {world}...</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">hello single char template Schöne Heimat...</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Schöne Heimat</span><span class="delimiter">&quot;</span></span> ),
-                et( <span class="string"><span class="delimiter">&quot;</span><span class="content">{{{</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">}}}</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">@</span><span class="delimiter">'</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">And it works with three and other escape as well.</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content">text in your letter: {{{my dear boy}}}.</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">And it works with three and other escape as well.</span><span class="delimiter">&quot;</span></span>
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content">text in your letter: well, that depends.</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">my dear boy</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">well, that depends</span><span class="delimiter">&quot;</span></span> ), <span class="comment">// kv1</span>
+                // below different sigil lengths, 1 and 3.
+                et( "{", "}", '\\', "hello single char template {world}...", "hello single char template Schöne Heimat...",
+                "world", "Schöne Heimat" ),
+                et( "{{{", "}}}", '@',
+                "And it works with three and other escape as well."
+                + "text in your letter: {{{my dear boy}}}.",
+                "And it works with three and other escape as well."
+                + "text in your letter: well, that depends.",
+                "my dear boy", "well, that depends" ), // kv1
             };
-    <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.stream( testData );
+    return Arrays.stream( testData );
 }</code></pre>
 </div>
 </div>
@@ -1231,7 +1230,7 @@ these parts together.</p>
 </div>
 <div id="class-diagram" class="imageblock">
 <div class="content">
-<img src="./images/engineclassesx.svg" alt="engineclassesx">
+<img src="images/engineclassesx.svg" alt="engineclassesx">
 </div>
 <div class="title">Figure 5. class diagram</div>
 </div>
@@ -1241,7 +1240,7 @@ Remember that an ObjIntConsumer takes two inputs and produces no direct return v
 </div>
 <div id="states" class="imageblock">
 <div class="content">
-<img src="./images/templaterStateMachinex-i.svg" alt="templaterStateMachinex i">
+<img src="images/templaterStateMachinex-i.svg" alt="templaterStateMachinex i">
 </div>
 <div class="title">Figure 6. state diagram</div>
 </div>
@@ -1285,7 +1284,7 @@ In most cases, including in Java, the regex is translated or compiled into a sta
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/postcode-regex.svg" alt="postcode regex">
+<img src="images/postcode-regex.svg" alt="postcode regex">
 </div>
 <div class="title">Figure 7. with diagram</div>
 </div>
@@ -1295,18 +1294,18 @@ In most cases, including in Java, the regex is translated or compiled into a sta
 <div class="listingblock">
 <div class="title">More complex example:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// note that you can break off the regex in java and intersperse it with comments.</span>
-<span class="predefined-type">String</span> emailRegex=<span class="string"><span class="delimiter">&quot;</span><span class="content">^[a-zA-Z0-9.!#$%&amp;''*+/=?^_`{|}~-]+</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// quite some rubish before the at sign</span>
-     <span class="string"><span class="delimiter">&quot;</span><span class="content">@</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// the at sign followed by a more restricted set of chars,</span>
-          <span class="comment">//  with some lengths restrictions</span>
-     <span class="string"><span class="delimiter">&quot;</span><span class="content">[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?</span><span class="delimiter">&quot;</span></span>+ <span class="comment">// optional non capt grp</span>
-     <span class="comment">// any number of letter-number combos</span>
-     <span class="string"><span class="delimiter">&quot;</span><span class="content">(?:</span><span class="char">\\</span><span class="content">.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$</span><span class="delimiter">&quot;</span></span>;</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// note that you can break off the regex in java and intersperse it with comments.
+String emailRegex="^[a-zA-Z0-9.!#$%&amp;''*+/=?^_`{|}~-]+"+ // quite some rubish before the at sign
+     "@"+ // the at sign followed by a more restricted set of chars,
+          //  with some lengths restrictions
+     "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?"+ // optional non capt grp
+     // any number of letter-number combos
+     "(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";</code></pre>
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/email-regex.svg" alt="email regex">
+<img src="images/email-regex.svg" alt="email regex">
 </div>
 <div class="title">Figure 8. Produces this 'railroad' diagram. which is equivalent to a state machine diagram.</div>
 </div>
@@ -1509,23 +1508,23 @@ Group 0 is typically the whole expression, and number one the first group identi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.regex.Pattern</span>;
-<span class="keyword">import</span> <span class="include">java.util.regex.Matcher</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
-        <span class="predefined-type">String</span> input = <span class="string"><span class="delimiter">&quot;</span><span class="content">The quick brown fox jumps over the lazy dog</span><span class="delimiter">&quot;</span></span>;
-        <span class="predefined-type">String</span> pattern = <span class="string"><span class="delimiter">&quot;</span><span class="content">The (</span><span class="char">\\</span><span class="content">w+) brown (</span><span class="char">\\</span><span class="content">w+) jumps over the (</span><span class="char">\\</span><span class="content">w+) dog</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="predefined-type">Pattern</span> p = <span class="predefined-type">Pattern</span>.compile(pattern);
-        <span class="predefined-type">Matcher</span> m = p.matcher(input);
-        <span class="keyword">if</span> (m.find()) { <i class="conum" data-value="2"></i><b>(2)</b>
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found a match</span><span class="delimiter">&quot;</span></span>);
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 0: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">0</span>)); <i class="conum" data-value="3"></i><b>(3)</b>
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 1: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">1</span>));
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 2: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">2</span>));
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 3: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">3</span>));
-        } <span class="keyword">else</span> {
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">No match found</span><span class="delimiter">&quot;</span></span>);
+public class Main {
+    public static void main(String[] args) {
+        String input = "The quick brown fox jumps over the lazy dog";
+        String pattern = "The (\\w+) brown (\\w+) jumps over the (\\w+) dog"; <i class="conum" data-value="1"></i><b>(1)</b>
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(input);
+        if (m.find()) { <i class="conum" data-value="2"></i><b>(2)</b>
+            System.out.println("Found a match");
+            System.out.println("Group 0: " + m.group(0)); <i class="conum" data-value="3"></i><b>(3)</b>
+            System.out.println("Group 1: " + m.group(1));
+            System.out.println("Group 2: " + m.group(2));
+            System.out.println("Group 3: " + m.group(3));
+        } else {
+            System.out.println("No match found");
         }
     }
 }</code></pre>
@@ -1555,26 +1554,26 @@ The third method is <code>lookingAt()</code>, which returns <code>true</code> if
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.regex.Pattern</span>;
-<span class="keyword">import</span> <span class="include">java.util.regex.Matcher</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> {
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
-        <span class="predefined-type">String</span> input = <span class="string"><span class="delimiter">&quot;</span><span class="content">The quick brown fox jumps over the lazy dog</span><span class="delimiter">&quot;</span></span>;
-        <span class="predefined-type">String</span> pattern =
-                      <span class="string"><span class="delimiter">&quot;</span><span class="content">The (?&lt;first&gt;</span><span class="char">\\</span><span class="content">w+)</span><span class="delimiter">&quot;</span></span> <span class="comment">// comment 1</span>
-                      +<span class="string"><span class="delimiter">&quot;</span><span class="content"> brown (?&lt;second&gt;</span><span class="char">\\</span><span class="content">w+)</span><span class="delimiter">&quot;</span></span> <span class="comment">// comment 2</span>
-                      +<span class="string"><span class="delimiter">&quot;</span><span class="content"> jumps over the (?&lt;third&gt;</span><span class="char">\\</span><span class="content">w+) dog</span><span class="delimiter">&quot;</span></span>; <span class="comment">// comment 3</span>
-        <span class="predefined-type">Pattern</span> p = <span class="predefined-type">Pattern</span>.compile(pattern);
-        <span class="predefined-type">Matcher</span> m = p.matcher(input);
-        <span class="keyword">if</span> (m.find()) {
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found a match</span><span class="delimiter">&quot;</span></span>);
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group 0: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="integer">0</span>));
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group first: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>));
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group second: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">second</span><span class="delimiter">&quot;</span></span>));
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Group third: </span><span class="delimiter">&quot;</span></span> + m.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">third</span><span class="delimiter">&quot;</span></span>));
-        } <span class="keyword">else</span> {
-            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">No match found</span><span class="delimiter">&quot;</span></span>);
+public class Main {
+    public static void main(String[] args) {
+        String input = "The quick brown fox jumps over the lazy dog";
+        String pattern =
+                      "The (?&lt;first&gt;\\w+)" // comment 1
+                      +" brown (?&lt;second&gt;\\w+)" // comment 2
+                      +" jumps over the (?&lt;third&gt;\\w+) dog"; // comment 3
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(input);
+        if (m.find()) {
+            System.out.println("Found a match");
+            System.out.println("Group 0: " + m.group(0));
+            System.out.println("Group first: " + m.group("first"));
+            System.out.println("Group second: " + m.group("second"));
+            System.out.println("Group third: " + m.group("third"));
+        } else {
+            System.out.println("No match found");
         }
     }
 }</code></pre>
@@ -1810,6 +1809,13 @@ applying the gradefilter on each line and collect the student numbers and grades
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

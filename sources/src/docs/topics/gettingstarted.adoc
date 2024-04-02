@@ -482,7 +482,7 @@ brew install subversion
 
 // include::configuringmaven.adoc[]
 
-include::testeasypom.adoc[]
+include::{topics}/testeasypom.adoc[]
 
 == Additional Pointers
 

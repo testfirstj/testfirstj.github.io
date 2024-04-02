@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>Setup your environment</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -242,7 +241,7 @@ OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz</p>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> unpack java distribution using the command-line</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">sudo mkdir -p /usr/lib/jvm
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo mkdir -p /usr/lib/jvm
 cd /usr/lib/jvm
 sudo tar xf ~/Downloads/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz</code></pre>
 </div>
@@ -256,7 +255,7 @@ sudo tar xf ~/Downloads/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz</code>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> install via HomeBrew</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">brew tap AdoptOpenJDK/openjdk
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">brew tap AdoptOpenJDK/openjdk
 brew install --cask adoptopenjdk11</code></pre>
 </div>
 </div>
@@ -277,7 +276,7 @@ Install the same way as normal programs.</p>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-windows fa-fw"></i></span> install via Chocolatey</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">choco install adoptopenjdk11 --params=&quot;/ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJavaHome /INSTALLDIR=C:\usr\lib\jvm\ /quiet&quot;</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">choco install adoptopenjdk11 --params="/ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJavaHome /INSTALLDIR=C:\usr\lib\jvm\ /quiet"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -327,7 +326,7 @@ If you type <code>java -version</code>, and your shell says <code>command not fo
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Define JAVA_HOME</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-17.0.1+12/ <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-17.0.1+12/ <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -344,7 +343,7 @@ If you type <code>java -version</code>, and your shell says <code>command not fo
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Append Java to the path</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -353,7 +352,7 @@ If you type <code>java -version</code>, and your shell says <code>command not fo
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Add the previous commands to <code>~/.bashrc</code></div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-11.0.10+9
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export JAVA_HOME=/usr/lib/jvm/jdk-11.0.10+9
 export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
 </div>
 </div>
@@ -367,7 +366,7 @@ and to make it easy to switch between Java versions.</p>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> List version(s) of Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">/usr/libexec/java_home <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">/usr/libexec/java_home <i class="conum" data-value="1"></i><b>(1)</b>
 /usr/libexec/java_home -V <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
@@ -390,7 +389,7 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Set the <code>JAVA_HOME</code> environment</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=&lt;path_to_java_home&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export JAVA_HOME=&lt;path_to_java_home&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -399,7 +398,7 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Obtaining the path to Java home</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">/usr/libexec/java_home -v '17*' <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">/usr/libexec/java_home -v '17*' <i class="conum" data-value="1"></i><b>(1)</b>
 /usr/libexec/java_home -v '17.0.2'<i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
@@ -418,7 +417,7 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Check that <code>JAVA_HOME</code> is set correctly</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">echo $JAVA_HOME</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">echo $JAVA_HOME</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -427,7 +426,7 @@ The only thing we need to do for this is set the <code>JAVA_HOME</code> environm
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Set <code>JAVA_HOME</code> dynamically with the following command (e.g. for Java 15):</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v '17*') <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v '17*') <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -454,9 +453,9 @@ This means we can specify our aliases in either <code>.zshrc</code> or in <code>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Add the following lines to ~/.zshrc:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v 17) <i class="conum" data-value="1"></i><b>(1)</b>
-alias j11=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 11`; java -version&quot; <i class="conum" data-value="2"></i><b>(2)</b>
-alias j17=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 17`; java -version&quot; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export JAVA_HOME=$(/usr/libexec/java_home -v 17) <i class="conum" data-value="1"></i><b>(1)</b>
+alias j11="export JAVA_HOME=`/usr/libexec/java_home -v 11`; java -version" <i class="conum" data-value="2"></i><b>(2)</b>
+alias j17="export JAVA_HOME=`/usr/libexec/java_home -v 17`; java -version" <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -487,7 +486,7 @@ alias j17=&quot;export JAVA_HOME=`/usr/libexec/java_home -v 17`; java -version&q
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> switching between Java versions</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">java -version <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">java -version <i class="conum" data-value="1"></i><b>(1)</b>
 j11 <i class="conum" data-value="2"></i><b>(2)</b>
 j15 <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
@@ -541,7 +540,7 @@ It is also the way the teachers use to compile and test the students work for th
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Install maven using apt-get</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">sudo apt install maven</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo apt install maven</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -556,7 +555,7 @@ It is also the way the teachers use to compile and test the students work for th
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> install apache maven and add to path</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">cd /usr/share
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cd /usr/share
 sudo rm -fr maven
 sudo tar xf ~/Downloads/apache-maven-3.8.4-bin.tar.gz
 sudo ln -sf apache-maven-3.8.4/ maven
@@ -570,13 +569,13 @@ sudo ln -sf ../share/maven/bin/mvn .</code></pre>
 <div class="listingblock">
 <div class="title">mvn --version command.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">hom@threehundred: /usr/share
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">hom@threehundred: /usr/share
 🐧$ mvn --version
 Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
 Maven home: /usr/share/maven
 Java version: 17.0.1, vendor: Eclipse Adoptium, runtime: /usr/lib/jvm/jdk-17.0.1+12
 Default locale: en_US, platform encoding: UTF-8
-OS name: &quot;linux&quot;, version: &quot;5.13.0-21-generic&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;</code></pre>
+OS name: "linux", version: "5.13.0-21-generic", arch: "amd64", family: "unix"</code></pre>
 </div>
 </div>
 </div>
@@ -588,7 +587,7 @@ OS name: &quot;linux&quot;, version: &quot;5.13.0-21-generic&quot;, arch: &quot;
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Install Maven using HomeBrew</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">brew install maven</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">brew install maven</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -670,7 +669,7 @@ in the traditional (as in same directories as the installer would) <code>/usr/lo
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Assuming you downloaded the binary, installing it is easy</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">cd /usr/local
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cd /usr/local
 sudo unzip ~/Downloads/netbeans-12.5-bin.zip
 sudo mv netbeans{,-12.5}</code></pre>
 </div>
@@ -681,8 +680,8 @@ sudo mv netbeans{,-12.5}</code></pre>
 <div class="listingblock">
 <div class="title">netbeans script in ~/bin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
-/usr/local/netbeans-12.5/bin/netbeans &quot;$@&quot; &amp; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">#!/bin/bash
+/usr/local/netbeans-12.5/bin/netbeans "$@" &amp; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -721,7 +720,7 @@ sudo mv netbeans{,-12.5}</code></pre>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Install Netbeans using HomeBrew</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">brew install --cask netbeans</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">brew install --cask netbeans</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -739,9 +738,9 @@ sudo mv netbeans{,-12.5}</code></pre>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Create <code>netbeans</code> file in <code>/usr/local/bin</code></div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">cd /usr/local/bin <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cd /usr/local/bin <i class="conum" data-value="1"></i><b>(1)</b>
 touch netbeans <i class="conum" data-value="2"></i><b>(2)</b>
-echo \&quot;/Applications/NetBeans/Apache NetBeans 12.5.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\&quot; --jdkhome \$JAVA_HOME \$\* \&amp; &gt; netbeans <i class="conum" data-value="3"></i><b>(3)</b>
+echo \"/Applications/NetBeans/Apache NetBeans 12.5.app/Contents/Resources/NetBeans/netbeans/bin/netbeans\" --jdkhome \$JAVA_HOME \$\* \&amp; &gt; netbeans <i class="conum" data-value="3"></i><b>(3)</b>
 chmod +x netbeans <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
@@ -773,7 +772,7 @@ Finally the <code>&amp;</code> means that NetBeans runs as a background process 
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Open <code>myProject</code> in Netbeans using Java version 17</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">j17
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">j17
 netbeans myProject</code></pre>
 </div>
 </div>
@@ -820,7 +819,7 @@ tool be installed on the system.</p>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-linux fa-fw"></i></span> Installing subversion via apt-get</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">sudo apt install subversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo apt install subversion</code></pre>
 </div>
 </div>
 </div>
@@ -834,7 +833,7 @@ The easiest way to do this is using HomeBrew:</p>
 <div class="listingblock">
 <div class="title"><span class="icon"><i class="fa fa-apple fa-fw"></i></span> Install subversion using HomeBrew</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">brew install subversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">brew install subversion</code></pre>
 </div>
 </div>
 </div>
@@ -900,12 +899,12 @@ javadoc in a professional looking way, including code highlighted code snippets,
 <div id="testeasypom-as-parent" class="listingblock">
 <div class="title">Setting testeasypom as parent.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
-      <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-      <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
-      <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
-      <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="tag">&lt;/parent&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">    &lt;parent&gt;
+      &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+      &lt;artifactId&gt;testeasypom&lt;/artifactId&gt;
+      &lt;version&gt;4.0.6&lt;/version&gt;
+      &lt;relativePath/&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;/parent&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -926,36 +925,36 @@ the basic one below. Add dependencies as required.</p>
 <div id="basic-maven" class="listingblock">
 <div class="title">Basic pom.xml file setting testeasypom as parent.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
-    <span class="tag">&lt;parent&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
-        <span class="tag">&lt;realtivePath</span><span class="tag">/&gt;</span><i class="conum" data-value="2"></i><b>(2)</b>
-    <span class="tag">&lt;/parent&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
-    <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-    <span class="tag">&lt;artifactId&gt;</span>basicsebimaven<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
-    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
-    <span class="comment">&lt;!-- The name in the IDE --&gt;</span>
-    <span class="tag">&lt;name&gt;</span>My App<span class="tag">&lt;/name&gt;</span>
-    <span class="tag">&lt;properties&gt;</span>
-        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
-        <span class="tag">&lt;java.release&gt;</span>11<span class="tag">&lt;/java.release&gt;</span>
-        <span class="comment">&lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;</span>
-        <span class="tag">&lt;exec.mainClass&gt;</span>basicsebimaven.Hello<span class="tag">&lt;/exec.mainClass&gt;</span>
-    <span class="tag">&lt;/properties&gt;</span>
-    <span class="tag">&lt;dependencies&gt;</span>
-      <span class="comment">&lt;!--example  --&gt;</span>
-      <span class="tag">&lt;dependency&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>...<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>...<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>...<span class="tag">&lt;/version&gt;</span>
-      <span class="tag">&lt;/dependency&gt;</span>
-    <span class="tag">&lt;/dpendencies&gt;</span>
-<span class="tag">&lt;/project&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+        &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+        &lt;artifactId&gt;testeasypom&lt;/artifactId&gt;
+        &lt;version&gt;4.0.6&lt;/version&gt;
+        &lt;realtivePath/&gt;<i class="conum" data-value="2"></i><b>(2)</b>
+    &lt;/parent&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+    &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+    &lt;artifactId&gt;basicsebimaven&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;!-- The name in the IDE --&gt;
+    &lt;name&gt;My App&lt;/name&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;java.release&gt;11&lt;/java.release&gt;
+        &lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;
+        &lt;exec.mainClass&gt;basicsebimaven.Hello&lt;/exec.mainClass&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+      &lt;!--example  --&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;...&lt;/groupId&gt;
+        &lt;artifactId&gt;...&lt;/artifactId&gt;
+        &lt;version&gt;...&lt;/version&gt;
+      &lt;/dependency&gt;
+    &lt;/dpendencies&gt;
+&lt;/project&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -982,7 +981,7 @@ In the commandline that would be</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/mvn-withfx-profile.png" alt="mvn withfx profile">
+<img src="images/mvn-withfx-profile.png" alt="mvn withfx profile">
 </div>
 <div class="title">Figure 1. Commandline. Real software engineers can use the command line.</div>
 </div>
@@ -991,7 +990,7 @@ In the commandline that would be</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/fx-profile-nb.png" alt="fx profile nb">
+<img src="images/fx-profile-nb.png" alt="fx profile nb">
 </div>
 <div class="title">Figure 2. Activate a profile in netbeans</div>
 </div>
@@ -1042,7 +1041,7 @@ This oneliner will do that for all projects below the current directory. After n
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sh">for i in $(find . -name pom.xml); do (cd $(dirname $i); mvn versions:update-parent  &amp; )   ; done</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">for i in $(find . -name pom.xml); do (cd $(dirname $i); mvn versions:update-parent  &amp; )   ; done</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1067,9 +1066,16 @@ git-bash or the windows subsystem for Linux.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-02 12:55:07 +0200
+Last updated 2024-04-02 13:40:13 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

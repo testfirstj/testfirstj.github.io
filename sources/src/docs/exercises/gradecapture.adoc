@@ -1,4 +1,3 @@
-
 :sectnums!:
 
 == Reading grades from text source
@@ -38,7 +37,7 @@ A set of test data is given and has the exact input as the table below.
 .Test data
 [format="csv", options="header,small",cols="5h,1h,1h,1h,1h"]
 |===
-include::{testsourcedir}/resources/gradecapture/testdata.csv[]
+include::{topics}/solution/gradecapture/src/test/resources/gradecapture/testdata.csv[]
 |===
 
 *Note* that the first column of the csv file is the *"quoted input"*, so should be seen as one input.

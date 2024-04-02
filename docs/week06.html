@@ -9,10 +9,9 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W6 Reflection</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/coderay-asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -332,7 +331,7 @@ are simply defined as a bit set packed into an <code>int</code>, and stored with
 <div class="listingblock">
 <div class="title">Does the class' field name comply with the standard naming conventions?</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
      * Check the field definition of a class, including naming conventions.
      *
      * @param targetClass to check
@@ -340,19 +339,19 @@ are simply defined as a bit set packed into an <code>int</code>, and stored with
      * @param type of the field
      * @param fieldName of the field
      * @throws SecurityException when field is not accessible.
-     */</span>
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> checkFieldAndNaming( <span class="predefined-type">Class</span>&lt;?&gt; targetClass,
-                                            <span class="type">int</span> modifierMask,
-                                            <span class="type">int</span> modifiers,
-                                            <span class="predefined-type">Class</span>&lt;?&gt; type, <span class="predefined-type">String</span> fieldName )
-            <span class="directive">throws</span> <span class="exception">SecurityException</span> {
-        <span class="keyword">if</span> ( ( PUBLIC | STATIC | FINAL ) == modifiers ) {  <i class="conum" data-value="1"></i><b>(1)</b>
+     */
+    public static void checkFieldAndNaming( Class&lt;?&gt; targetClass,
+                                            int modifierMask,
+                                            int modifiers,
+                                            Class&lt;?&gt; type, String fieldName )
+            throws SecurityException {
+        if ( ( PUBLIC | STATIC | FINAL ) == modifiers ) {  <i class="conum" data-value="1"></i><b>(1)</b>
             assertAllUpper( fieldName );
-        } <span class="keyword">else</span> {                                           <i class="conum" data-value="2"></i><b>(2)</b>
-            <span class="type">char</span> firstChar = fieldName.charAt( <span class="integer">0</span> );
-            assertEquals( <span class="string"><span class="delimiter">&quot;</span><span class="content">first char not lower case</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + (<span class="type">char</span>) <span class="predefined-type">Character</span>.
+        } else {                                           <i class="conum" data-value="2"></i><b>(2)</b>
+            char firstChar = fieldName.charAt( 0 );
+            assertEquals( "first char not lower case", "" + (char) Character.
                           toLowerCase(
-                                  firstChar ), <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> + (<span class="type">char</span>) firstChar );
+                                  firstChar ), "" + (char) firstChar );
         }
         checkField( targetClass, modifierMask, modifiers, type, fieldName );
     }</code></pre>
@@ -373,7 +372,7 @@ are simply defined as a bit set packed into an <code>int</code>, and stored with
 <div class="listingblock">
 <div class="title">Check the modifiers on a field.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
  * Check the field definition of a class.
  *
  * This method tests if the required modifiers are set. Example: to check
@@ -387,33 +386,33 @@ are simply defined as a bit set packed into an <code>int</code>, and stored with
  * @param fieldType of the field
  * @param fieldName of the field
  * @throws SecurityException when field is not accessible
- */</span>
-<span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> checkField( <span class="predefined-type">Class</span>&lt;?&gt; targetClass,
-                               <span class="type">int</span> modifierMask,
-                               <span class="type">int</span> modsRequired,
-                               <span class="predefined-type">Class</span>&lt;?&gt; fieldType,
-                               <span class="predefined-type">String</span> fieldName )
-        <span class="directive">throws</span> <span class="exception">SecurityException</span> {
-    <span class="predefined-type">Field</span> f = <span class="predefined-constant">null</span>;
-    <span class="keyword">try</span> {
+ */
+public static void checkField( Class&lt;?&gt; targetClass,
+                               int modifierMask,
+                               int modsRequired,
+                               Class&lt;?&gt; fieldType,
+                               String fieldName )
+        throws SecurityException {
+    Field f = null;
+    try {
         f = targetClass.getDeclaredField( fieldName );
-        assertEquals( <span class="string"><span class="delimiter">&quot;</span><span class="content">field </span><span class="delimiter">&quot;</span></span> + fieldName + <span class="string"><span class="delimiter">&quot;</span><span class="content"> should be of type </span><span class="delimiter">&quot;</span></span>
+        assertEquals( "field " + fieldName + " should be of type "
                 + fieldType, fieldType, f.getType() );
-        <span class="type">int</span> fieldModifiers = f.getModifiers();
-        <span class="keyword">if</span> ( ( modifierMask &amp; fieldModifiers ) != modsRequired ) {
-            fail( <span class="string"><span class="delimiter">&quot;</span><span class="content">field '</span><span class="delimiter">&quot;</span></span> + f.getName()
-                    + <span class="string"><span class="delimiter">&quot;</span><span class="content">' should be declared '</span><span class="delimiter">&quot;</span></span>
-                    + <span class="predefined-type">Modifier</span>.toString( modsRequired )
-                    + <span class="string"><span class="delimiter">&quot;</span><span class="content">', you declared it '</span><span class="delimiter">&quot;</span></span>
-                    + <span class="predefined-type">Modifier</span>.toString( fieldModifiers ) + <span class="string"><span class="delimiter">'</span><span class="char">\'</span><span class="delimiter">'</span></span> );
+        int fieldModifiers = f.getModifiers();
+        if ( ( modifierMask &amp; fieldModifiers ) != modsRequired ) {
+            fail( "field '" + f.getName()
+                    + "' should be declared '"
+                    + Modifier.toString( modsRequired )
+                    + "', you declared it '"
+                    + Modifier.toString( fieldModifiers ) + '\'' );
         }
-    } <span class="keyword">catch</span> ( <span class="exception">NoSuchFieldException</span> ex ) {
-        fail( <span class="string"><span class="delimiter">&quot;</span><span class="content">your class '</span><span class="delimiter">&quot;</span></span> + targetClass
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content">' does not contain the required field '</span><span class="delimiter">&quot;</span></span>
-                + <span class="predefined-type">Modifier</span>.toString( modifierMask )
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>
+    } catch ( NoSuchFieldException ex ) {
+        fail( "your class '" + targetClass
+                + "' does not contain the required field '"
+                + Modifier.toString( modifierMask )
+                + " "
                 + fieldType.getSimpleName()
-                + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + fieldName + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span> );
+                + " " + fieldName + "'" );
     }
 }</code></pre>
 </div>
@@ -428,7 +427,7 @@ as well as the fields that are defined in each of the classes in the field hiera
 <div class='ex'><details open class='ex'><summary class='ex'>Class Genealogy</summary>
 <div class="imageblock left thumb">
 <div class="content">
-<img src="./images/jbuttontree.png" alt="jbuttontree">
+<img src="images/jbuttontree.png" alt="jbuttontree">
 </div>
 <div class="title">Figure 1. inspiration for this task</div>
 </div>
@@ -520,7 +519,7 @@ that is in order from the top of the hierarchy to the bottom and within the clas
 <div class="listingblock">
 <div class="title">To determine if a field is non-statid use</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">Predicate</span>&lt;<span class="predefined-type">Field</span>&gt; nonStatic = ( <span class="predefined-type">Field</span> f ) -&gt; !<span class="predefined-type">Modifier</span>.isStatic( f.getModifiers() );</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Predicate&lt;Field&gt; nonStatic = ( Field f ) -&gt; !Modifier.isStatic( f.getModifiers() );</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -546,7 +545,7 @@ Doing so will get a quick full coverage, but testing the exact result may be a b
 <div class="listingblock">
 <div class="title">Example output for <code>java.lang.StringBuilder</code></div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="text">$ ./run.sh java.lang.StringBuilder
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">$ ./run.sh java.lang.StringBuilder
 class hierarchy of [java.lang.StringBuilder]
  public java.lang.Object
    abstract java.lang.AbstractStringBuilder  implements public java.lang.Appendable, public java.lang.CharSequence
@@ -580,33 +579,33 @@ by copying from an existing java class. The template below is created that way a
 <div class="listingblock">
 <div class="title">Assume your template text looks like</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> %<span class="integer">1</span><span class="error">$</span><span class="namespace">s</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package %1$s;
 
-<span class="keyword">import</span> <span class="include">deconstructorregistry.Deconstructor</span>;
-<span class="comment">/**
+import deconstructorregistry.Deconstructor;
+/**
  * This is generated code. Do not edit, your changes will be lost.
- */</span>
-<span class="directive">public</span> <span class="type">class</span> %<span class="integer">2</span><span class="error">$</span><span class="class">sDeconstructor</span> {
+ */
+public class %2$sDeconstructor {
 
-    <span class="comment">/**
+    /**
      * The purpose of self registration is not being able to
      * create new instances, other then by the class loader.
-     */</span>
-    <span class="directive">private</span> %<span class="integer">2</span><span class="error">$</span>sDeconstructor() {
+     */
+    private %2$sDeconstructor() {
     }
 
-    <span class="directive">static</span> {
-        Mapper.register( %<span class="integer">2</span><span class="error">$</span>s.class, <span class="keyword">new</span> %<span class="integer">2</span><span class="error">$</span>sDeconstructor() );
+    static {
+        Mapper.register( %2$s.class, new %2$sDeconstructor() );
     }
 
-    <span class="comment">/**
+    /**
      * Deconstruct an entity into an array.
      * @param %2$s the victim
-     */</span>
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct(  %<span class="integer">2</span><span class="error">$</span>s %<span class="integer">3</span><span class="error">$</span>s ) {
-       <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
-            %<span class="integer">4</span><span class="error">$</span>s
+     */
+    @Override
+    public Object[] deconstruct(  %2$s %3$s ) {
+       return new Object[]{
+            %4$s
        };
     }
 }</code></pre>
@@ -635,26 +634,26 @@ In this case the template specifies 4 parameters:</p>
 <div class="listingblock">
 <div class="title">Reading the template from a file and put it in a String constant.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> templateText( <span class="predefined-type">String</span> templateName ) {
-        <span class="predefined-type">String</span> text = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
-        <span class="predefined-type">Class</span> clz = Constants.class;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    private static String templateText( String templateName ) {
+        String text = "";
+        Class clz = Constants.class;
 
-        <span class="keyword">try</span> ( <span class="predefined-type">InputStream</span> in = clz.getResourceAsStream( templateName ) ) {
-            text = <span class="keyword">new</span> <span class="predefined-type">String</span>( in.readAllBytes<span class="error">​</span>() );
-        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ex ) {
-            <span class="predefined-type">Logger</span>.getLogger( Constants.class.getName() )
-                    .log( <span class="predefined-type">Level</span>.SEVERE, ex.getMessage() );
+        try ( InputStream in = clz.getResourceAsStream( templateName ) ) {
+            text = new String( in.readAllBytes​() );
+        } catch ( IOException ex ) {
+            Logger.getLogger( Constants.class.getName() )
+                    .log( Level.SEVERE, ex.getMessage() );
         }
-        <span class="keyword">return</span> text;
+        return text;
     }
-    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> CODE_TEMPLATE = templateText(
-            <span class="string"><span class="delimiter">&quot;</span><span class="content">CodeTemplate-java.txt</span><span class="delimiter">&quot;</span></span> );</code></pre>
+    public static String CODE_TEMPLATE = templateText(
+            "CodeTemplate-java.txt" );</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Use the template with the positional parameters.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> classText = <span class="predefined-type">String</span>.format( CODE_TEMPLATE,
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String classText = String.format( CODE_TEMPLATE,
             GENERATED_PACKAGE, <i class="conum" data-value="1"></i><b>(1)</b>
             typeName, <i class="conum" data-value="2"></i><b>(2)</b>
             paramName, <i class="conum" data-value="3"></i><b>(3)</b>
@@ -712,8 +711,8 @@ or fill a prepared statement when you want to put entities into a database using
 <div class="listingblock">
 <div class="title">example usage</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="keyword">for</span>( <span class="predefined-type">Object</span> fieldValue: deconstruct( student )) {
-     <span class="comment">// do something with the field value</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  for( Object fieldValue: deconstruct( student )) {
+     // do something with the field value
   }</code></pre>
 </div>
 </div>
@@ -727,27 +726,27 @@ Why not <em>generate</em> a deconstructor from the information that is in the cl
 <div class="listingblock">
 <div class="title">Given a student entity:</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Student</span>{
-    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Integer</span> snummer;
-    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> lastname;
-    <span class="comment">//...</span>
-    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Boolean</span> active;
-    <span class="comment">// rest left out</span>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class Student{
+    private final Integer snummer;
+    private final String lastname;
+    //...
+    private final Boolean active;
+    // rest left out
 
-    <span class="comment">// methods left out</span>
+    // methods left out
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">the <span class="blue">StudentDeconstructor</span> could look like this (abbreviated).</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">StudentDeconstructor</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class StudentDeconstructor {
 
-  <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct( Student s ) {
-    <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+  public static Object[] deconstruct( Student s ) {
+    return new Object[]{
         s.getSnummer(),
         s.getLastname(),
-       <span class="comment">// some left out for brevity</span>
+       // some left out for brevity
        s.getActive()
     };
   }
@@ -762,7 +761,7 @@ Why not <em>generate</em> a deconstructor from the information that is in the cl
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>    generateDeconstructor sampleentities.Student &gt; path/to/StudentDeconstructor.java</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">    generateDeconstructor sampleentities.Student &gt; path/to/StudentDeconstructor.java</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -833,7 +832,7 @@ white space. This can be done easily with:<br>
 <div class="listingblock">
 <div class="title">Windows run script to run the entitydeconstructor from the command line. Called run.cmd</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">@echo off
 rem @author David Greven - https://github.com/grevend
 set jar=target/entitydeconstructor-2.0-SNAPSHOT.jar
 if not exist %jar% cls &amp; echo Maven... &amp; call mvn package
@@ -844,10 +843,10 @@ java -jar %jar% %*</code></pre>
 <div class="listingblock">
 <div class="title">bash script to do the same as the above. Will work in git-bash too.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">#!/bin/bash
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">#!/bin/bash
 jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
 if [ ! -e ${jar} ]; then mvn package; fi
-java -jar ${jar} &quot;$@&quot;</code></pre>
+java -jar ${jar} "$@"</code></pre>
 </div>
 </div>
 </details></div><!--end Entity Deconstructor -->
@@ -878,10 +877,10 @@ look up the deconstructor</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">void</span> useEntity( E e ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  void useEntity( E e ) {
 
-    <span class="keyword">for</span> (<span class="predefined-type">Object</span> f : Deconstructor.forType( e.getClass() ).deconstruct( e ) ) {
-      <span class="comment">// use fields.</span>
+    for (Object f : Deconstructor.forType( e.getClass() ).deconstruct( e ) ) {
+      // use fields.
     }
   }</code></pre>
 </div>
@@ -891,7 +890,7 @@ look up the deconstructor</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/selfregister.svg" alt="selfregister">
+<img src="images/selfregister.svg" alt="selfregister">
 </div>
 <div class="title">Figure 2. A subclass registering it self in a superclass.</div>
 </div>
@@ -905,60 +904,60 @@ which include executing the static blocks in the code.</p>
 <div class="listingblock">
 <div class="title">Loading a class that then self registers.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">Deconstructor</span>&lt;E&gt; {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class Deconstructor&lt;E&gt; {
 
-    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">ConcurrentMap</span>&lt;<span class="predefined-type">Class</span>&lt;?&gt;, Deconstructor&lt;?&gt;&gt; register
-         = <span class="keyword">new</span> <span class="predefined-type">ConcurrentHashMap</span>&lt;&gt;();
+    private static final ConcurrentMap&lt;Class&lt;?&gt;, Deconstructor&lt;?&gt;&gt; register
+         = new ConcurrentHashMap&lt;&gt;();
 
-    <span class="directive">public</span> <span class="directive">static</span> &lt;E&gt; Deconstructor&lt;E&gt; forType( <span class="predefined-type">Class</span>&lt;E&gt; et ) {
-        <span class="keyword">if</span> ( !register.containsKey( et ) ) {
+    public static &lt;E&gt; Deconstructor&lt;E&gt; forType( Class&lt;E&gt; et ) {
+        if ( !register.containsKey( et ) ) {
             loadDeconstructorClass( et );
-        } <span class="comment">// assume loading is successful</span>
-        <span class="keyword">return</span> (Deconstructor&lt;E&gt;) register.get( et );
+        } // assume loading is successful
+        return (Deconstructor&lt;E&gt;) register.get( et );
     }
 
-    <span class="directive">private</span> <span class="directive">static</span> &lt;E&gt; <span class="type">void</span> loadDeconstructorClass( <span class="predefined-type">Class</span>&lt;E&gt; forEntity ) {
-        <span class="predefined-type">String</span> deconstructorName = forEntity.getName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">Deconstructor</span><span class="delimiter">&quot;</span></span>;
-        <span class="keyword">try</span> {
-            <span class="predefined-type">Class</span>.forName( deconstructorName, <span class="predefined-constant">true</span>, forEntity.getClassLoader() );
-        } <span class="keyword">catch</span> ( <span class="exception">ClassNotFoundException</span> ex ) {
-            <span class="predefined-type">Logger</span>.getLogger( Deconstructor.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE,
+    private static &lt;E&gt; void loadDeconstructorClass( Class&lt;E&gt; forEntity ) {
+        String deconstructorName = forEntity.getName() + "Deconstructor";
+        try {
+            Class.forName( deconstructorName, true, forEntity.getClassLoader() );
+        } catch ( ClassNotFoundException ex ) {
+            Logger.getLogger( Deconstructor.class.getName() ).log( Level.SEVERE,
                     ex.getMessage() );
         }
     }
 
-    <span class="directive">protected</span> <span class="directive">static</span> <span class="type">void</span> register( <span class="predefined-type">Class</span>&lt;?&gt; et, Deconstructor&lt;?&gt; dec ) {
+    protected static void register( Class&lt;?&gt; et, Deconstructor&lt;?&gt; dec ) {
         register.put( et, dec );
     }
 
-    <span class="comment">/**
+    /**
      * Method to be implemented by (potentially generated) leaf deconstructors.
      *
      * @param entity to deconstruct
      * @return field values in array
-     */</span>
-    <span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct( E entity );
+     */
+    public abstract Object[] deconstruct( E entity );
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Self registration in a subclass</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">StudentDeconstructor</span> <span class="directive">extends</span> Deconstructor&lt;Student&gt; {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class StudentDeconstructor extends Deconstructor&lt;Student&gt; {
 
-  <span class="directive">private</span> StudentDeconstructor(){
-    <span class="comment">// do what is needed to make this a valid object</span>
-    <span class="comment">// or leave empty to suppress a default constructor.</span>
+  private StudentDeconstructor(){
+    // do what is needed to make this a valid object
+    // or leave empty to suppress a default constructor.
   }
 
-  <span class="comment">/**
+  /**
    * Static block to self register.
-   */</span>
-  <span class="directive">static</span> {
-    <span class="predefined-type">Registry</span>.register( Student.class, <span class="keyword">new</span> StudentDeconstructor() );
+   */
+  static {
+    Registry.register( Student.class, new StudentDeconstructor() );
   }
 
-  <span class="comment">// other details left out</span>
+  // other details left out
 }</code></pre>
 </div>
 </div>
@@ -1068,34 +1067,34 @@ requiring that the parameter is non-null.</p>
 <div class="listingblock">
 <div class="title">Traditional returning null</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  SomeType result;
-  <span class="type">var</span> a = m1();
-  <span class="type">var</span> b=<span class="predefined-constant">null</span>;
-  <span class="type">var</span> c=<span class="predefined-constant">null</span>;
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != a ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  SomeType result;
+  var a = m1();
+  var b=null;
+  var c=null;
+  if ( null != a ) {
     b = m2( a );
   }
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != b ) {
+  if ( null != b ) {
     c = m3( b );
   }
 
-  <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != c ) {
+  if ( null != c ) {
     result = m4( c );
   }
-  <span class="keyword">return</span> result;
-  <span class="comment">// do something with result</span></code></pre>
+  return result;
+  // do something with result</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Using Optional. Returning Optional&lt;SomeType&gt;</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  Optional&lt;SomeType&gt; result
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  Optional&lt;SomeType&gt; result
      = m1ReturningOptional() <i class="conum" data-value="1"></i><b>(1)</b>
       .map( a-&gt; m2( a ) )
       .map( b-&gt; m3( b ) )
       .map( c-&gt; m4( c ) );
-  <span class="keyword">return</span> result;
-  <span class="comment">// do something with Optional result</span></code></pre>
+  return result;
+  // do something with Optional result</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1178,7 +1177,7 @@ final project and functionality. You do not have to do the copying, that has alr
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/generatedmapper.svg" alt="generatedmapper">
+<img src="images/generatedmapper.svg" alt="generatedmapper">
 </div>
 <div class="title">Figure 3. The Generic Mapper class diagram</div>
 </div>
@@ -1228,8 +1227,8 @@ type of <code>&lt;K&gt;.</code></p>
 <div class="listingblock">
 <div class="title">Creating the method type for a Constructor that takes all fields</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">Class</span><span class="type">[]</span> fieldTypes = ...               <i class="conum" data-value="1"></i><b>(1)</b>
-    MethodType ctorType = MethodType.methodType( <span class="type">void</span>.class, fieldTypes ); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    Class[] fieldTypes = ...               <i class="conum" data-value="1"></i><b>(1)</b>
+    MethodType ctorType = MethodType.methodType( void.class, fieldTypes ); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1272,11 +1271,11 @@ and the value from the deconstructed <code class="blue">Object[]</code>.</p>
 <div class="listingblock">
 <div class="title">Stream an entity as Stream of <strong>FieldPair</strong>s</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> Stream&lt;FieldPair&gt; stream( E entity ) {
-        <span class="predefined-type">Object</span><span class="type">[]</span> fieldValues = deconstruct( entity ); <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="keyword">return</span> IntStream
-                .range( <span class="integer">0</span>, entityFields.length )      <i class="conum" data-value="2"></i><b>(2)</b>
-                .mapToObj( i -&gt; <span class="keyword">new</span> FieldPair( entityFields[i].getName(),
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    public Stream&lt;FieldPair&gt; stream( E entity ) {
+        Object[] fieldValues = deconstruct( entity ); <i class="conum" data-value="1"></i><b>(1)</b>
+        return IntStream
+                .range( 0, entityFields.length )      <i class="conum" data-value="2"></i><b>(2)</b>
+                .mapToObj( i -&gt; new FieldPair( entityFields[i].getName(),
                 fieldValues[i] )
                 );
     }</code></pre>
@@ -1303,28 +1302,28 @@ and the value from the deconstructed <code class="blue">Object[]</code>.</p>
 <div class="listingblock">
 <div class="title">Student mapper in action one  a Student.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">Object</span><span class="type">[]</span> studentArgs = <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    static Object[] studentArgs = new Object[]{
         snummer, lastName, tussenVoegsel, firstName, dob, cohort, email, gender,
-        group, <span class="predefined-constant">true</span>
+        group, true
     };
 
-    <span class="directive">static</span> Student jan = <span class="keyword">new</span> Student(
+    static Student jan = new Student(
             snummer, lastName, tussenVoegsel, firstName, dob, cohort, email,
-            gender, group, <span class="predefined-constant">true</span>
+            gender, group, true
     );
 
-    <span class="annotation">@Test</span>
-    <span class="directive">public</span> <span class="type">void</span> tStudentMapperConstructs() {
-         Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
+    @Test
+    public void tStudentMapperConstructs() {
+         Mapper&lt;Student,Integer&gt; mapper = Mapper.mapperFor( Student.class );
          Student xJan = mapper.construct( studentArgs );
          assertThat( xJan ).usingRecursiveComparison().isEqualTo( jan );
      }
 
-     <span class="comment">//@Disabled(&quot;Think TDD&quot;)</span>
-     <span class="annotation">@Test</span>
-     <span class="directive">public</span> <span class="type">void</span> tStudentMapperDeconstructs() {
-         Mapper&lt;Student,<span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor( Student.class );
-         <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct = mapper.deconstruct( jan );
+     //@Disabled("Think TDD")
+     @Test
+     public void tStudentMapperDeconstructs() {
+         Mapper&lt;Student,Integer&gt; mapper = Mapper.mapperFor( Student.class );
+         Object[] deconstruct = mapper.deconstruct( jan );
          assertThat( deconstruct ).isEqualTo( studentArgs );
      }</code></pre>
 </div>
@@ -1337,43 +1336,43 @@ is almost exactly the same as in the deconstructor generator exercise. Only the 
 <div class="listingblock">
 <div class="title">Here is the Template</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> %<span class="integer">1</span><span class="error">$</span><span class="namespace">s</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package %1$s;
 
-<span class="keyword">import</span> %<span class="integer">2</span><span class="error">$</span><span class="include">s</span>;
-<span class="keyword">import</span> <span class="include">genericmapper.Mapper</span>;
-<span class="keyword">import</span> <span class="include">java.util.function.Function</span>;
+import %2$s;
+import genericmapper.Mapper;
+import java.util.function.Function;
 
-<span class="comment">/**
+/**
  * Generated code. Do not edit, your changes will be lost.
- */</span>
-<span class="directive">public</span> <span class="type">class</span> %<span class="integer">3</span><span class="error">$</span><span class="class">sMapper</span> <span class="directive">extends</span> Mapper&lt;%<span class="integer">3</span><span class="error">$</span>s, %<span class="integer">4</span><span class="error">$</span>s&gt; {
+ */
+public class %3$sMapper extends Mapper&lt;%3$s, %4$s&gt; {
 
-    <span class="comment">// No public ctor</span>
-    <span class="directive">private</span> %<span class="integer">3</span><span class="error">$</span>sMapper() {
-        <span class="local-variable">super</span>( %<span class="integer">3</span><span class="error">$</span>s.class );
+    // No public ctor
+    private %3$sMapper() {
+        super( %3$s.class );
     }
 
-    <span class="comment">// self register</span>
-    <span class="directive">static</span> {
-        Mapper.register( <span class="keyword">new</span> %<span class="integer">3</span><span class="error">$</span>sMapper() );
+    // self register
+    static {
+        Mapper.register( new %3$sMapper() );
     }
 
-    <span class="comment">// the method that it is all about</span>
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">Object</span><span class="type">[]</span> deconstruct(  %<span class="integer">3</span><span class="error">$</span>s %<span class="integer">5</span><span class="error">$</span>s ) {
-           <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span>{
-              %<span class="integer">6</span><span class="error">$</span>s
+    // the method that it is all about
+    @Override
+    public Object[] deconstruct(  %3$s %5$s ) {
+           return new Object[]{
+              %6$s
            };
     }
 
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> Function&lt;%<span class="integer">3</span><span class="error">$</span>s, %<span class="integer">4</span><span class="error">$</span>s&gt; keyExtractor() {
-        <span class="keyword">return</span> ( %<span class="integer">3</span><span class="error">$</span>s %<span class="integer">5</span><span class="error">$</span>s ) -&gt; %<span class="integer">5</span><span class="error">$</span>s.%<span class="integer">7</span><span class="error">$</span>s;
+    @Override
+    public Function&lt;%3$s, %4$s&gt; keyExtractor() {
+        return ( %3$s %5$s ) -&gt; %5$s.%7$s;
     }
 
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">Class</span>&lt;%<span class="integer">4</span><span class="error">$</span>s&gt; keyType() {
-        <span class="keyword">return</span> %<span class="integer">4</span><span class="error">$</span>s.class;
+    @Override
+    public Class&lt;%4$s&gt; keyType() {
+        return %4$s.class;
 
     }
 }</code></pre>
@@ -1442,71 +1441,71 @@ entities.</p>
 <div class="listingblock">
 <div class="title">Automagically generate mapper with <code>mvn compile</code> in the entities project. Pom from AIS example PRJ2 revised-implementaion</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
-    <span class="tag">&lt;repositories&gt;</span>
-        <span class="tag">&lt;repository&gt;</span>
-            <span class="tag">&lt;id&gt;</span>fontysvenlo.org<span class="tag">&lt;/id&gt;</span>
-            <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository<span class="tag">&lt;/url&gt;</span>
-        <span class="tag">&lt;/repository&gt;</span>
-    <span class="tag">&lt;/repositories&gt;</span>
-    <span class="tag">&lt;pluginRepositories&gt;</span>  <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="tag">&lt;pluginRepository&gt;</span>
-            <span class="tag">&lt;id&gt;</span>sebiplugins<span class="tag">&lt;/id&gt;</span>
-            <span class="tag">&lt;url&gt;</span>https://www.fontysvenlo.org/repository/<span class="tag">&lt;/url&gt;</span>
-        <span class="tag">&lt;/pluginRepository&gt;</span>
-    <span class="tag">&lt;/pluginRepositories&gt;</span>
-    <span class="tag">&lt;parent&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>fontys<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>AirlineInformationSystem<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>1.1-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-        <span class="tag">&lt;relativePath&gt;</span>..<span class="tag">&lt;/relativePath&gt;</span>
-    <span class="tag">&lt;/parent&gt;</span>
-    <span class="tag">&lt;artifactId&gt;</span>BusinessEntities<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
-    <span class="tag">&lt;version&gt;</span>1.1-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-    <span class="tag">&lt;dependencies&gt;</span>
-        <span class="tag">&lt;dependency&gt;</span>
-            <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>sebiannotations<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;type&gt;</span>jar<span class="tag">&lt;/type&gt;</span>
-        <span class="tag">&lt;/dependency&gt;</span>
-        <span class="tag">&lt;dependency&gt;</span>
-            <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>genericmapper<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>[2.2.0,)<span class="tag">&lt;/version&gt;</span>  <i class="conum" data-value="2"></i><b>(2)</b>
-            <span class="tag">&lt;type&gt;</span>jar<span class="tag">&lt;/type&gt;</span>
-            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
-        <span class="tag">&lt;/dependency&gt;</span>
-    <span class="tag">&lt;/dependencies&gt;</span>
-    <span class="tag">&lt;build&gt;</span>
-        <span class="tag">&lt;plugins&gt;</span>
-            <span class="tag">&lt;plugin&gt;</span>
-                <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
-                <span class="tag">&lt;artifactId&gt;</span>mapperplugin<span class="tag">&lt;/artifactId&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
-                <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;executions&gt;</span>
-                    <span class="tag">&lt;execution&gt;</span>
-                        <span class="tag">&lt;id&gt;</span>gen-src<span class="tag">&lt;/id&gt;</span>
-                        <span class="tag">&lt;phase&gt;</span>generate-sources<span class="tag">&lt;/phase&gt;</span>
-                        <span class="tag">&lt;goals&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>sebimappergenerator<span class="tag">&lt;/goal&gt;</span>
-                        <span class="tag">&lt;/goals&gt;</span>
-                        <span class="tag">&lt;configuration&gt;</span>
-                            <span class="tag">&lt;entityPackages&gt;</span>
-                                <span class="tag">&lt;entityPackage&gt;</span>businessentities<span class="tag">&lt;/entityPackage&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
-                            <span class="tag">&lt;/entityPackages&gt;</span>
-                            <span class="tag">&lt;classesDir&gt;</span>${basedir}/target/classes<span class="tag">&lt;/classesDir&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
-                            <span class="tag">&lt;outDir&gt;</span>${basedir}/src/main/java<span class="tag">&lt;/outDir&gt;</span><i class="conum" data-value="6"></i><b>(6)</b>
-                        <span class="tag">&lt;/configuration&gt;</span>
-                    <span class="tag">&lt;/execution&gt;</span>
-                <span class="tag">&lt;/executions&gt;</span>
-            <span class="tag">&lt;/plugin&gt;</span>
-        <span class="tag">&lt;/plugins&gt;</span>
-    <span class="tag">&lt;/build&gt;</span>
-<span class="tag">&lt;/project&gt;</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;fontysvenlo.org&lt;/id&gt;
+            &lt;url&gt;https://www.fontysvenlo.org/repository&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+    &lt;pluginRepositories&gt;  <i class="conum" data-value="1"></i><b>(1)</b>
+        &lt;pluginRepository&gt;
+            &lt;id&gt;sebiplugins&lt;/id&gt;
+            &lt;url&gt;https://www.fontysvenlo.org/repository/&lt;/url&gt;
+        &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;fontys&lt;/groupId&gt;
+        &lt;artifactId&gt;AirlineInformationSystem&lt;/artifactId&gt;
+        &lt;version&gt;1.1-SNAPSHOT&lt;/version&gt;
+        &lt;relativePath&gt;..&lt;/relativePath&gt;
+    &lt;/parent&gt;
+    &lt;artifactId&gt;BusinessEntities&lt;/artifactId&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;version&gt;1.1-SNAPSHOT&lt;/version&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+            &lt;artifactId&gt;sebiannotations&lt;/artifactId&gt;
+            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+            &lt;type&gt;jar&lt;/type&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+            &lt;artifactId&gt;genericmapper&lt;/artifactId&gt;
+            &lt;version&gt;[2.2.0,)&lt;/version&gt;  <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;type&gt;jar&lt;/type&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
+                &lt;artifactId&gt;mapperplugin&lt;/artifactId&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;version&gt;1.0&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;gen-src&lt;/id&gt;
+                        &lt;phase&gt;generate-sources&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;sebimappergenerator&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;entityPackages&gt;
+                                &lt;entityPackage&gt;businessentities&lt;/entityPackage&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                            &lt;/entityPackages&gt;
+                            &lt;classesDir&gt;${basedir}/target/classes&lt;/classesDir&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                            &lt;outDir&gt;${basedir}/src/main/java&lt;/outDir&gt;<i class="conum" data-value="6"></i><b>(6)</b>
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1573,73 +1572,73 @@ are also on github, under <a href="https://github.com/sebivenlo/mapperplugin" ta
 <div class="listingblock">
 <div class="title">MapperGeneratorRunner. There, I said it.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">genericmapper</span>;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package genericmapper;
 
-<span class="keyword">import</span> <span class="include">static</span> <span class="include">genericmapper.Constants.generatedJavaFileName</span>;
-<span class="keyword">import</span> <span class="include">java.io.File</span>;
-<span class="keyword">import</span> <span class="include">java.io.FileNotFoundException</span>;
-<span class="keyword">import</span> <span class="include">java.io.IOException</span>;
-<span class="keyword">import</span> <span class="include">java.io.PrintStream</span>;
-<span class="keyword">import</span> <span class="include">java.net.MalformedURLException</span>;
-<span class="keyword">import</span> <span class="include">java.net.URL</span>;
-<span class="keyword">import</span> <span class="include">java.net.URLClassLoader</span>;
-<span class="keyword">import</span> <span class="include">java.nio.file.Files</span>;
-<span class="keyword">import</span> <span class="include">java.nio.file.Path</span>;
-<span class="keyword">import</span> <span class="include">java.util.Collection</span>;
-<span class="keyword">import</span> <span class="include">java.util.Collections</span>;
-<span class="keyword">import</span> <span class="include">java.util.Set</span>;
-<span class="keyword">import</span> <span class="include">java.util.logging.Level</span>;
-<span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
-<span class="keyword">import</span> <span class="include">java.util.stream.Collectors</span>;
-<span class="keyword">import</span> <span class="include">java.util.stream.Stream</span>;
+import static genericmapper.Constants.generatedJavaFileName;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-<span class="comment">/**
+/**
  * Helper for mapper plugin.
  * This class accepts the parameters of the plugin and passes it to
  * individual MapperGenarator instances.
  *
  * @author Pieter van den Hombergh {@code Pieter.van.den.Hombergh@gmail.com}
- */</span>
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MapperGeneratorRunner</span> {
+ */
+public class MapperGeneratorRunner {
 
-    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
-        <span class="predefined-type">String</span> pOutDir = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">mapper.generator.outDir</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">out</span><span class="delimiter">&quot;</span></span> );
-        <span class="predefined-type">String</span> pClassesDir = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">mapper.generator.classesDir</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">target/classes</span><span class="delimiter">&quot;</span></span> );
-        <span class="predefined-type">String</span><span class="type">[]</span> packNames;
-        <span class="keyword">if</span> ( args.length &gt; <span class="integer">0</span> ) {
+    public static void main( String[] args ) {
+        String pOutDir = System.getProperty( "mapper.generator.outDir", "out" );
+        String pClassesDir = System.getProperty( "mapper.generator.classesDir",
+                "target/classes" );
+        String[] packNames;
+        if ( args.length &gt; 0 ) {
             packNames = args;
-        } <span class="keyword">else</span> {
-            packNames = <span class="keyword">new</span> <span class="predefined-type">String</span><span class="type">[]</span>{ <span class="string"><span class="delimiter">&quot;</span><span class="content">entities</span><span class="delimiter">&quot;</span></span> };
+        } else {
+            packNames = new String[]{ "entities" };
         }
-        <span class="keyword">new</span> MapperGeneratorRunner( pClassesDir, pOutDir, packNames ).run();
+        new MapperGeneratorRunner( pClassesDir, pOutDir, packNames ).run();
     }
 
-    <span class="directive">final</span> <span class="predefined-type">String</span> classesDir;
-    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> outDir;
-    <span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> packNames;
+    final String classesDir;
+    private final String outDir;
+    final String[] packNames;
 
-    <span class="directive">public</span> MapperGeneratorRunner( <span class="predefined-type">String</span> baseDir, <span class="predefined-type">String</span> outDir, <span class="predefined-type">String</span><span class="type">[]</span> packNames ) {
-        <span class="local-variable">this</span>.classesDir = baseDir;
-        <span class="local-variable">this</span>.outDir = outDir;
-        <span class="local-variable">this</span>.packNames = packNames;
+    public MapperGeneratorRunner( String baseDir, String outDir, String[] packNames ) {
+        this.classesDir = baseDir;
+        this.outDir = outDir;
+        this.packNames = packNames;
 
     }
 
-    <span class="directive">public</span> <span class="type">void</span> run() {
-        <span class="keyword">try</span> {
-            <span class="keyword">for</span> ( <span class="predefined-type">String</span> packName : packNames ) {
+    public void run() {
+        try {
+            for ( String packName : packNames ) {
                 generateMappers( outDir, classesDir,
                         getCanditateEntityNames(
                                 classesDir, packName ) );
             }
-        } <span class="keyword">catch</span> ( <span class="exception">IOException</span> | <span class="exception">ClassNotFoundException</span> ex ) {
-            <span class="predefined-type">Logger</span>.getLogger( MapperGenerator.class.getName() )
-                    .log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
+        } catch ( IOException | ClassNotFoundException ex ) {
+            Logger.getLogger( MapperGenerator.class.getName() )
+                    .log( Level.SEVERE, null, ex );
         }
     }
 
-    <span class="comment">/**
+    /**
      * Get the list of candidate entities from the compiled classes
      * directory.The method removes the following file name patterns from the
      * available files below the start directory.
@@ -1655,58 +1654,58 @@ are also on github, under <a href="https://github.com/sebivenlo/mapperplugin" ta
      * @return list of possible entity classes.
      *
      * @throws IOException dir
-     */</span>
-    <span class="directive">public</span> <span class="predefined-type">Set</span>&lt;<span class="predefined-type">String</span>&gt; getCanditateEntityNames( <span class="predefined-type">String</span> startDir,
-                                                <span class="predefined-type">String</span> entPackage )
-            <span class="directive">throws</span> <span class="exception">IOException</span> {
+     */
+    public Set&lt;String&gt; getCanditateEntityNames( String startDir,
+                                                String entPackage )
+            throws IOException {
         Path startPath = Path.of( startDir );
         Path root = Path.of(
-                startDir + fileSep + entPackage.replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">.</span><span class="delimiter">&quot;</span></span>, fileSep ) );
-        <span class="keyword">if</span> ( Files.exists( root ) ) {
-            <span class="keyword">try</span> ( Stream&lt;Path&gt; stream = Files.walk( root,
-                    <span class="predefined-type">Integer</span>.MAX_VALUE ) ) {
-                <span class="keyword">return</span> stream
+                startDir + fileSep + entPackage.replaceAll( "\\.", fileSep ) );
+        if ( Files.exists( root ) ) {
+            try ( Stream&lt;Path&gt; stream = Files.walk( root,
+                    Integer.MAX_VALUE ) ) {
+                return stream
                         .filter( file -&gt; !Files.isDirectory( file ) )
-                        .filter( f -&gt; !fileNameContains( f, <span class="string"><span class="delimiter">&quot;</span><span class="content">-</span><span class="delimiter">&quot;</span></span> ) ) <span class="comment">// avoid info files</span>
-                        .filter( f -&gt; !fileNameEndsWith( f, <span class="string"><span class="delimiter">&quot;</span><span class="content">Mapper.class</span><span class="delimiter">&quot;</span></span> ) )
-                        .filter( file -&gt; fileNameEndsWith( file, <span class="string"><span class="delimiter">&quot;</span><span class="content">.class</span><span class="delimiter">&quot;</span></span> ) )
+                        .filter( f -&gt; !fileNameContains( f, "-" ) ) // avoid info files
+                        .filter( f -&gt; !fileNameEndsWith( f, "Mapper.class" ) )
+                        .filter( file -&gt; fileNameEndsWith( file, ".class" ) )
                         .map( p -&gt; startPath.relativize( p ) )
                         .map( Path::toString )
-                        .map( s -&gt; s.substring( <span class="integer">0</span>,
-                        s.length() - <span class="string"><span class="delimiter">&quot;</span><span class="content">.class</span><span class="delimiter">&quot;</span></span>.length() ) )
-                        .map( s -&gt; s.replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span> ) )
+                        .map( s -&gt; s.substring( 0,
+                        s.length() - ".class".length() ) )
+                        .map( s -&gt; s.replaceAll( "/", "." ) )
                         .collect( Collectors.toSet() );
             }
-        } <span class="keyword">else</span> {
-            <span class="keyword">return</span> <span class="predefined-type">Collections</span>.emptySet();
+        } else {
+            return Collections.emptySet();
         }
     }
 
-    <span class="directive">static</span> <span class="type">boolean</span> fileNameEndsWith( Path file, <span class="predefined-type">String</span> end ) {
-        <span class="keyword">return</span> file.getFileName().toString().endsWith( end );
+    static boolean fileNameEndsWith( Path file, String end ) {
+        return file.getFileName().toString().endsWith( end );
     }
 
-    <span class="directive">static</span> <span class="type">boolean</span> fileNameContains( Path file, <span class="predefined-type">String</span> needle ) {
-        <span class="keyword">return</span> file.getFileName().toString().contains( needle );
+    static boolean fileNameContains( Path file, String needle ) {
+        return file.getFileName().toString().contains( needle );
     }
 
-    <span class="directive">static</span> <span class="predefined-type">String</span> pathSep = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">path.separator</span><span class="delimiter">&quot;</span></span> );
-    <span class="directive">static</span> <span class="predefined-type">String</span> fileSep = <span class="predefined-type">System</span>.getProperty( <span class="string"><span class="delimiter">&quot;</span><span class="content">file.separator</span><span class="delimiter">&quot;</span></span> );
+    static String pathSep = System.getProperty( "path.separator" );
+    static String fileSep = System.getProperty( "file.separator" );
 
-    <span class="type">void</span> generateMappers( <span class="predefined-type">String</span> outDir, <span class="predefined-type">String</span> classPathElement,
-                          <span class="predefined-type">Collection</span>&lt;<span class="predefined-type">String</span>&gt; entityNames ) <span class="directive">throws</span>
-            <span class="exception">ClassNotFoundException</span>, <span class="exception">FileNotFoundException</span>, <span class="exception">MalformedURLException</span> {
-        <span class="predefined-type">URLClassLoader</span> cl = <span class="keyword">new</span> <span class="predefined-type">URLClassLoader</span>( <span class="keyword">new</span> <span class="predefined-type">URL</span><span class="type">[]</span>{
+    void generateMappers( String outDir, String classPathElement,
+                          Collection&lt;String&gt; entityNames ) throws
+            ClassNotFoundException, FileNotFoundException, MalformedURLException {
+        URLClassLoader cl = new URLClassLoader( new URL[]{
             Path.of( classesDir ).toUri().toURL()
         } );
-        <span class="keyword">for</span> ( <span class="predefined-type">String</span> entityName : entityNames ) {
-            <span class="predefined-type">Class</span>&lt;?&gt; clz = <span class="predefined-type">Class</span>.forName( entityName, <span class="predefined-constant">true</span>, cl );
-            <span class="predefined-type">String</span> fileName = generatedJavaFileName( outDir, clz );
-            <span class="predefined-type">File</span> dir = <span class="keyword">new</span> <span class="predefined-type">File</span>( fileName );
+        for ( String entityName : entityNames ) {
+            Class&lt;?&gt; clz = Class.forName( entityName, true, cl );
+            String fileName = generatedJavaFileName( outDir, clz );
+            File dir = new File( fileName );
             dir.getParentFile().mkdirs();
-            <span class="predefined-type">String</span> javaSource = <span class="keyword">new</span> MapperGenerator( clz ).javaSource();
-            <span class="keyword">if</span> ( !javaSource.isBlank() ) {
-                <span class="keyword">try</span> ( <span class="predefined-type">PrintStream</span> out = <span class="keyword">new</span> <span class="predefined-type">PrintStream</span>( fileName ) ) {
+            String javaSource = new MapperGenerator( clz ).javaSource();
+            if ( !javaSource.isBlank() ) {
+                try ( PrintStream out = new PrintStream( fileName ) ) {
                     out.print( javaSource );
                     out.flush();
                 }
@@ -1812,11 +1811,11 @@ If you did not, the improvements will be considered (but not tested) in the test
 <div class="listingblock">
 <div class="title">static block to remove. Block loads StringMapper, which is now obsolete</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">  <span class="directive">static</span> {
-        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">loading  StringMapper</span><span class="delimiter">&quot;</span></span> );
-        <span class="keyword">try</span> {
-            <span class="predefined-type">Class</span>.forName( <span class="string"><span class="delimiter">&quot;</span><span class="content">genericmapper.Mapper$StringMapper</span><span class="delimiter">&quot;</span></span> );
-        } <span class="keyword">catch</span> ( <span class="exception">ClassNotFoundException</span> neverhappens ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  static {
+        System.out.println( "loading  StringMapper" );
+        try {
+            Class.forName( "genericmapper.Mapper$StringMapper" );
+        } catch ( ClassNotFoundException neverhappens ) {
         }
   }</code></pre>
 </div>
@@ -1834,7 +1833,7 @@ If you did not, the improvements will be considered (but not tested) in the test
 <div class="listingblock">
 <div class="title">improved log about missing constructor.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    /**
      * Better info when a constructor with a specific signature can't be
      * found.
      *
@@ -1842,18 +1841,18 @@ If you did not, the improvements will be considered (but not tested) in the test
      *
      * @param ex     exception that triggered this method
      * @param fields to compute the detail info.
-     */</span>
-    <span class="type">void</span> logCannotFind( <span class="predefined-type">Throwable</span> ex, <span class="directive">final</span> <span class="predefined-type">Field</span><span class="type">[]</span> fields ) {
+     */
+    void logCannotFind( Throwable ex, final Field[] fields ) {
         ex.setStackTrace( Stream.of( ex.getStackTrace() )
-                .filter( steFilter ).toArray( <span class="predefined-type">StackTraceElement</span><span class="type">[]</span>::<span class="keyword">new</span> ) );
-        Supplier&lt;<span class="predefined-type">String</span>&gt; msg = () -&gt; <span class="predefined-type">String</span>.format(
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">failed to find constructor for class '%s'</span><span class="char">\n</span><span class="char">\t</span><span class="content">with exception type '%s' </span><span class="char">\n</span><span class="char">\t</span><span class="content">and signature</span><span class="char">\n</span><span class="content"> %3s</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>,
+                .filter( steFilter ).toArray( StackTraceElement[]::new ) );
+        Supplier&lt;String&gt; msg = () -&gt; String.format(
+                "failed to find constructor for class '%s'\n\twith exception type '%s' \n\tand signature\n %3s\n",
                 entityType.getName(), ex.getClass().getName(),
-                <span class="string"><span class="delimiter">&quot;</span><span class="char">\t</span><span class="content">public </span><span class="delimiter">&quot;</span></span> + entityType.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">( </span><span class="delimiter">&quot;</span></span> + Stream
+                "\tpublic " + entityType.getSimpleName() + "( " + Stream
                 .of( fields )
-                .map( f -&gt; f.getType().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + f.getName() )
-                .collect( joining( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="char">\n</span><span class="char">\t</span><span class="char">\t</span><span class="char">\t</span><span class="delimiter">&quot;</span></span> ) ) + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="char">\t</span><span class="content">);</span><span class="delimiter">&quot;</span></span> );
-        logger.log( <span class="predefined-type">Level</span>.SEVERE, ex, msg );
+                .map( f -&gt; f.getType().getSimpleName() + " " + f.getName() )
+                .collect( joining( ",\n\t\t\t" ) ) + "\n\t);" );
+        logger.log( Level.SEVERE, ex, msg );
     }</code></pre>
 </div>
 </div>
@@ -1871,20 +1870,20 @@ with a call to the above method.</p>
 <div class="listingblock">
 <div class="title">previous code in catch Block</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="keyword">catch</span> ( <span class="exception">IllegalAccessException</span> | <span class="exception">NoSuchMethodException</span> ex ) {
-            Supplier&lt;<span class="predefined-type">String</span>&gt; puk = () -&gt; <span class="predefined-type">String</span>.format(
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">failed to find constructor for class %s with exception type %s and message %3s</span><span class="delimiter">&quot;</span></span>,
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    catch ( IllegalAccessException | NoSuchMethodException ex ) {
+            Supplier&lt;String&gt; puk = () -&gt; String.format(
+                    "failed to find constructor for class %s with exception type %s and message %3s",
                     entityType.getClass().getName(), ex.getClass().getName(),
                     ex.getMessage() );
-            <span class="predefined-type">Logger</span>.getLogger( Mapper.class.getName() )
-                    .log( <span class="predefined-type">Level</span>.SEVERE, puk );
+            Logger.getLogger( Mapper.class.getName() )
+                    .log( Level.SEVERE, puk );
     }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">new code in catch block.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">     <span class="keyword">catch</span> ( <span class="exception">IllegalAccessException</span> | <span class="exception">NoSuchMethodException</span> ex ) {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">     catch ( IllegalAccessException | NoSuchMethodException ex ) {
             logCannotFind( ex, fields );
      }</code></pre>
 </div>
@@ -2024,21 +2023,21 @@ By implication, having a primitive field implies non-null, with or without annot
 <div class="listingblock">
 <div class="title">Example Module class.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Data</span>                <i class="conum" data-value="1"></i><b>(1)</b>
-<span class="annotation">@AllArgsConstructor</span>  <i class="conum" data-value="2"></i><b>(2)</b>
-<span class="directive">public</span> <span class="type">class</span> <span class="class">CourseModule</span> {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Data                <i class="conum" data-value="1"></i><b>(1)</b>
+@AllArgsConstructor  <i class="conum" data-value="2"></i><b>(2)</b>
+public class CourseModule {
 
-    <span class="annotation">@ID</span>
-    <span class="directive">private</span> <span class="predefined-type">Integer</span> moduleid;
+    @ID
+    private Integer moduleid;
 
-    <span class="annotation">@NotNull</span>
-    <span class="predefined-type">String</span> name;
+    @NotNull
+    String name;
 
-    <span class="annotation">@NotNull</span> <span class="annotation">@Default</span>( value = <span class="string"><span class="delimiter">&quot;</span><span class="content">5</span><span class="delimiter">&quot;</span></span> ) <span class="annotation">@Check</span>(credits &gt; <span class="integer">0</span>)
-    <span class="predefined-type">Integer</span> credits;
-    <span class="comment">// extra ctor to make the default values take effect.</span>
-    <span class="directive">public</span> CourseModule( <span class="predefined-type">Integer</span> moduleid, <span class="predefined-type">String</span> name ) {
-        <span class="local-variable">this</span>( moduleid, name, <span class="integer">5</span> );
+    @NotNull @Default( value = "5" ) @Check(credits &gt; 0)
+    Integer credits;
+    // extra ctor to make the default values take effect.
+    public CourseModule( Integer moduleid, String name ) {
+        this( moduleid, name, 5 );
     }
 }</code></pre>
 </div>
@@ -2063,10 +2062,10 @@ the ID value is typically assigned by the database by means of a sequence or oth
 <div class="listingblock">
 <div class="title">Example Output.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> coursemodules (
-  moduleid SERIAL <span class="directive">PRIMARY</span> <span class="type">KEY</span>,
-  name <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
-  credits <span class="predefined-type">integer</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="directive">DEFAULT</span> (<span class="integer">5</span>) <span class="keyword">CHECK</span> (credits &gt; <span class="integer">0</span>)
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE TABLE coursemodules (
+  moduleid SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  credits integer NOT NULL DEFAULT (5) CHECK (credits &gt; 0)
 );</code></pre>
 </div>
 </div>
@@ -2074,7 +2073,7 @@ the ID value is typically assigned by the database by means of a sequence or oth
 <div class="listingblock">
 <div class="title">Windows run script to run the sqlgenerator from the command line.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
+<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">@echo off
 rem @author David Greven - https://github.com/grevend
 set jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
 if not exist %jar% cls &amp; echo Maven... &amp; call mvn package
@@ -2085,10 +2084,10 @@ java -jar %jar% %*</code></pre>
 <div class="listingblock">
 <div class="title">bash script to do the same as the above. Will work in git-bash too.</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">#!/bin/bash
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">#!/bin/bash
 jar=target/sqltablegenerator-1.0-SNAPSHOT.jar
 if [ ! -e ${jar} ]; then mvn package; fi
-java -jar ${jar} &quot;$@&quot;</code></pre>
+java -jar ${jar} "$@"</code></pre>
 </div>
 </div>
 </div>
@@ -2137,6 +2136,13 @@ java -jar ${jar} &quot;$@&quot;</code></pre>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

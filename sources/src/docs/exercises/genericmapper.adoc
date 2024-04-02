@@ -322,7 +322,7 @@ are also on github, under https://github.com/sebivenlo/mapperplugin[mapper plugi
 .MapperGeneratorRunner. There, I said it.
 [source,java]
 ----
-include::code/mappergeneratorrunner/src/main/java/genericmapper/MapperGeneratorRunner.java[]
+include::{exercises}/code/mappergeneratorrunner/src/main/java/genericmapper/MapperGeneratorRunner.java[]
 ----
 
 ++++

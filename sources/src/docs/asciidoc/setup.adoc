@@ -3,4 +3,4 @@
 :tabcolumns: d,h,d,d,d,d,d,d,d,d,d,d,d,d,h,d,d
 include::{topics}/topmenu.adoc[]
 
-include::../topics/gettingstarted.adoc[]
+include::{topics}/gettingstarted.adoc[]
