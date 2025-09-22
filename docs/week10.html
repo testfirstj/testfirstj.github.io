@@ -9,9 +9,10 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W10 Date/Time API and Internationalization</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -98,8 +99,8 @@ are immutable.</p>
 <em>zoned time</em>. Local date/time has a date and/or time of day, but no associated time zone. Examples:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="images/calendar_example_LocalDate.png" alt="calendar example LocalDate" width="25%" title="Local Date example"></span> Local Date example.
-<span class="image"><img src="images/alarmclock_example_LocalTime.jpg" alt="alarmclock example LocalTime" width="25%" title="Local Time example"></span> Local Time Example.</p>
+<p><span class="image"><img src="./images/calendar_example_LocalDate.png" alt="calendar example LocalDate" width="25%" title="Local Date example"></span> Local Date example.
+<span class="image"><img src="./images/alarmclock_example_LocalTime.jpg" alt="alarmclock example LocalTime" width="25%" title="Local Time example"></span> Local Time Example.</p>
 </div>
 <div class="paragraph">
 <p>Do not use zoned time, unless really necessary. Today&#8217;s date can be retrieved using <code>LocalDate.now()</code>, an arbitrary date
@@ -146,22 +147,22 @@ so that the whole test method reads</p>
 <div class="listingblock">
 <div class="title">fxtriangulate.GUITest.tLength</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @ParameterizedTest
-    @CsvSource( {
-        "a,greenCircle,blueCircle,500.0,400.0,100.0,100.0,500.0",
-        "b,redCircle,blueCircle,400.0,100.0,100.0,100.0,500.0",
-        "c,greenCircle,redCircle,300.0,100.0,100.0,400.0,100.0", } )
-    public void tLength( String line, String p1, String p2, double expected,
-            double x1, double y1, double x2, double y2 ) throws ParseException {
-        double xOrg = stage.getX();
-        double yOrg = stage.getY();
-        FxRobot rob = new FxRobot();
-        rob.drag( '#' + p1 ).dropTo( xOrg + x1, yOrg + y1 );
-        rob.drag( '#' + p2 ).dropTo( xOrg + x2, yOrg + y2 );
-        String ltext = labelMap.get( line ).apply( triangulator ).getText();
-        double l = getDoubleConsideringLocale( ltext.split( ":" )[ 1 ] ); <i class="conum" data-value="1"></i><b>(1)</b>
-        assertThat( l ).isCloseTo( expected, within( 0.1 ) );
-//        fail( "method tLength reached end. You know what to do." );
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@ParameterizedTest</span>
+    <span class="annotation">@CsvSource</span>( {
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">a,greenCircle,blueCircle,500.0,400.0,100.0,100.0,500.0</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">b,redCircle,blueCircle,400.0,100.0,100.0,100.0,500.0</span><span class="delimiter">&quot;</span></span>,
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">c,greenCircle,redCircle,300.0,100.0,100.0,400.0,100.0</span><span class="delimiter">&quot;</span></span>, } )
+    <span class="directive">public</span> <span class="type">void</span> tLength( <span class="predefined-type">String</span> line, <span class="predefined-type">String</span> p1, <span class="predefined-type">String</span> p2, <span class="type">double</span> expected,
+            <span class="type">double</span> x1, <span class="type">double</span> y1, <span class="type">double</span> x2, <span class="type">double</span> y2 ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+        <span class="type">double</span> xOrg = stage.getX();
+        <span class="type">double</span> yOrg = stage.getY();
+        FxRobot rob = <span class="keyword">new</span> FxRobot();
+        rob.drag( <span class="string"><span class="delimiter">'</span><span class="content">#</span><span class="delimiter">'</span></span> + p1 ).dropTo( xOrg + x1, yOrg + y1 );
+        rob.drag( <span class="string"><span class="delimiter">'</span><span class="content">#</span><span class="delimiter">'</span></span> + p2 ).dropTo( xOrg + x2, yOrg + y2 );
+        <span class="predefined-type">String</span> ltext = labelMap.get( line ).apply( triangulator ).getText();
+        <span class="type">double</span> l = getDoubleConsideringLocale( ltext.split( <span class="string"><span class="delimiter">&quot;</span><span class="content">:</span><span class="delimiter">&quot;</span></span> )[ <span class="integer">1</span> ] ); <i class="conum" data-value="1"></i><b>(1)</b>
+        assertThat( l ).isCloseTo( expected, within( <span class="float">0.1</span> ) );
+<span class="comment">//        fail( &quot;method tLength reached end. You know what to do.&quot; );</span>
     }</code></pre>
 </div>
 </div>
@@ -176,25 +177,25 @@ so that the whole test method reads</p>
 <div class="listingblock">
 <div class="title">Consider the local in which the number is written.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    /**
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
      * Use the default locale to parse a double value from a string.
      * @param input string
      * @return the double
      * @throws ParseException if the string does not parse to double.
-     */
-    static double getDoubleConsideringLocale( String input ) throws ParseException {
-        return DecimalFormat.getNumberInstance().parse( input ).doubleValue(); <i class="conum" data-value="1"></i><b>(1)</b>
+     */</span>
+    <span class="directive">static</span> <span class="type">double</span> getDoubleConsideringLocale( <span class="predefined-type">String</span> input ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+        <span class="keyword">return</span> <span class="predefined-type">DecimalFormat</span>.getNumberInstance().parse( input ).doubleValue(); <i class="conum" data-value="1"></i><b>(1)</b>
     }
 
-    /**
+    <span class="comment">/**
     * Use the given locale to parse a double value from a string.
     * @param locale to use.
     * @param input string.
     * @return the double.
     * @throws ParseException if the string does not parse to double.
-    */
-   static double getDoubleConsideringLocale( Locale locale, String input ) throws ParseException {
-       return DecimalFormat.getNumberInstance(locale).parse( input ).doubleValue();
+    */</span>
+   <span class="directive">static</span> <span class="type">double</span> getDoubleConsideringLocale( <span class="predefined-type">Locale</span> locale, <span class="predefined-type">String</span> input ) <span class="directive">throws</span> <span class="exception">ParseException</span> {
+       <span class="keyword">return</span> <span class="predefined-type">DecimalFormat</span>.getNumberInstance(locale).parse( input ).doubleValue();
    }</code></pre>
 </div>
 </div>
@@ -209,7 +210,7 @@ so that the whole test method reads</p>
 <div class="listingblock">
 <div class="title">Set the locale for the execution. Useful for tests.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">          Locale.setDefault( Locale.GERMANY ); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">          <span class="predefined-type">Locale</span>.setDefault( <span class="predefined-type">Locale</span>.GERMANY ); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -237,7 +238,7 @@ so that the whole test method reads</p>
 <div class="listingblock">
 <div class="title">To make a long story very short: here is an example:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String[] keys = keyWords.split( "\\|");
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span><span class="type">[]</span> keys = keyWords.split( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">|</span><span class="delimiter">&quot;</span></span>);
     assertThatThrownBy( () -&gt; {
                 MainSimulation.main( args );
     } ).isExactlyInstanceOf( exceptionMap.get( expectionClassName ) )
@@ -264,7 +265,7 @@ so that the whole test method reads</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/assertjtypehints.png" alt="assertjtypehints">
+<img src="./images/assertjtypehints.png" alt="assertjtypehints">
 </div>
 <div class="title">Figure 1. If you turn on type hints in NetBeans-IDE (or in intelij) you can see what the type is on which you call <code>contains(keys)</code></div>
 </div>
@@ -299,7 +300,7 @@ Make sure to read the bit about Resource Bundles, as you use them in the exercis
 </div>
 <div class="imageblock related thumb right">
 <div class="content">
-<img src="images/spanishBeerResources.png" alt="The resources in this project" height="^">
+<img src="./images/spanishBeerResources.png" alt="The resources in this project" height="^">
 </div>
 </div>
 <div class="paragraph">
@@ -314,9 +315,9 @@ in the key altogether, and derive the keys from the default message with</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String msg = getMessage(); <i class="conum" data-value="1"></i><b>(1)</b>
-    String key = msg.toLowerCase().replaceAll( "\\s", "_" ); <i class="conum" data-value="2"></i><b>(2)</b>
-    String lMessage = bundle.containsKey( key ) ? bundle.getString( key ) : msg; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> msg = getMessage(); <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="predefined-type">String</span> key = msg.toLowerCase().replaceAll( <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">s</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">_</span><span class="delimiter">&quot;</span></span> ); <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="predefined-type">String</span> lMessage = bundle.containsKey( key ) ? bundle.getString( key ) : msg; <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -338,7 +339,7 @@ in the key altogether, and derive the keys from the default message with</p>
 <div class="listingblock">
 <div class="title">The dutch file</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">#hello=Hello
+<pre class="CodeRay highlight"><code>#hello=Hello
 hello=Hallo
 #good_morning=Good Morning
 good_morning=Goede Morgen
@@ -385,7 +386,7 @@ Then, move to <code>LanguageTest.java</code> and work on the rest of the exercis
 <div class="listingblock">
 <div class="title">Windows run command</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-cmd hljs" data-lang="cmd">@echo off
+<pre class="CodeRay highlight"><code data-lang="cmd">@echo off
 rem @author David Greven - https://github.com/grevend
 if not exist target/classes call mvn clean compile
 chcp 65001
@@ -416,13 +417,6 @@ pause</code></pre>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

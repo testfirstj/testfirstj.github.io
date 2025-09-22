@@ -9,9 +9,10 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>Assessment Correction Rules.</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -373,15 +374,15 @@ that has to be coded by the candidate, but awaits enabling by commenting the <co
 <div class="listingblock">
 <div class="title">sample initial test method</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    // TODO assert that x conforms the specification.
-    @Disabled("Think TDD")
-    @Test
-    public void someTestMethod(){
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">// TODO assert that x conforms the specification.</span>
+    <span class="annotation">@Disabled</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Think TDD</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> someTestMethod(){
 
-      // you code here
+      <span class="comment">// you code here</span>
 
 
-      Assert.fail("method someTestMethod reached end. You know what to do.");
+      Assert.fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">method someTestMethod reached end. You know what to do.</span><span class="delimiter">&quot;</span></span>);
     }</code></pre>
 </div>
 </div>
@@ -427,13 +428,6 @@ Both options effectively take out the chance of the application code to be worth
 Last updated 2024-04-02 12:55:07 +0200
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

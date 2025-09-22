@@ -9,9 +9,10 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>TIPS through the weeks</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -144,9 +145,9 @@ your local variables at the place your need them and confine them there, without
 <div class="listingblock">
 <div class="title">example of block with scoped local variable</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-Java hljs" data-lang="Java">        {
-            int i=0;
-            // do something with i
+<pre class="CodeRay highlight"><code data-lang="Java">        {
+            <span class="type">int</span> i=<span class="integer">0</span>;
+            <span class="comment">// do something with i</span>
         }</code></pre>
 </div>
 </div>
@@ -162,29 +163,55 @@ you want to have a constructor, just to initialise things. Here is an examples f
 <div class="listingblock">
 <div class="title">initialize a binding in an 'Anonymous' constructor, lines 10..12, which is a block with no name&#8230;&#8203;</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-Java hljs" data-lang="Java">    public static void main( String[] args ) {
+<pre class="CodeRay highlight"><code data-lang="Java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td>
+  <td class="code"><pre>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
 
-        final DoubleProperty a = new SimpleDoubleProperty( 1 );
-        final DoubleProperty b = new SimpleDoubleProperty( 2 );
-        final DoubleProperty c = new SimpleDoubleProperty( 3 );
-        final DoubleProperty d = new SimpleDoubleProperty( 4 );
+        <span class="directive">final</span> DoubleProperty a = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">1</span> );
+        <span class="directive">final</span> DoubleProperty b = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">2</span> );
+        <span class="directive">final</span> DoubleProperty c = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">3</span> );
+        <span class="directive">final</span> DoubleProperty d = <span class="keyword">new</span> SimpleDoubleProperty( <span class="integer">4</span> );
 
-        DoubleBinding db = new DoubleBinding() {
+        DoubleBinding db = <span class="keyword">new</span> DoubleBinding() {
 
             { <i class="conum" data-value="1"></i><b>(1)</b>
-                super.bind( a, b, c, d );
+                <span class="local-variable">super</span>.bind( a, b, c, d );
             } <i class="conum" data-value="2"></i><b>(2)</b>
 
-            @Override
-            protected double computeValue() {
-                return ( a.get() * b.get() ) + ( c.get() * d.get() );
+            <span class="annotation">@Override</span>
+            <span class="directive">protected</span> <span class="type">double</span> computeValue() {
+                <span class="keyword">return</span> ( a.get() * b.get() ) + ( c.get() * d.get() );
             }
         };
 
-        System.out.println( db.get() );
-        b.set( 3 );
-        System.err.println( db.get() );
-    }</code></pre>
+        <span class="predefined-type">System</span>.out.println( db.get() );
+        b.set( <span class="integer">3</span> );
+        <span class="predefined-type">System</span>.err.println( db.get() );
+    }</pre></td>
+</tr></table></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -264,26 +291,26 @@ multiple authors contributed substantially. See the the jdk libraries for exampl
 <div class="listingblock">
 <div class="title">Excerpt from the String javadoc.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">&lt;p&gt;A {@code String} represents a string in the UTF-16 format
+<pre class="CodeRay highlight"><code data-lang="java">&lt;p&gt;A {<span class="annotation">@code</span> <span class="predefined-type">String</span>} represents a string in the UTF-<span class="integer">16</span> format
  * in which &lt;em&gt;supplementary characters&lt;/em&gt; are represented by &lt;em&gt;surrogate
- * pairs&lt;/em&gt; (see the section &lt;a href="Character.html#unicode"&gt;Unicode
- * Character Representations&lt;/a&gt; in the {@code Character} class for
+ * pairs&lt;/em&gt; (see the section &lt;a href=<span class="string"><span class="delimiter">&quot;</span><span class="content">Character.html#unicode</span><span class="delimiter">&quot;</span></span>&gt;Unicode
+ * <span class="predefined-type">Character</span> Representations&lt;/a&gt; in the {<span class="annotation">@code</span> <span class="predefined-type">Character</span>} <span class="type">class</span> <span class="class">for</span>
  * more information).
- * Index values refer to {@code char} code units, so a supplementary
- * character uses two positions in a {@code String}.
- * &lt;p&gt;The {@code String} class provides methods for dealing with
- * Unicode code points (i.e., characters), in addition to those for
- * dealing with Unicode code units (i.e., {@code char} values).
+ * Index values refer to {<span class="annotation">@code</span> <span class="type">char</span>} code units, so a supplementary
+ * character uses two positions in a {<span class="annotation">@code</span> <span class="predefined-type">String</span>}.
+ * &lt;p&gt;The {<span class="annotation">@code</span> <span class="predefined-type">String</span>} <span class="type">class</span> <span class="class">provides</span> methods <span class="keyword">for</span> dealing with
+ * Unicode code points (i.e., characters), in addition to those <span class="keyword">for</span>
+ * dealing with Unicode code units (i.e., {<span class="annotation">@code</span> <span class="type">char</span>} values).
  *
- * @author  Lee Boynton
- * @author  Arthur van Hoff
- * @author  Martin Buchholz
- * @author  Ulf Zibis
- * @see     java.lang.Object#toString()
- * @see     java.lang.StringBuffer
- * @see     java.lang.StringBuilder
- * @see     java.nio.charset.Charset
- * @since   JDK1.0</code></pre>
+ * <span class="annotation">@author</span>  Lee Boynton
+ * <span class="annotation">@author</span>  Arthur van Hoff
+ * <span class="annotation">@author</span>  Martin Buchholz
+ * <span class="annotation">@author</span>  Ulf Zibis
+ * <span class="annotation">@see</span>     java.lang.Object<span class="error">#</span>toString()
+ * <span class="annotation">@see</span>     java.lang.StringBuffer
+ * <span class="annotation">@see</span>     java.lang.StringBuilder
+ * <span class="annotation">@see</span>     java.nio.charset.Charset
+ * <span class="annotation">@since</span>   JDK1<span class="float">.0</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -294,15 +321,15 @@ out author or make substantial changes to a file without adding the author of th
 <div class="listingblock">
 <div class="title">Class java doc</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
  * Friendly and well known program.
  *
  * @author John Doe
  * @author Jane Doe
- */
- public class HelloWorld {
-   public static void main(String... args){
-     /// wot goes here should be obvious.
+ */</span>
+ <span class="directive">public</span> <span class="type">class</span> <span class="class">HelloWorld</span> {
+   <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span>... args){
+     <span class="comment">/// wot goes here should be obvious.</span>
    }
 
  }</code></pre>
@@ -349,7 +376,7 @@ to NetBeans. Quite a few are predefined but you can add your own too.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/codetemplatedialog.png" alt="codetemplatedialog">
+<img src="./images/codetemplatedialog.png" alt="codetemplatedialog">
 </div>
 </div>
 <div class="paragraph">
@@ -361,10 +388,10 @@ to NetBeans. Quite a few are predefined but you can add your own too.</p>
 <div class="listingblock">
 <div class="title">Definition of my codetemplate <strong>jutm</strong></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//@Disabled("think TDD")
-@${baseType type="org.junit.jupiter.api.Test" default="Test" editable="false"}
-public void ${method}(){
-    fail("method ${method} reached end. You know what to do.");
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//@Disabled(&quot;think TDD&quot;)</span>
+<span class="error">@</span><span class="error">$</span>{baseType type=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter.api.Test</span><span class="delimiter">&quot;</span></span> <span class="keyword">default</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Test</span><span class="delimiter">&quot;</span></span> editable=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span>}
+<span class="directive">public</span> <span class="type">void</span> <span class="error">$</span>{method}(){
+    fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">method ${method} reached end. You know what to do.</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -433,12 +460,12 @@ javadoc in a professional looking way, including code highlighted code snippets,
 <div id="testeasypom-as-parent" class="listingblock">
 <div class="title">Setting testeasypom as parent.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">    &lt;parent&gt;
-      &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
-      &lt;artifactId&gt;testeasypom&lt;/artifactId&gt;
-      &lt;version&gt;4.0.6&lt;/version&gt;
-      &lt;relativePath/&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-    &lt;/parent&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;parent&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;relativePath</span><span class="tag">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="tag">&lt;/parent&gt;</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -459,36 +486,36 @@ the basic one below. Add dependencies as required.</p>
 <div id="basic-maven" class="listingblock">
 <div class="title">Basic pom.xml file setting testeasypom as parent.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;parent&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-        &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
-        &lt;artifactId&gt;testeasypom&lt;/artifactId&gt;
-        &lt;version&gt;4.0.6&lt;/version&gt;
-        &lt;realtivePath/&gt;<i class="conum" data-value="2"></i><b>(2)</b>
-    &lt;/parent&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-    &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
-    &lt;artifactId&gt;basicsebimaven&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-    &lt;packaging&gt;jar&lt;/packaging&gt;
-    &lt;!-- The name in the IDE --&gt;
-    &lt;name&gt;My App&lt;/name&gt;
-    &lt;properties&gt;
-        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
-        &lt;java.release&gt;11&lt;/java.release&gt;
-        &lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;
-        &lt;exec.mainClass&gt;basicsebimaven.Hello&lt;/exec.mainClass&gt;
-    &lt;/properties&gt;
-    &lt;dependencies&gt;
-      &lt;!--example  --&gt;
-      &lt;dependency&gt;
-        &lt;groupId&gt;...&lt;/groupId&gt;
-        &lt;artifactId&gt;...&lt;/artifactId&gt;
-        &lt;version&gt;...&lt;/version&gt;
-      &lt;/dependency&gt;
-    &lt;/dpendencies&gt;
-&lt;/project&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+    <span class="tag">&lt;parent&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>testeasypom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>4.0.6<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;realtivePath</span><span class="tag">/&gt;</span><i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="tag">&lt;/parent&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>basicsebimaven<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
+    <span class="comment">&lt;!-- The name in the IDE --&gt;</span>
+    <span class="tag">&lt;name&gt;</span>My App<span class="tag">&lt;/name&gt;</span>
+    <span class="tag">&lt;properties&gt;</span>
+        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+        <span class="tag">&lt;java.release&gt;</span>11<span class="tag">&lt;/java.release&gt;</span>
+        <span class="comment">&lt;!-- change mainClass to the proper starting point of your program, if any.--&gt;</span>
+        <span class="tag">&lt;exec.mainClass&gt;</span>basicsebimaven.Hello<span class="tag">&lt;/exec.mainClass&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+    <span class="tag">&lt;dependencies&gt;</span>
+      <span class="comment">&lt;!--example  --&gt;</span>
+      <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>...<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>...<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>...<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;/dpendencies&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -515,7 +542,7 @@ In the commandline that would be</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/mvn-withfx-profile.png" alt="mvn withfx profile">
+<img src="./images/mvn-withfx-profile.png" alt="mvn withfx profile">
 </div>
 <div class="title">Figure 1. Commandline. Real software engineers can use the command line.</div>
 </div>
@@ -524,7 +551,7 @@ In the commandline that would be</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/fx-profile-nb.png" alt="fx profile nb">
+<img src="./images/fx-profile-nb.png" alt="fx profile nb">
 </div>
 <div class="title">Figure 2. Activate a profile in netbeans</div>
 </div>
@@ -575,7 +602,7 @@ This oneliner will do that for all projects below the current directory. After n
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">for i in $(find . -name pom.xml); do (cd $(dirname $i); mvn versions:update-parent  &amp; )   ; done</code></pre>
+<pre class="CodeRay highlight"><code data-lang="sh">for i in $(find . -name pom.xml); do (cd $(dirname $i); mvn versions:update-parent  &amp; )   ; done</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -681,7 +708,7 @@ other modules.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/mavenmodules.svg" alt="mavenmodules">
+<img src="./images/mavenmodules.svg" alt="mavenmodules">
 </div>
 <div class="title">Figure 3. Modules and parent.</div>
 </div>
@@ -692,20 +719,20 @@ inter-dependencies. Otherwise it is just plain maven.</p>
 <div class="listingblock">
 <div class="title">Snippet from a parent pom</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">    &lt;groupId&gt;nl.fontys.sebivenlo&lt;/groupId&gt;
-    &lt;artifactId&gt;parentpom&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-    &lt;packaging&gt;pom&lt;/packaging&gt;
-    &lt;properties&gt;
-      &lt;version&gt;1.0&lt;/version&gt;
-    &lt;/properties&gt;
-    &lt;modules&gt;
-        &lt;module&gt;entities&lt;/module&gt;
-        &lt;module&gt;db&lt;/module&gt;
-        &lt;module&gt;app-logic&lt;/module&gt;
-        &lt;module&gt;ui&lt;/module&gt;
-        &lt;module&gt;restserver&lt;/module&gt;
-    &lt;/modules&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;groupId&gt;</span>nl.fontys.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>parentpom<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>pom<span class="tag">&lt;/packaging&gt;</span>
+    <span class="tag">&lt;properties&gt;</span>
+      <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+    <span class="tag">&lt;modules&gt;</span>
+        <span class="tag">&lt;module&gt;</span>entities<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>db<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>app-logic<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>ui<span class="tag">&lt;/module&gt;</span>
+        <span class="tag">&lt;module&gt;</span>restserver<span class="tag">&lt;/module&gt;</span>
+    <span class="tag">&lt;/modules&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -738,23 +765,23 @@ inherits from such parent.</p>
 <div class="listingblock">
 <div class="title">example pom for rest server.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span>
+  <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+  <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
 
-    &lt;parent&gt;
-        &lt;groupId&gt;io.github.sebivenlo&lt;/groupId&gt;
-        &lt;artifactId&gt;parentpom&lt;/artifactId&gt;
-        &lt;version&gt;1.0&lt;/version&gt;
-         &lt;!-- parent directory .. as parent is natural but not mandatory --&gt;
-        &lt;relativePath&gt;..&lt;/relativePath&gt;
-    &lt;/parent&gt;
-    &lt;artifactId&gt;restserver&lt;/artifactId&gt;
-    &lt;version&gt;${version}&lt;/version&gt;
-    &lt;packaging&gt;war&lt;/packaging&gt;
-    &lt;name&gt;Rest server&lt;/name&gt;
-&lt;/project&gt;</code></pre>
+    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>io.github.sebivenlo<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>parentpom<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+         <span class="comment">&lt;!-- parent directory .. as parent is natural but not mandatory --&gt;</span>
+        <span class="tag">&lt;relativePath&gt;</span>..<span class="tag">&lt;/relativePath&gt;</span>
+    <span class="tag">&lt;/parent&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>restserver<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>${version}<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+    <span class="tag">&lt;name&gt;</span>Rest server<span class="tag">&lt;/name&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -838,7 +865,7 @@ all commands that you can enter on the commandline are found using the <code>$PA
 <div class="listingblock">
 <div class="title">setting JAVA_HOME and PATH in ~/.bashrc</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">## DEFAULT IS JAVA 8 HERE
+<pre class="CodeRay highlight"><code data-lang="sh">## DEFAULT IS JAVA 8 HERE
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
 </div>
@@ -849,7 +876,7 @@ export PATH=${JAVA_HOME}/bin:$PATH</code></pre>
 <div class="listingblock">
 <div class="title">updating  JAVA_HOME and PATH to switch java version.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">#!/bin/bash
+<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/bash
 
 ## This script assumes that the JAVA_HOME environment variable is set
 ##   and that the PATH contains ${JAVA_HOME}/bin
@@ -876,19 +903,19 @@ OPATH=${PATH}
 ## Let my name do the choosing
 case ${thisname} in
     J8)
-	NJAVA_HOME=/usr/lib/jvm/java-8-oracle;;
+        NJAVA_HOME=/usr/lib/jvm/java-8-oracle;;
     J11)
-	NJAVA_HOME=/usr/lib/jvm/jdk-11.0.2;;
+        NJAVA_HOME=/usr/lib/jvm/jdk-11.0.2;;
     J12)
-	NJAVA_HOME=/usr/lib/jvm/jdk-12;;
+        NJAVA_HOME=/usr/lib/jvm/jdk-12;;
     *)
-	echo call me as 'eval $(J8)', 'eval $(J11)' or 'eval $(J12)'
-	exit 1
-	;;
+        echo call me as 'eval $(J8)', 'eval $(J11)' or 'eval $(J12)'
+        exit 1
+        ;;
 esac
 
 ## edit path to use the new java_home
-p=$(echo ${OPATH} | sed -e "s@${JAVA_HOME}/bin@${NJAVA_HOME}/bin@")
+p=$(echo ${OPATH} | sed -e &quot;s@${JAVA_HOME}/bin@${NJAVA_HOME}/bin@&quot;)
 
 ##
 echo export JAVA_HOME=${NJAVA_HOME}
@@ -905,14 +932,14 @@ in a file called <code>${HOME}/.bash_aliases</code> and are loaded on login and 
 <div class="listingblock">
 <div class="title">using aliases to switch with simple command. Excerpt from my .bash_aliases file.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">alias j12='eval $(J12)'
+<pre class="CodeRay highlight"><code data-lang="sh">alias j12='eval $(J12)'
 alias j11='eval $(J11)'
 alias j8='eval $(J8)'</code></pre>
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/j8j11-terminal.png" alt="j8j11 terminal">
+<img src="./images/j8j11-terminal.png" alt="j8j11 terminal">
 </div>
 <div class="title">Figure 4. see it all work</div>
 </div>
@@ -939,13 +966,6 @@ alias j8='eval $(J8)'</code></pre>
 Last updated 2024-04-02 13:23:03 +0200
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

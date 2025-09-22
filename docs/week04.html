@@ -9,9 +9,10 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W4 Generics</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -164,12 +165,12 @@ nowadays called <strong class="blue">raw</strong> form. From the above you can i
 <div class="listingblock">
 <div class="title">Using a map in pre Java 5 times</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   Map studentsMap = new HashMap(); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="predefined-type">Map</span> studentsMap = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>(); <i class="conum" data-value="1"></i><b>(1)</b>
 
-   studentsMap.put( Integer.valueOf( 313581 ) ,new Student( "Potter","Harry" ) );
+   studentsMap.put( <span class="predefined-type">Integer</span>.valueOf( <span class="integer">313581</span> ) ,<span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Potter</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">Harry</span><span class="delimiter">&quot;</span></span> ) );
 
-   // some time later
-   Student harry = (Student) studentsMap.get(Integer.valueOf( 313581 ) ); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+   <span class="comment">// some time later</span>
+   Student harry = (Student) studentsMap.get(<span class="predefined-type">Integer</span>.valueOf( <span class="integer">313581</span> ) ); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -187,7 +188,7 @@ Also note that you had to turn the <code>int</code> into an <code>Integer</code>
 </div>
 <div class="imageblock related thumb right"">
 <div class="content">
-<a class="image" href="https://emojipedia.org/ghost/"><img src="images/ghost_1f47b.png" alt="ghost 1f47b"></a>
+<a class="image" href="https://emojipedia.org/ghost/"><img src="./images/ghost_1f47b.png" alt="ghost 1f47b"></a>
 </div>
 <div class="title">Figure 1. Dementor</div>
 </div>
@@ -203,9 +204,9 @@ on retrieval.</p>
 <div class="listingblock">
 <div class="title">example lists and maps</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   List&lt;String&gt; l1 = new ArrayList&lt;&gt;();
-   List&lt;Student&gt; stuList = new ArrayList&lt;&gt;();
-   Map&lt;String,BiFunction&lt;Double,Integer,Integer&gt;&gt; operatorMap;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">   <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; l1 = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;();
+   <span class="predefined-type">List</span>&lt;Student&gt; stuList = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;();
+   <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>,BiFunction&lt;<span class="predefined-type">Double</span>,<span class="predefined-type">Integer</span>,<span class="predefined-type">Integer</span>&gt;&gt; operatorMap;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -215,15 +216,15 @@ As an example, say you have a simple person hierarchy: Person is extended by Stu
 <div class="listingblock">
 <div class="title">some regular people in lists.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class Person{}
-class Student extends Person{}
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Person</span>{}
+<span class="type">class</span> <span class="class">Student</span> <span class="directive">extends</span> Person{}
 
-// in some code
-    void m(){
+<span class="comment">// in some code</span>
+    <span class="type">void</span> m(){
       Person paul = ....
       Student serena = ...
       List&lt;Person&gt; pl;
-      List&lt;Student&gt; sl;
+      <span class="predefined-type">List</span>&lt;Student&gt; sl;
 
     }</code></pre>
 </div>
@@ -263,14 +264,14 @@ class <code>IntegerBox</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-Java hljs" data-lang="Java">public class IntegerBox {
-  private Integer value;
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="directive">public</span> <span class="type">class</span> <span class="class">IntegerBox</span> {
+  <span class="directive">private</span> <span class="predefined-type">Integer</span> value;
 
-  public void putIntegerInBox(Integer anInt) {
+  <span class="directive">public</span> <span class="type">void</span> putIntegerInBox(<span class="predefined-type">Integer</span> anInt) {
     value = anInt;
   }
-  public Integer getInteger() {
-    return value;
+  <span class="directive">public</span> <span class="predefined-type">Integer</span> getInteger() {
+    <span class="keyword">return</span> value;
   }
 }</code></pre>
 </div>
@@ -310,14 +311,14 @@ your list of classes grows: <code>IntegerBox</code>, <code>StringBox</code>, <co
 <div class="listingblock">
 <div class="title">Test your implementation by using this main method.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-Java hljs" data-lang="Java">public static void main(String[] args) {
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
 
-   Box&lt;Integer&gt; iBox = new Box&lt;Integer&gt;(5);
-   Box&lt;String&gt; sBox = new Box&lt;String&gt;("Some Text");
+   <span class="predefined-type">Box</span>&lt;<span class="predefined-type">Integer</span>&gt; iBox = <span class="keyword">new</span> <span class="predefined-type">Box</span>&lt;<span class="predefined-type">Integer</span>&gt;(<span class="integer">5</span>);
+   <span class="predefined-type">Box</span>&lt;<span class="predefined-type">String</span>&gt; sBox = <span class="keyword">new</span> <span class="predefined-type">Box</span>&lt;<span class="predefined-type">String</span>&gt;(<span class="string"><span class="delimiter">&quot;</span><span class="content">Some Text</span><span class="delimiter">&quot;</span></span>);
 
 
-   System.out.println("My integerBox contains: "+ iBox.get());
-   System.out.println("My stringBox contains: "+ sBox.get());
+   <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">My integerBox contains: </span><span class="delimiter">&quot;</span></span>+ iBox.get());
+   <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">My stringBox contains: </span><span class="delimiter">&quot;</span></span>+ sBox.get());
 }</code></pre>
 </div>
 </div>
@@ -349,13 +350,13 @@ your list of classes grows: <code>IntegerBox</code>, <code>StringBox</code>, <co
 <div class="listingblock">
 <div class="title">Test your implementation by using this main method.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-Java hljs" data-lang="Java">public static void main(String[] args) {
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
 
-   Pair&lt;String,Integer&gt; box = new Pair&lt;&gt;("Test", 4);
+   Pair&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Integer</span>&gt; box = <span class="keyword">new</span> Pair&lt;&gt;(<span class="string"><span class="delimiter">&quot;</span><span class="content">Test</span><span class="delimiter">&quot;</span></span>, <span class="integer">4</span>);
 
 
-   System.out.println("My String contains: "+ box.getP());
-   System.out.println("My Integer contains: "+ box.getQ());
+   <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">My String contains: </span><span class="delimiter">&quot;</span></span>+ box.getP());
+   <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">My Integer contains: </span><span class="delimiter">&quot;</span></span>+ box.getQ());
 }</code></pre>
 </div>
 </div>
@@ -371,16 +372,16 @@ they will be aborted by the JVM.</p>
 <div class="listingblock">
 <div class="title">Sneaky code. Do not do this at home. You are only fooling yourselves.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public static void main( String[] args ) {
-        List&lt;Student&gt; sl = new ArrayList&lt;Student&gt;();
-        sl.add( new Student( "Hermione" )); <i class="conum" data-value="1"></i><b>(1)</b>
-        List ol = (List) sl;                <i class="conum" data-value="2"></i><b>(2)</b>
-        ol.add( new Person("Voldemort") );  <i class="conum" data-value="3"></i><b>(3)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+        <span class="predefined-type">List</span>&lt;Student&gt; sl = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;Student&gt;();
+        sl.add( <span class="keyword">new</span> Student( <span class="string"><span class="delimiter">&quot;</span><span class="content">Hermione</span><span class="delimiter">&quot;</span></span> )); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="predefined-type">List</span> ol = (<span class="predefined-type">List</span>) sl;                <i class="conum" data-value="2"></i><b>(2)</b>
+        ol.add( <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Voldemort</span><span class="delimiter">&quot;</span></span>) );  <i class="conum" data-value="3"></i><b>(3)</b>
 
-        // somewhere else in the scenario
-        Student hermione = sl.get( 0 );       <i class="conum" data-value="4"></i><b>(4)</b>
-        Student lilly = sl.get( 1 );        <i class="conum" data-value="5"></i><b>(5)</b>
-        System.out.println( "lilly = " + lilly ); <i class="conum" data-value="6"></i><b>(6)</b>
+        <span class="comment">// somewhere else in the scenario</span>
+        Student hermione = sl.get( <span class="integer">0</span> );       <i class="conum" data-value="4"></i><b>(4)</b>
+        Student lilly = sl.get( <span class="integer">1</span> );        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">lilly = </span><span class="delimiter">&quot;</span></span> + lilly ); <i class="conum" data-value="6"></i><b>(6)</b>
     }</code></pre>
 </div>
 </div>
@@ -416,7 +417,7 @@ they will be aborted by the JVM.</p>
 <div class="sect2">
 <h3 id="_type_token"><a class="anchor" href="#_type_token"></a><a class="link" href="#_type_token">1.4. Type token.</a></h3>
 <div class="paragraph">
-<p><span class="image thumb right"><img src="images/towerguard.png" alt="towerguard" width="140px" title="guards guards"></span>
+<p><span class="image thumb right"><img src="./images/towerguard.png" alt="towerguard" width="140px" title="guards guards"></span>
 Sometimes you have a problem, which can only be solved by explicitly providing the generic information to
 the code at run-time. This use is called 'providing a type-token'.<br>
 An example of such use is the method <a href="file:///usr/share/doc/openjdk-11-doc/docs/api/java.base/java/util/Collections.html#checkedList(java.util.List,java.lang.Class)">Collections.checkedList( &lt;List&lt;E&gt;, Class&lt;E&gt; type )</a>,<br>
@@ -463,7 +464,7 @@ is the correct choice.</p>
 <h3 id="_upper_bound_or_covariant"><a class="anchor" href="#_upper_bound_or_covariant"></a><a class="link" href="#_upper_bound_or_covariant">2.2. Upper bound or Covariant</a></h3>
 <div id="supers" class="imageblock">
 <div class="content">
-<img src="images/acceptablesupers.svg" alt="acceptablesupers">
+<img src="./images/acceptablesupers.svg" alt="acceptablesupers">
 </div>
 <div class="title">Figure 2. Hierarchy of shapes, assume mathematical shapes, so a line has no width and hence no surface area. Nor does an arc.</div>
 </div>
@@ -499,8 +500,8 @@ then there are a few rules to apply to your generic code. It all has to do with 
 <div class="listingblock">
 <div class="title">Passing things to be drawn to the canvas.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  interface Canvas {
-    void draw( List&lt;Shape&gt; shapes ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">interface</span> <span class="class">Canvas</span> {
+    <span class="type">void</span> draw( <span class="predefined-type">List</span>&lt;<span class="predefined-type">Shape</span>&gt; shapes ); <i class="conum" data-value="1"></i><b>(1)</b>
   }</code></pre>
 </div>
 </div>
@@ -526,8 +527,8 @@ any derived type. You do that by adding the wild-card which expresses anything (
 <div class="listingblock">
 <div class="title">Flexible shape that also accepts lists of sub-classes of Shape.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  interface Canvas {
-    void draw( List&lt;? extends Shape&gt; shapes ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">interface</span> <span class="class">Canvas</span> {
+    <span class="type">void</span> draw( <span class="predefined-type">List</span>&lt;? <span class="directive">extends</span> <span class="predefined-type">Shape</span>&gt; shapes ); <i class="conum" data-value="1"></i><b>(1)</b>
   }</code></pre>
 </div>
 </div>
@@ -554,9 +555,9 @@ In the documentation such list, which should accept objects, would be called a <
 <div class="listingblock">
 <div class="title">Passing a container that should receive/consume collected shapes.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  class Collector {
-    // objects are added to be added to receiver or consumer
-    void collect( List&lt;Circle&gt; receiver ){ <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="type">class</span> <span class="class">Collector</span> {
+    <span class="comment">// objects are added to be added to receiver or consumer</span>
+    <span class="type">void</span> collect( <span class="predefined-type">List</span>&lt;Circle&gt; receiver ){ <i class="conum" data-value="1"></i><b>(1)</b>
       Circle c =...
       receiver.add( c ); <i class="conum" data-value="2"></i><b>(2)</b>
     }
@@ -587,7 +588,7 @@ on the line <code>receiver.add( c );</code> with a nasty curse:</p>
 <div class="listingblock">
 <div class="title">Compiler complaint.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">incompatible types: Circle cannot be converted to CAP#1
+<pre class="CodeRay highlight"><code>incompatible types: Circle cannot be converted to CAP#1
   where CAP#1 is a fresh type variable:
     CAP#1 extends Shape from capture of ? extends Shape</code></pre>
 </div>
@@ -600,9 +601,9 @@ be acceptable to the receiver. Circle is the <strong>lower bound</strong> in the
 <div class="listingblock">
 <div class="title">Super, that does it.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class Collector {
-    // objects are added to receiver
-      void collect( List&lt;? super Circle&gt; receiver ){ <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Collector</span> {
+    <span class="comment">// objects are added to receiver</span>
+      <span class="type">void</span> collect( <span class="predefined-type">List</span>&lt;? <span class="local-variable">super</span> Circle&gt; receiver ){ <i class="conum" data-value="1"></i><b>(1)</b>
         Circle c =...
         receiver.add( c ); <i class="conum" data-value="2"></i><b>(2)</b>
       }
@@ -771,8 +772,8 @@ An example of that is the definition of the
 <div class="listingblock">
 <div class="title">Enum class definition, a bit of a mouth-full.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class Enum&lt;E extends Enum&lt;E&gt;&gt;
-        implements Comparable&lt;E&gt;, Serializable {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">Enum</span>&lt;E <span class="directive">extends</span> <span class="predefined-type">Enum</span>&lt;E&gt;&gt;
+        <span class="directive">implements</span> <span class="predefined-type">Comparable</span>&lt;E&gt;, <span class="predefined-type">Serializable</span> {
 }</code></pre>
 </div>
 </div>
@@ -804,7 +805,7 @@ and we want to be able to use it in a <em>fluent</em> style of programming.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/zoo.svg" alt="zoo">
+<img src="./images/zoo.svg" alt="zoo">
 </div>
 <div class="title">Figure 3. Mini zoo</div>
 </div>
@@ -832,11 +833,11 @@ In particular, it is <strong class="red">not</strong> parameterized any further 
 <div class="listingblock">
 <div class="title">EBird is an extendable Bird</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface EBird&lt;EB extends EBird&lt;EB&gt;&gt;  extends Flyer&lt;EB&gt;, Walker&lt;EB&gt;{
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">EBird</span>&lt;EB <span class="directive">extends</span> EBird&lt;EB&gt;&gt;  <span class="directive">extends</span> Flyer&lt;EB&gt;, Walker&lt;EB&gt;{
 
      EB afterBurner(){
-         System.out.println("VROOOAAAR");
-         return self();
+         <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">VROOOAAAR</span><span class="delimiter">&quot;</span></span>);
+         <span class="keyword">return</span> self();
      }
 }</code></pre>
 </div>
@@ -844,9 +845,9 @@ In particular, it is <strong class="red">not</strong> parameterized any further 
 <div class="listingblock">
 <div class="title">Thunderbird is it&#8217;s child.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class ThunderBird implements EBird&lt;ThunderBird&gt;{
-    public static void main( String[] args ) {
-        ThunderBird tb = new ThunderBird();
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">ThunderBird</span> <span class="directive">implements</span> EBird&lt;ThunderBird&gt;{
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main( <span class="predefined-type">String</span><span class="type">[]</span> args ) {
+        ThunderBird tb = <span class="keyword">new</span> ThunderBird();
         tb.fly().move().walk().fly().brood().fly().afterBurner();
     }
 }</code></pre>
@@ -859,7 +860,7 @@ In particular, it is <strong class="red">not</strong> parameterized any further 
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<span class="image thumb right"><img src="images/LeafFarket.png" alt="LeafFarket" width="100"></span>
+<span class="image thumb right"><img src="./images/LeafFarket.png" alt="LeafFarket" width="100"></span>
 A leaf class is a concrete class at the bottom of the type hierarchy, which is no longer generic on self. In the current implementation you can&#8217;t extend it easily.
 In java <span class="blue">enum</span> and <span class="blue">record</span> types are also all leaf classes, that cannot be extended.
 </td>
@@ -872,23 +873,23 @@ In java <span class="blue">enum</span> and <span class="blue">record</span> type
 <div class="listingblock">
 <div class="title">Animals can move and are self aware.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package zoo;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">zoo</span>;
 
-public abstract interface Animal&lt;A extends Animal&lt;A&gt;&gt; {
+<span class="directive">public</span> <span class="directive">abstract</span> <span class="type">interface</span> <span class="class">Animal</span>&lt;A <span class="directive">extends</span> Animal&lt;A&gt;&gt; {
 
-    default A move() {
-        System.out.println( "twitch " );
-        return self();
+    <span class="keyword">default</span> A move() {
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">twitch </span><span class="delimiter">&quot;</span></span> );
+        <span class="keyword">return</span> self();
     }
 
-    default A brood() {
-        System.out.println( "cosy with my offspring " );
-        return self();
+    <span class="keyword">default</span> A brood() {
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">cosy with my offspring </span><span class="delimiter">&quot;</span></span> );
+        <span class="keyword">return</span> self();
     }
 
-    // makes object self aware.
-    default A self() {
-        return (A) this;
+    <span class="comment">// makes object self aware.</span>
+    <span class="keyword">default</span> A self() {
+        <span class="keyword">return</span> (A) <span class="local-variable">this</span>;
     }
 
 }</code></pre>
@@ -900,13 +901,13 @@ public abstract interface Animal&lt;A extends Animal&lt;A&gt;&gt; {
 <div class="listingblock">
 <div class="title">Flyer adds flying functionality.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package zoo;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">zoo</span>;
 
-public interface Flyer&lt;F extends Flyer&lt;F&gt;&gt; extends Animal&lt;F&gt; {
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">Flyer</span>&lt;F <span class="directive">extends</span> Flyer&lt;F&gt;&gt; <span class="directive">extends</span> Animal&lt;F&gt; {
 
-    default F fly() {
-        System.out.println( "swoosh" );
-        return self();
+    <span class="keyword">default</span> F fly() {
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">swoosh</span><span class="delimiter">&quot;</span></span> );
+        <span class="keyword">return</span> self();
     }
 }</code></pre>
 </div>
@@ -914,16 +915,16 @@ public interface Flyer&lt;F extends Flyer&lt;F&gt;&gt; extends Animal&lt;F&gt; {
 <div class="listingblock">
 <div class="title">Ducks are Animals with many traits, all inherited, and little work. You might think ducks are lazy. &#x1F986; &#128522;</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package zoo;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">zoo</span>;
 
-public class Duck implements  Flyer&lt;Duck&gt;, Swimmer&lt;Duck&gt;, Walker&lt;Duck&gt; {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Duck</span> <span class="directive">implements</span>  Flyer&lt;Duck&gt;, Swimmer&lt;Duck&gt;, Walker&lt;Duck&gt; {
 
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <div class="title">you know it is just a model, think movies &#8230;&#8203;</div>
-<p><span class="image thumb left"><img src="images/duckling.jpg" alt="duckling" width="150"></span>
+<p><span class="image thumb left"><img src="./images/duckling.jpg" alt="duckling" width="150"></span>
 The Duck class above is the complete concrete leaf class, nothing has been left out. Everything is in the supers (the interfaces in this case), generics is
 just the thread that stitches the Duck together.</p>
 </div>
@@ -952,7 +953,7 @@ as the little zoo example already hinted towards.</p>
 </div>
 <div class="paragraph">
 <div class="title">make it super</div>
-<p><span class="image thumb left"><img src="images/Superman_shield.png" alt="Superman shield" width="200"></span>
+<p><span class="image thumb left"><img src="./images/Superman_shield.png" alt="Superman shield" width="200"></span>
 In the zoo example you go from the abstract (super type animal) and interfaces (Flyer and the lot) to the concrete Penguin and Duck.
 For a student that studies Software Design, in particular <a href="https://en.wikipedia.org/wiki/Software_design_pattern">Design Patterns</a>,
 that smells like a potential application of the <a href="https://en.wikipedia.org/wiki/Abstract_factory_pattern">Abstract Factory</a> Pattern.
@@ -1002,7 +1003,7 @@ That could very well be in Java 17. We&#8217;ll see.</p>
 <div class="listingblock">
 <div class="title">from the java.lang.Integer source, i.e. Java 16</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    /**
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
      * Constructs a newly allocated {@code Integer} object that
      * represents the specified {@code int} value.
      *
@@ -1013,10 +1014,10 @@ That could very well be in Java 17. We&#8217;ll see.</p>
      * It is rarely appropriate to use this constructor. The static factory
      * {@link #valueOf(int)} is generally a better choice, as it is
      * likely to yield significantly better space and time performance.
-     */
-    @Deprecated(since="9", forRemoval = true) ) <i class="conum" data-value="1"></i><b>(1)</b>
-    public Integer(int value) {
-        this.value = value;
+     */</span>
+    <span class="annotation">@Deprecated</span>(since=<span class="string"><span class="delimiter">&quot;</span><span class="content">9</span><span class="delimiter">&quot;</span></span>, forRemoval = <span class="predefined-constant">true</span>) ) <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="directive">public</span> <span class="predefined-type">Integer</span>(<span class="type">int</span> value) {
+        <span class="local-variable">this</span>.value = value;
     }</code></pre>
 </div>
 </div>
@@ -1077,7 +1078,7 @@ a lambda expression. <code>(P a, P b) &#8594; D</code>, which says that the meth
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/range-classes.svg" alt="range classes">
+<img src="./images/range-classes.svg" alt="range classes">
 </div>
 <div class="title">Figure 4. Class diagram of the ranges project</div>
 </div>
@@ -1115,7 +1116,7 @@ The most important operation in this case is to compute the overlap between to r
 </div>
 <div id="operations" class="imageblock">
 <div class="content">
-<img src="images/rangesoperations.svg" alt="rangesoperations">
+<img src="./images/rangesoperations.svg" alt="rangesoperations">
 </div>
 <div class="title">Figure 5. Operations between ranges</div>
 </div>
@@ -1126,7 +1127,7 @@ If you then book, the free range is then cut up into a (optional) free part <em>
 </div>
 <div id="cutter" class="imageblock">
 <div class="content">
-<img src="images/rangecutter.svg" alt="rangecutter">
+<img src="./images/rangecutter.svg" alt="rangecutter">
 </div>
 <div class="title">Figure 6. The cutter cuts red and blue and takes green as a whole</div>
 </div>
@@ -1159,54 +1160,54 @@ The <code>IntegerRange</code> is also the first leaf class in our design.</p>
 <div class="listingblock">
 <div class="title">IntegerRange is a Range of Integer</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class IntegerRange implements Range&lt;IntegerRange, Integer, Integer&gt; {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">IntegerRange</span> <span class="directive">implements</span> Range&lt;IntegerRange, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; {
 
-    final Integer start;
-    final Integer end;
+    <span class="directive">final</span> <span class="predefined-type">Integer</span> start;
+    <span class="directive">final</span> <span class="predefined-type">Integer</span> end;
 
-    private IntegerRange( Integer[] p ) { <i class="conum" data-value="1"></i><b>(1)</b>
-        this.start = p[ 0 ];
-        this.end = p[ 1 ];
+    <span class="directive">private</span> IntegerRange( <span class="predefined-type">Integer</span><span class="type">[]</span> p ) { <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="local-variable">this</span>.start = p[ <span class="integer">0</span> ];
+        <span class="local-variable">this</span>.end = p[ <span class="integer">1</span> ];
     }
 
-    @Override
-    public Integer start() {
-        return start;
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Integer</span> start() {
+        <span class="keyword">return</span> start;
     }
 
-    @Override
-    public Integer end() {
-        return end;
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Integer</span> end() {
+        <span class="keyword">return</span> end;
     }
 
-    @Override
-    public BiFunction&lt;Integer, Integer, Integer&gt; meter() { <i class="conum" data-value="2"></i><b>(2)</b>
-        return ( a, b ) -&gt; b - a;
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> BiFunction&lt;<span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; meter() { <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="keyword">return</span> ( a, b ) -&gt; b - a;
     }
 
-    @Override
-    public int hashCode() {
-        return rangeHashCode();
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+        <span class="keyword">return</span> rangeHashCode();
     }
 
-    @Override
-    @SuppressWarnings( "EqualsWhichDoesntCheckParameterClass" )
-    public boolean equals( Object obj ) { <i class="conum" data-value="3"></i><b>(3)</b>
-        return rangeEquals( obj );
+    <span class="annotation">@Override</span>
+    <span class="annotation">@SuppressWarnings</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">EqualsWhichDoesntCheckParameterClass</span><span class="delimiter">&quot;</span></span> )
+    <span class="directive">public</span> <span class="type">boolean</span> equals( <span class="predefined-type">Object</span> obj ) { <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="keyword">return</span> rangeEquals( obj );
     }
 
-    @Override
-    public String toString() {
-        return rangeToString();
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="keyword">return</span> rangeToString();
     }
 
-    @Override
-    public IntegerRange between( Integer start, Integer end ) { <i class="conum" data-value="4"></i><b>(4)</b>
-        return IntegerRange.of( start, end );
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> IntegerRange between( <span class="predefined-type">Integer</span> start, <span class="predefined-type">Integer</span> end ) { <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="keyword">return</span> IntegerRange.of( start, end );
     }
 
-    public static of(Integer start, Integer end) {
-        return new IntegerRange(  Range.minmax( start, end ) ); <i class="conum" data-value="5"></i><b>(5)</b>
+    <span class="directive">public</span> <span class="directive">static</span> of(<span class="predefined-type">Integer</span> start, <span class="predefined-type">Integer</span> end) {
+        <span class="keyword">return</span> <span class="keyword">new</span> IntegerRange(  Range.minmax( start, end ) ); <i class="conum" data-value="5"></i><b>(5)</b>
     }
 }</code></pre>
 </div>
@@ -1239,22 +1240,22 @@ overwrite methods of a class in an interface, we use this trick to avoid duplica
 <div class="listingblock">
 <div class="title">IntegerRange as Java 16+ feature, less boilerplate.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public record IntegerRange( Integer start, Integer end) implements
-        Range&lt;IntegerRange, Integer, Integer&gt; {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> record IntegerRange( <span class="predefined-type">Integer</span> start, <span class="predefined-type">Integer</span> end) <span class="directive">implements</span>
+        Range&lt;IntegerRange, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; {
 
-    @Override
-    public BiFunction&lt;Integer, Integer, Integer&gt; meter() {
-        return ( a, b ) -&gt; b - a;
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> BiFunction&lt;<span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; meter() {
+        <span class="keyword">return</span> ( a, b ) -&gt; b - a;
     }
 
-    @Override
-    public IntegerRange between( Integer start, Integer end ) {
-        return new IntegerRange( start, end );
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> IntegerRange between( <span class="predefined-type">Integer</span> start, <span class="predefined-type">Integer</span> end ) {
+        <span class="keyword">return</span> <span class="keyword">new</span> IntegerRange( start, end );
     }
 
-    @Override
-    public Integer zero() {
-        return 0;
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Integer</span> zero() {
+        <span class="keyword">return</span> <span class="integer">0</span>;
     }
 }</code></pre>
 </div>
@@ -1273,24 +1274,24 @@ add a build section to tell the compiler to turn on the preview-features.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">   &lt;java.release&gt;16&lt;/java.release&gt;
+<pre class="CodeRay highlight"><code data-lang="xml">   <span class="tag">&lt;java.release&gt;</span>16<span class="tag">&lt;/java.release&gt;</span>
 .
 .
 
-  &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                &lt;configuration&gt;
-                    &lt;compilerArguments&gt;--enable-preview&lt;/compilerArguments&gt;
-                    &lt;compilerArgs&gt;
-                        &lt;arg&gt;--enable-preview&lt;/arg&gt;
-                    &lt;/compilerArgs&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-  &lt;/build&gt;</code></pre>
+  <span class="tag">&lt;build&gt;</span>
+        <span class="tag">&lt;plugins&gt;</span>
+            <span class="tag">&lt;plugin&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                <span class="tag">&lt;configuration&gt;</span>
+                    <span class="tag">&lt;compilerArguments&gt;</span>--enable-preview<span class="tag">&lt;/compilerArguments&gt;</span>
+                    <span class="tag">&lt;compilerArgs&gt;</span>
+                        <span class="tag">&lt;arg&gt;</span>--enable-preview<span class="tag">&lt;/arg&gt;</span>
+                    <span class="tag">&lt;/compilerArgs&gt;</span>
+                <span class="tag">&lt;/configuration&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;/plugins&gt;</span>
+  <span class="tag">&lt;/build&gt;</span></code></pre>
 </div>
 </div>
 </td>
@@ -1300,19 +1301,19 @@ add a build section to tell the compiler to turn on the preview-features.</p>
 <div class="listingblock">
 <div class="title">The Range interface class header</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
  * Range with start and end and some operations.
  *
  * @param &lt;R&gt; self referencing range type.
  * @param &lt;P&gt; the demarcation type of start and end point.
  * @param &lt;D&gt; the distance Dimension between start and end points.
- */
- public interface Range&lt;R extends Range&lt;R,P,D&gt;,
-                        P extends Comparable&lt;? super P&gt;,
-                        D extends Comparable&lt;? super D&gt;
+ */</span>
+ <span class="directive">public</span> <span class="type">interface</span> <span class="class">Range</span>&lt;R <span class="directive">extends</span> Range&lt;R,P,D&gt;,
+                        P <span class="directive">extends</span> <span class="predefined-type">Comparable</span>&lt;? <span class="local-variable">super</span> P&gt;,
+                        D <span class="directive">extends</span> <span class="predefined-type">Comparable</span>&lt;? <span class="local-variable">super</span> D&gt;
                         &gt;
-        extends Comparable&lt;R&gt;, Serializable {
-// code omitted
+        <span class="directive">extends</span> <span class="predefined-type">Comparable</span>&lt;R&gt;, <span class="predefined-type">Serializable</span> {
+<span class="comment">// code omitted</span>
 }</code></pre>
 </div>
 </div>
@@ -1336,8 +1337,8 @@ as <code>ChronoUnit.DAYS</code>, <code>ChronoUnit.HOURS</code> or <code>ChronoUn
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class LocalDateTimeRange implements Range&lt;LocalDateRange, LocalDateTime, Duration&gt; {
-  // code omitted
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">LocalDateTimeRange</span> <span class="directive">implements</span> Range&lt;LocalDateRange, LocalDateTime, <span class="predefined-type">Duration</span>&gt; {
+  <span class="comment">// code omitted</span>
 }</code></pre>
 </div>
 </div>
@@ -1352,37 +1353,37 @@ Not all units are applicable all of the time. HOURS and DAYS are precise, but MO
 <div class="listingblock">
 <div class="title">Between. Note that <strong class="blue">a</strong> is included, <strong class="red">b</strong> is excluded in the range a-b</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"> /**
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="comment">/**
    * Is a midpoint between a (inclusive) and b (exclusive).
    *
    * @param a first point
    * @param b second
    * @param inBetween point
    * @return true if inBetween is at or after a and strictly before b.
-   */
-  default boolean isBetween( P a, P b, P inBetween ) {
-      return a.compareTo( inBetween ) &lt;= 0 &amp;&amp; inBetween.compareTo( b ) &lt; 0;
+   */</span>
+  <span class="keyword">default</span> <span class="type">boolean</span> isBetween( P a, P b, P inBetween ) {
+      <span class="keyword">return</span> a.compareTo( inBetween ) &lt;= <span class="integer">0</span> &amp;&amp; inBetween.compareTo( b ) &lt; <span class="integer">0</span>;
   }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Do two ranges have points in common?</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
  * Does this range overlap with another one.
  *
  * @param other to check
  * @return true on overlap with other
- */
-default boolean overlaps( R other ) {
-    // code left as exercise
+ */</span>
+<span class="keyword">default</span> <span class="type">boolean</span> overlaps( R other ) {
+    <span class="comment">// code left as exercise</span>
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">The getLength() method evaluates the method returned by the meter() method implemented in the above class.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
  * Get the length of this range in some unit. The effective operation is
  * (end - start), but since we do not know how to subtract the sub-types,
  * that is left to the implementer. The exception thrown on incompatibility
@@ -1391,9 +1392,9 @@ default boolean overlaps( R other ) {
  * @param unit of measurement
  * @return the length
  * @throws RuntimeException when the unit and this range are not compatible
- */
-default long getLength( D unit ) {
-    return meter().apply( this.start(), this.end() );
+ */</span>
+<span class="keyword">default</span> <span class="type">long</span> getLength( D unit ) {
+    <span class="keyword">return</span> meter().apply( <span class="local-variable">this</span>.start(), <span class="local-variable">this</span>.end() );
 }</code></pre>
 </div>
 </div>
@@ -1403,13 +1404,13 @@ default long getLength( D unit ) {
 <div class="listingblock">
 <div class="title">The measurement <em class="blue">device</em> is a BiFunction&lt;P,P,D&gt; that is applied in the above method.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    /**
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
      * Return the 'device' to measure the distance between two points Compute the distance in dimension D.
      * The implementer has the choice to return a class, lambda expression, or a (static) method reference.
      * The lambda has two inputs of type P: a and b.
      *
      * @return the distance meter lambda or BiFunction Implementation.
-     */
+     */</span>
     BiFunction&lt;P,P,D&gt; meter();
 }</code></pre>
 </div>
@@ -1417,30 +1418,30 @@ default long getLength( D unit ) {
 <div class="listingblock">
 <div class="title">One of methods that makes the Range interface and its sub-classes worth their keep.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">/**
  * Compute the length that this and an other range overlap.
  *
  * @param other range
  * @param unit of measurement
  * @return the length of the overlap as a number of 'long' units
- */
-default D overlap( R other ) {
-   // sorry, this is your work. And 0 is wrong most of the time.
+ */</span>
+<span class="keyword">default</span> D overlap( R other ) {
+   <span class="comment">// sorry, this is your work. And 0 is wrong most of the time.</span>
 }</code></pre>
 </div>
 </div>
 <div id="punchthrough" class="imageblock">
 <div class="content">
-<img src="images/punchthrough.svg" alt="punchthrough">
+<img src="./images/punchthrough.svg" alt="punchthrough">
 </div>
 <div class="title">Figure 7. The punch only punches if it has a full hit</div>
 </div>
 <div class="listingblock">
 <div class="title">The punching on test stage as shown in figure <a href="#punchthrough">The punch only punches if it has a full hit</a></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   Stream&lt;Range&lt;R, T, U&gt;&gt; result = range.punchThrough( punch ); <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">   Stream&lt;Range&lt;R, T, U&gt;&gt; result = range.punchThrough( punch ); <i class="conum" data-value="1"></i><b>(1)</b>
    assertThat( result )
-        .as( "punch " + range + " with " + punch )
+        .as( <span class="string"><span class="delimiter">&quot;</span><span class="content">punch </span><span class="delimiter">&quot;</span></span> + range + <span class="string"><span class="delimiter">&quot;</span><span class="content"> with </span><span class="delimiter">&quot;</span></span> + punch )
         .containsExactlyElementsOf( expectedParts );</code></pre>
 </div>
 </div>
@@ -1525,7 +1526,7 @@ Test driven in this instance means adding a row of test data to the data source,
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Initial test situation</div>
-<p><span class="image thumb left"><img src="images/rangetest.svg" alt="rangetest"></span>
+<p><span class="image thumb left"><img src="./images/rangetest.svg" alt="rangetest"></span>
 The Range interface can be nicely implemented into leaf classes such as IntegerRange, which you already
 implemented in the exercise above. It can also be implemented by time based ranges such as <code class="blue">LocalDateRange</code> and <code class="blue">LocalDateTimeRange</code>, and <code class="blue">InstantRange</code>.
 The first two may sound familiar, but actually the third is the precise one. The other two deal with the quirks of daylight saving time,
@@ -1538,7 +1539,7 @@ Now we want to preserve the investment. The trick is to again use generics and '
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/generictestclasses.svg" alt="generictestclasses">
+<img src="./images/generictestclasses.svg" alt="generictestclasses">
 </div>
 <div class="title">Figure 8. Generics on both sides of the business/test divide.</div>
 </div>
@@ -1589,9 +1590,9 @@ significant.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    */
-    Integer getPoint( String key ) {
-        return pointsA[ key.charAt( 0 ) - 'a' ]; <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">    */
+    <span class="predefined-type">Integer</span> getPoint( <span class="predefined-type">String</span> key ) {
+        <span class="keyword">return</span> pointsA[ key.charAt( <span class="integer">0</span> ) - <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span> ]; <i class="conum" data-value="1"></i><b>(1)</b>
     }</code></pre>
 </div>
 </div>
@@ -1626,29 +1627,29 @@ You only see trivial methods that configure the <code class="blue">RangeTestData
 <div class="listingblock">
 <div class="title">IntegerRangeTest class, the whole of it.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.github.sebivenlo.ranges;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">io.github.sebivenlo.ranges</span>;
 
-import java.util.Map;
-public class IntegerRangeTest extends RangeTestBase&lt;IntegerRange, Integer, Integer&gt; {
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="directive">public</span> <span class="type">class</span> <span class="class">IntegerRangeTest</span> <span class="directive">extends</span> RangeTestBase&lt;IntegerRange, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; {
 
-    RangeTestDataFactory&lt;IntegerRange, Integer, Integer&gt; daf; <i class="conum" data-value="1"></i><b>(1)</b>
-    Integer[] points={ 42, 51, 55, 1023, 1610, 2840  };
+    RangeTestDataFactory&lt;IntegerRange, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; daf; <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="predefined-type">Integer</span><span class="type">[]</span> points={ <span class="integer">42</span>, <span class="integer">51</span>, <span class="integer">55</span>, <span class="integer">1023</span>, <span class="integer">1610</span>, <span class="integer">2840</span>  };
 
-    @Override
-    RangeTestDataFactory&lt;IntegerRange, Integer, Integer&gt; helper() {
-        if ( null == daf ) {                                  <i class="conum" data-value="2"></i><b>(2)</b>
-            daf = new RangeTestDataFactory&lt;&gt;( points ) { <i class="conum" data-value="3"></i><b>(3)</b>
-                @Override
-                IntegerRange createRange( Integer start, Integer end ) {
-                    return IntegerRange.of( start, end );
+    <span class="annotation">@Override</span>
+    RangeTestDataFactory&lt;IntegerRange, <span class="predefined-type">Integer</span>, <span class="predefined-type">Integer</span>&gt; helper() {
+        <span class="keyword">if</span> ( <span class="predefined-constant">null</span> == daf ) {                                  <i class="conum" data-value="2"></i><b>(2)</b>
+            daf = <span class="keyword">new</span> RangeTestDataFactory&lt;&gt;( points ) { <i class="conum" data-value="3"></i><b>(3)</b>
+                <span class="annotation">@Override</span>
+                IntegerRange createRange( <span class="predefined-type">Integer</span> start, <span class="predefined-type">Integer</span> end ) {
+                    <span class="keyword">return</span> IntegerRange.of( start, end );
                 }
-                @Override
-                Integer distance( Integer a, Integer b ) {
-                    return b - a;
+                <span class="annotation">@Override</span>
+                <span class="predefined-type">Integer</span> distance( <span class="predefined-type">Integer</span> a, <span class="predefined-type">Integer</span> b ) {
+                    <span class="keyword">return</span> b - a;
                 }
             };
         }
-        return daf;                                           <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="keyword">return</span> daf;                                           <i class="conum" data-value="4"></i><b>(4)</b>
     }
 }</code></pre>
 </div>
@@ -1712,38 +1713,38 @@ Remember we started by copying the complete test class for the IntegerRange as a
 <div class="listingblock">
 <div class="title">Important members of RangeTestDataFactory.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class RangeTestDataFactory&lt;R,P,D &gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">RangeTestDataFactory</span>&lt;R,P,D &gt; { <i class="conum" data-value="1"></i><b>(1)</b>
 
-    protected final p[] points;  <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="directive">protected</span> <span class="directive">final</span> p<span class="type">[]</span> points;  <i class="conum" data-value="2"></i><b>(2)</b>
 
-    /**
+    <span class="comment">/**
      * Remember the type of the class under test.
      *
-     */
-    protected RangeTestDataFactory( P[] points ) {
-        this.points = points;
+     */</span>
+    <span class="directive">protected</span> RangeTestDataFactory( P<span class="type">[]</span> points ) {
+        <span class="local-variable">this</span>.points = points;
     }
 
-    /**
+    <span class="comment">/**
      * Lookup up a point from the spec.
      * @param key for lookup
      * @return the mapped value.
-     */
-    P lookupPoint( String key ) {
-        return points.get( key );
+     */</span>
+    P lookupPoint( <span class="predefined-type">String</span> key ) {
+        <span class="keyword">return</span> points.get( key );
     }
 
-    /**
+    <span class="comment">/**
      * Create a test range,`P a()`,
      *
      * @param start or range
      * @param end   of range
      * @return the range
-     */
-    abstract R createRange( P start, P end );   <i class="conum" data-value="3"></i><b>(3)</b>
+     */</span>
+    <span class="directive">abstract</span> R createRange( P start, P end );   <i class="conum" data-value="3"></i><b>(3)</b>
 
-    abstract D distance(P a, P b);              <i class="conum" data-value="4"></i><b>(4)</b>
-    // remainder left out
+    <span class="directive">abstract</span> D distance(P a, P b);              <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="comment">// remainder left out</span>
 }</code></pre>
 </div>
 </div>
@@ -1793,40 +1794,40 @@ And even without daylight saving, the idea of leap year and leap day also throw 
 <div class="listingblock">
 <div class="title">LocalDataRangeTest inner class extending RangeTestFactory</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">   RangeTestDataFactory&lt;LocalDate, Duration, LocalDateRange&gt; daf;
+<pre class="CodeRay highlight"><code data-lang="java">   RangeTestDataFactory&lt;LocalDate, <span class="predefined-type">Duration</span>, LocalDateRange&gt; daf;
 
-   static final ChronoUnit UNIT = ChronoUnit.DAYS;
+   <span class="directive">static</span> <span class="directive">final</span> ChronoUnit UNIT = ChronoUnit.DAYS;
 
-   static final LocalDate A = LocalDate.EPOCH.plus( 12, UNIT );
+   <span class="directive">static</span> <span class="directive">final</span> LocalDate A = LocalDate.EPOCH.plus( <span class="integer">12</span>, UNIT );
 
-   static Map&lt;String, LocalDate&gt; dateMap = Map.of(     <i class="conum" data-value="1"></i><b>(1)</b>
-           "a", A,
-           "b", A.plus( 5, UNIT ),
-           "c", A.plus( 7, UNIT ),
-           "d", A.plus( 14, UNIT ),
-           "e", A.plus( 21, UNIT ),
-           "f", A.plus( 28, UNIT )
+   <span class="directive">static</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, LocalDate&gt; dateMap = <span class="predefined-type">Map</span>.of(     <i class="conum" data-value="1"></i><b>(1)</b>
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, A,
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, A.plus( <span class="integer">5</span>, UNIT ),
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>, A.plus( <span class="integer">7</span>, UNIT ),
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">d</span><span class="delimiter">&quot;</span></span>, A.plus( <span class="integer">14</span>, UNIT ),
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">e</span><span class="delimiter">&quot;</span></span>, A.plus( <span class="integer">21</span>, UNIT ),
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">f</span><span class="delimiter">&quot;</span></span>, A.plus( <span class="integer">28</span>, UNIT )
    );
 
-   @Override
-   RangeTestDataFactory&lt; LocalDateRange, LocalDate, Duration&gt; helper() {
-       if ( null == daf ) {
-           daf = new RangeTestDataFactory&lt;&gt;( dateMap ) { <i class="conum" data-value="2"></i><b>(2)</b>
-               @Override
+   <span class="annotation">@Override</span>
+   RangeTestDataFactory&lt; LocalDateRange, LocalDate, <span class="predefined-type">Duration</span>&gt; helper() {
+       <span class="keyword">if</span> ( <span class="predefined-constant">null</span> == daf ) {
+           daf = <span class="keyword">new</span> RangeTestDataFactory&lt;&gt;( dateMap ) { <i class="conum" data-value="2"></i><b>(2)</b>
+               <span class="annotation">@Override</span>
                LocalDateRange createRange( LocalDate start, LocalDate end ) {
-                   return LocalDateRange.of( start, end );
+                   <span class="keyword">return</span> LocalDateRange.of( start, end );
                }
-               @Override
-               Duration distance( LocalDate a, LocalDate b ) {
-                   return Duration.between( a, b );
+               <span class="annotation">@Override</span>
+               <span class="predefined-type">Duration</span> distance( LocalDate a, LocalDate b ) {
+                   <span class="keyword">return</span> <span class="predefined-type">Duration</span>.between( a, b );
                }
            };
        }
-       return daf;
+       <span class="keyword">return</span> daf;
    }
-   // public static void main( String[] args ) {
-   //      new LocalDataRangeTest(); <i class="conum" data-value="3"></i><b>(3)</b>
-   //  }</code></pre>
+   <span class="comment">// public static void main( String[] args ) {</span>
+   <span class="comment">//      new LocalDataRangeTest(); </span><i class="conum" data-value="3"></i><b>(3)</b>
+   <span class="comment">//  }</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1881,13 +1882,13 @@ the following declaration:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class RangeTestBase&lt;
-              R extends Range&lt;R, P, D&gt;,
-              P extends Comparable&lt;? super P&gt;,
-              D extends Comparable&lt;? super D&gt;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">RangeTestBase</span>&lt;
+              R <span class="directive">extends</span> Range&lt;R, P, D&gt;,
+              P <span class="directive">extends</span> <span class="predefined-type">Comparable</span>&lt;? <span class="local-variable">super</span> P&gt;,
+              D <span class="directive">extends</span> <span class="predefined-type">Comparable</span>&lt;? <span class="local-variable">super</span> D&gt;
               &gt;
                {
-                // class left out
+                <span class="comment">// class left out</span>
 }</code></pre>
 </div>
 </div>
@@ -1951,10 +1952,10 @@ In case of equals, do it like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Override
-    @SuppressWarnings( "EqualsWhichDoesntCheckParameterClass" )
-    public boolean equals( Object obj ) {
-        return rangeEquals( obj );
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
+    <span class="annotation">@SuppressWarnings</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">EqualsWhichDoesntCheckParameterClass</span><span class="delimiter">&quot;</span></span> )
+    <span class="directive">public</span> <span class="type">boolean</span> equals( <span class="predefined-type">Object</span> obj ) {
+        <span class="keyword">return</span> rangeEquals( obj );
     }</code></pre>
 </div>
 </div>
@@ -2028,13 +2029,13 @@ The later will then look like:</p>
 <div class="listingblock">
 <div class="title">if two points are equal, the return ZERO distance.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Override
-    public BiFunction&lt;BigDecimal, BigDecimal, BigDecimal&gt; meter() {
-        return ( a, b ) -&gt; {
-            if ( a.equals( b ) ) {
-                return BigDecimal.ZERO;
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@Override</span>
+    <span class="directive">public</span> BiFunction&lt;<span class="predefined-type">BigDecimal</span>, <span class="predefined-type">BigDecimal</span>, <span class="predefined-type">BigDecimal</span>&gt; meter() {
+        <span class="keyword">return</span> ( a, b ) -&gt; {
+            <span class="keyword">if</span> ( a.equals( b ) ) {
+                <span class="keyword">return</span> <span class="predefined-type">BigDecimal</span>.ZERO;
             }
-            return b.subtract( a );
+            <span class="keyword">return</span> b.subtract( a );
         };
     }</code></pre>
 </div>
@@ -2161,13 +2162,6 @@ you only need to know what tricks to apply.</p>
 Last updated 2024-04-02 13:28:06 +0200
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

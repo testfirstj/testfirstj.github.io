@@ -9,9 +9,10 @@
 <meta name="keywords" content="Test Driven Java SEBI Venlo">
 <meta name="author" content="Martijn Bonajo, Richard van den Ham, Pieter van den Hombergh, Linda Urselmans">
 <title>W7 Java Database Access</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="css/asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/googlecode.min.css">
+<link rel="stylesheet" href="css/coderay-asciidoctor.css">
 <link rel="stylesheet" href="css/sebistyle.css">
 <link rel="stylesheet" href="css/mooc.css">
 <link rel="icon" type="image/png" href="images/Java_Logo.png?v=3"/>
@@ -242,7 +243,7 @@ The directions are especially important because in dependencies (which is what t
 </ul>
 </div>
 <div class="paragraph">
-<p><span class="image thumb right"><img src="images/meatgrinder.jpg" alt="meatgrinder" width="250" title="A meat grinder is not made of meat"></span></p>
+<p><span class="image thumb right"><img src="./images/meatgrinder.jpg" alt="meatgrinder" width="250" title="A meat grinder is not made of meat"></span></p>
 </div>
 <div class="ulist">
 <ul>
@@ -327,11 +328,11 @@ Or even applying plugins like in a meat grinder by replacing the grind wheel and
 <div class="content">
 <div class="paragraph left">
 <div class="title">A. Data to process.</div>
-<p><span class="image"><img src="images/Salsiccia-700x467.jpg" alt="Salsiccia 700x467" width="300"></span></p>
+<p><span class="image"><img src="./images/Salsiccia-700x467.jpg" alt="Salsiccia 700x467" width="300"></span></p>
 </div>
 <div class="paragraph right">
 <div class="title">B. System plan.</div>
-<p><span class="image"><img src="images/howtomeatgrinder.jpg" alt="howtomeatgrinder" width="300"></span></p>
+<p><span class="image"><img src="./images/howtomeatgrinder.jpg" alt="howtomeatgrinder" width="300"></span></p>
 </div>
 </div>
 </div>
@@ -390,7 +391,7 @@ It also helps to give such files well known names, so the program can refer to t
 <div class="listingblock">
 <div class="title"><span class="black">application.properties</span> file specifying connection details for dev and prod</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># You can add comments here.
+<pre class="CodeRay highlight"><code data-lang="properties"># You can add comments here.
 
 jdbc.pg.dev.dbname=dev
 jdbc.pg.dev.username=exam
@@ -409,59 +410,59 @@ jdbc.pg.prod.hostname=dbcluster</code></pre>
 <div class="listingblock">
 <div class="title">Configuring a datasource. Put it in a utility class.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    static DataSource getDataSource( final String sourceName ) {
-        // dataSourceByName is a map, serving as a cache.
-        return datasourceByName.computeIfAbsent( sourceName,
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">DataSource</span> getDataSource( <span class="directive">final</span> <span class="predefined-type">String</span> sourceName ) {
+        <span class="comment">// dataSourceByName is a map, serving as a cache.</span>
+        <span class="keyword">return</span> datasourceByName.computeIfAbsent( sourceName,
             ( s ) -&gt; {
-                Properties props = properties( "application.properties" );
+                <span class="predefined-type">Properties</span> props = properties( <span class="string"><span class="delimiter">&quot;</span><span class="content">application.properties</span><span class="delimiter">&quot;</span></span> );
 
-                PGSimpleDataSource source = new PGSimpleDataSource();
+                PGSimpleDataSource source = <span class="keyword">new</span> PGSimpleDataSource();
 
-                String prefix = sourceName + "."; <i class="conum" data-value="1"></i><b>(1)</b>
-                String[] serverNames = {
-                    props.getProperty( prefix + "dbhost" )
+                <span class="predefined-type">String</span> prefix = sourceName + <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="predefined-type">String</span><span class="type">[]</span> serverNames = {
+                    props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">dbhost</span><span class="delimiter">&quot;</span></span> )
                 };
                 source.setServerNames( serverNames );
 
-                String user = props.getProperty( prefix + "username" );
+                <span class="predefined-type">String</span> user = props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> );
                 source.setUser( user );
 
-                source.setDatabaseName( props.getProperty( prefix + "dbname" ) );
+                source.setDatabaseName( props.getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">dbname</span><span class="delimiter">&quot;</span></span> ) );
                 source.setPassword( props
-                        .getProperty( prefix + "password" ) );
-                String pingQuery = "SELECT current_database(), now()::TIMESTAMP as now;";
-                try ( Connection con = source.getConnection();
-                    // ping the database for success.
-                    PreparedStatement pst = con.prepareStatement( pingQuery ); ) {
-                        try ( ResultSet rs = pst.executeQuery(); ) {
-                            if ( rs.next() ) {
-                                Object db = rs.getObject(  "current_database");
-                                Object now = rs.getObject(  "now");
-                                System.out.println("connected to db "+ db.toString()+ ", date/time is " + now.toString() );
+                        .getProperty( prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> ) );
+                <span class="predefined-type">String</span> pingQuery = <span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT current_database(), now()::TIMESTAMP as now;</span><span class="delimiter">&quot;</span></span>;
+                <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = source.getConnection();
+                    <span class="comment">// ping the database for success.</span>
+                    <span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement( pingQuery ); ) {
+                        <span class="keyword">try</span> ( <span class="predefined-type">ResultSet</span> rs = pst.executeQuery(); ) {
+                            <span class="keyword">if</span> ( rs.next() ) {
+                                <span class="predefined-type">Object</span> db = rs.getObject(  <span class="string"><span class="delimiter">&quot;</span><span class="content">current_database</span><span class="delimiter">&quot;</span></span>);
+                                <span class="predefined-type">Object</span> now = rs.getObject(  <span class="string"><span class="delimiter">&quot;</span><span class="content">now</span><span class="delimiter">&quot;</span></span>);
+                                <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">connected to db </span><span class="delimiter">&quot;</span></span>+ db.toString()+ <span class="string"><span class="delimiter">&quot;</span><span class="content">, date/time is </span><span class="delimiter">&quot;</span></span> + now.toString() );
                             }
                         }
 
-                } catch ( SQLException ex ) {
-                    Logger.getLogger( PgJDBCUtils.class.getName() ).log( Level.SEVERE, null, ex );
+                } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) {
+                    <span class="predefined-type">Logger</span>.getLogger( PgJDBCUtils.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
                 }
-                return source;
+                <span class="keyword">return</span> source;
             }
-            ); // end of lambda.
+            ); <span class="comment">// end of lambda.</span>
       }
 
-      // read properties
-      static Properties properties( String propFileName ) {
-          Properties properties = new Properties();
-          try (
-                  FileInputStream fis = new FileInputStream( propFileName ); ) {
+      <span class="comment">// read properties</span>
+      <span class="directive">static</span> <span class="predefined-type">Properties</span> properties( <span class="predefined-type">String</span> propFileName ) {
+          <span class="predefined-type">Properties</span> properties = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+          <span class="keyword">try</span> (
+                  <span class="predefined-type">FileInputStream</span> fis = <span class="keyword">new</span> <span class="predefined-type">FileInputStream</span>( propFileName ); ) {
               properties.load( fis );
-          } catch ( IOException ignored ) {
-              Logger.getLogger( PgJDBCUtils.class.getName() ).log(
-                      Level.INFO,
-                      "attempt to read file from well known location failed'",
+          } <span class="keyword">catch</span> ( <span class="exception">IOException</span> ignored ) {
+              <span class="predefined-type">Logger</span>.getLogger( PgJDBCUtils.class.getName() ).log(
+                      <span class="predefined-type">Level</span>.INFO,
+                      <span class="string"><span class="delimiter">&quot;</span><span class="content">attempt to read file from well known location failed'</span><span class="delimiter">&quot;</span></span>,
                       ignored );
           }
-          return properties;
+          <span class="keyword">return</span> properties;
       }</code></pre>
 </div>
 </div>
@@ -486,32 +487,32 @@ A connection is <code>AutoClosable</code> so candidate for <strong class="green"
 <div class="listingblock">
 <div class="title">Using a datasource to obtain a connection and use the connection</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package simplejdbc;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">simplejdbc</span>;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import javax.sql.DataSource;
+<span class="keyword">import</span> <span class="include">java.sql.Connection</span>;
+<span class="keyword">import</span> <span class="include">java.sql.SQLException</span>;
+<span class="keyword">import</span> <span class="include">javax.sql.DataSource</span>;
 
-/**
+<span class="comment">/**
  *
  * @author hom
- */
-public class DataSourceDemo {
+ */</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DataSourceDemo</span> {
 
-    final DataSource datasource; <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="directive">final</span> <span class="predefined-type">DataSource</span> datasource; <i class="conum" data-value="1"></i><b>(1)</b>
 
-    public DataSourceDemo( DataSource datasource ) { <i class="conum" data-value="2"></i><b>(2)</b>
-        this.datasource = datasource;
+    <span class="directive">public</span> DataSourceDemo( <span class="predefined-type">DataSource</span> datasource ) { <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="local-variable">this</span>.datasource = datasource;
     }
 
-    void demo() throws SQLException {  <i class="conum" data-value="3"></i><b>(3)</b>
-        String query <i class="conum" data-value="4"></i><b>(4)</b>
-                = """
+    <span class="type">void</span> demo() <span class="directive">throws</span> <span class="exception">SQLException</span> {  <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="predefined-type">String</span> query <i class="conum" data-value="4"></i><b>(4)</b>
+                = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
                   select state.name as state,p.name as president,state.year_entered
                   from president p join state state on(p.state_id_born=state.id)
                   where state.name like 'N%'
-                  """;
-            doQuery( query, System.out );
+                  </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+            doQuery( query, <span class="predefined-type">System</span>.out );
     }
 }</code></pre>
 </div>
@@ -544,13 +545,13 @@ You will see some similarities in what you have seen in project 1, using php PDO
 <div class="listingblock">
 <div class="title">doQuery</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    void doQuery( String query,
-                  PrintStream out ) throws SQLException {
-        try ( Connection con = datasource.getConnection();
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery( query ) ) {
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="type">void</span> doQuery( <span class="predefined-type">String</span> query,
+                  <span class="predefined-type">PrintStream</span> out ) <span class="directive">throws</span> <span class="exception">SQLException</span> {
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = datasource.getConnection();
+                <span class="predefined-type">Statement</span> st = con.createStatement();
+                <span class="predefined-type">ResultSet</span> rs = st.executeQuery( query ) ) {
 
-            new ResultSetPrinter( rs ).printTable( out );
+            <span class="keyword">new</span> ResultSetPrinter( rs ).printTable( out );
 
         }
     }</code></pre>
@@ -595,8 +596,8 @@ you want to insert or update, or you want to use in your select or delete query.
 <div class="listingblock">
 <div class="title">sql query text to insert a student.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">insert into students (student_id , lastname, firstname, dob, gender) <i class="conum" data-value="1"></i><b>(1)</b>
-            values   (?        ,          ?,         ?,   ?,      ?) <i class="conum" data-value="2"></i><b>(2)</b>
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">insert</span> <span class="class">into</span> students (student_id , lastname, firstname, dob, gender) <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="keyword">values</span>   (<span class="error">?</span>        ,          <span class="error">?</span>,         <span class="error">?</span>,   <span class="error">?</span>,      <span class="error">?</span>) <i class="conum" data-value="2"></i><b>(2)</b>
 returning *                                                          <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
@@ -642,7 +643,7 @@ Also assume that we have an array of student data, simply as an array of objects
 <div class="listingblock">
 <div class="title">student data in array</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"> Object[] studentData = {123513, "Klaassen", "Jan", "1993-05-12" , "M"}; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="predefined-type">Object</span><span class="type">[]</span> studentData = {<span class="integer">123513</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Klaassen</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Jan</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">1993-05-12</span><span class="delimiter">&quot;</span></span> , <span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>}; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -659,15 +660,15 @@ Also assume that we have an array of student data, simply as an array of objects
 <div class="listingblock">
 <div class="title">loop to substitute placeholders.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">     try (
-          Connection con = datasource.getConnection();
-          PreparedStatement stmt = con.prepareStatement( query ); ) {
+<pre class="CodeRay highlight"><code data-lang="java">     <span class="keyword">try</span> (
+          <span class="predefined-type">Connection</span> con = datasource.getConnection();
+          <span class="predefined-type">PreparedStatement</span> stmt = con.prepareStatement( query ); ) {
 
-            int count = 0;
-            for ( Object param : studentData ) {
+            <span class="type">int</span> count = <span class="integer">0</span>;
+            <span class="keyword">for</span> ( <span class="predefined-type">Object</span> param : studentData ) {
                 stmt.setObject( ++count, param ); <i class="conum" data-value="1"></i><b>(1)</b>
             }
-            return stmt.executeUpdate();
+            <span class="keyword">return</span> stmt.executeUpdate();
      }</code></pre>
 </div>
 </div>
@@ -732,26 +733,26 @@ is filling the account tables from some List of accounts.</p>
 <div class="listingblock">
 <div class="title">load accounts from list. The code is part of a test suite to prepare the database for tests.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    static String addAccount = "insert into account(accountid,balance,maxdebit,customerid,astate) "
-                             + "values(?,?,?,?,?)";
-    static void loadAccounts() throws SQLException {
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="predefined-type">String</span> addAccount = <span class="string"><span class="delimiter">&quot;</span><span class="content">insert into account(accountid,balance,maxdebit,customerid,astate) </span><span class="delimiter">&quot;</span></span>
+                             + <span class="string"><span class="delimiter">&quot;</span><span class="content">values(?,?,?,?,?)</span><span class="delimiter">&quot;</span></span>;
+    <span class="directive">static</span> <span class="type">void</span> loadAccounts() <span class="directive">throws</span> <span class="exception">SQLException</span> {
 
-        try ( Connection con = olifantysSource.getConnection();
-                PreparedStatement pst = con.prepareStatement( addAccount ) ) {
-            for ( Account account : accounts ) {
-                pst.setObject( 1, account.accountid );
-                pst.setBigDecimal( 2, account.balance );
-                pst.setBigDecimal( 3, account.maxdebit );
-                pst.setObject( 4, account.customerid );
-                pst.setString( 5, account.astate );
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = olifantysSource.getConnection();
+                <span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement( addAccount ) ) {
+            <span class="keyword">for</span> ( Account account : accounts ) {
+                pst.setObject( <span class="integer">1</span>, account.accountid );
+                pst.setBigDecimal( <span class="integer">2</span>, account.balance );
+                pst.setBigDecimal( <span class="integer">3</span>, account.maxdebit );
+                pst.setObject( <span class="integer">4</span>, account.customerid );
+                pst.setString( <span class="integer">5</span>, account.astate );
                 pst.addBatch(); <i class="conum" data-value="1"></i><b>(1)</b>
             }
-            int[] results = pst.executeBatch();
-            System.out.println( "results = " + Arrays.toString( results ) );
+            <span class="type">int</span><span class="type">[]</span> results = pst.executeBatch();
+            <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">results = </span><span class="delimiter">&quot;</span></span> + <span class="predefined-type">Arrays</span>.toString( results ) );
 
-        } catch ( PSQLException e ) {
-            System.out.println( "caused by " + e.getNextException() );
-            throw e;
+        } <span class="keyword">catch</span> ( PSQLException e ) {
+            <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">caused by </span><span class="delimiter">&quot;</span></span> + e.getNextException() );
+            <span class="keyword">throw</span> e;
         }
     }</code></pre>
 </div>
@@ -787,16 +788,16 @@ called the <code class="blue">information_schema</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE TABLE public.students (
-    student_id INTEGER PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY, <i class="conum" data-value="1"></i><b>(1)</b>
-    firstname TEXT NOT NULL,  <i class="conum" data-value="2"></i><b>(2)</b>
-    lastname TEXT NOT NULL,
-    dob DATE NOT NULL,
-    cohort integer NOT NULL DEFAULT  EXTRACT('year' from now()), <i class="conum" data-value="3"></i><b>(3)</b>
-    email TEXT NOT NULL,
-    gender CHARACTER(1) NOT NULL check (gender in ('F','M','U')), <i class="conum" data-value="4"></i><b>(4)</b>
-    student_grp TEXT NOT NULL,
-    active BOOLEAN DEFAULT false NOT NULL
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="type">TABLE</span> public.students (
+    student_id <span class="predefined-type">INTEGER</span> <span class="directive">PRIMARY</span> <span class="type">KEY</span> GENERATED <span class="keyword">BY</span> <span class="directive">DEFAULT</span> <span class="keyword">AS</span> IDENTITY, <i class="conum" data-value="1"></i><b>(1)</b>
+    firstname <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,  <i class="conum" data-value="2"></i><b>(2)</b>
+    lastname <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    dob <span class="predefined-type">DATE</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    cohort <span class="predefined-type">integer</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="directive">DEFAULT</span>  EXTRACT(<span class="string"><span class="delimiter">'</span><span class="content">year</span><span class="delimiter">'</span></span> <span class="keyword">from</span> <span class="predefined">now</span>()), <i class="conum" data-value="3"></i><b>(3)</b>
+    email <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    gender CHARACTER(<span class="integer">1</span>) <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span> <span class="keyword">check</span> (gender <span class="keyword">in</span> (<span class="string"><span class="delimiter">'</span><span class="content">F</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">M</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">U</span><span class="delimiter">'</span></span>)), <i class="conum" data-value="4"></i><b>(4)</b>
+    student_grp <span class="predefined-type">TEXT</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>,
+    active <span class="predefined-type">BOOLEAN</span> <span class="directive">DEFAULT</span> <span class="predefined-constant">false</span> <span class="keyword">NOT</span> <span class="predefined-constant">NULL</span>
 );</code></pre>
 </div>
 </div>
@@ -826,9 +827,9 @@ Only use varchar if your business requires a length constraint.</td>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">SELECT ordinal_position, column_name,data_type, column_default, is_nullable,
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span> ordinal_position, column_name,data_type, column_default, is_nullable,
        is_generated, datetime_precision
-FROM   information_schema.columns WHERE table_name ='students' ORDER BY 1;</code></pre>
+<span class="keyword">FROM</span>   information_schema.columns <span class="keyword">WHERE</span> table_name =<span class="string"><span class="delimiter">'</span><span class="content">students</span><span class="delimiter">'</span></span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="integer">1</span>;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -836,7 +837,7 @@ FROM   information_schema.columns WHERE table_name ='students' ORDER BY 1;</code
 </div>
 <div class="listingblock small-code-font-70">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌──────────────────┬─────────────┬───────────┬──────────────────────────┬─────────────┬──────────────┬────────────────────┐
+<pre class="CodeRay highlight"><code data-lang="text">┌──────────────────┬─────────────┬───────────┬──────────────────────────┬─────────────┬──────────────┬────────────────────┐
 │ ordinal_position │ column_name │ data_type │      column_default      │ is_nullable │ is_generated │ datetime_precision │
 ╞══════════════════╪═════════════╪═══════════╪══════════════════════════╪═════════════╪══════════════╪════════════════════╡
 │                1 │ student_id  │ integer   │                          │ NO          │ NEVER        │                    │
@@ -859,19 +860,19 @@ FROM   information_schema.columns WHERE table_name ='students' ORDER BY 1;</code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package entities;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">entities</span>;
 
-import java.time.LocalDate;
+<span class="keyword">import</span> <span class="include">java.time.LocalDate</span>;
 
-public record Student (
-   int student_id,
-   String firstname,
-   String lastname,
+<span class="directive">public</span> record Student (
+   <span class="type">int</span> student_id,
+   <span class="predefined-type">String</span> firstname,
+   <span class="predefined-type">String</span> lastname,
    LocalDate dob,
-   int cohort,
-   String email,
-   char gender,
-   String student_grp,
+   <span class="type">int</span> cohort,
+   <span class="predefined-type">String</span> email,
+   <span class="type">char</span> gender,
+   <span class="predefined-type">String</span> student_grp,
    bool active
 ){} <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
@@ -910,30 +911,30 @@ instead of using reflection to the same effect. You teachers might turn that int
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">-- retrieve the check constraints for the user schemas
-select tc.table_schema,                                                          
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="comment">-- retrieve the check constraints for the user schemas</span>
+<span class="class">select</span> tc.table_schema,                                                          
        tc.table_name,
-       string_agg(col.column_name, ', ') as columns,
+       string_agg(col.column_name, <span class="string"><span class="delimiter">'</span><span class="content">, </span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="type">columns</span>,
        tc.constraint_name,
        cc.check_clause
-from information_schema.table_constraints tc
-join information_schema.check_constraints cc
-     on tc.constraint_schema = cc.constraint_schema
-     and tc.constraint_name = cc.constraint_name
-join pg_namespace nsp on nsp.nspname = cc.constraint_schema
-join pg_constraint pgc on pgc.conname = cc.constraint_name
-                       and pgc.connamespace = nsp.oid
-                       and pgc.contype = 'c'
-join information_schema.columns col
-     on col.table_schema = tc.table_schema
-     and col.table_name = tc.table_name
-     and col.ordinal_position = ANY(pgc.conkey)
-where tc.constraint_schema not in('pg_catalog', 'information_schema')
-group by tc.table_schema,
+<span class="keyword">from</span> information_schema.table_constraints tc
+<span class="keyword">join</span> information_schema.check_constraints cc
+     <span class="keyword">on</span> tc.constraint_schema = cc.constraint_schema
+     <span class="keyword">and</span> tc.constraint_name = cc.constraint_name
+<span class="keyword">join</span> pg_namespace nsp <span class="keyword">on</span> nsp.nspname = cc.constraint_schema
+<span class="keyword">join</span> pg_constraint pgc <span class="keyword">on</span> pgc.conname = cc.constraint_name
+                       <span class="keyword">and</span> pgc.connamespace = nsp.oid
+                       <span class="keyword">and</span> pgc.contype = <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>
+<span class="keyword">join</span> information_schema.columns col
+     <span class="keyword">on</span> col.table_schema = tc.table_schema
+     <span class="keyword">and</span> col.table_name = tc.table_name
+     <span class="keyword">and</span> col.ordinal_position = <span class="keyword">ANY</span>(pgc.conkey)
+<span class="keyword">where</span> tc.constraint_schema <span class="keyword">not</span> <span class="keyword">in</span>(<span class="string"><span class="delimiter">'</span><span class="content">pg_catalog</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">information_schema</span><span class="delimiter">'</span></span>)
+<span class="keyword">group</span> <span class="keyword">by</span> tc.table_schema,
          tc.table_name,
          tc.constraint_name,
          cc.check_clause
-order by tc.table_schema,
+<span class="keyword">order</span> <span class="keyword">by</span> tc.table_schema,
          tc.table_name;</code></pre>
 </div>
 </div>
@@ -942,7 +943,7 @@ order by tc.table_schema,
 </div>
 <div class="listingblock small-code-font-70">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌──────────────┬────────────┬─────────┬───────────────────────┬─────────────────────────────────────────────────────────────────┐
+<pre class="CodeRay highlight"><code data-lang="text">┌──────────────┬────────────┬─────────┬───────────────────────┬─────────────────────────────────────────────────────────────────┐
 │ table_schema │ table_name │ columns │    constraint_name    │                          check_clause                           │
 ╞══════════════╪════════════╪═════════╪═══════════════════════╪═════════════════════════════════════════════════════════════════╡
 │ public       │ students   │ gender  │ students_gender_check │ ((gender = ANY (ARRAY['F'::bpchar, 'M'::bpchar, 'U'::bpchar]))) │
@@ -983,7 +984,7 @@ If something fails, the mess created can either be undone (rollback) or not comm
 </div>
 <div class="paragraph">
 <div class="title">DReadlocks? by <a href="https://cilserolf.artstation.com/projects/W2JAqE">Cil Flores</a></div>
-<p><span class="image related thumb left"><img src="images/cil-flores-jack.jpg" alt="cil flores jack" width="250" title="by Cil Flores"></span>
+<p><span class="image related thumb left"><img src="./images/cil-flores-jack.jpg" alt="cil flores jack" width="250" title="by Cil Flores"></span>
 Locking out sounds serious, and it is, on multiple accounts.</p>
 </div>
 <div class="ulist">
@@ -1049,22 +1050,22 @@ with a select that invokes the stored procedure.</p>
 <div class="listingblock">
 <div class="title">This is what a test would look like from java through the jdbc driver.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    static long  FROM_ACCOUNT= 100;
-    static long  TO_ACCOUNT= 110;
-    @Test
-    public void transferOK() throws SQLException {
-        try ( Connection con = dataSource.getConnection(); ) {
-            con.setAutoCommit( false );
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">static</span> <span class="type">long</span>  FROM_ACCOUNT= <span class="integer">100</span>;
+    <span class="directive">static</span> <span class="type">long</span>  TO_ACCOUNT= <span class="integer">110</span>;
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> transferOK() <span class="directive">throws</span> <span class="exception">SQLException</span> {
+        <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = dataSource.getConnection(); ) {
+            con.setAutoCommit( <span class="predefined-constant">false</span> );
             Account pre = findAccount( con, TO_ACCOUNT );
-            long transactionId= doQuery( con, <i class="conum" data-value="1"></i><b>(1)</b>
-                System.out,  <i class="conum" data-value="2"></i><b>(2)</b>
-                "select transferlockfree(?,?,?,'should be ok')",  <i class="conum" data-value="3"></i><b>(3)</b>
-                FROM_ACCOUNT, TO_ACCOUNT,110,25 ); <i class="conum" data-value="4"></i><b>(4)</b>
+            <span class="type">long</span> transactionId= doQuery( con, <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="predefined-type">System</span>.out,  <i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">select transferlockfree(?,?,?,'should be ok')</span><span class="delimiter">&quot;</span></span>,  <i class="conum" data-value="3"></i><b>(3)</b>
+                FROM_ACCOUNT, TO_ACCOUNT,<span class="integer">110</span>,<span class="integer">25</span> ); <i class="conum" data-value="4"></i><b>(4)</b>
             Account post = findAccount( con, TO_ACCOUNT );
             assertThat( post.balance )
-                .as("transaction failed")
-                .isEqualTo( pre.balance.add( new BigDecimal( "25" ) ) );
-            con.rollback(); // this is a test, leave the account in pristine state.
+                .as(<span class="string"><span class="delimiter">&quot;</span><span class="content">transaction failed</span><span class="delimiter">&quot;</span></span>)
+                .isEqualTo( pre.balance.add( <span class="keyword">new</span> <span class="predefined-type">BigDecimal</span>( <span class="string"><span class="delimiter">&quot;</span><span class="content">25</span><span class="delimiter">&quot;</span></span> ) ) );
+            con.rollback(); <span class="comment">// this is a test, leave the account in pristine state.</span>
         }
     }</code></pre>
 </div>
@@ -1147,30 +1148,30 @@ For example a <code>StudentDAO</code>. This <code>StudentDAO</code> contains met
 <div class="listingblock">
 <div class="title">StudentDAO.update(student) method</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public Optional&lt;Student&gt; update(Student student){
-    String query =
-                "update students set (lastname, firstname, email)"<i class="conum" data-value="1"></i><b>(1)</b>
-                + "= (?, ?, ?) "<i class="conum" data-value="2"></i><b>(2)</b>
-                + "where snummer=?"<i class="conum" data-value="3"></i><b>(3)</b>
-                + "returning lastname, firstname, email";<i class="conum" data-value="4"></i><b>(4)</b>
-    try(Connection con = dataSource.getConnection();){
-        try(PreparedStatement pst = con.prepareStatement(query)){<i class="conum" data-value="5"></i><b>(5)</b>
-            pst.setString(1, student.getLastname());<i class="conum" data-value="6"></i><b>(6)</b>
-            pst.setString(2, student.getFirstname());
-            pst.setString(3, student.getEmail());
-            pst.setInt(4, student.getSnummer());
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Optional&lt;Student&gt; update(Student student){
+    <span class="predefined-type">String</span> query =
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">update students set (lastname, firstname, email)</span><span class="delimiter">&quot;</span></span><i class="conum" data-value="1"></i><b>(1)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">= (?, ?, ?) </span><span class="delimiter">&quot;</span></span><i class="conum" data-value="2"></i><b>(2)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">where snummer=?</span><span class="delimiter">&quot;</span></span><i class="conum" data-value="3"></i><b>(3)</b>
+                + <span class="string"><span class="delimiter">&quot;</span><span class="content">returning lastname, firstname, email</span><span class="delimiter">&quot;</span></span>;<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="keyword">try</span>(<span class="predefined-type">Connection</span> con = dataSource.getConnection();){
+        <span class="keyword">try</span>(<span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement(query)){<i class="conum" data-value="5"></i><b>(5)</b>
+            pst.setString(<span class="integer">1</span>, student.getLastname());<i class="conum" data-value="6"></i><b>(6)</b>
+            pst.setString(<span class="integer">2</span>, student.getFirstname());
+            pst.setString(<span class="integer">3</span>, student.getEmail());
+            pst.setInt(<span class="integer">4</span>, student.getSnummer());
 
-            try (ResultSet rs = pst.executeQuery();) {<i class="conum" data-value="7"></i><b>(7)</b>
-                if ( rs.next() ) {<i class="conum" data-value="8"></i><b>(8)</b>
-                    return Optional.ofNullable( recordToEntity( rs ) );<i class="conum" data-value="9"></i><b>(9)</b>
-                } else {
-                    return Optional.empty();
+            <span class="keyword">try</span> (<span class="predefined-type">ResultSet</span> rs = pst.executeQuery();) {<i class="conum" data-value="7"></i><b>(7)</b>
+                <span class="keyword">if</span> ( rs.next() ) {<i class="conum" data-value="8"></i><b>(8)</b>
+                    <span class="keyword">return</span> Optional.ofNullable( recordToEntity( rs ) );<i class="conum" data-value="9"></i><b>(9)</b>
+                } <span class="keyword">else</span> {
+                    <span class="keyword">return</span> Optional.empty();
                 }
             }
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        throw new RuntimeException(ex.getMessage(), ex);
+    } <span class="keyword">catch</span> (<span class="exception">SQLException</span> ex) {
+        <span class="predefined-type">Logger</span>.getLogger(StudentDAO.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(ex.getMessage(), ex);
     }
 }</code></pre>
 </div>
@@ -1218,12 +1219,12 @@ For example a <code>StudentDAO</code>. This <code>StudentDAO</code> contains met
 <div class="listingblock">
 <div class="title">BTW, with Java 14 textblocks, your would write the query sql text as</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    String query =
-          """
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="predefined-type">String</span> query =
+          <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
           update students set (lastname, firstname, email) = (?, ?, ?)
           where snummer=?
           returning lastname, firstname, email
-          """;</code></pre>
+          </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1239,38 +1240,38 @@ has exactly the functionality that we need to generate the
 <div class="listingblock">
 <div class="title">StudentDAO.update(student) using the <code>StudentMapper</code></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public Optional&lt;Student&gt; update(Student student){
-    var studentMapper = Mapper.mapperFor(Student.class);
-    var columnNames = studentMapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Optional&lt;Student&gt; update(Student student){
+    <span class="type">var</span> studentMapper = Mapper.mapperFor(Student.class);
+    <span class="type">var</span> columnNames = studentMapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
             .stream()
-            .map( Field::getName )<i class="conum" data-value="2"></i><b>(2)</b>
+            .map( <span class="predefined-type">Field</span>::getName )<i class="conum" data-value="2"></i><b>(2)</b>
             .collect( toList() );
-    String columns = String
-            .join( ",", columnNames );<i class="conum" data-value="3"></i><b>(3)</b>
-    String placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="4"></i><b>(4)</b>
-    String query = format(
-            """
+    <span class="predefined-type">String</span> columns = <span class="predefined-type">String</span>
+            .join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, columnNames );<i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">String</span> placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="predefined-type">String</span> query = format(
+            <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
             update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)
             returning  %2$s
-            """,
-            "students",
+            </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">students</span><span class="delimiter">&quot;</span></span>,
             columns,
             placeholders,
             mapper.getKeyFieldName() );
-    try(Connection con = dataSource.getConnection();){
-        try(PreparedStatement pst = con.prepareStatement(query)){
+    <span class="keyword">try</span>(<span class="predefined-type">Connection</span> con = dataSource.getConnection();){
+        <span class="keyword">try</span>(<span class="predefined-type">PreparedStatement</span> pst = con.prepareStatement(query)){
             fillPreparedStatement(pst, student);<i class="conum" data-value="5"></i><b>(5)</b>
-            try (ResultSet rs = pst.executeQuery();) {
-                if ( rs.next() ) {
-                    return Optional.ofNullable( recordToEntity( rs ) );
-                } else {
-                    return Optional.empty();
+            <span class="keyword">try</span> (<span class="predefined-type">ResultSet</span> rs = pst.executeQuery();) {
+                <span class="keyword">if</span> ( rs.next() ) {
+                    <span class="keyword">return</span> Optional.ofNullable( recordToEntity( rs ) );
+                } <span class="keyword">else</span> {
+                    <span class="keyword">return</span> Optional.empty();
                 }
             }
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        throw new RuntimeException(ex.getMessage(), ex);
+    } <span class="keyword">catch</span> (<span class="exception">SQLException</span> ex) {
+        <span class="predefined-type">Logger</span>.getLogger(StudentDAO.class.getName()).log(<span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex);
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(ex.getMessage(), ex);
     }
 }</code></pre>
 </div>
@@ -1312,7 +1313,7 @@ we can come to the following generic <code>DAO</code>.</p>
 <div class="listingblock">
 <div class="title">generic DAO</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface DAO&lt;E, K&gt; extends AutoCloseable{<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">DAO</span>&lt;E, K&gt; <span class="directive">extends</span> AutoCloseable{<i class="conum" data-value="1"></i><b>(1)</b>
     Optional&lt;E&gt; update( E e );
     ....<i class="conum" data-value="2"></i><b>(2)</b>
 }</code></pre>
@@ -1334,13 +1335,13 @@ primary key (e.g. Integer)</td>
 <div class="listingblock">
 <div class="title">Usage example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  DAO&lt;Employee,Integer&gt; sdao = daoFactory.createDao( Student.class );
-  Student j = sdao.save( new Student(....) ).get(); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">  DAO&lt;Employee,<span class="predefined-type">Integer</span>&gt; sdao = daoFactory.createDao( Student.class );
+  Student j = sdao.save( <span class="keyword">new</span> Student(....) ).get(); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/daosequencesimple.svg" alt="daosequencesimple">
+<img src="./images/daosequencesimple.svg" alt="daosequencesimple">
 </div>
 <div class="title">Figure 1. Sequence diagram of simple operation</div>
 </div>
@@ -1372,21 +1373,21 @@ rollback the operation.</p>
 <div class="listingblock">
 <div class="title">Transaction example.</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    try (
-            DAO&lt;Department, Integer&gt; ddao = daof.createDao( Department.class );  <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="keyword">try</span> (
+            DAO&lt;Department, <span class="predefined-type">Integer</span>&gt; ddao = daof.createDao( Department.class );  <i class="conum" data-value="1"></i><b>(1)</b>
             TransactionToken tok = ddao.startTransaction();              <i class="conum" data-value="2"></i><b>(2)</b>
-            DAO&lt;Employee,Integer&gt; edao = daof.createDao( Employee.class, tok ); ) {  <i class="conum" data-value="3"></i><b>(3)</b>
+            DAO&lt;Employee,<span class="predefined-type">Integer</span>&gt; edao = daof.createDao( Employee.class, tok ); ) {  <i class="conum" data-value="3"></i><b>(3)</b>
 
         savedDept = ddao.save( engineering );
-        int depno = savedDept.getDepartmentid();
+        <span class="type">int</span> depno = savedDept.getDepartmentid();
         dilbert.setDepartmentid( depno );
         savedDilbert = edao.save( dilbert );
-        System.out.println( "savedDilbert = " + savedDilbert );
+        <span class="predefined-type">System</span>.out.println( <span class="string"><span class="delimiter">&quot;</span><span class="content">savedDilbert = </span><span class="delimiter">&quot;</span></span> + savedDilbert );
         tok.commit();                                                             <i class="conum" data-value="4"></i><b>(4)</b>
-    } catch ( Exception ex ) {
+    } <span class="keyword">catch</span> ( <span class="exception">Exception</span> ex ) {
         ttok.rollback();                                                        <i class="conum" data-value="5"></i><b>(5)</b>
-        Logger.getLogger( TransactionTest.class.getName() ).
-                        log( Level.SEVERE, null, ex );
+        <span class="predefined-type">Logger</span>.getLogger( TransactionTest.class.getName() ).
+                        log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>, ex );
     }</code></pre>
 </div>
 </div>
@@ -1416,7 +1417,7 @@ rollback the operation.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/daosequencetransaction.svg" alt="daosequencetransaction">
+<img src="./images/daosequencetransaction.svg" alt="daosequencetransaction">
 </div>
 <div class="title">Figure 2. Sequence diagram of transactional operation</div>
 </div>
@@ -1428,7 +1429,7 @@ Thankfully that was also already implemented in last weeks exercise.</p>
 <div class="listingblock">
 <div class="title">retrieving the correct mapper for entity type</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Mapper&lt;Student, Integer&gt; mapper = Mapper.mapperFor(Student.class );</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Mapper&lt;Student, <span class="predefined-type">Integer</span>&gt; mapper = Mapper.mapperFor(Student.class );</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1457,26 +1458,26 @@ when registered in a registry. A lot like the things we saw in week 6.</p>
 <div class="listingblock">
 <div class="title">DAO Methods</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">  // K is id, E is entity
-interface DAO&lt;K,E&gt; extends AutoClosable {
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="comment">// K is id, E is entity</span>
+<span class="type">interface</span> <span class="class">DAO</span>&lt;K,E&gt; <span class="directive">extends</span> AutoClosable {
     Optional&lt;E&gt; get( K id );
-    List&lt;E&gt; getAll();
-    default List&lt;E&gt; getByColumnValues( Object... keyValues );
+    <span class="predefined-type">List</span>&lt;E&gt; getAll();
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;E&gt; getByColumnValues( <span class="predefined-type">Object</span>... keyValues );
     Optional&lt;E&gt; save( E e );
     E update( E e );
-    void deleteEntity( E e );
-    void deleteById( K k );
-    default TransactionToken startTransaction();
-    default DAO&lt;E, K&gt; setTransactionToken( TransactionToken tok );
-    default TransactionToken getTransactionToken();
-    default int size();
-    default int lastId();
-    default void close() throws Exception;
-    default List&lt;? extends E&gt; saveAll( List&lt;E&gt; entities );
-    default List&lt;? extends E&gt; saveAll( E... entities );
-    default void deleteAll( Iterable&lt;E&gt; entities );
-    default void deleteAll( E... entities );
-    default List&lt;E&gt; anyQuery( String queryText, Object... params );
+    <span class="type">void</span> deleteEntity( E e );
+    <span class="type">void</span> deleteById( K k );
+    <span class="keyword">default</span> TransactionToken startTransaction();
+    <span class="keyword">default</span> DAO&lt;E, K&gt; setTransactionToken( TransactionToken tok );
+    <span class="keyword">default</span> TransactionToken getTransactionToken();
+    <span class="keyword">default</span> <span class="type">int</span> size();
+    <span class="keyword">default</span> <span class="type">int</span> lastId();
+    <span class="keyword">default</span> <span class="type">void</span> close() <span class="directive">throws</span> <span class="exception">Exception</span>;
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;? <span class="directive">extends</span> E&gt; saveAll( <span class="predefined-type">List</span>&lt;E&gt; entities );
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;? <span class="directive">extends</span> E&gt; saveAll( E... entities );
+    <span class="keyword">default</span> <span class="type">void</span> deleteAll( <span class="predefined-type">Iterable</span>&lt;E&gt; entities );
+    <span class="keyword">default</span> <span class="type">void</span> deleteAll( E... entities );
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;E&gt; anyQuery( <span class="predefined-type">String</span> queryText, <span class="predefined-type">Object</span>... params );
 }</code></pre>
 </div>
 </div>
@@ -1485,7 +1486,7 @@ interface DAO&lt;K,E&gt; extends AutoClosable {
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/daoclassdiagram.svg" alt="daoclassdiagram">
+<img src="./images/daoclassdiagram.svg" alt="daoclassdiagram">
 </div>
 <div class="title">Figure 3. Class diagram of a DAO and its collaborators</div>
 </div>
@@ -1547,12 +1548,12 @@ with all defined field names in between.</p>
 <div class="listingblock">
 <div class="title">Constructor</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    final Mapper&lt;E, K&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">final</span> Mapper&lt;E, K&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
 
-    PGDAO( PGDAOFactory fac, DataSource ds, Class&lt;E&gt; entityType,
+    PGDAO( PGDAOFactory fac, <span class="predefined-type">DataSource</span> ds, <span class="predefined-type">Class</span>&lt;E&gt; entityType,
             QueryFactory queryTextCache, AbstractQueryExecutor qe ) {
 
-        this.mapper = Mapper.mapperFor( entityType );<i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="local-variable">this</span>.mapper = Mapper.mapperFor( entityType );<i class="conum" data-value="2"></i><b>(2)</b>
         ....<i class="conum" data-value="3"></i><b>(3)</b>
     }</code></pre>
 </div>
@@ -1576,17 +1577,17 @@ with all defined field names in between.</p>
 <div class="listingblock">
 <div class="title">Update method</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
-public E update( E t ) {
-    if ( null != transactionToken ) {<i class="conum" data-value="1"></i><b>(1)</b>
-        return update( transactionToken.getConnection(), t );
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+<span class="directive">public</span> E update( E t ) {
+    <span class="keyword">if</span> ( <span class="predefined-constant">null</span> != transactionToken ) {<i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">return</span> update( transactionToken.getConnection(), t );
     }
-    try ( Connection con = this.getConnection(); ) {<i class="conum" data-value="2"></i><b>(2)</b>
-        return update( con, t );<i class="conum" data-value="3"></i><b>(3)</b>
-    } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
-        Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE,
+    <span class="keyword">try</span> ( <span class="predefined-type">Connection</span> con = <span class="local-variable">this</span>.getConnection(); ) {<i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="keyword">return</span> update( con, t );<i class="conum" data-value="3"></i><b>(3)</b>
+    } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) { <span class="comment">// cannot test cover this, unless connection breaks mid-air</span>
+        <span class="predefined-type">Logger</span>.getLogger( PGDAO.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE,
                 ex.getMessage() );
-        throw new DAOException( ex.getMessage(), ex );
+        <span class="keyword">throw</span> <span class="keyword">new</span> DAOException( ex.getMessage(), ex );
     }
 }</code></pre>
 </div>
@@ -1613,10 +1614,10 @@ public E update( E t ) {
 <div class="listingblock">
 <div class="title">Update helper method</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private E update( final Connection c, E e ) {
-    String sql = queryFactory.updateQueryText();<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> E update( <span class="directive">final</span> <span class="predefined-type">Connection</span> c, E e ) {
+    <span class="predefined-type">String</span> sql = queryFactory.updateQueryText();<i class="conum" data-value="1"></i><b>(1)</b>
     K key = mapper.keyExtractor().apply( e );<i class="conum" data-value="2"></i><b>(2)</b>
-    return (E) qe.doUpdate( c, sql, e, key );<i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="keyword">return</span> (E) qe.doUpdate( c, sql, e, key );<i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -1643,37 +1644,37 @@ now let us focus on the <code>doUpdate</code>.</p>
 <div class="listingblock">
 <div class="title">doUpdate method, create the prepared statement</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
-E doUpdate( final Connection c, String sql, E e, K key ) throws DAOException {
-    try ( PreparedStatement pst = c.prepareStatement( sql ); ) {
-        Object[] parts = mapper.deconstruct( e );
-        int j = 1;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+E doUpdate( <span class="directive">final</span> <span class="predefined-type">Connection</span> c, <span class="predefined-type">String</span> sql, E e, K key ) <span class="directive">throws</span> DAOException {
+    <span class="keyword">try</span> ( <span class="predefined-type">PreparedStatement</span> pst = c.prepareStatement( sql ); ) {
+        <span class="predefined-type">Object</span><span class="type">[]</span> parts = mapper.deconstruct( e );
+        <span class="type">int</span> j = <span class="integer">1</span>;
 
-        // all fields
-        for ( Object part : parts ) {
-            if ( part == null ) { <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="comment">// all fields</span>
+        <span class="keyword">for</span> ( <span class="predefined-type">Object</span> part : parts ) {
+            <span class="keyword">if</span> ( part == <span class="predefined-constant">null</span> ) { <i class="conum" data-value="1"></i><b>(1)</b>
                 pst.setObject( j++, part );
-                continue;
+                <span class="keyword">continue</span>;
             }
-            Object po = factory.marshallOut( part ); <i class="conum" data-value="2"></i><b>(2)</b>
-            if ( po instanceof PGobject ) {
+            <span class="predefined-type">Object</span> po = factory.marshallOut( part ); <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="keyword">if</span> ( po <span class="keyword">instanceof</span> PGobject ) {
                 pst.setObject( j++, part, java.sql.Types.OTHER ); <i class="conum" data-value="3"></i><b>(3)</b>
-            } else {
+            } <span class="keyword">else</span> {
                 pst.setObject( j++, part ); <i class="conum" data-value="4"></i><b>(4)</b>
             }
         }
         pst.setObject( j, key ); <i class="conum" data-value="5"></i><b>(5)</b>
-        try ( ResultSet rs = pst.executeQuery(); ) {
-            if ( rs.next() ) {
-                return (E) recordToEntity( rs ); <i class="conum" data-value="6"></i><b>(6)</b>
-            } else {
-                return null;
+        <span class="keyword">try</span> ( <span class="predefined-type">ResultSet</span> rs = pst.executeQuery(); ) {
+            <span class="keyword">if</span> ( rs.next() ) {
+                <span class="keyword">return</span> (E) recordToEntity( rs ); <i class="conum" data-value="6"></i><b>(6)</b>
+            } <span class="keyword">else</span> {
+                <span class="keyword">return</span> <span class="predefined-constant">null</span>;
             }
         }
-    } catch ( SQLException ex ) {
-        Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+    } <span class="keyword">catch</span> ( <span class="exception">SQLException</span> ex ) {
+        <span class="predefined-type">Logger</span>.getLogger( PGDAO.class.getName() ).log( <span class="predefined-type">Level</span>.SEVERE, <span class="predefined-constant">null</span>,
                 ex );
-        throw new DAOException( ex.getMessage(), ex );
+        <span class="keyword">throw</span> <span class="keyword">new</span> DAOException( ex.getMessage(), ex );
     }
 }</code></pre>
 </div>
@@ -1714,14 +1715,14 @@ of the entity type.</p>
 <div class="listingblock">
 <div class="title">recordToEntity, convert a record of the <code>ResultSet</code> to an instance of entity type</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
-E recordToEntity( final ResultSet rs ) throws SQLException {
-    Object[] parts = new Object[ mapper.getArraySize() ]; <i class="conum" data-value="1"></i><b>(1)</b>
-    for ( int i = 0; i &lt; parts.length; i++ ) {
-        Class&lt;?&gt; type = mapper.entityFields().get( i ).getType();<i class="conum" data-value="2"></i><b>(2)</b>
-        parts[i] = factory.marshallIn( type, rs.getObject( i + 1 ) );<i class="conum" data-value="3"></i><b>(3)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+E recordToEntity( <span class="directive">final</span> <span class="predefined-type">ResultSet</span> rs ) <span class="directive">throws</span> <span class="exception">SQLException</span> {
+    <span class="predefined-type">Object</span><span class="type">[]</span> parts = <span class="keyword">new</span> <span class="predefined-type">Object</span>[ mapper.getArraySize() ]; <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="integer">0</span>; i &lt; parts.length; i++ ) {
+        <span class="predefined-type">Class</span>&lt;?&gt; type = mapper.entityFields().get( i ).getType();<i class="conum" data-value="2"></i><b>(2)</b>
+        parts[i] = factory.marshallIn( type, rs.getObject( i + <span class="integer">1</span> ) );<i class="conum" data-value="3"></i><b>(3)</b>
     }
-    return mapper.construct( parts );<i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="keyword">return</span> mapper.construct( parts );<i class="conum" data-value="4"></i><b>(4)</b>
 }</code></pre>
 </div>
 </div>
@@ -1758,7 +1759,7 @@ This part will be discussed in the following exercise.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/pgdaodetails.svg" alt="pgdaodetails">
+<img src="./images/pgdaodetails.svg" alt="pgdaodetails">
 </div>
 <div class="title">Figure 4. The detailed class diagram for the PGDAO and its helpers.</div>
 </div>
@@ -1822,12 +1823,12 @@ In that case the tests take about 3 seconds to run; with the database tests acti
 <div class="listingblock">
 <div class="title">Constructor of <code>QueryFactory</code></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Mapper&lt;?, ?&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Mapper&lt;?, ?&gt; mapper;<i class="conum" data-value="1"></i><b>(1)</b>
 
-ConcurrentMap&lt;String, String&gt; queryTextCache = new ConcurrentHashMap&lt;&gt;();<i class="conum" data-value="2"></i><b>(2)</b>
+<span class="predefined-type">ConcurrentMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; queryTextCache = <span class="keyword">new</span> <span class="predefined-type">ConcurrentHashMap</span>&lt;&gt;();<i class="conum" data-value="2"></i><b>(2)</b>
 
-public QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
-    this.mapper = mapper;<i class="conum" data-value="3"></i><b>(3)</b>
+<span class="directive">public</span> QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
+    <span class="local-variable">this</span>.mapper = mapper;<i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -1850,9 +1851,9 @@ public QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
 <div class="listingblock">
 <div class="title">updateQueryText</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String updateQueryText() {
-    return queryTextCache
-        .computeIfAbsent( "update", x -&gt; computeUpdateQueryText() <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">String</span> updateQueryText() {
+    <span class="keyword">return</span> queryTextCache
+        .computeIfAbsent( <span class="string"><span class="delimiter">&quot;</span><span class="content">update</span><span class="delimiter">&quot;</span></span>, x -&gt; computeUpdateQueryText() <i class="conum" data-value="1"></i><b>(1)</b>
     );
 }</code></pre>
 </div>
@@ -1871,22 +1872,22 @@ public QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
 <div class="listingblock">
 <div class="title">Compute the update query string</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private String computeUpdateQueryText() {
-    var columnNames = mapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="predefined-type">String</span> computeUpdateQueryText() {
+    <span class="type">var</span> columnNames = mapper.entityFields()<i class="conum" data-value="1"></i><b>(1)</b>
             .stream()
-            .map( Field::getName )<i class="conum" data-value="2"></i><b>(2)</b>
+            .map( <span class="predefined-type">Field</span>::getName )<i class="conum" data-value="2"></i><b>(2)</b>
             .collect( toList() );
-    String columns = String
-            .join( ",", columnNames );
-    String placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="3"></i><b>(3)</b>
-    String sqlt = format(
-            "update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)"
-            + " returning  %2$s",
+    <span class="predefined-type">String</span> columns = <span class="predefined-type">String</span>
+            .join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, columnNames );
+    <span class="predefined-type">String</span> placeholders = makePlaceHolders( columnNames.size() );<i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="predefined-type">String</span> sqlt = format(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">update %1$s set (%2$s)=(%3$s) where (%4$s)=(?)</span><span class="delimiter">&quot;</span></span>
+            + <span class="string"><span class="delimiter">&quot;</span><span class="content"> returning  %2$s</span><span class="delimiter">&quot;</span></span>,
             tableName(),
             columns,
             placeholders,
             mapper.getKeyFieldName() );<i class="conum" data-value="4"></i><b>(4)</b>
-    return sqlt;
+    <span class="keyword">return</span> sqlt;
 }</code></pre>
 </div>
 </div>
@@ -1915,10 +1916,10 @@ public QueryFactory( Mapper&lt;?, ?&gt; mapper ) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final String makePlaceHolders( final int count ) {
-    String[] qm = new String[ count ];
-    Arrays.fill( qm, "?" );
-    return String.join( ",", qm );
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> <span class="predefined-type">String</span> makePlaceHolders( <span class="directive">final</span> <span class="type">int</span> count ) {
+    <span class="predefined-type">String</span><span class="type">[]</span> qm = <span class="keyword">new</span> <span class="predefined-type">String</span>[ count ];
+    <span class="predefined-type">Arrays</span>.fill( qm, <span class="string"><span class="delimiter">&quot;</span><span class="content">?</span><span class="delimiter">&quot;</span></span> );
+    <span class="keyword">return</span> <span class="predefined-type">String</span>.join( <span class="string"><span class="delimiter">&quot;</span><span class="content">,</span><span class="delimiter">&quot;</span></span>, qm );
 }</code></pre>
 </div>
 </div>
@@ -1974,9 +1975,9 @@ Each of these operations may cause a constraint violation, meaning that the oper
 <div class="listingblock">
 <div class="title">jdbc transaction example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try (Connection co= datasource.getConnection) {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">try</span> (<span class="predefined-type">Connection</span> co= datasource.getConnection) {
 
-} catch(SQLException sqe) {
+} <span class="keyword">catch</span>(<span class="exception">SQLException</span> sqe) {
   co.rollback();
 
 }</code></pre>
@@ -2042,7 +2043,7 @@ maven surefire plugin refuses to work with java 16 byte-codes. That should not b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/ormappingandviews.svg" alt="ormappingandviews">
+<img src="./images/ormappingandviews.svg" alt="ormappingandviews">
 </div>
 <div class="title">Figure 5. Relation between data in the RDBMS and the object model using views.</div>
 </div>
@@ -2054,9 +2055,9 @@ maven surefire plugin refuses to work with java 16 byte-codes. That should not b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE OR REPLACE VIEW students_v AS
-SELECT person.name,person.dob,student.*  <i class="conum" data-value="1"></i><b>(1)</b>
-FROM students_t natural join persons_t</code></pre>
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">CREATE</span> <span class="keyword">OR</span> <span class="class">REPLACE</span> <span class="type">VIEW</span> students_v <span class="keyword">AS</span>
+<span class="class">SELECT</span> person.name,person.dob,student.*  <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="keyword">FROM</span> students_t natural <span class="keyword">join</span> persons_t</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2136,16 +2137,9 @@ sufficient expertise.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-02 13:28:06 +0200
+Last updated 2025-09-22 09:25:37 +0200
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-<script>
-if (!hljs.initHighlighting.called) {
-  hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
-}
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",

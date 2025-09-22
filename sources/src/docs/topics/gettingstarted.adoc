@@ -16,7 +16,7 @@ Since 2018, https://www.youtube.com/watch?v=x73WTEltyHU[bash] is also available 
 Before you install any software from the internet, please validate the the package. You typically see signature files such as SHA-256 or PGP-ASC, os something similar,
 which can help to ascertain that the package is the one you think it is. For instance with:
 
-icon:linux[fw] `$ sha512sum /path/to/file` +
+icon:linux[fw] `$ sha256sum /path/to/file` +
 icon:apple[fw] `$ shasum -a 256 /path/to/file` +
 icon:windows[fw] `$ certUtil -hashfile /path/to/file SHA256`
 
@@ -91,7 +91,7 @@ With HomeBrew:
 [source,sh]
 ----
 brew tap AdoptOpenJDK/openjdk
-brew install --cask adoptopenjdk11
+brew install --cask adoptopenjdk17
 ----
 
 Manual installation:
@@ -107,7 +107,7 @@ With Chocolatey:
 .icon:windows[fw] install via Chocolatey
 [source,sh]
 ----
-choco install adoptopenjdk11 --params="/ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJavaHome /INSTALLDIR=C:\usr\lib\jvm\ /quiet"
+choco install adoptopenjdk17 --params="/ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJavaHome /INSTALLDIR=C:\usr\lib\jvm\ /quiet"
 ----
 
 Manual installation:
@@ -140,7 +140,7 @@ Since we want the best Java experience, we will use some common environment vari
 .icon:linux[fw] Define JAVA_HOME
 [source,sh]
 ----
-export JAVA_HOME=/usr/lib/jvm/jdk-17.0.1+12/ #<1>
+export JAVA_HOME=/usr/lib/jvm/jdk-17.0.15+6/ #<1>
 ----
 <1> Path for manual installation
 // <2> Path for package manager installation
@@ -158,7 +158,7 @@ To avoid having to do this every time you start the command-line, add the comman
 .icon:linux[fw] Add the previous commands to `~/.bashrc`
 [source,sh]
 ----
-export JAVA_HOME=/usr/lib/jvm/jdk-11.0.10+9
+export JAVA_HOME=/usr/lib/jvm/jdk-17.0.15+6
 export PATH=${JAVA_HOME}/bin:$PATH
 ----
 
@@ -282,15 +282,15 @@ Install manually:
 
 Fetch a fresh copy of https://maven.apache.org/[Apache Maven] from the website.
 
-To install it, do (example uses version 3.8.4  as of 2021-11-21)
+To install it, do (example uses version 3.9.11  as of 2025-09-22)
 
 .icon:linux[fw] install apache maven and add to path
 [source,sh]
 ----
 cd /usr/share
 sudo rm -fr maven
-sudo tar xf ~/Downloads/apache-maven-3.8.4-bin.tar.gz
-sudo ln -sf apache-maven-3.8.4/ maven
+sudo tar xf ~/Downloads/apache-maven-3.9.11-bin.tar.gz
+sudo ln -sf apache-maven-3.9.11/ maven
 cd /usr/bin
 sudo ln -sf ../share/maven/bin/mvn .
 ----
@@ -302,11 +302,12 @@ Once this is done, entering  `mvn --version` should produce output similar to
 ----
 hom@threehundred: /usr/share
 🐧$ mvn --version
-Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
+Apache Maven 3.9.11 (a0360b3cef57eeee480750d869b7f9d98cc2a333)
 Maven home: /usr/share/maven
-Java version: 17.0.1, vendor: Eclipse Adoptium, runtime: /usr/lib/jvm/jdk-17.0.1+12
+Java version: 17.0.15, vendor: Eclipse Adoptium, runtime: /usr/lib/jvm/jdk-17.0.15+6
 Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "5.13.0-21-generic", arch: "amd64", family: "unix"
+OS name: "linux", version: "6.14.0-29-generic", arch: "amd64", family: "unix"
+h
 ----
 
 ==== icon:apple[fw] macOS
@@ -364,8 +365,8 @@ in the traditional (as in same directories as the installer would) `/usr/local`.
 [source,sh]
 ----
 cd /usr/local
-sudo unzip ~/Downloads/netbeans-12.5-bin.zip
-sudo mv netbeans{,-12.5}
+sudo unzip ~/Downloads/netbeans-27-bin.zip
+sudo mv netbeans{,-27}
 ----
 
 For extra creature comfort, add a simple netbeans script to your path
@@ -374,7 +375,7 @@ For extra creature comfort, add a simple netbeans script to your path
 [source,sh]
 ----
 #!/bin/bash
-/usr/local/netbeans-12.5/bin/netbeans "$@" & #<1>
+/usr/local/netbeans-27/bin/netbeans "$@" & #<1>
 ----
 
 <1> Invoke netbeans using its absolute path.
