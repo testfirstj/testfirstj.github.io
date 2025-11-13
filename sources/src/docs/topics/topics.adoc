@@ -34,7 +34,7 @@ both by Cay S. Horstmann and both in the eleventh edition.
 |link:week10.html[10, title='Mon 2021-04-26'] | Date/Time API and Internationalization     | TBD |
 |link:week11.html[11, title='Mon 2021-05-10'] | Exceptions, Assertions and logging, File(I/O)    | TBD |
 |link:week12.html[12, title='Mon 2021-05-17'] | Programmers responsibility: Security   | TBD |
-|link:week13.html[13, title='Mon 2021-06-07'] | Not used, buffer   | - | |
+|link:week13.html[13, title='Mon 2021-06-07'] | Not used, buffer   | - | 
 
 // TODO: choose topic
 // |link:2021/week04.html[04, title='Mon 2021-03-12'] | Generics | Test and Quality and other Qualities | Vol. I - Ch8 | BoxOfThings, Shapes
