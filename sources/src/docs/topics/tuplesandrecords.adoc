@@ -26,8 +26,8 @@ import java.time.LocalDate;
 record NameDate( String name, LocalDate date){}
 ----
 
-and that is it. What you get is a class with a constructor and whose object provide getters, although named using a different conventions, toString,
-hashcode and equals, and the objects are immutable as well which is a good thing.
+and that is it. What you get is a class with a constructor and whose object provide getters, although using a different naming-convention, toString,
+hashcode and equals, and the objects are immutable as well, which is a good thing.
 
 Spelling it out in classic before record classes:
 
@@ -82,6 +82,6 @@ Here record has the added benefit that https://inside.java/2021/03/12/simpler-se
 
 The use case of DTO is often combined with Data Access Objects (DAO), in particular when you are talking to a database.
 In that case writing records and the helper class (DAO) can even be less work, because both can easily be generated from the database schema meta information.
-So generating a  DTO+DAO for each table or view can save a lot of typing and testing.
+So generating a DTO+DAO for each table or view can save a lot of typing and testing.
 
 See the coming chapter on reflection and generating code.
